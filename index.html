@@ -471,6 +471,36 @@
     .stat-card b { font-size: 25px; display: block; line-height: 1.15; font-variant-numeric: tabular-nums; }
     .stat-card span { color: var(--muted); font-size: 12.5px; }
 
+    .club-live-panel .club-live-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+    .club-live-panel .club-live-stats.cols-4 { grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); }
+    .club-live-panel .cl-stat {
+      background: #f4f6fb; border: 1px solid var(--line); border-radius: 10px;
+      padding: 10px 6px; text-align: center;
+    }
+    .club-live-panel .cl-stat b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; color: var(--navy-2); line-height: 1.1; }
+    .club-live-panel .cl-stat span { font-size: 11px; color: var(--muted); line-height: 1.25; display: block; }
+    .club-live-panel .cl-next { border-top: 1px dashed var(--line); padding-top: 12px; }
+    .club-live-panel .cl-next b { display: block; font-size: 13px; margin-bottom: 2px; }
+    [data-theme="dark"] .club-live-panel .cl-stat { background: #121a38; }
+    [data-theme="dark"] .club-live-panel .cl-stat b { color: var(--ink); }
+
+    .club-live-panel .cl-stat.s-open { background: #ecfdf5; border-color: #a7f3d0; }
+    .club-live-panel .cl-stat.s-open b { color: #15803d; }
+    .club-live-panel .cl-stat.s-soon { background: #fefce8; border-color: #fde047; }
+    .club-live-panel .cl-stat.s-soon b { color: #b45309; }
+    .club-live-panel .cl-stat.s-closed { background: #fef2f2; border-color: #fecaca; }
+    .club-live-panel .cl-stat.s-closed b { color: #b91c1c; }
+    .club-live-panel .cl-stat.s-subs { background: #eef2ff; border-color: #c7d2fe; }
+    .club-live-panel .cl-stat.s-subs b { color: var(--navy-2); }
+    [data-theme="dark"] .club-live-panel .cl-stat.s-open { background: rgba(34,197,94,.14); border-color: rgba(34,197,94,.35); }
+    [data-theme="dark"] .club-live-panel .cl-stat.s-open b { color: #4ade80; }
+    [data-theme="dark"] .club-live-panel .cl-stat.s-soon { background: rgba(245,158,11,.14); border-color: rgba(245,158,11,.35); }
+    [data-theme="dark"] .club-live-panel .cl-stat.s-soon b { color: #fcd34d; }
+    [data-theme="dark"] .club-live-panel .cl-stat.s-closed { background: rgba(239,68,68,.14); border-color: rgba(239,68,68,.35); }
+    [data-theme="dark"] .club-live-panel .cl-stat.s-closed b { color: #fca5a5; }
+    [data-theme="dark"] .club-live-panel .cl-stat.s-subs { background: rgba(99,102,241,.14); border-color: rgba(99,102,241,.35); }
+    [data-theme="dark"] .club-live-panel .cl-stat.s-subs b { color: #a5b4fc; }
+
     .pin-badge {
       background: linear-gradient(135deg, var(--gold), #f7c948); color: #3b2f00;
       font-weight: 800; padding: 2px 10px; border-radius: 999px; font-size: 11.5px; letter-spacing: .4px;
@@ -1425,9 +1455,6 @@
     function formSubs(formId) {
       return db.submissions.filter(function (s) { return s.formId === formId; });
     }
-    function isClosed(form) {
-      return form.deadline && form.deadline < todayISO();
-    }
 
     function toast(msg, kind) {
       var root = document.getElementById("toast-root");
@@ -1496,12 +1523,19 @@
         subs: function () { return db.submissions.length; },
         reactions: function () { return db.notices.reduce(function (sum, n) { return sum + Object.keys(n.reactions || {}).reduce(function (s2, k) { return s2 + (n.reactions[k] || 0); }, 0); }, 0); }
       };
+      var clubLiveStatFns = {
+        "open-forms": function (cid) { return clubForms(cid).filter(isOpen).length; },
+        "soon-forms": function (cid) { return clubForms(cid).filter(function (f) { return statusOf(f).key === "soon"; }).length; },
+        "closed-forms": function (cid) { return clubForms(cid).filter(function (f) { return statusOf(f).key === "closed"; }).length; },
+        subs: function (cid) { return clubForms(cid).reduce(function (sum, f) { return sum + formSubs(f.id).length; }, 0); }
+      };
       var lsEls = document.querySelectorAll("[data-live-stat]");
       for (var s = 0; s < lsEls.length; s++) {
         var sKey = lsEls[s].getAttribute("data-live-stat");
-        var sFn = liveStatFns[sKey];
+        var sClub = lsEls[s].getAttribute("data-live-club");
+        var sFn = sClub ? clubLiveStatFns[sKey] : liveStatFns[sKey];
         if (!sFn) continue;
-        var sVal = sFn();
+        var sVal = sClub ? sFn(sClub) : sFn();
         var numEl = lsEls[s].querySelector("b, .live-count") || lsEls[s];
         numEl.textContent = sVal;
         var one = lsEls[s].getAttribute("data-live-one");
@@ -1517,8 +1551,10 @@
       if (nextEl) {
         var curId = nextEl.getAttribute("data-next-id") || "";
         var curKey = nextEl.getAttribute("data-next-key") || "";
+        var nextClub = nextEl.getAttribute("data-next-club") || "";
+        var scopeForms = nextClub ? clubForms(nextClub) : db.forms;
         var nx = null;
-        db.forms.forEach(function (f) {
+        scopeForms.forEach(function (f) {
           var st = statusOf(f);
           if (st.key === "closed") return;
           var ts = st.key === "soon" ? st.start.getTime() : (st.end ? st.end.getTime() : 0);
@@ -1781,13 +1817,13 @@
         "</ul></div>" +
         "</div>" +
         "</div>" +
+        "</section>" +
         '<div class="container"><div class="stats-strip">' +
         '<div class="stat-card" data-live-stat="open-forms" data-live-one="form open now" data-live-many="forms open now"><span class="sc-icon">📝</span><div><b>' + db.forms.filter(isOpen).length + '</b><span class="live-label">forms open now</span></div></div>' +
         '<div class="stat-card" data-live-stat="subs" data-live-one="total submission" data-live-many="total submissions"><span class="sc-icon">📥</span><div><b class="live-count">' + totalSubs + '</b><span class="live-label">total submissions</span></div></div>' +
         '<div class="stat-card" data-live-stat="week-notices" data-live-one="notice this week" data-live-many="notices this week"><span class="sc-icon">📢</span><div><b>' + weekNotices + '</b><span class="live-label">notices this week</span></div></div>' +
         '<div class="stat-card" data-live-stat="reactions" data-live-one="reaction" data-live-many="reactions"><span class="sc-icon">💬</span><div><b>' + totalReactions + '</b><span class="live-label">reactions</span></div></div>' +
         "</div></div>" +
-        "</section>" +
 
         '<section class="section"><div class="container">' +
         '<div class="section-head"><div><h2>Our clubs</h2><p class="sub">Find your community — every club at NITER in one place.</p></div>' +
@@ -1909,6 +1945,21 @@
       var notices = clubNotices(id);
       var forms = clubForms(id);
       var membership = forms.find(function (f) { return /membership/i.test(f.title); }) || forms[0];
+      var clubOpen = forms.filter(isOpen).length;
+      var clubSoon = forms.filter(function (f) { return statusOf(f).key === "soon"; }).length;
+      var clubSubs = forms.reduce(function (sum, f) { return sum + formSubs(f.id).length; }, 0);
+      var clubNext = null;
+      forms.forEach(function (f) {
+        var st = statusOf(f);
+        if (st.key === "closed") return;
+        var ts = st.key === "soon" ? st.start.getTime() : (st.end ? st.end.getTime() : 0);
+        if (!ts) return;
+        if (!clubNext || ts < clubNext.ts) clubNext = { ts: ts, form: f, st: st };
+      });
+      var clubNextHTML = clubNext
+        ? (clubNext.st.key === "soon" ? "🚀 " : "⏳ ") + "<b>" + esc(clubNext.form.title) + "</b>" +
+          '<span class="next-count" data-countdown' + (clubNext.st.key === "soon" ? ' data-start="' + esc(clubNext.form.openAt) + '"' : ' data-end="' + esc(clubNext.form.deadline) + '"') + "></span>"
+        : '<span class="muted small">No upcoming forms</span>';
       var execs = (c.executives || [])
         .map(function (r) {
           var role = typeof r === "string" ? r : ((r && r.role) || "");
@@ -1952,9 +2003,20 @@
         '<div class="big-icon">' + esc(c.icon) + "</div>" +
         "<h3>Interested in joining?</h3>" +
         '<p class="mb-2">Apply through our membership form and our team will get back to you.</p>' +
-        (membership && !isClosed(membership)
-          ? '<a class="btn btn-primary btn-block" href="#/form/' + esc(membership.id) + '">Apply now</a>'
-          : '<button class="btn btn-outline btn-block" disabled>Applications closed</button>') +
+        (membership
+          ? (isClosed(membership)
+              ? '<button class="btn btn-outline btn-block" disabled>Applications closed</button>'
+              : '<a class="btn btn-primary btn-block" href="#/form/' + esc(membership.id) + '">Apply now</a>')
+          : '<button class="btn btn-outline btn-block" disabled>No application form yet</button>') +
+        "</div>" +
+
+        '<div class="panel club-live-panel"><h3>📊 Forms status</h3>' +
+        '<div class="club-live-stats">' +
+        '<div class="cl-stat s-open" data-live-stat="open-forms" data-live-club="' + esc(c.id) + '" data-live-one="form open now" data-live-many="forms open now"><b>' + clubOpen + '</b><span class="live-label">forms open now</span></div>' +
+        '<div class="cl-stat s-soon" data-live-stat="soon-forms" data-live-club="' + esc(c.id) + '" data-live-one="form opening soon" data-live-many="forms opening soon"><b>' + clubSoon + '</b><span class="live-label">forms opening soon</span></div>' +
+        '<div class="cl-stat s-subs" data-live-stat="subs" data-live-club="' + esc(c.id) + '" data-live-one="submission" data-live-many="submissions"><b>' + clubSubs + '</b><span class="live-label">submissions</span></div>' +
+        "</div>" +
+        '<div class="cl-next" data-next-id="' + (clubNext ? esc(clubNext.form.id) : "") + '" data-next-key="' + (clubNext ? (clubNext.st.key === "soon" ? "soon" : "open") : "") + '" data-next-club="' + esc(c.id) + '">' + clubNextHTML + "</div>" +
         "</div>" +
 
         '<div class="panel"><h3>📮 Complaint box</h3>' +
@@ -2348,6 +2410,10 @@
         return analyticsHTML(club);
       }
       var list = clubForms(club.id);
+      var portalOpen = list.filter(isOpen).length;
+      var portalSoon = list.filter(function (f) { return statusOf(f).key === "soon"; }).length;
+      var portalClosed = list.filter(function (f) { return statusOf(f).key === "closed"; }).length;
+      var portalSubs = list.reduce(function (sum, f) { return sum + formSubs(f.id).length; }, 0);
       var items = list.length ? list.map(function (f) {
         var subs = formSubs(f.id).length;
         var st = statusOf(f);
@@ -2377,6 +2443,14 @@
         '<div class="panel">' +
         '<div class="portal-toolbar mb-2"><h2>Forms</h2>' +
         '<button class="btn btn-primary btn-sm" data-action="new-form">+ Create form</button></div>' +
+        (list.length
+          ? '<div class="club-live-panel mb-2"><div class="club-live-stats cols-4">' +
+            '<div class="cl-stat s-open" data-live-stat="open-forms" data-live-club="' + esc(club.id) + '" data-live-one="form open now" data-live-many="forms open now"><b>' + portalOpen + '</b><span class="live-label">forms open now</span></div>' +
+            '<div class="cl-stat s-soon" data-live-stat="soon-forms" data-live-club="' + esc(club.id) + '" data-live-one="form opening soon" data-live-many="forms opening soon"><b>' + portalSoon + '</b><span class="live-label">forms opening soon</span></div>' +
+            '<div class="cl-stat s-closed" data-live-stat="closed-forms" data-live-club="' + esc(club.id) + '" data-live-one="closed form" data-live-many="closed forms"><b>' + portalClosed + '</b><span class="live-label">closed forms</span></div>' +
+            '<div class="cl-stat s-subs" data-live-stat="subs" data-live-club="' + esc(club.id) + '" data-live-one="submission" data-live-many="submissions"><b>' + portalSubs + '</b><span class="live-label">submissions</span></div>' +
+            "</div></div>"
+          : "") +
         (list.length
           ? '<div class="club-grid" style="grid-template-columns:repeat(auto-fill,minmax(270px,1fr))">' + items + "</div>"
           : '<div class="empty-state"><div class="icon">📝</div><p>No forms yet. Create a membership or event form for your club.</p></div>') +
@@ -2847,7 +2921,7 @@
         };
         if (b.formId) {
           var f = formById(b.formId);
-          if (f) { f.title = payload.title; f.description = payload.description; f.deadline = payload.deadline; f.fields = payload.fields; }
+          if (f) { f.title = payload.title; f.description = payload.description; f.openAt = payload.openAt; f.deadline = payload.deadline; f.fields = payload.fields; }
           toast("Form updated.", "ok");
         } else {
           db.forms.push(Object.assign({ id: DB.uid("f"), clubId: state.session.clubId }, payload));
