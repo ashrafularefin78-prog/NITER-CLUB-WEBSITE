@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    /* Submission photos — anyone can view (shown on public pages).
+       A single rule covers both folders:
+       - signed-in users upload under their own uid folder
+       - public visitors (not signed in) upload under the shared "guest" folder.
+       Because anyone can write to guest/, keep the size/type limits strict and
+       never put private data in guest uploads. */
+    match /submission-photos/{folder}/{allPaths=**} {
+      allow read: if true;
+      allow create, update: if request.resource != null
+        && request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*')
+        && (folder == 'guest' || (request.auth != null && request.auth.uid == folder));
+      allow delete: if false;
+    }
+  }
+}

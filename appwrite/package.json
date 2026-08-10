@@ -1,0 +1,18 @@
+{
+  "name": "niter-club-appwrite",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Appwrite MCP server config + provisioning script for the NITER Club website (schema per document/02-TRD.md).",
+  "type": "module",
+  "scripts": {
+    "setup": "node setup-appwrite.mjs",
+    "setup:dry-run": "node setup-appwrite.mjs --dry-run"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "node-appwrite": "^27.1.0"
+  }
+}
