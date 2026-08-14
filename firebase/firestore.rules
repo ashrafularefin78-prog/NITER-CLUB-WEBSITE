@@ -53,10 +53,16 @@ service cloud.firestore {
        lookup) so club staff can query `where("clubId", ==, ...)` — Firestore
        rejects a query unless the rules can prove every returned doc is readable,
        and a get() on another doc defeats that proof. clubId is set from the
-       form's clubId when a submission is created. */
+       form's clubId when a submission is created.
+       A student may also read their own submissions (by uid or the email they
+       filled the form with) so their dashboard shows their applications. */
     match /submissions/{id} {
       allow create: if true;
-      allow read: if isAdmin() || execOf(resource.data.clubId);
+      allow read: if isAdmin() || execOf(resource.data.clubId) ||
+        (signedIn() && (
+          resource.data.userId == request.auth.uid ||
+          resource.data.submitterEmail == request.auth.token.email
+        ));
       allow update, delete: if isAdmin() || execOf(resource.data.clubId);
     }
 
@@ -64,6 +70,33 @@ service cloud.firestore {
     match /complaints/{id} {
       allow create: if true;
       allow read: if isAdmin() || execOf(resource.data.clubId);
+      allow update, delete: if isAdmin() || execOf(resource.data.clubId);
+    }
+
+    /* ---------- memberships (junction table: student <-> club) ----------
+       Students request to join (status == 'pending', own doc only — no
+       self-approval). Club staff approve / reject, admins manage everything.
+       A student may cancel their own still-pending request. Reads are limited
+       to the requester or the club's staff/admins, which lets the app query
+       per-user and per-managed-club and merge the results. */
+    match /memberships/{id} {
+      allow create: if signedIn() &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.clubId is string &&
+        request.resource.data.status == 'pending';
+      allow read: if signedIn() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin() || execOf(resource.data.clubId)
+      );
+      allow update: if isAdmin() || execOf(resource.data.clubId);
+      allow delete: if isAdmin() || execOf(resource.data.clubId) ||
+        (signedIn() && resource.data.userId == request.auth.uid && resource.data.status == 'pending');
+    }
+
+    /* ---------- events (public read; club staff & admins post) ---------- */
+    match /events/{id} {
+      allow read: if true;
+      allow create: if isAdmin() || execOf(request.resource.data.clubId);
       allow update, delete: if isAdmin() || execOf(resource.data.clubId);
     }
 
@@ -80,7 +113,7 @@ service cloud.firestore {
          request.resource.data.clubs.size() == 0)
       );
       allow update: if signedIn() && request.auth.uid == uid &&
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name']) ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'studentId']) ||
         isAdmin();
       allow delete: if isAdmin();
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
