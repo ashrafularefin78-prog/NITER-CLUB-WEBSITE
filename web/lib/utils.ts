@@ -113,6 +113,21 @@ export function formSubs(db: Database, formId: string) {
   return db.submissions.filter((s) => s.formId === formId);
 }
 
+/* ---------------- ads ---------------- */
+/** Active ads across all clubs, newest first — the home carousel feed. */
+export function activeAds(db: Database) {
+  return (db.ads ?? [])
+    .filter((a) => a.status === "active")
+    .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+}
+
+/** A club's own ads (any status), newest first — the portal ads tab. */
+export function clubAds(db: Database, clubId: string) {
+  return (db.ads ?? [])
+    .filter((a) => a.clubId === clubId)
+    .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+}
+
 export function sortNotices(list: ReturnType<typeof clubNotices>) {
   return list.slice().sort((a, b) => {
     if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;

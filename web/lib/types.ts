@@ -107,6 +107,26 @@ export interface ClubEvent {
   createdAt: string;
 }
 
+export type AdStatus = "active" | "paused";
+
+export interface AdLink {
+  type: "club" | "form" | "external";
+  value: string;
+}
+
+/** Moderator-published club ad — an image or video shown in the home carousel. */
+export interface Ad {
+  id: string;
+  clubId: string;
+  title: string;
+  tagline?: string;
+  media: string;
+  mediaType: "image" | "video";
+  link: AdLink;
+  status: AdStatus;
+  createdAt: string;
+}
+
 export type MembershipStatus = "pending" | "approved" | "rejected";
 
 export interface Membership {
@@ -147,6 +167,7 @@ export interface Database {
   complaints: Complaint[];
   memberships: Membership[];
   events: ClubEvent[];
+  ads: Ad[];
   students: Student[];
   config: Config;
   __users?: PortalUser[];

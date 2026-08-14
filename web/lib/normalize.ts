@@ -1,5 +1,5 @@
 import type { Database, Form, Student } from "./types";
-import { PAYMENT_OPTIONS } from "./utils";
+import { PAYMENT_OPTIONS, uid } from "./utils";
 
 /* Official student roster — B.Sc. CSE, Session 2025-2026 (merit list import).
    ID format: CS (CSE) + 26 (batch year) + 07 (NITER dept code) + roll. */
@@ -382,6 +382,23 @@ export function normalizeDb(d: Database): Database {
   if (!Array.isArray(d.submissions)) d.submissions = [];
   if (!Array.isArray(d.memberships)) d.memberships = [];
   if (!Array.isArray(d.events)) d.events = [];
+  // Ads — moderators publish image/video club ads; default missing fields so
+  // legacy databases (without the feature) never break the carousel.
+  if (!Array.isArray(d.ads)) d.ads = [];
+  d.ads.forEach((a) => {
+    if (!a.id) a.id = uid();
+    if (!a.clubId) a.clubId = "";
+    if (!a.title) a.title = "";
+    if (!a.tagline) a.tagline = "";
+    if (!a.media) a.media = "";
+    if (!a.mediaType) {
+      a.mediaType = /^data:video\//.test(a.media) || /\/video\/|\.mp4$|\.webm$|\.ogv$/i.test(a.media) ? "video" : "image";
+    }
+    if (!a.link || typeof a.link !== "object") a.link = { type: "club", value: a.clubId };
+    if (!a.link.type) a.link.type = "club";
+    if (!a.status) a.status = "active";
+    if (!a.createdAt) a.createdAt = new Date().toISOString();
+  });
   // Student roster — backfill into existing databases (never wipes real data).
   if (!Array.isArray(d.students) || !d.students.length) d.students = STUDENT_ROSTER.slice();
   d.submissions.forEach((s) => {

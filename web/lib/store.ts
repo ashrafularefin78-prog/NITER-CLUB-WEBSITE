@@ -29,6 +29,7 @@ const CLOUD_COLLECTIONS = [
   "complaints",
   "memberships",
   "events",
+  "ads",
   "students",
 ] as const;
 const RESTRICTED_COLLECTIONS = new Set(["submissions", "complaints", "memberships"]);
@@ -500,7 +501,7 @@ async function diffPush() {
   const cur = snapshotOf(db);
   const prev =
     lastSynced ??
-    { clubs: [], notices: [], forms: [], submissions: [], complaints: [], memberships: [], events: [], students: [] };
+    { clubs: [], notices: [], forms: [], submissions: [], complaints: [], memberships: [], events: [], ads: [], students: [] };
   const next: Record<string, unknown[]> = {};
   CLOUD_COLLECTIONS.forEach((name) => (next[name] = []));
 

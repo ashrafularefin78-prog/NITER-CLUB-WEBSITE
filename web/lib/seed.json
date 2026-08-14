@@ -4473,5 +4473,51 @@
       "createdBy": "",
       "createdAt": "2026-08-03T12:00:00.000Z"
     }
+  ],
+  "ads": [
+    {
+      "id": "ad-codestorm",
+      "clubId": "computer-club",
+      "title": "CodeStorm 2026 — Registrations Open",
+      "tagline": "48 hours. Real problems. Campus-wide bragging rights. Register before the deadline.",
+      "media": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1400&q=70&fm=jpg",
+      "mediaType": "image",
+      "link": { "type": "club", "value": "computer-club" },
+      "status": "active",
+      "createdAt": "2026-08-09T10:00:00.000Z"
+    },
+    {
+      "id": "ad-cv-clinic",
+      "clubId": "career-club",
+      "title": "CV Clinic & Mock Interviews",
+      "tagline": "HR professionals will review your CV and run real mock interviews — bring a printed copy.",
+      "media": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1400&q=70&fm=jpg",
+      "mediaType": "image",
+      "link": { "type": "club", "value": "career-club" },
+      "status": "active",
+      "createdAt": "2026-08-09T11:00:00.000Z"
+    },
+    {
+      "id": "ad-cultural-auditions",
+      "clubId": "cultural-club",
+      "title": "Annual Cultural Program — Auditions",
+      "tagline": "Singers, dancers and performers — your moment on the big stage is here.",
+      "media": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "mediaType": "video",
+      "link": { "type": "club", "value": "cultural-club" },
+      "status": "active",
+      "createdAt": "2026-08-09T12:00:00.000Z"
+    },
+    {
+      "id": "ad-football-league",
+      "clubId": "games-sports-club",
+      "title": "Inter-Department Football League",
+      "tagline": "Department teams, knockout rounds, one champion. Gear up and represent your batch!",
+      "media": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1400&q=70&fm=jpg",
+      "mediaType": "image",
+      "link": { "type": "club", "value": "games-sports-club" },
+      "status": "active",
+      "createdAt": "2026-08-09T13:00:00.000Z"
+    }
   ]
 }

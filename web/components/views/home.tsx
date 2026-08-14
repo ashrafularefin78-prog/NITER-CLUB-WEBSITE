@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useDb } from "@/lib/store";
 import { clubById, formById, isOpen, nextDeadline, sortNotices, statusOf } from "@/lib/utils";
 import { ClubGrid, FormGrid, NoticeCard } from "@/components/cards";
+import AdsCarousel from "@/components/ads";
 import { LiveBadge, SectionHead, Skeleton } from "@/components/ui";
 import { Countdown, LiveClock, RelativeTime } from "@/components/countdown";
 import { Reveal } from "@/components/reveal";
@@ -146,6 +147,9 @@ export default function HomeView() {
           </div>
         </div>
       </section>
+
+      {/* ---------------- Sponsored club ads (moderator-published image/video) ---------------- */}
+      <AdsCarousel />
 
       {/* ---------------- NITER institutional stats band ---------------- */}
       <div className="border-b border-hairline bg-surface-2">
