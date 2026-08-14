@@ -16,15 +16,18 @@
       "executives": [
         {
           "role": "President",
-          "name": "Farhan Kabir Sifat"
+          "name": "Farhan Kabir Sifat",
+          "photo": "/committee/farhan-pres.jpg"
         },
         {
           "role": "Vice President",
-          "name": "Niloy Chandra Sarker"
+          "name": "Niloy Chandra Sarker",
+          "photo": "/committee/niloy-vp.jpg"
         },
         {
           "role": "General Secretary",
-          "name": "MD. Abir Habib"
+          "name": "MD. Abir Habib",
+          "photo": "/committee/abir-gs.jpg"
         },
         {
           "role": "Joint Secretary",

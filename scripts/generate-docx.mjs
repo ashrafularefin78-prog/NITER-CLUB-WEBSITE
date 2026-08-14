@@ -236,8 +236,8 @@ B.push(
   `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="600" w:after="200"/></w:pPr>` +
     `<w:r><w:rPr><w:color w:val="${SKY}"/></w:rPr><w:t>One portal for every club at NITER</w:t></w:r></w:p>`,
   rule(),
-  kv("Version", "1.0"),
-  kv("Date", "August 10, 2026"),
+  kv("Version", "2.0"),
+  kv("Date", "August 15, 2026"),
   kv("Status", "Released"),
   kv("Repository", "github.com/ashrafularefin78-prog/NITER-CLUB-WEBSITE"),
   pageBreak()
@@ -251,6 +251,7 @@ B.push(
     ["Version", "Date", "Author", "Description"],
     [
       ["1.0", "10 Aug 2026", "NITER Clubs Portal team", "Initial release — full project documentation."],
+      ["2.0", "15 Aug 2026", "NITER Clubs Portal team", "Added club ads, events, memberships, committee editor, student directory and Appwrite mirroring."],
     ]
   ),
   h2("Revision History"),
@@ -258,6 +259,7 @@ B.push(
     ["Version", "Date", "Change"],
     [
       ["1.0", "10 Aug 2026", "Initial release."],
+      ["2.0", "15 Aug 2026", "Documented the moderator-published ads feature, club events, membership approvals, the committee editor with email notifications, the admin-only student directory and the Appwrite mirroring routes."],
     ]
   ),
   h2("Related Documents"),
@@ -304,14 +306,14 @@ B.push(
   bullet("Establish a credible, permanent web presence for every club, independent of any single social platform."),
   bullet("Reduce the manual overhead of membership drives, event registrations and announcements."),
   bullet("Increase event attendance and membership sign-ups through better visibility and live feedback."),
-  bullet("Let club executives publish an event or notice in under five minutes without touching code."),
+  bullet("Let club executives publish an event, notice or sponsored ad in under five minutes without touching code."),
   bullet("Protect student data — personal information is visible only to club staff, never to the public."),
   h2("2.4 Implementations"),
   p("The project contains two frontends with identical functionality:"),
   table(
     ["Implementation", "Location", "Description"],
     [
-      ["Legacy static app", "`index.html` (repo root)", "Single-file HTML/CSS/JavaScript SPA. Zero build step — opens directly in a browser and talks to Firebase in-browser."],
+      ["Legacy static app", "`index.html` (repo root)", "Single-file HTML/CSS/JavaScript SPA. Zero build step — opens directly in a browser, talks to Firebase in-browser and mirrors submissions/accounts to Appwrite via optional API routes."],
       ["Next.js rewrite", "`web/`", "Next.js 15 (App Router), React 19, TypeScript (strict), Tailwind CSS v4. The recommended codebase for new feature work."],
     ]
   ),
@@ -363,7 +365,7 @@ B.push(
   table(
     ["Page", "Route", "Highlights"],
     [
-      ["Home", "`#/`", "Hero with live clock and next deadline, live stat chips (clubs, open forms, submissions, reactions), clubs grid, forms open now with countdowns, realtime activity feed, latest notices, student tools."],
+      ["Home", "`#/`", "Hero with live clock and next deadline, live stat chips (clubs, open forms, submissions, reactions), sponsored ads carousel (§4.7), clubs grid, forms open now with countdowns, realtime activity feed, latest notices, student tools."],
       ["Notices", "`#/notices`", "Live feed of all club notices, pinned-first ordering, full-text search, club filter, emoji reactions."],
       ["Clubs", "`#/clubs`", "Directory of all 11 clubs and societies with search."],
       ["Club detail", "`#/club/:id`", "About, notices, forms, executives panel, contact info, complaint box, live forms-status panel."],
@@ -371,18 +373,23 @@ B.push(
       ["Complaints", "`#/complaint/:clubId`", "Confidential complaint box per club with category, subject, details and optional contact."],
       ["IT support", "`#/it-support`", "Campus IT complaint box (WiFi, computer labs, portal, hardware, software)."],
       ["IT helpdesk", "`#/it-desk`", "Staff view of student-reported IT issues with status management."],
+      ["Student directory", "`#/students`", "Official student roster — admin-only (hidden from the public navigation)."],
+      ["Student profile", "`#/student/:key`", "Public per-student profile page with an initials avatar."],
     ]
   ),
   h2("4.2 Member Portal"),
-  p("Signed-in executives and admins manage their club from the portal dashboard, organised into five tabs:"),
+  p("Signed-in executives and admins manage their club from the portal dashboard — eight tabs in the legacy app, seven in the Next.js app:"),
   table(
     ["Tab", "Capabilities"],
     [
       ["Notices", "Post, edit, pin and delete notices; optionally link a notice to a form."],
-      ["Forms", "Build forms with a visual field builder (see §4.4), edit scheduling, view per-form analytics and submission counts."],
+      ["Forms", "Build forms with a visual field builder (see §4.5), edit scheduling, view per-form analytics and submission counts."],
       ["Submissions", "Review, search and export submissions; view per-form analysis."],
+      ["Memberships", "Review club join requests and approve or decline them (legacy: membership requests)."],
+      ["Events", "Post club events with date, venue and capacity (legacy app)."],
+      ["Ads", "Publish image/video ads for events — see §4.7."],
       ["Complaints", "Review complaints for the club, reply and update status (open / in progress / resolved)."],
-      ["Settings", "Add a new club, manage members & roles, export/import JSON backups, reset local data, load sample data to the cloud."],
+      ["Settings", "Edit the club's committee & photos (§4.9), add a new club, manage members & roles, export/import JSON backups, reset local data, load sample data to the cloud."],
     ]
   ),
   h2("4.3 Authentication & Roles"),
@@ -391,12 +398,13 @@ B.push(
     ["Role", "Access"],
     [
       ["Visitor", "Browse all public content; fill forms; file complaints."],
-      ["Member", "Public access plus the ability to track their own submissions."],
-      ["Executive", "Manage the clubs they are assigned to — notices, forms, submissions, complaints."],
+      ["Member", "Public access plus the ability to track their own submissions, join requests and dashboard."],
+      ["Executive", "Manage the clubs they are assigned to — notices, forms, submissions, complaints, ads and the committee."],
+      ["IT Staff", "Admin-granted role that unlocks the campus IT helpdesk."],
       ["Admin", "Everything, plus role management and the ability to manage any club."],
     ]
   ),
-  h2("4.4 Form Engine"),
+  h2("4.5 Form Engine"),
   p("Executives build forms from typed fields. Supported field types:"),
   table(
     ["Field type", "Behaviour"],
@@ -410,13 +418,30 @@ B.push(
     ]
   ),
   p("Forms have an **open date**, **deadline** and live status (`opens soon` / `open` / `closed`); countdowns update in real time. After submission, the student sees a receipt screen and can export their submission as **JSON, CSV or print/PDF**."),
-  h2("4.5 Realtime & Live Feedback"),
+  h2("4.6 Realtime & Live Feedback"),
   bullet("Live clock and per-form countdowns on the home page and club pages."),
   bullet("Live stat chips — clubs, forms open now, forms opening soon, notices this week, total submissions, reactions."),
   bullet("Realtime activity feed of recent submissions across all clubs."),
   bullet("Emoji reactions on notices (👍 ❤️ 🎉 …), persisted and synchronised."),
-  h2("4.6 Student Tools"),
-  p("The home page links a dedicated **IT Complaint Box** for reporting campus IT issues — WiFi/internet, computer labs, email/portal, hardware/equipment, software/access and other categories. Complaints may be filed anonymously and carry a status lifecycle (open → in progress → resolved) with staff replies.")
+  h2("4.7 Student Tools"),
+  p("The home page links a dedicated **IT Complaint Box** for reporting campus IT issues — WiFi/internet, computer labs, email/portal, hardware/equipment, software/access and other categories. Complaints may be filed anonymously and carry a status lifecycle (open → in progress → resolved) with staff replies."),
+  h2("4.8 Club Ads (moderator-published)"),
+  p("Every club moderator can publish **image or video ads** for events from the portal's *Ads* tab. A published ad appears in the **sponsored carousel** on the homepage (and in the legacy app it also advertises the club's own page), rotating every six seconds with dots and prev/next controls. Autoplay honours `prefers-reduced-motion` and pauses on hover."),
+  bullet("**Media** — upload an image or video file, or paste a URL. Images are downscaled client-side (max 1200 px, JPEG) and videos are capped at 15 MB; images at 8 MB."),
+  bullet("**Uploads** — in the Next.js app, media is uploaded to Firebase Storage under `ad-media/{clubId}/` when connected, keeping Firestore documents small; offline mode stores an inline data URL (matching the legacy app)."),
+  bullet("**Link target** — each ad links to the club page, a specific club form (\"Apply now\"), or an external URL."),
+  bullet("**Lifecycle** — ads are `active` or `paused`; moderators can pause, resume, edit or delete their club's ads. Paused ads disappear from the carousel immediately."),
+  bullet("**Access control** — the Ads tab is role-gated: only the club's moderators (executives assigned to the club) and admins can manage its ads (`canManageClub`)."),
+  h2("4.9 Club Events"),
+  p("Clubs post **events** (title, description, start/end time, venue, capacity) from the portal. Events appear on the club page, the homepage and each member's dashboard, and are capped by capacity."),
+  h2("4.10 Memberships & Committee Management"),
+  bullet("**Memberships** — students request membership from a club page; moderators review and approve or decline each request from the portal. Approved members see their club on the dashboard."),
+  bullet("**Committee editor** — the Settings tab lets a club's moderator edit the executive committee (role, name, photo — upload or URL). Every save is logged in a public *committee history* on the club page and the club's moderators are emailed via `POST /api/committee-notify`."),
+  bullet("**Student dashboard** — signed-in students get a personal dashboard tracking their memberships, submissions and approvals."),
+  h2("4.11 Student Directory & Public Profiles"),
+  p("The portal ships an **official student roster** (B.Sc. CSE session 2025–26 and the full institute section lists). The directory is **admin-only** — the footer link is hidden for everyone else — and is backed by the Appwrite `students` collection when configured, falling back to the bundled roster offline. Each student gets a public profile page with an initials avatar."),
+  h2("4.12 Appwrite Mirroring"),
+  p("Both apps can optionally **mirror data to Appwrite** alongside Firebase/local storage. The static site mirrors form submissions and student accounts through its `DATA_API` origin; the Next.js app writes through `POST /api/submissions` (idempotent per form + submitter email, photo data-URLs dropped, payload capped) and `POST /api/users`. The Appwrite write is always best-effort — a slow or offline backend never blocks the student.")
 );
 
 /* ---------- 5. Technology Stack ---------- */
@@ -426,11 +451,11 @@ B.push(
   table(
     ["Service", "Technology", "Purpose"],
     [
-      ["Database", "Firebase Firestore", "Structured, realtime-synchronised data (clubs, notices, forms, submissions, complaints, users)."],
+      ["Database", "Firebase Firestore", "Structured, realtime-synchronised data (clubs, notices, forms, submissions, complaints, memberships, events, ads, users)."],
       ["Authentication", "Firebase Auth (email/password)", "Accounts and role-based sign-in for executives and admins."],
-      ["File storage", "Firebase Storage", "Submission photos and attachments, stored under `submission-photos/`."],
+      ["File storage", "Firebase Storage", "Submission photos under `submission-photos/` and ad media under `ad-media/{clubId}/`."],
       ["Security", "Firestore & Storage security rules", "Role-based read/write enforcement, first-admin bootstrap marker."],
-      ["Alternative backend", "Appwrite (kit in `appwrite/`)", "Provisioning script + MCP server configs for an Appwrite-hosted schema."],
+      ["Alternative backend", "Appwrite (kit in `appwrite/`)", "Provisioning + seed scripts and MCP server configs for an Appwrite-hosted schema; the web app reads the student directory and mirrors submissions/accounts through `/api` routes."],
     ]
   ),
   h2("5.2 Legacy Static App"),
@@ -452,6 +477,7 @@ B.push(
       ["Styling", "Tailwind CSS v4 with NITER brand tokens and `data-theme` dark mode"],
       ["Firebase", "Modular Firebase SDK v12 (`web/lib/firebase.ts`)"],
       ["State", "Custom client store with `useSyncExternalStore`, cross-tab sync, Firestore hydrate/push"],
+      ["API routes", "`app/api/` — `/api/students` (Appwrite-backed directory), `/api/submissions` and `/api/users` (Appwrite mirror), `/api/committee-notify` (moderator emails)"],
       ["Tooling", "ESLint 9, Prettier 3, `tsc --noEmit` typecheck"],
     ]
   ),
@@ -471,17 +497,23 @@ B.push(
       ["`forms`", "One doc per form", "Everyone", "Admins / executives of the club"],
       ["`submissions`", "One doc per application", "Club staff", "Anyone (public application forms)"],
       ["`complaints`", "One doc per complaint", "Club staff", "Anyone (filing)"],
+      ["`memberships`", "One doc per join request", "Self / club staff", "Anyone (requesting); staff (reviewing)"],
+      ["`events`", "One doc per club event", "Everyone", "Admins / executives of the club"],
+      ["`ads`", "One doc per ad (`ad-…`)", "Everyone", "Admins / executives of the club"],
       ["`users/{uid}`", "Profile + `role` + `clubs[]`", "Self / staff", "Self (name only), admins (roles)"],
+      ["`config/site`", "Institute name + semester list", "Everyone", "Admins"],
       ["`meta/bootstrap`", "First-admin marker", "Everyone", "Created once"],
     ]
   ),
   h2("6.2 Key Entities & Statuses"),
-  bullet("**Roles** — `admin`, `executive`, `member` (visitors have no record)."),
+  bullet("**Roles** — `admin`, `executive`, `it-staff`, `member` (visitors have no record)."),
   bullet("**Form status** — derived from `openAt` / `deadline`: `soon`, `open`, `closed`."),
   bullet("**Complaint status** — `open`, `in-progress`, `resolved`."),
+  bullet("**Membership status** — `pending`, `approved`, `rejected`."),
+  bullet("**Ad status** — `active` / `paused`; ads carry `clubId`, `title`, `tagline`, `media`, `mediaType` (image/video) and a `link` target."),
   bullet("**Submissions** — carry `formId`, `clubId` (for club-scoped queries), the field data and a `submittedAt` timestamp."),
   h2("6.3 Appwrite Alternative Schema"),
-  p("The `appwrite/` kit can provision an equivalent backend on Appwrite: a `niter_club` database with `users`, `events`, `event_registrations`, `applications`, `notices`, `albums`, `photos` and `executives` collections, plus public storage buckets for event banners, gallery photos and notice attachments. It also includes MCP server configs so AI assistants and IDEs can operate the backend directly. See `appwrite/README.md`.")
+  p("The `appwrite/` kit can provision an equivalent backend on Appwrite: a `niter_club` database with `users`, `events`, `event_registrations`, `applications`, `notices`, `albums`, `photos` and `executives` collections, plus public storage buckets for event banners, gallery photos and notice attachments. `appwrite/seed-students.mjs` seeds the `students` collection used by the student directory, and `appwrite/seed-site-data.mjs` seeds clubs/notices/forms/events. The kit also includes MCP server configs so AI assistants and IDEs can operate the backend directly. See `appwrite/README.md`.")
 );
 
 /* ---------- 7. Setup & Installation ---------- */
@@ -519,6 +551,14 @@ B.push(
     "npm install",
     "npm run setup:dry-run    # optional preview",
     "npm run setup            # creates database, collections, indexes and buckets (idempotent)",
+    "npm run seed:students    # seeds the student roster (powers the directory)",
+    "npm run seed:site        # seeds clubs, notices, forms and events",
+  ]),
+  p("To use the student directory and the Appwrite mirror in the web app, copy the three values into `web/.env.local` (see `appwrite/README.md`):"),
+  code([
+    "APPWRITE_ENDPOINT=https://sgp.cloud.appwrite.io/v1",
+    "APPWRITE_PROJECT_ID=…",
+    "APPWRITE_API_KEY=…          # server key with databases.read — never sent to the browser",
   ]),
   h2("7.6 Demo Mode"),
   p("With no Firebase config, the member portal uses the demo member code `niter2025` and stores everything locally — ideal for evaluation and development.")
@@ -552,8 +592,10 @@ B.push(
   h1("9. Security Model"),
   h2("9.1 Firestore Rules"),
   p("The rules in `firebase/firestore.rules` enforce the read/write matrix in §6.1 server-side — a client can never grant itself access by editing the UI. Key protections:"),
-  bullet("Public collections (`clubs`, `notices`, `forms`) are readable by anyone but writable only by the club's admins/executives."),
-  bullet("Restricted collections (`submissions`, `complaints`) are readable only by club staff and scoped by club."),
+  bullet("Public collections (`clubs`, `notices`, `forms`, `events`, `ads`) are readable by anyone but writable only by the club's admins/executives."),
+  bullet("Restricted collections (`submissions`, `complaints`, `memberships`) are readable only by club staff and scoped by club."),
+  bullet("The ads and committee editors are double-guarded in code (`canManageClub` / `isPortalAdmin`), so a moderator can only touch their own club's content."),
+  bullet("The student directory is hidden from the public navigation and gated to portal admins."),
   bullet("`users/{uid}` documents are writable by the owner (name only) and by admins (roles)."),
   bullet("The `meta/bootstrap` marker ensures the first admin account is created exactly once."),
   h2("9.2 Storage Rules"),
@@ -563,7 +605,7 @@ B.push(
   h2("9.4 Platform Notes"),
   bullet("Passwords are handled entirely by Firebase Auth — they are never stored or logged in the application."),
   bullet("Role checks are re-verified from the user's Firestore profile on every restricted read, so revoking a role takes effect immediately."),
-  bullet("The Appwrite variant (if used) keeps server-side API keys in `.env` (gitignored) and enforces roles in the backend.")
+  bullet("The Appwrite variant (if used) keeps server-side API keys in `.env` (gitignored) and enforces roles in the backend; the web app's `/api` routes use those keys server-side only, so they never reach the browser.")
 );
 
 /* ---------- 10. Project Structure ---------- */
@@ -571,23 +613,28 @@ B.push(
   h1("10. Project Structure"),
   code([
     "NITER-CLUB-WEBSITE/",
-    "├── index.html              # Legacy static SPA (Firebase, offline-capable)",
+    "├── index.html              # Legacy static SPA (Firebase + optional Appwrite mirroring)",
     "├── css/styles.css          # Legacy stylesheet",
+    "├── campus/                 # Campus photography used by the web app hero",
+    "├── committee/              # Committee portrait photos (local copies)",
     "├── document/               # PRD, TRD, user flow, application flow, design system",
+    "├── plan/                   # Implementation plan & working notes",
     "├── firebase/               # Firestore rules, storage rules, hosting config",
     "│   ├── firestore.rules",
     "│   ├── storage.rules",
     "│   ├── firebase.json",
     "│   └── README.md",
-    "├── appwrite/               # Alternative backend: provisioning script + MCP configs",
+    "├── appwrite/               # Alternative backend: setup + seed scripts + MCP configs",
     "│   ├── setup-appwrite.mjs",
     "│   ├── verify-appwrite.mjs",
+    "│   ├── seed-students.mjs",
+    "│   ├── seed-site-data.mjs",
     "│   ├── mcp.json / mcp.cloud.json",
     "│   └── README.md",
     "├── web/                    # Next.js 15 rewrite (recommended for new work)",
-    "│   ├── app/                # Routes (home, notices, clubs, portal, it-support, it-desk, …)",
-    "│   ├── components/         # layout, cards, countdown, views/…",
-    "│   ├── lib/                # types, seed, store, firebase, auth, utils",
+    "│   ├── app/                # Routes + /api (students, submissions, users, committee-notify)",
+    "│   ├── components/         # layout, cards, ads carousel, countdown, views/…",
+    "│   ├── lib/                # types, seed, store, firebase, auth, utils, appwrite-*",
     "│   ├── package.json",
     "│   └── README.md",
     "├── .github/workflows/ci.yml  # Typecheck + lint + format + build on push",
@@ -623,7 +670,7 @@ B.push(
     ["Area", "Planned improvement"],
     [
       ["Localisation", "Bangla (বাংলা) language support alongside English."],
-      ["Notifications", "Email notifications for application status, event reminders and complaint replies."],
+      ["Notifications", "Email notifications for application status, event reminders and complaint replies (committee-edit emails already shipped via `/api/committee-notify`)."],
       ["Payments", "Direct integration with bKash / Nagad / SSLCommerz instead of manual TrxID capture."],
       ["Certificates", "Automated certificate generation for event participants and members."],
       ["Community", "Per-club discussion/chat and richer member profiles."],
@@ -644,7 +691,10 @@ B.push(
       ["Firebase project", "`niter-club-website`"],
       ["Demo member code", "`niter2025` (offline demo mode)"],
       ["Local storage key", "`niter-clubs-db-v8`"],
+      ["Ad media storage path", "`ad-media/{clubId}/` (Firebase Storage)"],
+      ["Submission photos path", "`submission-photos/` (Firebase Storage)"],
       ["Next.js dev server", "http://localhost:3000"],
+      ["Appwrite env vars", "`APPWRITE_ENDPOINT`, `APPWRITE_PROJECT_ID`, `APPWRITE_API_KEY` (web/.env.local)"],
       ["Primary documentation", "`document/01-PRD.md` … `document/05-DESIGN.md`"],
     ]
   ),
@@ -764,7 +814,7 @@ function headerXml() {
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
 <w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="4" w:space="1" w:color="FFB606"/></w:pBdr><w:jc w:val="right"/><w:spacing w:after="60"/></w:pPr>
-<w:r><w:rPr><w:color w:val="${GRAY}"/><w:sz w:val="16"/><w:szCs w:val="16"/></w:rPr><w:t>NITER Clubs Portal — Project Documentation v1.0</w:t></w:r>
+<w:r><w:rPr><w:color w:val="${GRAY}"/><w:sz w:val="16"/><w:szCs w:val="16"/></w:rPr><w:t>NITER Clubs Portal — Project Documentation v2.0</w:t></w:r>
 </w:p></w:hdr>`;
 }
 
@@ -831,8 +881,8 @@ function coreXml() {
 <dc:description>Technical documentation and user guide for the NITER Clubs Portal — architecture, features, data model, setup, deployment and security.</dc:description>
 <cp:lastModifiedBy>NITER Clubs Portal team</cp:lastModifiedBy>
 <dcterms:created xsi:type="dcterms:W3CDTF">2026-08-10T00:00:00Z</dcterms:created>
-<dcterms:modified xsi:type="dcterms:W3CDTF">2026-08-10T00:00:00Z</dcterms:modified>
-<cp:revision>1</cp:revision>
+<dcterms:modified xsi:type="dcterms:W3CDTF">2026-08-15T00:00:00Z</dcterms:modified>
+<cp:revision>2</cp:revision>
 </cp:coreProperties>`;
 }
 

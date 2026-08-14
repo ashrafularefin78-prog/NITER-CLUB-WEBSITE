@@ -123,3 +123,35 @@ cd firebase
 firebase init hosting        # point "public" at the project root (one level up)
 firebase deploy --only hosting
 ```
+
+## 9 · Local development — Storage CORS
+
+Uploading photos or ad media from a **local dev server** (e.g.
+`http://localhost:3210`) can fail with a CORS preflight error even though the
+same upload works from the deployed origin. That is a Firebase **Storage
+bucket** configuration issue, not an app bug — the app handles it gracefully
+by keeping a downscaled data URL instead of the upload, so submissions still
+succeed.
+
+To allow localhost origins (plus your deployed origin, if it isn't already
+listed), run the Google Cloud CLI from this folder's project:
+
+```bash
+cd firebase
+npx gsutil cors set storage-cors.json gs://niter-club-website.firebasestorage.app
+```
+
+with a `storage-cors.json` such as:
+
+```json
+[
+  {
+    "origin": ["http://localhost:3000", "http://localhost:3210", "https://your-deployed-origin"],
+    "method": ["GET", "PUT", "POST", "DELETE"],
+    "maxAgeSeconds": 3600
+  }
+]
+```
+
+Afterwards, refresh the page — uploads (submission photos, ad media,
+committee portraits) will go straight to Storage.
