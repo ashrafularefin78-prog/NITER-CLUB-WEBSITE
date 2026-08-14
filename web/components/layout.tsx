@@ -9,6 +9,8 @@ const NAV = [
   { href: "/", label: "Home", match: "/" },
   { href: "/notices", label: "Notices", match: "/notices" },
   { href: "/clubs", label: "Clubs", match: "/clubs" },
+  { href: "/students", label: "Students", match: "/students" },
+  { href: "/dashboard", label: "My Dashboard", match: "/dashboard" },
   { href: "/it-support", label: "IT Help", match: "/it-support" },
 ];
 
@@ -140,12 +142,13 @@ const FOOTER_LINKS: { title: string; links: { label: string; href: string }[] }[
       { label: "Home", href: "/" },
       { label: "Notices", href: "/notices" },
       { label: "Clubs", href: "/clubs" },
-      { label: "IT Help", href: "/it-support" },
+      { label: "Student directory", href: "/students" },
     ],
   },
   {
     title: "For students",
     links: [
+      { label: "My Dashboard", href: "/dashboard" },
       { label: "Member Portal", href: "/portal" },
       { label: "Browse forms", href: "/clubs" },
       { label: "Report an issue", href: "/it-support" },

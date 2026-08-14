@@ -21,10 +21,19 @@ import { getCloudDb } from "./firebase";
 
 export const STORAGE_KEY = "niter-clubs-db-v8";
 
-const CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints"] as const;
-const RESTRICTED_COLLECTIONS = new Set(["submissions", "complaints"]);
+const CLOUD_COLLECTIONS = [
+  "clubs",
+  "notices",
+  "forms",
+  "submissions",
+  "complaints",
+  "memberships",
+  "events",
+  "students",
+] as const;
+const RESTRICTED_COLLECTIONS = new Set(["submissions", "complaints", "memberships"]);
 
-type ReadScope = { role: Role; clubs: string[] } | null;
+type ReadScope = { role: Role; clubs: string[]; uid?: string; email?: string } | null;
 
 /* ---------------- module state ---------------- */
 let db: Database | null = null;
@@ -162,6 +171,32 @@ export function mutate(mutator: (draft: Database) => void) {
   notify();
 }
 
+/** Permanently link submissions to the signed-in account. Submissions made
+ *  as a visitor (typed email) carry no userId yet — after any sign-in we
+ *  backfill userId (plus missing name/ID) onto every submission whose
+ *  submitter email matches, so the dashboard keeps showing them even if the
+ *  account email changes later. Returns how many were linked. */
+export function linkSubmissionsToUser(profile: {
+  uid: string;
+  email: string;
+  name?: string;
+  studentId?: string;
+}): number {
+  let linked = 0;
+  mutate((draft) => {
+    const email = (profile.email || "").toLowerCase();
+    (draft.submissions || []).forEach((s) => {
+      if (!s.userId && s.submitterEmail && s.submitterEmail.toLowerCase() === email) {
+        s.userId = profile.uid;
+        if (!s.submitterName && profile.name) s.submitterName = profile.name;
+        if (!s.submitterStudentId && profile.studentId) s.submitterStudentId = profile.studentId;
+        linked++;
+      }
+    });
+  });
+  return linked;
+}
+
 export function setReadScope(scope: ReadScope) {
   readScope = scope;
   // Restricted collections (submissions / complaints) are only readable per
@@ -242,6 +277,35 @@ async function fetchCollection(
       } catch (err) {
         return { err, items: null };
       }
+    }
+    // IT staff (admin-granted) read only the IT helpdesk complaints.
+    if (name === "complaints" && readScope.role === "it-staff") {
+      try {
+        const q = query(collection(dbRef, name), where("clubId", "==", "it"));
+        return { items: mapSnap(await getDocs(q)) };
+      } catch (err) {
+        return { err, items: null };
+      }
+    }
+    // Memberships: each student sees their own requests; staff see the clubs
+    // they manage. Queries merge by id, and one unreadable query never fails
+    // the rest.
+    if (name === "memberships") {
+      const mq: Promise<unknown[]>[] = [];
+      if (readScope.uid) {
+        mq.push(
+          getDocs(query(collection(dbRef, name), where("userId", "==", readScope.uid))).then(mapSnap)
+        );
+      }
+      (readScope.clubs ?? []).slice(0, 10).forEach((cid) => {
+        mq.push(
+          getDocs(query(collection(dbRef, name), where("clubId", "==", cid))).then(mapSnap)
+        );
+      });
+      const parts = await Promise.all(mq.map((p) => p.catch(() => [] as unknown[])));
+      const byId = new Map<string, unknown>();
+      parts.forEach((part) => part.forEach((x) => byId.set((x as { id: string }).id, x)));
+      return { items: [...byId.values()] };
     }
     const clubs = (readScope.clubs ?? []).slice();
     if (!clubs.length) return { items: null };
@@ -336,6 +400,10 @@ function applyCloudCollection(name: string, items: unknown[]) {
 function restrictedQuery(dbRef: Firestore, name: string): ReturnType<typeof query> | null {
   if (!readScope || readScope.role === "member") return null;
   if (readScope.role === "admin") return query(collection(dbRef, name));
+  // IT staff see only the IT helpdesk complaints.
+  if (name === "complaints" && readScope.role === "it-staff") {
+    return query(collection(dbRef, name), where("clubId", "==", "it"));
+  }
   const clubs = (readScope.clubs ?? []).slice();
   if (!clubs.length) return null;
   // Executives query only the clubs they manage — matching the security rules.
@@ -388,6 +456,30 @@ function refreshRestrictedSubscriptions() {
   for (const unsub of restrictedUnsubs) unsub();
   restrictedUnsubs = [];
   for (const name of RESTRICTED_COLLECTIONS) {
+    // Memberships need per-user + per-club listeners merged (a single "in"
+    // query can't span two different fields without a compound index).
+    if (name === "memberships" && readScope && readScope.role !== "admin") {
+      const attach = (q: ReturnType<typeof query> | null) => {
+        if (!q) return;
+        restrictedUnsubs.push(
+          onSnapshot(
+            q,
+            (snap) => applyCloudCollection(name, mapSnap(snap)),
+            () => {
+              /* no read permission for this scope */
+            }
+          )
+        );
+      };
+      if (readScope.role === "member" && readScope.uid) {
+        attach(query(collection(dbRef, name), where("userId", "==", readScope.uid)));
+      } else {
+        (readScope.clubs ?? []).slice(0, 10).forEach((cid) => {
+          attach(query(collection(dbRef, name), where("clubId", "==", cid)));
+        });
+      }
+      continue;
+    }
     const q = restrictedQuery(dbRef, name);
     if (!q) continue;
     const unsub = onSnapshot(
@@ -406,7 +498,9 @@ async function diffPush() {
   const dbRef = cloudDb();
   if (!dbRef || !db || !hydrated) return;
   const cur = snapshotOf(db);
-  const prev = lastSynced ?? { clubs: [], notices: [], forms: [], submissions: [], complaints: [] };
+  const prev =
+    lastSynced ??
+    { clubs: [], notices: [], forms: [], submissions: [], complaints: [], memberships: [], events: [], students: [] };
   const next: Record<string, unknown[]> = {};
   CLOUD_COLLECTIONS.forEach((name) => (next[name] = []));
 

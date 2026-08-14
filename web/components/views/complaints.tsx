@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { Complaint, ComplaintStatus } from "@/lib/types";
 import { uid } from "@/lib/utils";
 import { mutate, useDb } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import { useToast } from "@/components/providers";
 import { EmptyState, LiveBadge, Skeleton } from "@/components/ui";
 import { RelativeTime } from "@/components/countdown";
@@ -234,9 +235,34 @@ export function ComplaintView({ clubId, isIt = false }: { clubId?: string; isIt?
 /* ---------------- IT Helpdesk ---------------- */
 export function ItDeskView() {
   const db = useDb();
+  const auth = useAuth();
   const toast = useToast();
 
   if (!db) return <ComplaintSkeleton />;
+
+  // Access is restricted to the admin and users the admin has granted the
+  // "it-staff" role (cloud mode). Offline demo mode has no roles, so any
+  // visitor may preview the desk there.
+  const canManage = auth.cloud
+    ? !!auth.user && (auth.user.role === "admin" || auth.user.role === "it-staff")
+    : true;
+  if (!canManage) {
+    return (
+      <div className="container-x py-16">
+        <div className="card mx-auto max-w-md p-8 text-center">
+          <div className="text-5xl">🛠</div>
+          <h1 className="mt-3 text-xl font-bold text-ink">Restricted area</h1>
+          <p className="mt-1 text-[14px] text-muted">
+            The IT Helpdesk is visible only to the site admin and users the admin has given permission.{" "}
+            <Link href="/it-support" className="font-semibold text-navy no-underline hover:underline">
+              Report a website issue →
+            </Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const list = db.complaints
     .filter((c) => c.clubId === "it")
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -254,13 +280,11 @@ export function ItDeskView() {
         <LiveBadge>{open} open</LiveBadge>
       </div>
 
-      <div className="mt-4 rounded-xl border border-gold/40 bg-gold/10 p-3.5 text-[13px] text-warn">
-        💡 Demo staff view — in production this would be locked to the IT team’s accounts.
-      </div>
-
       <div className="mt-6 space-y-4">
         {list.length ? (
-          list.map((c) => <ComplaintManageCard key={c.id} complaint={c} onToast={toast.toast} />)
+          list.map((c) => (
+            <ComplaintManageCard key={c.id} clubId="it" complaint={c} onToast={toast.toast} />
+          ))
         ) : (
           <EmptyState icon="🖥">No IT complaints yet.</EmptyState>
         )}
@@ -270,13 +294,16 @@ export function ItDeskView() {
 }
 
 export function ComplaintManageCard({
+  clubId,
   complaint,
   onToast,
 }: {
+  clubId: string;
   complaint: Complaint;
   onToast: (m: string, k?: "" | "ok" | "err") => void;
 }) {
   const [reply, setReply] = useState(complaint.reply);
+  const canManage = complaint.clubId === clubId;
   return (
     <div className="card p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
@@ -301,6 +328,7 @@ export function ComplaintManageCard({
           value={complaint.status}
           aria-label="Status"
           onChange={(e) => {
+            if (!canManage) return;
             const s = e.target.value as ComplaintStatus;
             mutate((db) => {
               const c = db.complaints.find((x) => x.id === complaint.id);
@@ -329,6 +357,7 @@ export function ComplaintManageCard({
         <button
           className="btn btn-outline btn-sm"
           onClick={() => {
+            if (!canManage) return;
             mutate((db) => {
               const c = db.complaints.find((x) => x.id === complaint.id);
               if (c) c.reply = reply.trim();

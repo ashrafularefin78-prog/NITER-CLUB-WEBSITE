@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { Form, FormField, Notice, PortalUser, Submission } from "@/lib/types";
+import type { Form, FormField, Membership, Notice, PortalUser, Submission } from "@/lib/types";
 import {
   clubById,
   clubForms,
@@ -11,6 +11,7 @@ import {
   fmtDateTime,
   formById,
   isOpen,
+  relativeAgo,
   statusOf,
   uid,
 } from "@/lib/utils";
@@ -20,10 +21,10 @@ import { getCloudAuth } from "@/lib/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { useToast } from "@/components/providers";
 import { Countdown, RelativeTime } from "@/components/countdown";
-import { EmptyState, Skeleton } from "@/components/ui";
+import { EmptyState, GoogleButton, OrDivider, Skeleton } from "@/components/ui";
 import { ComplaintManageCard } from "@/components/views/complaints";
 
-type Tab = "notices" | "forms" | "submissions" | "complaints" | "settings";
+type Tab = "notices" | "forms" | "submissions" | "complaints" | "memberships" | "settings";
 
 export default function PortalView() {
   const db = useDb();
@@ -72,6 +73,7 @@ export default function PortalView() {
     forms: clubForms(db, club.id).length,
     submissions: db.submissions.filter((s) => formById(db, s.formId)?.clubId === club.id).length,
     complaints: db.complaints.filter((c) => c.clubId === club.id).length,
+    memberships: (db.memberships || []).filter((m) => m.clubId === club.id).length,
     settings: 0,
   };
 
@@ -106,7 +108,7 @@ export default function PortalView() {
       </div>
       <div className="container-x py-8">
         <div className="tabs" role="tablist" aria-label="Dashboard sections">
-          {(["notices", "forms", "submissions", "complaints", "settings"] as Tab[]).map((t) => (
+          {(["notices", "forms", "submissions", "complaints", "memberships", "settings"] as Tab[]).map((t) => (
             <button
               key={t}
               role="tab"
@@ -144,7 +146,10 @@ export default function PortalView() {
             <SubmissionsTab clubId={club.id} subFormId={subFormId} setSubFormId={setSubFormId} />
           )}
           {tab === "complaints" && <ComplaintsTab clubId={club.id} />}
-          {tab === "settings" && <SettingsTab isAdmin={auth.user?.role === "admin"} />}
+          {tab === "memberships" && <MembershipsTab clubId={club.id} />}
+          {tab === "settings" && (
+            <SettingsTab clubId={club.id} isAdmin={auth.user?.role === "admin"} />
+          )}
         </div>
       </div>
     </>
@@ -156,6 +161,7 @@ const TAB_LABELS: Record<Tab, string> = {
   forms: "📝 Forms",
   submissions: "📥 Submissions",
   complaints: "📮 Complaints",
+  memberships: "🤝 Memberships",
   settings: "⚙️ Settings",
 };
 
@@ -239,7 +245,17 @@ function CloudLogin() {
   const [pass, setPass] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [gBusy, setGBusy] = useState(false);
   const [resetting, setResetting] = useState(false);
+
+  const googleSignIn = async () => {
+    if (gBusy) return;
+    setGBusy(true);
+    const err = await auth.loginWithGoogle();
+    setGBusy(false);
+    if (err) toast.toast(err, "err");
+    else toast.toast("Signed in with Google!", "ok");
+  };
 
   const resetPassword = async () => {
     const auth = getCloudAuth();
@@ -271,8 +287,12 @@ function CloudLogin() {
         <p className="mt-1 text-[13.5px] text-muted">
           Sign in to manage your club — notices, forms, submissions and complaints.
         </p>
+        <div className="mt-6 space-y-4 text-left">
+          <GoogleButton onClick={googleSignIn} busy={gBusy} />
+          <OrDivider />
+        </div>
         <form
-          className="mt-6 space-y-4 text-left"
+          className="space-y-4 text-left"
           onSubmit={async (e) => {
             e.preventDefault();
             setBusy(true);
@@ -1153,11 +1173,53 @@ function SubmissionsTab({
   setSubFormId: (id: string | null) => void;
 }) {
   const db = useDb()!;
+  const auth = useAuth();
   const toast = useToast();
   const forms = clubForms(db, clubId);
 
   const activeForm = subFormId ? formById(db, subFormId) : null;
   const subs = activeForm ? db.submissions.filter((s) => s.formId === activeForm.id) : [];
+
+  const setReview = (s: Submission, status: "approved" | "rejected") => {
+    const target = db.submissions.find((x) => x.id === s.id);
+    if (!target || target.clubId !== clubId) {
+      toast.toast("Only this club's moderator can review its applications.", "err");
+      return;
+    }
+    mutate((draft) => {
+      const t = draft.submissions.find((x) => x.id === s.id);
+      if (!t) return;
+      t.reviewStatus = status;
+      t.reviewedAt = new Date().toISOString();
+      t.reviewedBy = auth.user?.name || auth.user?.email || "";
+    });
+    toast.toast(status === "approved" ? "Application approved." : "Application rejected.", "ok");
+  };
+
+  const reviewCell = (s: Submission) => {
+    if (s.reviewStatus === "approved")
+      return (
+        <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-800">
+          ✓ Approved
+        </span>
+      );
+    if (s.reviewStatus === "rejected")
+      return (
+        <span className="rounded-full bg-rose-100 px-2.5 py-1 text-[11px] font-bold text-rose-700">
+          ✕ Rejected
+        </span>
+      );
+    return (
+      <div className="flex gap-1.5">
+        <button className="btn btn-outline btn-sm" onClick={() => setReview(s, "approved")}>
+          ✓ Approve
+        </button>
+        <button className="btn btn-outline btn-sm" onClick={() => setReview(s, "rejected")}>
+          ✕ Reject
+        </button>
+      </div>
+    );
+  };
 
   if (forms.length === 0)
     return (
@@ -1217,6 +1279,7 @@ function SubmissionsTab({
                     {fl.type === "payment" ? " / Trx" : ""}
                   </th>
                 ))}
+                <th>Review</th>
               </tr>
             </thead>
             <tbody>
@@ -1254,6 +1317,7 @@ function SubmissionsTab({
                       </td>
                     );
                   })}
+                  <td className="whitespace-nowrap">{reviewCell(s)}</td>
                 </tr>
               ))}
             </tbody>
@@ -1323,7 +1387,7 @@ function ComplaintsTab({ clubId }: { clubId: string }) {
       {list.length ? (
         <div className="space-y-3">
           {list.map((c) => (
-            <ComplaintManageCard key={c.id} complaint={c} onToast={toast.toast} />
+            <ComplaintManageCard key={c.id} clubId={clubId} complaint={c} onToast={toast.toast} />
           ))}
         </div>
       ) : (
@@ -1333,9 +1397,220 @@ function ComplaintsTab({ clubId }: { clubId: string }) {
   );
 }
 
+/* ================= Memberships tab ================= */
+
+function MembershipsTab({ clubId }: { clubId: string }) {
+  const db = useDb()!;
+  const auth = useAuth();
+  const toast = useToast();
+  const list = (db.memberships || [])
+    .filter((m) => m.clubId === clubId)
+    .sort((a, b) => b.requestedAt.localeCompare(a.requestedAt));
+
+  const setStatus = (m: Membership, status: "approved" | "rejected") => {
+    const target = (db.memberships || []).find((x) => x.id === m.id);
+    if (!target || target.clubId !== clubId) {
+      toast.toast("Only this club's moderator can review join requests.", "err");
+      return;
+    }
+    mutate((draft) => {
+      const t = draft.memberships.find((x) => x.id === m.id);
+      if (!t) return;
+      t.status = status;
+      t.reviewedAt = new Date().toISOString();
+      t.reviewedBy = auth.user?.name || auth.user?.email || "";
+    });
+    toast.toast(status === "approved" ? "Membership approved!" : "Membership rejected.", "ok");
+  };
+
+  const pill = (m: Membership) => {
+    if (m.status === "approved") return "bg-emerald-100 text-emerald-800";
+    if (m.status === "rejected") return "bg-rose-100 text-rose-700";
+    return "bg-amber-100 text-amber-800";
+  };
+
+  return (
+    <div className="panel">
+      <h2 className="m-0 mb-1 text-[18px] font-bold text-ink">Memberships</h2>
+      <p className="m-0 mb-4 text-[13px] text-muted">
+        Students who requested to join this club — approve or reject their requests.
+      </p>
+      {list.length ? (
+        <div className="space-y-3">
+          {list.map((m) => (
+            <div key={m.id} className="rounded-xl border border-line p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-[14.5px] font-bold text-ink">{m.userName || m.userEmail}</div>
+                  <div className="text-[12.5px] text-muted">
+                    {m.userEmail}
+                    {m.studentId ? ` · 🎓 ${m.studentId}` : ""} · {relativeAgo(m.requestedAt)}
+                  </div>
+                </div>
+                <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${pill(m)}`}>
+                  {m.status === "approved"
+                    ? "✓ Member"
+                    : m.status === "rejected"
+                      ? "✕ Rejected"
+                      : "⏳ Pending"}
+                </span>
+              </div>
+              {m.status === "pending" && (
+                <div className="mt-3 flex gap-2">
+                  <button className="btn btn-primary btn-sm" onClick={() => setStatus(m, "approved")}>
+                    ✓ Approve
+                  </button>
+                  <button className="btn btn-outline btn-sm" onClick={() => setStatus(m, "rejected")}>
+                    ✕ Reject
+                  </button>
+                </div>
+              )}
+              {m.status !== "pending" && m.reviewedBy && (
+                <p className="mb-0 mt-2 text-[12px] text-muted">
+                  Reviewed by {m.reviewedBy}
+                  {m.reviewedAt ? ` · ${relativeAgo(m.reviewedAt)}` : ""}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <EmptyState icon="🤝">No membership requests for this club yet.</EmptyState>
+      )}
+    </div>
+  );
+}
+
 /* ================= Settings tab ================= */
 
-function SettingsTab({ isAdmin }: { isAdmin: boolean }) {
+/* ================= Committee editor =================
+   Lets the club's moderator (and the admin) update the committee shown on
+   the club page — roles change, members change, photos change. Reached from
+   the portal Settings tab, which only opens for clubs the user manages. */
+type DraftExec = { role: string; name: string; photo: string };
+
+function CommitteeEditor({ clubId }: { clubId: string }) {
+  const db = useDb()!;
+  const toast = useToast();
+  const auth = useAuth();
+  const [rows, setRows] = useState<DraftExec[]>(() =>
+    (db.clubs.find((c) => c.id === clubId)?.executives ?? []).map((e) => ({
+      role: e.role || "",
+      name: e.name || "",
+      photo: e.photo || "",
+    }))
+  );
+
+  const setRow = (i: number, patch: Partial<DraftExec>) =>
+    setRows((prev) => prev.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
+
+  const onPhotoFile = (i: number, file: File | undefined) => {
+    if (!file) return;
+    if (!/^image\//.test(file.type)) return toast.toast("Please choose an image file (JPG/PNG).", "err");
+    if (file.size > 8 * 1024 * 1024) return toast.toast("That image is too large — pick one under 8 MB.", "err");
+    const reader = new FileReader();
+    reader.onload = () => setRow(i, { photo: String(reader.result || "") });
+    reader.readAsDataURL(file);
+  };
+
+  const save = () => {
+    const clean = rows
+      .map((r) => ({
+        role: (r.role || "").trim(),
+        name: (r.name || "").trim(),
+        photo: (r.photo || "").trim(),
+      }))
+      .filter((r) => r.role || r.name);
+    mutate((draft) => {
+      const club = draft.clubs.find((c) => c.id === clubId);
+      if (!club) return;
+      const next = clean.map((r) => ({ role: r.role || "Member", name: r.name, photo: r.photo }));
+      const changed = JSON.stringify(club.executives) !== JSON.stringify(next);
+      club.executives = next;
+      // Record who updated the committee (and when) for the "last edited" note on the club page.
+      if (changed) {
+        club.committeeMeta = {
+          by: auth.user?.name || auth.user?.email || "a club moderator",
+          at: new Date().toISOString(),
+        };
+      }
+    });
+    toast.toast("Committee saved — the club page is updated.", "ok");
+  };
+
+  return (
+    <div className="panel lg:col-span-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="m-0 text-[18px] font-bold text-ink">👥 Committee &amp; photos</h2>
+        <button className="btn btn-outline btn-sm" onClick={() => setRows((p) => [...p, { role: "", name: "", photo: "" }])}>
+          + Add member
+        </button>
+      </div>
+      <p className="m-0 mt-1 text-[13px] text-muted">
+        The committee shown on your club page — role, name and photo (upload an image or paste a URL). Roles
+        change, members change; save to publish.
+      </p>
+      <div className="mt-4 space-y-2.5">
+        {rows.map((r, i) => (
+          <div key={i} className="flex flex-wrap items-center gap-2 rounded-xl border border-line bg-surface-2 p-2.5">
+            <span className="inline-grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-gold to-amber-400 text-[12px] font-extrabold text-navy">
+              {r.photo ? (
+                <img src={r.photo} alt="" className="h-full w-full rounded-full object-cover" />
+              ) : (
+                initialsOf(r.name || "?")
+              )}
+            </span>
+            <input
+              className="input !w-[130px]"
+              placeholder="Role"
+              value={r.role}
+              onChange={(e) => setRow(i, { role: e.target.value })}
+              aria-label="Role"
+            />
+            <input
+              className="input grow"
+              placeholder="Full name"
+              value={r.name}
+              onChange={(e) => setRow(i, { name: e.target.value })}
+              aria-label="Full name"
+            />
+            <input
+              className="input !max-w-[210px] grow"
+              placeholder="Photo URL"
+              value={r.photo.startsWith("data:") ? "(uploaded image)" : r.photo}
+              onChange={(e) => setRow(i, { photo: e.target.value })}
+              aria-label="Photo URL"
+            />
+            <label className="btn btn-outline btn-sm mb-0 cursor-pointer">
+              📁
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => onPhotoFile(i, e.target.files?.[0])}
+              />
+            </label>
+            <button className="btn btn-danger btn-sm" onClick={() => setRows((p) => p.filter((_, idx) => idx !== i))}>
+              ✕
+            </button>
+          </div>
+        ))}
+        {!rows.length && <p className="m-0 text-[13px] text-muted">No members yet — add the first one.</p>}
+      </div>
+      <button className="btn btn-primary mt-4" onClick={save}>
+        Save committee
+      </button>
+    </div>
+  );
+}
+
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "?";
+  return ((parts[0][0] || "") + (parts[parts.length - 1][0] || "")).toUpperCase();
+}
+
+function SettingsTab({ clubId, isAdmin }: { clubId: string; isAdmin: boolean }) {
   const db = useDb()!;
   const toast = useToast();
   const [users, setUsersState] = useState<PortalUser[] | null>(null);
@@ -1361,6 +1636,8 @@ function SettingsTab({ isAdmin }: { isAdmin: boolean }) {
 
   return (
     <div className="grid gap-5 lg:grid-cols-2">
+      <CommitteeEditor clubId={clubId} />
+
       <div className="panel">
         <h2 className="m-0 text-[18px] font-bold text-ink">Data</h2>
         <div className="mt-4 flex flex-col gap-2.5">
@@ -1426,7 +1703,8 @@ function SettingsTab({ isAdmin }: { isAdmin: boolean }) {
         <div className="panel lg:col-span-2">
           <h2 className="m-0 text-[18px] font-bold text-ink">Members &amp; roles</h2>
           <p className="m-0 mt-1 text-[13px] text-muted">
-            Promote members to executives and pick which clubs they manage.
+            Promote members to executives and pick which clubs they manage. Grant <b>IT Staff</b> to let
+            someone run the IT Helpdesk.
           </p>
           <div className="mt-3">
             <button className="btn btn-outline btn-sm" onClick={() => void loadUsers()}>
@@ -1471,6 +1749,7 @@ function MemberRow({
           >
             <option value="admin">Admin</option>
             <option value="executive">Executive</option>
+            <option value="it-staff">IT Staff</option>
             <option value="member">Member</option>
           </select>
           <button

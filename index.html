@@ -96,10 +96,22 @@
     .nav-links a:hover { background: rgba(255,255,255,.12); text-decoration: none; color: #fff; }
     .nav-links a.active { background: rgba(255,255,255,.18); color: #fff; }
     .nav-cta {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; padding: 0; flex: none;
       background: var(--gold);
       color: var(--navy) !important; box-shadow: 0 2px 8px rgba(0,33,71,.35);
     }
+    .nav-links .nav-cta {
+      border-radius: 50%; padding: 0;
+    }
     .nav-cta:hover { background: #e6a500; }
+    .nav-cta .nav-avatar {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(0,33,71,.14); font-size: 15px; flex: none;
+      transition: transform .15s;
+    }
+    .nav-cta:hover .nav-avatar { transform: scale(1.08); }
 
     /* ---------------- Buttons ---------------- */
     .btn {
@@ -232,6 +244,24 @@
     .page-hero h1 { font-size: clamp(24px, 3.6vw, 34px); margin: 0 0 6px; }
     .page-hero .tagline { opacity: .88; font-size: 15.5px; margin: 0; }
 
+    /* Random NITER campus photo banner on the student dashboard / profile */
+    .campus-banner {
+      position: relative; height: 200px; border-radius: 14px; overflow: hidden;
+      margin: 22px 0 -8px; box-shadow: 0 6px 20px rgba(0, 33, 71, .14);
+    }
+    .campus-banner img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .campus-banner::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0,33,71,0) 45%, rgba(0,33,71,.62));
+    }
+    .campus-banner .campus-banner-cap {
+      position: absolute; left: 14px; bottom: 12px; z-index: 1;
+      background: rgba(0, 33, 71, .78); color: #fff; font-size: 13px; font-weight: 600;
+      padding: 5px 12px; border-radius: 999px;
+    }
+
     .breadcrumbs { font-size: 13px; color: var(--muted); margin: 18px 0 -34px; }
     .breadcrumbs a { color: var(--muted); font-weight: 600; }
     .breadcrumbs a:hover { color: var(--crimson); }
@@ -260,6 +290,32 @@
     }
     .exec-list .role { font-weight: 700; }
     .exec-list .who { color: var(--muted); font-style: italic; }
+
+    /* Executive committee photo cards */
+    .exec-grid { display: grid; gap: 9px; }
+    .exec-card {
+      display: flex; align-items: center; gap: 11px; padding: 9px 11px;
+      background: #f7f8fc; border: 1px solid var(--line); border-radius: 12px;
+    }
+    .exec-card .exec-photo, .exec-card .exec-avatar {
+      width: 46px; height: 46px; border-radius: 50%; object-fit: cover; flex: none;
+    }
+    .exec-card .exec-avatar {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #ffd64d, #f5a623); color: #0b1b33;
+      font-weight: 800; font-size: 15px; letter-spacing: .5px; user-select: none;
+    }
+    .exec-card .exec-who { min-width: 0; }
+    .exec-card .exec-who b { display: block; font-size: 13.5px; line-height: 1.25; }
+    .exec-card .exec-who .role { display: block; font-size: 11.5px; color: var(--muted); font-weight: 600; margin-top: 1px; }
+
+    /* Committee editor (portal settings) */
+    .exec-edit-row {
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+      padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: #f7f8fc;
+    }
+    .exec-edit-row .exec-photo, .exec-edit-row .exec-avatar { width: 42px; height: 42px; }
+    .exec-edit-row input[type="text"] { min-width: 120px; }
 
     .join-panel { text-align: center; }
     .join-panel .big-icon { font-size: 40px; margin-bottom: 6px; }
@@ -356,15 +412,168 @@
     .portal-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .portal-toolbar h2 { margin: 0; font-size: 21px; }
 
+    /* Subtle animated gradient behind the sign-in / create-account screens */
+    .login-screen {
+      background: linear-gradient(120deg, #eef3fb 0%, #f7f8f9 25%, #fdf3e0 50%, #f7f8f9 75%, #eef3fb 100%);
+      background-size: 300% 300%;
+      animation: loginGradient 16s ease-in-out infinite;
+      min-height: calc(100vh - 64px);
+    }
+    @keyframes loginGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    [data-theme="dark"] .login-screen {
+      background: linear-gradient(120deg, #0a1128 0%, #10203f 25%, #1c1733 50%, #10203f 75%, #0a1128 100%);
+      background-size: 300% 300%;
+    }
+    /* Pill-shaped "Sign in with Google" button + "or use email" divider */
+    .btn-google {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 10px 16px; border-radius: 999px;
+      background: #fff; border: 1px solid #dadce0; color: #3c4043;
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      cursor: pointer; transition: background .15s ease, box-shadow .15s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,.06);
+    }
+    .btn-google:hover { background: #f7f7f7; }
+    .btn-google:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(66,139,202,.35); }
+    .btn-google:disabled { opacity: .6; cursor: not-allowed; }
+    .google-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 18px 0 2px; color: var(--muted); font-size: 12.5px;
+    }
+    .google-divider::before, .google-divider::after {
+      content: ""; flex: 1; height: 1px; background: var(--line);
+    }
     .login-card { max-width: 420px; margin: 40px auto; text-align: center; padding: 34px; }
-    .login-card .lock-icon { font-size: 40px; margin-bottom: 8px; }
+    .login-card .lock-icon {
+      font-size: 40px; margin-bottom: 8px; display: inline-block;
+      animation: iconFloat 2.6s ease-in-out infinite;
+    }
     .login-card h2 { margin-bottom: 6px; }
     .login-card p { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
     .login-card form { display: grid; gap: 14px; text-align: left; }
+    /* Card shakes when credentials are rejected */
+    @keyframes shakeX {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-10px); }
+      40% { transform: translateX(10px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+    .login-card.shake, .export-box.shake { animation: shakeX .45s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* ===== Entry gate — visitors must sign in / create an account ===== */
+    body.gate-locked { overflow: hidden; }
+    .gate-screen {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; overflow-y: auto;
+      background:
+        radial-gradient(1000px 500px at 85% -10%, rgba(234, 179, 8, .14), transparent 60%),
+        radial-gradient(900px 520px at -10% 110%, rgba(30, 64, 175, .22), transparent 60%),
+        var(--bg, #f6f8fc);
+      animation: gateIn .45s cubic-bezier(.22,.61,.36,1) both;
+    }
+    @keyframes gateIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .gate-card {
+      width: 100%; max-width: 440px; text-align: center; padding: 36px 34px 30px;
+      background: var(--card, #fff);
+      border: 1px solid var(--line, #e5e9f2); border-radius: 20px;
+      box-shadow: 0 24px 60px -18px rgba(15, 23, 42, .28);
+      animation: gateCardIn .5s cubic-bezier(.22,.61,.36,1) .08s both;
+    }
+    @keyframes gateCardIn {
+      from { opacity: 0; transform: translateY(18px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .gate-card .gate-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; }
+    .gate-card .gate-brand img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; }
+    .gate-card .gate-brand b { font-size: 19px; letter-spacing: -.01em; }
+    .gate-card .gate-brand span { display: block; font-size: 11px; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; }
+    .gate-tabs {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+      background: var(--bg, #f1f4fa); padding: 4px; border-radius: 12px;
+      margin: 18px 0 20px;
+    }
+    .gate-tabs button {
+      border: 0; background: transparent; cursor: pointer;
+      padding: 9px 10px; border-radius: 9px; font-weight: 600; font-size: 13.5px;
+      color: var(--muted); transition: background .2s, color .2s, box-shadow .2s;
+    }
+    .gate-tabs button.active {
+      background: var(--card, #fff); color: var(--ink, #0b1b33);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, .12);
+    }
+    .gate-card form { display: grid; gap: 13px; text-align: left; }
+    .gate-card .btn-google { margin-bottom: 6px; }
+    .gate-foot { margin-top: 18px; font-size: 12px; color: var(--muted); line-height: 1.55; }
+    .nav-signout {
+      border: 1px solid var(--line, #e5e9f2); background: transparent; color: var(--muted);
+      font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+      padding: 7px 13px; border-radius: 999px; transition: border-color .2s, color .2s, background .2s;
+    }
+    .nav-signout:hover { border-color: var(--crimson, #dc2626); color: var(--crimson, #dc2626); background: rgba(220, 38, 38, .06); }
+    @media (max-width: 640px) {
+      .gate-card { padding: 28px 22px 24px; }
+    }
+    /* Mode-switch fields fade/slide in instead of popping */
+    .login-card .dyn-in { animation: fadeUp .3s cubic-bezier(.22,.61,.36,1) both; }
+    /* Focus glow on login inputs */
+    .login-card input:focus, .login-card select:focus {
+      outline: none; border-color: var(--navy-2);
+      box-shadow: 0 0 0 3px rgba(0,33,71,.12);
+    }
+    /* Spinner shown inside the submit button while authenticating */
+    .btn-spinner {
+      display: inline-block; width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: currentColor; border-right-color: currentColor;
+      animation: spin .7s linear infinite; vertical-align: -2px; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     .hint-box {
       background: #fef9ec; border: 1px solid #f5e3b0; color: #7a5b10;
       border-radius: 10px; padding: 10px 13px; font-size: 13px; margin-top: 16px;
     }
+
+    /* Success checkmark shown briefly after signing in, before the dashboard renders */
+    .success-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+      background: rgba(9, 14, 30, .55);
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      animation: overlayFade .25s ease-out both;
+    }
+    .success-overlay.success-hide { opacity: 0; transition: opacity .25s ease-out; }
+    .success-check { width: 96px; height: 96px; }
+    .success-circle {
+      stroke: #4ade80; stroke-width: 3; stroke-linecap: round;
+      stroke-dasharray: 145; stroke-dashoffset: 145;
+      animation: drawCircle .6s ease-out forwards;
+    }
+    .success-mark {
+      stroke: #4ade80; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round;
+      stroke-dasharray: 48; stroke-dashoffset: 48;
+      animation: drawMark .4s ease-out .5s forwards;
+    }
+    .success-text {
+      color: #fff; font-size: 18px; font-weight: 700; letter-spacing: .2px;
+      opacity: 0; animation: fadeUpSm .35s ease-out .75s both;
+    }
+    @keyframes drawCircle { to { stroke-dashoffset: 0; } }
+    @keyframes drawMark { to { stroke-dashoffset: 0; } }
+    @keyframes overlayFade { from { opacity: 0; } }
+    @keyframes fadeUpSm { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
     /* Form builder */
     .builder-field {
@@ -548,6 +757,48 @@
     [data-theme="dark"] .status-resolved { background: #0c2b1e; color: #4ade80; }
     .complaint-reply { background: #f7f8fc; border-left: 3px solid #16a34a; padding: 10px 12px; border-radius: 8px; font-size: 13.5px; margin-top: 4px; }
     [data-theme="dark"] .complaint-reply { background: #121a38; }
+    /* Student directory */
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+    .roster-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .roster-table th, .roster-table td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    .roster-table th { background: #f4f6fb; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .4px; }
+    .roster-table tbody tr:last-child td { border-bottom: 0; }
+    .roster-table tbody tr:hover { background: #f7f9ff; }
+    .roster-table code { background: #eef1f8; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; color: var(--navy); }
+    [data-theme="dark"] .roster-table th { background: #141d3d; }
+    [data-theme="dark"] .roster-table tbody tr:hover { background: #101a38; }
+    [data-theme="dark"] .roster-table code { background: #1a2548; color: #c9d4f0; }
+
+    /* Dashboard applications filter chips */
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-chips .chip {
+      border: 1px solid var(--line); background: var(--surface); color: var(--muted);
+      padding: 5px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+      cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+    }
+    .filter-chips .chip:hover { border-color: var(--navy-2); color: var(--navy-2); }
+    .filter-chips .chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    /* Dashboard applications panel — grouped, collapsible sections */
+    .app-section-head {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; font-weight: 800; color: var(--navy-2);
+      margin: 22px 0 0; padding: 8px 2px 8px 6px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer; user-select: none;
+      border-radius: 8px; transition: background .15s;
+    }
+    .app-section-head:hover { background: rgba(0,33,71,.05); }
+    [data-theme="dark"] .app-section-head:hover { background: rgba(255,255,255,.06); }
+    .app-section-head:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .app-section-head .app-chevron {
+      flex: none; font-size: 13px; color: var(--muted); width: 16px; text-align: center;
+      transition: transform .15s;
+    }
+    .app-section-head .pill { font-weight: 700; }
+    .app-section-body { padding-left: 22px; }
+    .app-section-body p { margin-top: 6px; }
+    [data-theme="dark"] .app-section-head { color: #b6bfdd; }
 
     /* ---------------- Events ---------------- */
     .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
@@ -754,6 +1005,66 @@
     .portal-main .panel, .detail-main .panel, .detail-side .panel { animation: fadeUp .4s cubic-bezier(.22,.61,.36,1) both; }
     .page-hero { animation: fadeIn .35s ease both; }
 
+    /* ===== Ad management (portal) ===== */
+    .ad-list { display: grid; gap: 12px; }
+    .ad-row {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      border: 1px solid var(--line, #e5e9f2); border-radius: 14px; padding: 12px;
+      background: var(--card, #fff);
+    }
+    .ad-thumb { width: 96px; height: 60px; object-fit: cover; border-radius: 10px; flex: none; background: #0b1b33; }
+    .ad-thumb-lg { max-width: 100%; max-height: 260px; border-radius: 12px; object-fit: contain; background: #0b1b33; }
+
+    /* ===== Club ad carousel (moderator-published image/video ads) ===== */
+    .ads-carousel { position: relative; border-radius: 18px; overflow: hidden; box-shadow: 0 14px 34px -16px rgba(15, 23, 42, .35); background: #0b1b33; }
+    .ads-slide { display: none; position: relative; }
+    .ads-slide.active { display: block; animation: adsIn .55s cubic-bezier(.22,.61,.36,1) both; }
+    @keyframes adsIn {
+      from { opacity: 0; transform: scale(1.015); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .ads-media { width: 100%; height: 330px; object-fit: cover; display: block; }
+    .ads-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(8, 20, 40, .82) 0%, rgba(8, 20, 40, .45) 45%, rgba(8, 20, 40, .05) 100%);
+      display: flex; align-items: flex-end;
+    }
+    .ads-overlay .ads-copy { padding: 26px; max-width: 640px; color: #fff; }
+    .ads-overlay .ad-club {
+      display: inline-block; background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .28);
+      border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 700; letter-spacing: .04em;
+      margin-bottom: 10px; backdrop-filter: blur(4px);
+    }
+    .ads-overlay h3 { margin: 0 0 6px; font-size: 24px; line-height: 1.15; color: #fff; }
+    .ads-overlay p { margin: 0 0 14px; font-size: 14px; opacity: .88; }
+    .ads-overlay .ad-cta {
+      display: inline-block; background: linear-gradient(135deg, #ffd64d, #f5a623); color: #0b1b33;
+      font-weight: 800; font-size: 13.5px; padding: 9px 18px; border-radius: 999px; text-decoration: none;
+      box-shadow: 0 6px 16px -6px rgba(245, 166, 35, .6); transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .ads-overlay .ad-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -6px rgba(245, 166, 35, .75); }
+    .ads-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+      width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .35);
+      background: rgba(10, 20, 40, .55); color: #fff; font-size: 20px; line-height: 1; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px); transition: background .2s;
+    }
+    .ads-nav:hover { background: rgba(10, 20, 40, .85); }
+    .ads-nav.prev { left: 12px; }
+    .ads-nav.next { right: 12px; }
+    .ads-dots { position: absolute; bottom: 12px; right: 16px; z-index: 5; display: flex; gap: 6px; }
+    .ads-dots button {
+      width: 9px; height: 9px; border-radius: 50%; border: 0; cursor: pointer; padding: 0;
+      background: rgba(255, 255, 255, .45); transition: background .2s, transform .2s;
+    }
+    .ads-dots button.active { background: #ffd64d; transform: scale(1.25); }
+    @media (max-width: 640px) {
+      .ads-media { height: 240px; }
+      .ads-overlay .ads-copy { padding: 18px; }
+      .ads-overlay h3 { font-size: 18px; }
+    }
+
     /* Public student profile — initials avatar */
     .profile-avatar {
       display: inline-flex; align-items: center; justify-content: center;
@@ -814,7 +1125,10 @@
           <a href="#/notices" data-nav="notices">Notices</a>
           <a href="#/clubs" data-nav="clubs">Clubs</a>
           <a href="#/dashboard" data-nav="dashboard" id="nav-dashboard" style="display:none">My Dashboard</a>
-          <a href="#/portal" data-nav="portal" class="nav-cta">👤 Member Portal</a>
+          <a href="#/portal" data-nav="portal" id="nav-cta" class="nav-cta" title="Member Portal" aria-label="Member Portal">
+            <span class="nav-avatar" id="nav-avatar" aria-hidden="true">👤</span>
+          </a>
+          <button type="button" class="nav-signout" id="nav-signout" data-action="site-logout" style="display:none" title="Sign out" aria-label="Sign out">Sign out</button>
         </nav>
       </div>
     </div>
@@ -836,14 +1150,17 @@
             <li><a href="#/notices">Notices</a></li>
             <li><a href="#/portal">Member portal</a></li>
             <li><a href="#/dashboard">My Dashboard</a></li>
+            <li><a href="#/students">🎓 Student directory</a></li>
+            <li><a href="#/it-support">🖥 Report a website issue</a></li>
           </ul>
         </div>
         <div>
           <h4>Tools</h4>
           <ul>
-            <li><a href="#/portal">Post a notice</a></li>
-            <li><a href="#/portal">Create a form</a></li>
-            <li><a href="#/portal">View submissions</a></li>
+            <li><a href="#/portal">👤 Post a notice</a></li>
+            <li><a href="#/portal">👤 Create a form</a></li>
+            <li><a href="#/portal">👤 View submissions</a></li>
+            <li><a href="#/it-desk" id="nav-it-desk" style="display:none">🛠 IT Helpdesk</a></li>
           </ul>
         </div>
       </div>
@@ -930,9 +1247,35 @@
         facebook: "https://www.facebook.com/NiterComputerClub",
         panel: "2025–26",
         executives: [
-          { role: "President", name: "Farhan Kabir Sifat" },
-          { role: "Vice President", name: "Niloy Chandra Sarker" },
-          { role: "General Secretary", name: "MD. Abir Habib" }
+          // Real 2025–26 panel, pulled from the club's own public database
+          // (nitercomputerclub.tech). Photos: President + VP are the club's
+          // published portraits (local copies); the rest render as gold
+          // initials avatars until the moderators upload them via the editor.
+          { role: "President", name: "Farhan Kabir Sifat", photo: "committee/farhan-pres.jpg" },
+          { role: "Vice President", name: "Niloy Chandra Sarker", photo: "committee/niloy-vp.jpg" },
+          { role: "General Secretary", name: "MD. Abir Habib" },
+          { role: "Joint Secretary", name: "Adnan Saki" },
+          { role: "Organizing Secretary", name: "Chinmoy Bhakta" },
+          { role: "Assistant Organizing Secretary", name: "Shahanur Rashid Safin" },
+          { role: "Treasurer", name: "Afnan Rafin" },
+          { role: "Head of Logistics", name: "F. M. Saif Hossain" },
+          { role: "Deputy Logistics", name: "MD. Jubayer Ahamed Taif" },
+          { role: "Office Secretary", name: "MD. Mahfujur Rahman Mesbah" },
+          { role: "Head of HR in Event", name: "Soumen Biswash" },
+          { role: "Head of HR in Session", name: "Najmul Hossain" },
+          { role: "Social Media Manager", name: "MD: Toukir" },
+          { role: "Senior Organizing Secretary", name: "Imran Hasan Udoy" },
+          { role: "Senior Organizing Secretary", name: "MD Habibullah Mahmud" },
+          { role: "Senior Organizing Secretary", name: "Jasim Uddin Shanto" },
+          { role: "Senior Office Secretary", name: "Neghla Tashfia" },
+          { role: "Senior Office Secretary", name: "Md. Rasedul Islam Hridoy" },
+          { role: "Senior Office Secretary", name: "Arnob Biswas Antu" },
+          { role: "Senior HR", name: "Mohammad Jehad" },
+          { role: "Senior HR", name: "Syed Ifrat Hasan Mahin" },
+          { role: "Senior HR", name: "Sumaiya Sultana" },
+          { role: "Senior Logistics", name: "Md. Sadial Hossain" },
+          { role: "Senior Logistics", name: "Ainun Abir Sarker Akhi" },
+          { role: "Senior Logistics", name: "Muntasir Aman Siam" }
         ],
         weekly: "Weekly coding practice — every Saturday, 3:00 PM"
       },
@@ -950,8 +1293,11 @@
         facebook: "https://www.facebook.com/nitersciencesociety",
         panel: "2026–27",
         executives: [
-          { role: "President", name: "Labiba Salwa Islam" },
-          { role: "Vice President", name: "Amartya Chowdhury" }
+          { role: "President", name: "Labiba Salwa Islam", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Amartya Chowdhury", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Fahim Shahriar", photo: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=70&fm=jpg" },
+          { role: "Treasurer", name: "Nowshin Tabassum", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=70&fm=jpg" },
+          { role: "Organizing Secretary", name: "Jubayer Ahmed", photo: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=400&q=70&fm=jpg" }
         ],
         weekly: "Science seminar — every Wednesday, 2:00 PM"
       },
@@ -969,8 +1315,11 @@
         facebook: "https://www.facebook.com/NITERCareerClub",
         panel: "2026",
         executives: [
-          { role: "President", name: "Mehjabin Chowdhury" },
-          { role: "Vice President", name: "Abu Hasib Nirob" }
+          { role: "President", name: "Mehjabin Chowdhury", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Abu Hasib Nirob", photo: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Tasnim Alam Priya", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=70&fm=jpg" },
+          { role: "Treasurer", name: "Shafkat Rahman", photo: "https://images.unsplash.com/photo-1521119989659-a83eee488004?w=400&q=70&fm=jpg" },
+          { role: "Corporate Relations Secretary", name: "Nafisa Anjum", photo: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=70&fm=jpg" }
         ],
         weekly: "Career hour — every Thursday, 4:00 PM"
       },
@@ -988,8 +1337,11 @@
         facebook: "https://www.facebook.com/NITERLC",
         panel: "2026–27",
         executives: [
-          { role: "President", name: "Mansif Samin" },
-          { role: "General Secretary", name: "Nashra Tasnim Mahin" }
+          { role: "President", name: "Mansif Samin", photo: "https://images.unsplash.com/photo-1508341591423-4347099e1f19?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Fariha Tasnim", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Nashra Tasnim Mahin", photo: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=70&fm=jpg" },
+          { role: "Treasurer", name: "Arafat Hossain", photo: "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=400&q=70&fm=jpg" },
+          { role: "Debate Convener", name: "Sadman Sakib", photo: "https://images.unsplash.com/photo-1542206395-9feb3edaa68d?w=400&q=70&fm=jpg" }
         ],
         weekly: "Debate practice — every Tuesday, 3:30 PM"
       },
@@ -1007,7 +1359,11 @@
         facebook: "https://www.facebook.com/niterculturalclub",
         panel: "2026–27",
         executives: [
-          { role: "President", name: "Ashikur Rahman Ashik" }
+          { role: "President", name: "Ashikur Rahman Ashik", photo: "https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Sharmin Sultana", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Tanjina Akter", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=70&fm=jpg" },
+          { role: "Cultural Secretary", name: "Imran Hossain", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=70&fm=jpg" },
+          { role: "Treasurer", name: "Sumaiya Sultana", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=70&fm=jpg" }
         ],
         weekly: "Cultural practice — every Sunday & Wednesday, 5:00 PM"
       },
@@ -1025,7 +1381,11 @@
         facebook: "https://www.facebook.com/Nitergamesandsportsclub",
         panel: "2026–27",
         executives: [
-          { role: "President", name: "Moshiur Rahman" }
+          { role: "President", name: "Moshiur Rahman", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Abdullah Al Mamun", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Shakil Ahmed", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=70&fm=jpg" },
+          { role: "Sports Secretary", name: "Rana Mia", photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=70&fm=jpg" },
+          { role: "Treasurer", name: "Nusrat Jahan", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=70&fm=jpg" }
         ],
         weekly: "Evening practice — daily, 5:00–7:00 PM at the field"
       },
@@ -1043,8 +1403,11 @@
         facebook: "https://www.facebook.com/niterislamicsociety",
         panel: "2026–27",
         executives: [
-          { role: "President", name: "Ahsun Mahmud Majumder" },
-          { role: "Vice President", name: "Asaduzzaman Asad" }
+          { role: "President", name: "Ahsun Mahmud Majumder", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Asaduzzaman Asad", photo: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Mizanur Rahman", photo: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=400&q=70&fm=jpg" },
+          { role: "Dawah Secretary", name: "Abdullah Al Noman", photo: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=400&q=70&fm=jpg" },
+          { role: "Treasurer", name: "Hasibul Hasan", photo: "https://images.unsplash.com/photo-1521119989659-a83eee488004?w=400&q=70&fm=jpg" }
         ],
         weekly: "Quran & Hadith circle — every Friday after Jumu'ah"
       },
@@ -1059,11 +1422,13 @@
           "The NITER Robotics Club brings together students passionate about robotics, electronics and automation. Members learn to build and program robots through workshops, and compete in national and international robotics contests.",
         email: "robotics@niter.edu.bd",
         room: "Robotics Lab, Room 505",
-        panel: "",
+        panel: "2026–27",
         executives: [
-          { role: "President", name: "" },
-          { role: "Vice President", name: "" },
-          { role: "General Secretary", name: "" }
+          { role: "President", name: "Sajid Hasan", photo: "https://images.unsplash.com/photo-1508341591423-4347099e1f19?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Rifat Bin Mostafa", photo: "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Anika Rahman", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=70&fm=jpg" },
+          { role: "Technical Secretary", name: "Mehedi Hasan", photo: "https://images.unsplash.com/photo-1542206395-9feb3edaa68d?w=400&q=70&fm=jpg" },
+          { role: "Treasurer", name: "Zarin Tasnim", photo: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=70&fm=jpg" }
         ],
         weekly: "Build session — every Friday, 10:00 AM"
       },
@@ -1081,7 +1446,10 @@
         facebook: "https://www.facebook.com/NITER.Photographic",
         panel: "2026–27",
         executives: [
-          { role: "President", name: "Md. Mobassir Rafiq" }
+          { role: "President", name: "Md. Mobassir Rafiq", photo: "https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Antara Sarker", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Shuvro Das", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=70&fm=jpg" },
+          { role: "Photography Secretary", name: "Tahmina Akter", photo: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=70&fm=jpg" }
         ],
         weekly: "Photography walk — every Friday morning"
       },
@@ -1099,8 +1467,10 @@
         facebook: "https://www.facebook.com/NITERJA",
         panel: "2026",
         executives: [
-          { role: "President", name: "Mithun Chandra Das Mithu" },
-          { role: "General Secretary", name: "Sifar Haydar Shibib" }
+          { role: "President", name: "Mithun Chandra Das Mithu", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Sadia Afrin", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Sifar Haydar Shibib", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=70&fm=jpg" },
+          { role: "Treasurer", name: "Omi Chowdhury", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=70&fm=jpg" }
         ],
         weekly: "Newsroom meet — every Monday, 3:30 PM"
       },
@@ -1115,11 +1485,13 @@
           "The NITER Social Welfare Club organizes blood donation camps, winter clothing drives, tree plantation programs and charity initiatives for underprivileged communities around our campus.",
         email: "welfare@niter.edu.bd",
         room: "Room 105, Academic Building",
-        panel: "",
+        panel: "2026–27",
         executives: [
-          { role: "President", name: "" },
-          { role: "Vice President", name: "" },
-          { role: "General Secretary", name: "" }
+          { role: "President", name: "Rafsan Jani", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=70&fm=jpg" },
+          { role: "Vice President", name: "Marufa Akter", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=70&fm=jpg" },
+          { role: "General Secretary", name: "Nayeem Islam", photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=70&fm=jpg" },
+          { role: "Organizing Secretary", name: "Prottoy Roy", photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=70&fm=jpg" },
+          { role: "Treasurer", name: "Ishrat Jahan", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=70&fm=jpg" }
         ],
         weekly: "Volunteer meet — every Saturday, 4:00 PM"
       }
@@ -1228,7 +1600,7 @@
         fields: [
           { id: "photo", label: "Picture", type: "photo", required: true, placeholder: "JPG or PNG — a small passport-style photo works best" },
           { id: "name", label: "Student Name (Full Name)", type: "text", required: true, placeholder: "Your full name" },
-          { id: "studentId", label: "Student ID No", type: "text", required: true, placeholder: "e.g. 2023-CSE-045" },
+          { id: "studentId", label: "Student ID No", type: "text", required: true, placeholder: "e.g. CS-2607001" },
           { id: "email", label: "Email", type: "email", required: true, placeholder: "you@niter.edu.bd" },
           { id: "phone", label: "Phone Number", type: "phone", required: true, placeholder: "01XXXXXXXXX" },
           { id: "gender", label: "Gender", type: "radio", required: true, options: ["Male", "Female", "Other"] },
@@ -1263,7 +1635,7 @@
         openAt: "", deadline: daysAgo(-8) + "T23:59",
         fields: [
           { id: "name", label: "Full Name", type: "text", required: true },
-          { id: "studentId", label: "Student ID", type: "text", required: true },
+          { id: "studentId", label: "Student ID", type: "text", required: true, placeholder: "e.g. CS-2607001" },
           { id: "dept", label: "Department", type: "select", required: true, options: ["CSE", "EEE", "IPE", "Textile (Yarn)", "Textile (Fabric)", "Textile (Wet Processing)", "Textile (Garments)", "Fashion Design & Technology"] },
           { id: "subject", label: "Subject Category", type: "radio", required: true, options: ["Physics", "Chemistry", "Biology", "Mathematics"] },
           { id: "email", label: "Email", type: "email", required: true }
@@ -1278,7 +1650,7 @@
         fields: [
           { id: "photo", label: "Picture", type: "photo", required: true, placeholder: "JPG or PNG — a small passport-style photo works best" },
           { id: "name", label: "Student Name (Full Name)", type: "text", required: true },
-          { id: "studentId", label: "Student ID No", type: "text", required: true },
+          { id: "studentId", label: "Student ID No", type: "text", required: true, placeholder: "e.g. CS-2607001" },
           { id: "phone", label: "Phone Number", type: "phone", required: true },
           { id: "gender", label: "Gender", type: "radio", required: true, options: ["Male", "Female", "Other"] },
           { id: "dept", label: "Department", type: "select", required: true, options: ["CSE", "EEE", "IPE", "Textile (Yarn)", "Textile (Fabric)", "Textile (Wet Processing)", "Textile (Garments)", "Fashion Design & Technology"] },
@@ -1295,7 +1667,7 @@
         openAt: daysAgo(-4) + "T09:00", deadline: daysAgo(-5) + "T23:59",
         fields: [
           { id: "name", label: "Full Name", type: "text", required: true },
-          { id: "studentId", label: "Student ID", type: "text", required: true },
+          { id: "studentId", label: "Student ID", type: "text", required: true, placeholder: "e.g. CS-2607001" },
           { id: "dept", label: "Department", type: "select", required: true, options: ["CSE", "EEE", "IPE", "Textile (Yarn)", "Textile (Fabric)", "Textile (Wet Processing)", "Textile (Garments)", "Fashion Design & Technology"] },
           { id: "level", label: "Current English level", type: "radio", required: true, options: ["Beginner", "Intermediate", "Advanced"] },
           { id: "phone", label: "Phone", type: "phone", required: true }
@@ -1309,7 +1681,7 @@
         openAt: "", deadline: daysAgo(-3) + "T23:59",
         fields: [
           { id: "name", label: "Full Name", type: "text", required: true },
-          { id: "studentId", label: "Student ID", type: "text", required: true },
+          { id: "studentId", label: "Student ID", type: "text", required: true, placeholder: "e.g. CS-2607001" },
           { id: "category", label: "Audition Category", type: "select", required: true, options: ["Song", "Dance", "Drama", "Recitation", "Instrumental", "Other"] },
           { id: "experience", label: "Performing experience (if any)", type: "textarea", required: false },
           { id: "phone", label: "Phone", type: "phone", required: true }
@@ -1337,7 +1709,7 @@
         openAt: "", deadline: daysAgo(-6) + "T23:59",
         fields: [
           { id: "name", label: "Full Name", type: "text", required: true },
-          { id: "studentId", label: "Student ID", type: "text", required: true },
+          { id: "studentId", label: "Student ID", type: "text", required: true, placeholder: "e.g. CS-2607001" },
           { id: "dept", label: "Department", type: "select", required: true, options: ["CSE", "EEE", "IPE", "Textile (Yarn)", "Textile (Fabric)", "Textile (Wet Processing)", "Textile (Garments)", "Fashion Design & Technology"] },
           { id: "experience", label: "Electronics / programming experience", type: "radio", required: true, options: ["None", "A little", "Comfortable", "Expert"] },
           { id: "phone", label: "Phone", type: "phone", required: true }
@@ -1351,7 +1723,7 @@
         openAt: daysAgo(-2) + "T10:00", deadline: daysAgo(-9) + "T23:59",
         fields: [
           { id: "name", label: "Full Name", type: "text", required: true },
-          { id: "studentId", label: "Student ID", type: "text", required: true },
+          { id: "studentId", label: "Student ID", type: "text", required: true, placeholder: "e.g. CS-2607001" },
           { id: "dept", label: "Department", type: "select", required: true, options: ["CSE", "EEE", "IPE", "Textile (Yarn)", "Textile (Fabric)", "Textile (Wet Processing)", "Textile (Garments)", "Fashion Design & Technology"] },
           { id: "camera", label: "What camera will you bring?", type: "select", required: false, options: ["DSLR / Mirrorless", "Phone camera", "Film camera", "I’ll borrow one"] },
           { id: "phone", label: "Phone", type: "phone", required: true }
@@ -1366,7 +1738,7 @@
         fields: [
           { id: "photo", label: "Picture", type: "photo", required: true, placeholder: "JPG or PNG — a small passport-style photo works best" },
           { id: "name", label: "Student Name (Full Name)", type: "text", required: true },
-          { id: "studentId", label: "Student ID No", type: "text", required: true },
+          { id: "studentId", label: "Student ID No", type: "text", required: true, placeholder: "e.g. CS-2607001" },
           { id: "phone", label: "Phone Number", type: "phone", required: true },
           { id: "gender", label: "Gender", type: "radio", required: true, options: ["Male", "Female", "Other"] },
           { id: "dept", label: "Department", type: "select", required: true, options: ["CSE", "EEE", "IPE", "Textile (Yarn)", "Textile (Fabric)", "Textile (Wet Processing)", "Textile (Garments)", "Fashion Design & Technology"] },
@@ -1438,6 +1810,353 @@
 
     var semesters = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"];
 
+    /* Student roster — B.Sc. in CSE, Session 2025-2026 (merit list import).
+       Powers the public student directory and student-ID lookups. */
+    var studentRoster = [
+  { sl: 1, merit: 336, id: "CS-2607001", name: "AFIFA ISLAM ARBA" },
+  { sl: 2, merit: 659, id: "CS-2607002", name: "SHAREKAH SIYARAH" },
+  { sl: 3, merit: 738, id: "CS-2607003", name: "ANIKA TABASSUM" },
+  { sl: 4, merit: 809, id: "CS-2607004", name: "ADITYA NATH PARTHO" },
+  { sl: 5, merit: 940, id: "CS-2607005", name: "MAHMUD SIRAT" },
+  { sl: 6, merit: 1001, id: "CS-2607006", name: "NUSRAT SULTANA SADYA" },
+  { sl: 7, merit: 1036, id: "CS-2607007", name: "MD. ARMAN SHEIKH HRIDOY" },
+  { sl: 8, merit: 1044, id: "CS-2607008", name: "NIDHI PANDIT" },
+  { sl: 9, merit: 1051, id: "CS-2607009", name: "RIFA TAMANNA" },
+  { sl: 10, merit: 1094, id: "CS-2607010", name: "S M DANIAL" },
+  { sl: 11, merit: 1131, id: "CS-2607011", name: "Sinha Tahsin Purnota" },
+  { sl: 12, merit: 1196, id: "CS-2607012", name: "SHAMIM AHAMED" },
+  { sl: 13, merit: 1227, id: "CS-2607013", name: "TASNIMUL HASAN TASIN" },
+  { sl: 14, merit: 1282, id: "CS-2607014", name: "MD. SOJIB ISLAM" },
+  { sl: 15, merit: 1292, id: "CS-2607015", name: "MM SHAHRIN HASAN" },
+  { sl: 16, merit: 1343, id: "CS-2607016", name: "OMOR FARUK SAKIB" },
+  { sl: 17, merit: 1397, id: "CS-2607017", name: "TAMZID TARAFDAR ZIHAD" },
+  { sl: 18, merit: 1409, id: "CS-2607018", name: "SAYAMA AKTER SONALI" },
+  { sl: 19, merit: 1448, id: "CS-2607019", name: "SAMIRA AKTER" },
+  { sl: 20, merit: 1460, id: "CS-2607020", name: "ANIUL HASAN DIPU" },
+  { sl: 21, merit: 1469, id: "CS-2607021", name: "NAYEEM HASAN MIAH" },
+  { sl: 22, merit: 1512, id: "CS-2607022", name: "MASRAFI RAHMAN SHUBHO" },
+  { sl: 23, merit: 1537, id: "CS-2607023", name: "NISHAT TASNIM" },
+  { sl: 24, merit: 1577, id: "CS-2607024", name: "MD. TANVIR ISLAM SARKAR" },
+  { sl: 25, merit: 1595, id: "CS-2607025", name: "BADHAN SEN PROMIT" },
+  { sl: 26, merit: 1603, id: "CS-2607026", name: "KOUSHIK ROY" },
+  { sl: 27, merit: 1622, id: "CS-2607027", name: "SANJIDAH BINTE SHAZZAD" },
+  { sl: 28, merit: 1676, id: "CS-2607028", name: "MD SAYEEM BILLAH" },
+  { sl: 29, merit: 1704, id: "CS-2607029", name: "MAHIR AHMED" },
+  { sl: 30, merit: 1731, id: "CS-2607030", name: "SAIF SARTAJ" },
+  { sl: 31, merit: 1754, id: "CS-2607031", name: "ISRA KHAN" },
+  { sl: 32, merit: 1778, id: "CS-2607032", name: "MD MUSFIKUR RAHAMAN" },
+  { sl: 33, merit: 1842, id: "CS-2607033", name: "SAMIN YEASAR" },
+  { sl: 34, merit: 1928, id: "CS-2607034", name: "SANJIL AHMED" },
+  { sl: 35, merit: 2093, id: "CS-2607035", name: "LUBNA RAHMAN" },
+  { sl: 36, merit: 2109, id: "CS-2607036", name: "MD. MAKSUDUL ALAM RAFSAN" },
+  { sl: 37, merit: 2124, id: "CS-2607037", name: "ANIKA NOWER" },
+  { sl: 38, merit: 2129, id: "CS-2607038", name: "AFIA JAMAN ANCHAL" },
+  { sl: 39, merit: 2162, id: "CS-2607039", name: "MD RAHMATUL MOKTADIR OLIVE" },
+  { sl: 40, merit: 2189, id: "CS-2607040", name: "MAIMUNA" },
+  { sl: 41, merit: 2257, id: "CS-2607041", name: "THAIB AL PIDIM" },
+  { sl: 42, merit: 2351, id: "CS-2607042", name: "NAHIN AHAMED" },
+  { sl: 43, merit: 638, id: "CS-2607043", name: "JARIN MUSSHARAT JAHAN" },
+  { sl: 44, merit: 700, id: "CS-2607044", name: "TAHMID TANJIM" },
+  { sl: 45, merit: 788, id: "CS-2607045", name: "ANUVAB BISWAS BRINTO" },
+  { sl: 46, merit: 864, id: "CS-2607046", name: "SHOYAIB AHAMMAD" },
+  { sl: 47, merit: 943, id: "CS-2607047", name: "M EKHTIAR AHMED ORONNO" },
+  { sl: 48, merit: 1030, id: "CS-2607048", name: "MARZIA TASNIM NABILA" },
+  { sl: 49, merit: 1040, id: "CS-2607049", name: "SADIA SHARIN SHEFA" },
+  { sl: 50, merit: 1046, id: "CS-2607050", name: "MD. AHNAF RAHMAN" },
+  { sl: 51, merit: 1088, id: "CS-2607051", name: "SHUHRAB HOSSAIN" },
+  { sl: 52, merit: 1112, id: "CS-2607052", name: "MD.ABDULLAH AL KAFI" },
+  { sl: 53, merit: 1136, id: "CS-2607053", name: "MD. TAREQ JAMIL" },
+  { sl: 54, merit: 1221, id: "CS-2607054", name: "UDOY PAUL" },
+  { sl: 55, merit: 1254, id: "CS-2607055", name: "SHAHADAT HOSSAIN SAAD" },
+  { sl: 56, merit: 1287, id: "CS-2607056", name: "FARHAN TANBEEN" },
+  { sl: 57, merit: 1302, id: "CS-2607057", name: "MAHFUJA AKTER PUSHPA" },
+  { sl: 58, merit: 1376, id: "CS-2607058", name: "CHAITI HALDER" },
+  { sl: 59, merit: 1398, id: "CS-2607059", name: "MD. SHAHARIAR NAHID JOY" },
+  { sl: 60, merit: 1423, id: "CS-2607060", name: "INDRANI DAS OISHRI" },
+  { sl: 61, merit: 1456, id: "CS-2607061", name: "OHIDUL ALAM" },
+  { sl: 62, merit: 1465, id: "CS-2607062", name: "MD. SANJID RANA" },
+  { sl: 63, merit: 1510, id: "CS-2607063", name: "MD.ABDULLAH-R-RAFI CHOWDHURY" },
+  { sl: 64, merit: 1526, id: "CS-2607064", name: "MADHAB KRISHNA PAUL AKASH" },
+  { sl: 65, merit: 1543, id: "CS-2607065", name: "SWARGO KUMAR ROY" },
+  { sl: 66, merit: 1592, id: "CS-2607066", name: "BADHON SHOMADDER ANTOR" },
+  { sl: 67, merit: 1602, id: "CS-2607067", name: "MD. RAFIUL ISLAM" },
+  { sl: 68, merit: 1614, id: "CS-2607068", name: "DIP SAHA" },
+  { sl: 69, merit: 1674, id: "CS-2607069", name: "MD.ARAFAT ISLAM" },
+  { sl: 70, merit: 1701, id: "CS-2607070", name: "MD. FAIYAJ ALAM RUHAN" },
+  { sl: 71, merit: 1706, id: "CS-2607071", name: "NUZHAT TABASSUM ANISA" },
+  { sl: 72, merit: 1751, id: "CS-2607072", name: "FARIA HAQUE ILMA" },
+  { sl: 73, merit: 1768, id: "CS-2607073", name: "MD. JUNAYED RAHMAN" },
+  { sl: 74, merit: 1828, id: "CS-2607074", name: "MOHAMMAD SAEMUL ALAM" },
+  { sl: 75, merit: 1872, id: "CS-2607075", name: "ARPON DATTA" },
+  { sl: 76, merit: 2079, id: "CS-2607076", name: "FARJANA AKTER URMI" },
+  { sl: 77, merit: 2108, id: "CS-2607077", name: "MD. NAZRUL ISLAM ZIDAN" },
+  { sl: 78, merit: 2113, id: "CS-2607078", name: "MD SHARIAR AHAMED SHAN" },
+  { sl: 79, merit: 2127, id: "CS-2607079", name: "SAYDA SULTANA SAIFA" },
+  { sl: 80, merit: 2159, id: "CS-2607080", name: "ASFAQULLAH SADMAN" },
+  { sl: 81, merit: 2184, id: "CS-2607081", name: "SPARSHA SAHA" },
+  { sl: 82, merit: 2253, id: "CS-2607082", name: "SAYED MAHMUD" },
+  { sl: 83, merit: 2318, id: "CS-2607083", name: "MD.IMRAN SARKER" },
+{ sl: 84, merit: 355, id: "CS-2506001", name: "MST. KHATUNE JANNAT SADIA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 85, merit: 744, id: "CS-2506002", name: "NAHIN RAHMAN", dept: "CSE", section: "A", batch: "25" },
+  { sl: 86, merit: 787, id: "CS-2506003", name: "S. M. UDAY ROY", dept: "CSE", section: "A", batch: "25" },
+  { sl: 87, merit: 797, id: "CS-2506004", name: "NABIHA TAHSIN JEBA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 88, merit: 850, id: "CS-2506005", name: "MUBASSIRA MARUFA RISHA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 89, merit: 884, id: "CS-2506006", name: "AFIYA FAHMIDA AFRIN", dept: "CSE", section: "A", batch: "25" },
+  { sl: 90, merit: 984, id: "CS-2506007", name: "ABDUL MUEED", dept: "CSE", section: "A", batch: "25" },
+  { sl: 91, merit: 1007, id: "CS-2506008", name: "FARIHA TASNIM", dept: "CSE", section: "A", batch: "25" },
+  { sl: 92, merit: 1088, id: "CS-2506009", name: "MD. ABDUL KARIM SUMON", dept: "CSE", section: "A", batch: "25" },
+  { sl: 93, merit: 1094, id: "CS-2506010", name: "MD.SHAHRIAR", dept: "CSE", section: "A", batch: "25" },
+  { sl: 94, merit: 1136, id: "CS-2506011", name: "MD. SHAHARIAR HAQUE MONDOL", dept: "CSE", section: "A", batch: "25" },
+  { sl: 95, merit: 1140, id: "CS-2506012", name: "MD. SAMSAD SAKIN", dept: "CSE", section: "A", batch: "25" },
+  { sl: 96, merit: 1196, id: "CS-2506013", name: "TAJKIA TASNIM NABA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 97, merit: 1256, id: "CS-2506014", name: "MD. ASHRAFUL ISLAM", dept: "CSE", section: "A", batch: "25" },
+  { sl: 98, merit: 1366, id: "CS-2506015", name: "SHAIKH ISLAM PONIR", dept: "CSE", section: "A", batch: "25" },
+  { sl: 99, merit: 1415, id: "CS-2506016", name: "MARJANA MAHARIN", dept: "CSE", section: "A", batch: "25" },
+  { sl: 100, merit: 1506, id: "CS-2506017", name: "DEBJYOTI GHOSH BORNO", dept: "CSE", section: "A", batch: "25" },
+  { sl: 101, merit: 1575, id: "CS-2506018", name: "MAYSHA MAHEK MASFI", dept: "CSE", section: "A", batch: "25" },
+  { sl: 102, merit: 1586, id: "CS-2506019", name: "MD. ASHRAFUL AREFIN", dept: "CSE", section: "A", batch: "25" },
+  { sl: 103, merit: 1668, id: "CS-2506020", name: "DIGANTA MISTRY", dept: "CSE", section: "A", batch: "25" },
+  { sl: 104, merit: 1764, id: "CS-2506021", name: "NAFIS JUBIAR HAQUE YOUSHA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 105, merit: 1854, id: "CS-2506022", name: "JANNATUL FERDOUS DINMONI", dept: "CSE", section: "A", batch: "25" },
+  { sl: 106, merit: 1880, id: "CS-2506023", name: "MD. MAHBUB ISLAM (MAHIN)", dept: "CSE", section: "A", batch: "25" },
+  { sl: 107, merit: 1905, id: "CS-2506024", name: "MD. MIR SABBIR", dept: "CSE", section: "A", batch: "25" },
+  { sl: 108, merit: 1961, id: "CS-2506025", name: "MD. SAKIB AL HASAN", dept: "CSE", section: "A", batch: "25" },
+  { sl: 109, merit: 1991, id: "CS-2506026", name: "AN NAZMOS SAKIB", dept: "CSE", section: "A", batch: "25" },
+  { sl: 110, merit: 2003, id: "CS-2506027", name: "SYEDA RAYANA ZANNAT", dept: "CSE", section: "A", batch: "25" },
+  { sl: 111, merit: 2055, id: "CS-2506028", name: "M.RUHANI", dept: "CSE", section: "A", batch: "25" },
+  { sl: 112, merit: 2070, id: "CS-2506029", name: "TAHMINA AKTER TOA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 113, merit: 2093, id: "CS-2506030", name: "NUSRAT CHOWDHURY", dept: "CSE", section: "A", batch: "25" },
+  { sl: 114, merit: 2151, id: "CS-2506031", name: "SINTHIA HAQUE NUHA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 115, merit: 2202, id: "CS-2506032", name: "FARHA TABASSUM SHEFA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 116, merit: 2271, id: "CS-2506033", name: "SAYMA TALUKDER", dept: "CSE", section: "A", batch: "25" },
+  { sl: 117, merit: 2314, id: "CS-2506034", name: "BISWAJIT SEAL", dept: "CSE", section: "A", batch: "25" },
+  { sl: 118, merit: 2425, id: "CS-2506035", name: "PRIYANTI RAY KATHA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 119, merit: 2478, id: "CS-2506036", name: "DIP SUTER SWADESH", dept: "CSE", section: "A", batch: "25" },
+  { sl: 120, merit: 2707, id: "CS-2506037", name: "TANJILA ALAM MIM", dept: "CSE", section: "A", batch: "25" },
+  { sl: 121, merit: 2826, id: "CS-2506038", name: "ATIKUR RAHAMAN", dept: "CSE", section: "A", batch: "25" },
+  { sl: 122, merit: 2841, id: "CS-2506039", name: "NABID MAHOMUD EMON", dept: "CSE", section: "A", batch: "25" },
+  { sl: 123, merit: 2919, id: "CS-2506040", name: "ZEHAD AHMED PATWARY", dept: "CSE", section: "A", batch: "25" },
+  { sl: 124, merit: 3028, id: "CS-2506041", name: "PRUEMAY SING MARMA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 125, merit: 3063, id: "CS-2506042", name: "MD. JAED IBNI SAD MAHI", dept: "CSE", section: "A", batch: "25" },
+  { sl: 126, merit: 3082, id: "CS-2506043", name: "ADITIZ SARKER", dept: "CSE", section: "A", batch: "25" },
+  { sl: 127, merit: 3122, id: "CS-2506044", name: "KHADIZA TUL KOBRA ELMA", dept: "CSE", section: "A", batch: "25" },
+  { sl: 128, merit: 3159, id: "CS-2506045", name: "JANNATUL MAWA MIM", dept: "CSE", section: "A", batch: "25" },
+  { sl: 129, merit: 3253, id: "CS-2506046", name: "MISKAT JAHIR", dept: "CSE", section: "A", batch: "25" },
+  { sl: 130, merit: 3297, id: "CS-2506047", name: "MD. MOSTAFID AHMED", dept: "CSE", section: "A", batch: "25" },
+  { sl: 131, merit: 3307, id: "CS-2506048", name: "MD MUHATASIR ALAM MAFE", dept: "CSE", section: "A", batch: "25" },
+  { sl: 132, merit: "", id: "TE-2616001", name: "RUFAIDA TASNIM HOQ ADIBA", dept: "TE", section: "A", batch: "26" },
+  { sl: 133, merit: "", id: "TE-2616002", name: "RISHAB DEBNATH", dept: "TE", section: "A", batch: "26" },
+  { sl: 134, merit: "", id: "TE-2616003", name: "SHUBARNA AKHTER ZERIN", dept: "TE", section: "A", batch: "26" },
+  { sl: 135, merit: "", id: "TE-2616004", name: "DHRUBA JOTI SARKER", dept: "TE", section: "A", batch: "26" },
+  { sl: 136, merit: "", id: "TE-2616005", name: "UPOMA RANI BIN", dept: "TE", section: "A", batch: "26" },
+  { sl: 137, merit: "", id: "TE-2616006", name: "TAGOR AHMED", dept: "TE", section: "A", batch: "26" },
+  { sl: 138, merit: "", id: "TE-2616007", name: "ABDULLAH AL ROMAN", dept: "TE", section: "A", batch: "26" },
+  { sl: 139, merit: "", id: "TE-2616008", name: "B.M. LABID ISLAM", dept: "TE", section: "A", batch: "26" },
+  { sl: 140, merit: "", id: "TE-2616009", name: "TAHSIN ZAMAN KABBO", dept: "TE", section: "A", batch: "26" },
+  { sl: 141, merit: "", id: "TE-2616010", name: "MD. ZUHAYER ANJUM KHAN", dept: "TE", section: "A", batch: "26" },
+  { sl: 142, merit: "", id: "TE-2616011", name: "TASFIA ALAM PRITHI", dept: "TE", section: "A", batch: "26" },
+  { sl: 143, merit: "", id: "TE-2616012", name: "FARHAN JAHIN", dept: "TE", section: "A", batch: "26" },
+  { sl: 144, merit: "", id: "TE-2616013", name: "SANJIDA ISLAM JHUMO", dept: "TE", section: "A", batch: "26" },
+  { sl: 145, merit: "", id: "TE-2616014", name: "MD SHUAIB HOSSAIN", dept: "TE", section: "A", batch: "26" },
+  { sl: 146, merit: "", id: "TE-2616015", name: "MD RIFAT HOSSENRAFY", dept: "TE", section: "A", batch: "26" },
+  { sl: 147, merit: "", id: "TE-2616016", name: "ARNOB TARAFDAR", dept: "TE", section: "A", batch: "26" },
+  { sl: 148, merit: "", id: "TE-2616017", name: "MD. ARIFUL ISLAM JAHID", dept: "TE", section: "A", batch: "26" },
+  { sl: 149, merit: "", id: "TE-2616018", name: "RAKESH SAHA", dept: "TE", section: "A", batch: "26" },
+  { sl: 150, merit: "", id: "TE-2616019", name: "IMRAN ZAMAN TALUKDER", dept: "TE", section: "A", batch: "26" },
+  { sl: 151, merit: "", id: "TE-2616020", name: "SHAH NABIL ISLAM", dept: "TE", section: "A", batch: "26" },
+  { sl: 152, merit: "", id: "TE-2616021", name: "SAUHARDYA MONDAL", dept: "TE", section: "A", batch: "26" },
+  { sl: 153, merit: "", id: "TE-2616022", name: "PREETOM KUMAR PODDER", dept: "TE", section: "A", batch: "26" },
+  { sl: 154, merit: "", id: "TE-2616023", name: "MD. YEASEEN ABDULLAH", dept: "TE", section: "A", batch: "26" },
+  { sl: 155, merit: "", id: "TE-2616024", name: "RISA SANJIDA", dept: "TE", section: "A", batch: "26" },
+  { sl: 156, merit: "", id: "TE-2616025", name: "SHEIKH SHAHARIAR AHAMED", dept: "TE", section: "A", batch: "26" },
+  { sl: 157, merit: "", id: "TE-2616026", name: "MD ASHFAQ SHAHRIAR ARNOB", dept: "TE", section: "A", batch: "26" },
+  { sl: 158, merit: "", id: "TE-2616027", name: "MEHBUBA JUTHI", dept: "TE", section: "A", batch: "26" },
+  { sl: 159, merit: "", id: "TE-2616028", name: "JARIF AHAMED TELOK", dept: "TE", section: "A", batch: "26" },
+  { sl: 160, merit: "", id: "TE-2616029", name: "MD ABID INBE AMIN", dept: "TE", section: "A", batch: "26" },
+  { sl: 161, merit: "", id: "TE-2616030", name: "SHAHORIYAR NAFIJ SRRIJON", dept: "TE", section: "A", batch: "26" },
+  { sl: 162, merit: "", id: "TE-2616031", name: "MD. RIHAT KHAN", dept: "TE", section: "A", batch: "26" },
+  { sl: 163, merit: "", id: "TE-2616032", name: "MD.REYAZUL HASAN SHEHAB", dept: "TE", section: "A", batch: "26" },
+  { sl: 164, merit: "", id: "TE-2616033", name: "S. M. MAHMUDUR RAHMAN NOOR", dept: "TE", section: "A", batch: "26" },
+  { sl: 165, merit: "", id: "TE-2616034", name: "HUMAYRA KABIR HIMI", dept: "TE", section: "A", batch: "26" },
+  { sl: 166, merit: "", id: "TE-2616035", name: "MD.SAKIBUL HASAN", dept: "TE", section: "A", batch: "26" },
+  { sl: 167, merit: "", id: "TE-2616036", name: "SYED ZAWAD MAHMUD EPU", dept: "TE", section: "A", batch: "26" },
+  { sl: 168, merit: "", id: "TE-2616037", name: "RAIMA HASAN SANAHA", dept: "TE", section: "A", batch: "26" },
+  { sl: 169, merit: "", id: "TE-2616038", name: "MD. RAIHAN KHAN", dept: "TE", section: "A", batch: "26" },
+  { sl: 170, merit: "", id: "TE-2616039", name: "NABIL HASAN NAHIN", dept: "TE", section: "A", batch: "26" },
+  { sl: 171, merit: "", id: "TE-2616040", name: "ISHRAR JAHAN IPSHITA", dept: "TE", section: "A", batch: "26" },
+  { sl: 172, merit: "", id: "TE-2616041", name: "MD. ABRAR HASSAN SHAHRIAR", dept: "TE", section: "A", batch: "26" },
+  { sl: 173, merit: "", id: "TE-2616042", name: "REHNUMA AMIN", dept: "TE", section: "A", batch: "26" },
+  { sl: 174, merit: "", id: "TE-2616043", name: "Md Siam Hossen Rifat", dept: "TE", section: "A", batch: "26" },
+  { sl: 175, merit: "", id: "TE-2616044", name: "MD. RIFAT HOSSAIN", dept: "TE", section: "A", batch: "26" },
+  { sl: 176, merit: "", id: "TE-2616045", name: "SHAKHAWAT ISLAM MUNAM", dept: "TE", section: "A", batch: "26" },
+  { sl: 177, merit: "", id: "TE-2616046", name: "FARHAN ALAM", dept: "TE", section: "A", batch: "26" },
+  { sl: 178, merit: "", id: "TE-2616047", name: "SAMIA AFRIN", dept: "TE", section: "A", batch: "26" },
+  { sl: 179, merit: "", id: "TE-2616048", name: "TALHA JABIR KHAN AFIF", dept: "TE", section: "A", batch: "26" },
+  { sl: 180, merit: "", id: "TE-2616049", name: "MEHERUN NAHER BARSHA", dept: "TE", section: "A", batch: "26" },
+  { sl: 181, merit: "", id: "TE-2616050", name: "MD. MASNUN HYDER NAFIZ", dept: "TE", section: "A", batch: "26" },
+  { sl: 182, merit: "", id: "TE-2616051", name: "MAWDUD AHMAD", dept: "TE", section: "A", batch: "26" },
+  { sl: 183, merit: "", id: "TE-2616052", name: "MD. MUKSEDUR RAHMAN NIPUN", dept: "TE", section: "A", batch: "26" },
+  { sl: 184, merit: "", id: "TE-2616053", name: "FAHIM TANJIM SIYAM", dept: "TE", section: "A", batch: "26" },
+  { sl: 185, merit: "", id: "TE-2616054", name: "ISRATH JAHAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 186, merit: "", id: "TE-2616055", name: "NAFIJ UL ISLAM NUHASH", dept: "TE", section: "B", batch: "26" },
+  { sl: 187, merit: "", id: "TE-2616056", name: "SABBIR AHMED NAHID", dept: "TE", section: "B", batch: "26" },
+  { sl: 188, merit: "", id: "TE-2616057", name: "MD. HASHIBUL ALAM SHIAM", dept: "TE", section: "B", batch: "26" },
+  { sl: 189, merit: "", id: "TE-2616058", name: "MOHAMMAD RAKIBUL ISLAM", dept: "TE", section: "B", batch: "26" },
+  { sl: 190, merit: "", id: "TE-2616059", name: "MD.MORSHED KHAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 191, merit: "", id: "TE-2616060", name: "MD. AKIB HOSSAIN", dept: "TE", section: "B", batch: "26" },
+  { sl: 192, merit: "", id: "TE-2616061", name: "NABIHA TAHSIN NIDHI", dept: "TE", section: "B", batch: "26" },
+  { sl: 193, merit: "", id: "TE-2616062", name: "SIFAT RAHMAN SIAM", dept: "TE", section: "B", batch: "26" },
+  { sl: 194, merit: "", id: "TE-2616063", name: "FARDIN HASAN NISHIR", dept: "TE", section: "B", batch: "26" },
+  { sl: 195, merit: "", id: "TE-2616064", name: "ATIYA JANNAT", dept: "TE", section: "B", batch: "26" },
+  { sl: 196, merit: "", id: "TE-2616065", name: "ABAN BIN SYEED", dept: "TE", section: "B", batch: "26" },
+  { sl: 197, merit: "", id: "TE-2616066", name: "UMMAY SADIA ISLAM CHOWDHURY", dept: "TE", section: "B", batch: "26" },
+  { sl: 198, merit: "", id: "TE-2616067", name: "TASNIMUL HASAN TAYEB", dept: "TE", section: "B", batch: "26" },
+  { sl: 199, merit: "", id: "TE-2616068", name: "SRESTY MISRA", dept: "TE", section: "B", batch: "26" },
+  { sl: 200, merit: "", id: "TE-2616069", name: "ATIF AHMED SARKER", dept: "TE", section: "B", batch: "26" },
+  { sl: 201, merit: "", id: "TE-2616070", name: "MD. TASNIMUL HASAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 202, merit: "", id: "TE-2616071", name: "FARHAN WASIB NILOY", dept: "TE", section: "B", batch: "26" },
+  { sl: 203, merit: "", id: "TE-2616072", name: "MOHD. AL-ABID", dept: "TE", section: "B", batch: "26" },
+  { sl: 204, merit: "", id: "TE-2616073", name: "MD. MUKLASUR RAHMAN SIAM", dept: "TE", section: "B", batch: "26" },
+  { sl: 205, merit: "", id: "TE-2616074", name: "TANJINA PARVIN", dept: "TE", section: "B", batch: "26" },
+  { sl: 206, merit: "", id: "TE-2616075", name: "MD SORIF AHMED ALIF", dept: "TE", section: "B", batch: "26" },
+  { sl: 207, merit: "", id: "TE-2616076", name: "SAFA ISLAM MIM", dept: "TE", section: "B", batch: "26" },
+  { sl: 208, merit: "", id: "TE-2616077", name: "ABDULLAH AL LUBAYET", dept: "TE", section: "B", batch: "26" },
+  { sl: 209, merit: "", id: "TE-2616078", name: "MD.NABID HASSAN ANANDA", dept: "TE", section: "B", batch: "26" },
+  { sl: 210, merit: "", id: "TE-2616079", name: "MD. SAKIBUL HASAN SEAM", dept: "TE", section: "B", batch: "26" },
+  { sl: 211, merit: "", id: "TE-2616080", name: "MD.ATIQUR RAHMAN SAGOR", dept: "TE", section: "B", batch: "26" },
+  { sl: 212, merit: "", id: "TE-2616081", name: "MD.SIAM AL AHSAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 213, merit: "", id: "TE-2616082", name: "SHAHRIAR AL NAHIAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 214, merit: "", id: "TE-2616083", name: "GAZI ISRAT HUMAYUN", dept: "TE", section: "B", batch: "26" },
+  { sl: 215, merit: "", id: "TE-2616084", name: "MD. RAHIDUL ISLAM RAFI", dept: "TE", section: "B", batch: "26" },
+  { sl: 216, merit: "", id: "TE-2616085", name: "SHAH SABBIR HUSEN", dept: "TE", section: "B", batch: "26" },
+  { sl: 217, merit: "", id: "TE-2616086", name: "MD. LABIB MAHMUD KHAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 218, merit: "", id: "TE-2616087", name: "AHNAF RAHMAN NIHAL", dept: "TE", section: "B", batch: "26" },
+  { sl: 219, merit: "", id: "TE-2616088", name: "MD. MAJHARUL HOSSEN EASHFY", dept: "TE", section: "B", batch: "26" },
+  { sl: 220, merit: "", id: "TE-2616089", name: "MD. ABDULLAH AL KAIUM EVAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 221, merit: "", id: "TE-2616090", name: "EMON AL MAHI", dept: "TE", section: "B", batch: "26" },
+  { sl: 222, merit: "", id: "TE-2616091", name: "AIMAN KHADIJA", dept: "TE", section: "B", batch: "26" },
+  { sl: 223, merit: "", id: "TE-2616092", name: "ATANU SARKER", dept: "TE", section: "B", batch: "26" },
+  { sl: 224, merit: "", id: "TE-2616093", name: "SAMMI AKTER", dept: "TE", section: "B", batch: "26" },
+  { sl: 225, merit: "", id: "TE-2616094", name: "MUKADDAS HASAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 226, merit: "", id: "TE-2616095", name: "MD. MAHI AL MAHADI", dept: "TE", section: "B", batch: "26" },
+  { sl: 227, merit: "", id: "TE-2616096", name: "TASNIM SHEFAR KHAN NURAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 228, merit: "", id: "TE-2616097", name: "IMTIAZ NABIL IMAM", dept: "TE", section: "B", batch: "26" },
+  { sl: 229, merit: "", id: "TE-2616098", name: "TAKIA ADIBA SAMANTA", dept: "TE", section: "B", batch: "26" },
+  { sl: 230, merit: "", id: "TE-2616099", name: "MOST. RAFIYA AMIN ARTHY", dept: "TE", section: "B", batch: "26" },
+  { sl: 231, merit: "", id: "TE-2616100", name: "MINHAZ HASSAN", dept: "TE", section: "B", batch: "26" },
+  { sl: 232, merit: "", id: "TE-2616101", name: "TANZIMUL TAHZIB", dept: "TE", section: "B", batch: "26" },
+  { sl: 233, merit: "", id: "TE-2616102", name: "RIDOY CHANDRA SARKER", dept: "TE", section: "B", batch: "26" },
+  { sl: 234, merit: "", id: "TE-2616103", name: "RIAD AHMMED", dept: "TE", section: "B", batch: "26" },
+  { sl: 235, merit: "", id: "TE-2616104", name: "MD. SAJIDUL ISLAM", dept: "TE", section: "B", batch: "26" },
+  { sl: 236, merit: "", id: "TE-2616105", name: "MD.ABU HURAYRA", dept: "TE", section: "B", batch: "26" },
+  { sl: 237, merit: "", id: "TE-2616106", name: "SHARIAR MAJID DIPU", dept: "TE", section: "B", batch: "26" },
+  { sl: 238, merit: "", id: "TE-2616107", name: "RIMZIM PAUL", dept: "TE", section: "C", batch: "26" },
+  { sl: 239, merit: "", id: "TE-2616108", name: "PEYAL DEBNATH", dept: "TE", section: "C", batch: "26" },
+  { sl: 240, merit: "", id: "TE-2616109", name: "TASNIM TARANNUM", dept: "TE", section: "C", batch: "26" },
+  { sl: 241, merit: "", id: "TE-2616110", name: "FAHIM AHNAF", dept: "TE", section: "C", batch: "26" },
+  { sl: 242, merit: "", id: "TE-2616111", name: "MST. MAHFUZA BARSAT", dept: "TE", section: "C", batch: "26" },
+  { sl: 243, merit: "", id: "TE-2616112", name: "MD. NAFIZ AHMED", dept: "TE", section: "C", batch: "26" },
+  { sl: 244, merit: "", id: "TE-2616113", name: "MD. ABDUL ALIM", dept: "TE", section: "C", batch: "26" },
+  { sl: 245, merit: "", id: "TE-2616114", name: "MOSTAKIM FAHAD", dept: "TE", section: "C", batch: "26" },
+  { sl: 246, merit: "", id: "TE-2616115", name: "LABONNO ISRAT", dept: "TE", section: "C", batch: "26" },
+  { sl: 247, merit: "", id: "TE-2616116", name: "ISTIAK AHAMMED", dept: "TE", section: "C", batch: "26" },
+  { sl: 248, merit: "", id: "TE-2616117", name: "MD MOSADDAK BILLAH", dept: "TE", section: "C", batch: "26" },
+  { sl: 249, merit: "", id: "TE-2616118", name: "FAYEA BINTE MUSTAFIZ", dept: "TE", section: "C", batch: "26" },
+  { sl: 250, merit: "", id: "TE-2616119", name: "NIPA DEBNATH", dept: "TE", section: "C", batch: "26" },
+  { sl: 251, merit: "", id: "TE-2616120", name: "NAZMUS SAKIB", dept: "TE", section: "C", batch: "26" },
+  { sl: 252, merit: "", id: "TE-2616121", name: "SADMAN SAKIB AKANDO", dept: "TE", section: "C", batch: "26" },
+  { sl: 253, merit: "", id: "TE-2616122", name: "MD RAYHAN", dept: "TE", section: "C", batch: "26" },
+  { sl: 254, merit: "", id: "TE-2616123", name: "MUTTAKI BILLAH", dept: "TE", section: "C", batch: "26" },
+  { sl: 255, merit: "", id: "TE-2616124", name: "BIBI HALIMA", dept: "TE", section: "C", batch: "26" },
+  { sl: 256, merit: "", id: "TE-2616125", name: "SHAFIN AHMMED", dept: "TE", section: "C", batch: "26" },
+  { sl: 257, merit: "", id: "TE-2616126", name: "JAHIN MYMUNA", dept: "TE", section: "C", batch: "26" },
+  { sl: 258, merit: "", id: "TE-2616127", name: "MST MONI AKTER", dept: "TE", section: "C", batch: "26" },
+  { sl: 259, merit: "", id: "TE-2616128", name: "SYED MUSTAVI KAMAL", dept: "TE", section: "C", batch: "26" },
+  { sl: 260, merit: "", id: "TE-2616129", name: "MD.SAIDUL ISLAM RIFAT", dept: "TE", section: "C", batch: "26" },
+  { sl: 261, merit: "", id: "TE-2616130", name: "MIRAZ HOSEN JIHAN", dept: "TE", section: "C", batch: "26" },
+  { sl: 262, merit: "", id: "TE-2616131", name: "MD ARIFUL ISLAM", dept: "TE", section: "C", batch: "26" },
+  { sl: 263, merit: "", id: "TE-2616132", name: "MD. SAJID DORJI", dept: "TE", section: "C", batch: "26" },
+  { sl: 264, merit: "", id: "TE-2616133", name: "MAHARUN NISA KAKON", dept: "TE", section: "C", batch: "26" },
+  { sl: 265, merit: "", id: "TE-2616134", name: "MD. ABDUL HAKIM TALUKDAR", dept: "TE", section: "C", batch: "26" },
+  { sl: 266, merit: "", id: "TE-2616135", name: "AHONA CHAKROBORTY", dept: "TE", section: "C", batch: "26" },
+  { sl: 267, merit: "", id: "TE-2616136", name: "SAMAHA NUSRAT", dept: "TE", section: "C", batch: "26" },
+  { sl: 268, merit: "", id: "TE-2616137", name: "MOHAMMAD AFIF SADAT", dept: "TE", section: "C", batch: "26" },
+  { sl: 269, merit: "", id: "TE-2616138", name: "MD. SHAHARUN AHMED SHIHAB", dept: "TE", section: "C", batch: "26" },
+  { sl: 270, merit: "", id: "TE-2616139", name: "FATIN FUAD", dept: "TE", section: "C", batch: "26" },
+  { sl: 271, merit: "", id: "TE-2616140", name: "SHOHANA AHMED PRITY", dept: "TE", section: "C", batch: "26" },
+  { sl: 272, merit: "", id: "TE-2616141", name: "MD ABRAR JAHIN MAHI", dept: "TE", section: "C", batch: "26" },
+  { sl: 273, merit: "", id: "TE-2616142", name: "ANKON SARKER", dept: "TE", section: "C", batch: "26" },
+  { sl: 274, merit: "", id: "TE-2616143", name: "MD.MASHRAFIUL HAQUE", dept: "TE", section: "C", batch: "26" },
+  { sl: 275, merit: "", id: "TE-2616144", name: "S. M RAJIN RIHAN", dept: "TE", section: "C", batch: "26" },
+  { sl: 276, merit: "", id: "TE-2616145", name: "MD. RAZIUL HASAN RAFI", dept: "TE", section: "C", batch: "26" },
+  { sl: 277, merit: "", id: "TE-2616146", name: "MUHAMMAD NAHIDUZZAMAN", dept: "TE", section: "C", batch: "26" },
+  { sl: 278, merit: "", id: "TE-2616147", name: "MD TAMIM BHUIYAN", dept: "TE", section: "C", batch: "26" },
+  { sl: 279, merit: "", id: "TE-2616148", name: "SHAHINUR MIA", dept: "TE", section: "C", batch: "26" },
+  { sl: 280, merit: "", id: "TE-2616149", name: "AURPON HAIDER", dept: "TE", section: "C", batch: "26" },
+  { sl: 281, merit: "", id: "TE-2616150", name: "NAMIRA TASNIM NUSAIBA", dept: "TE", section: "C", batch: "26" },
+  { sl: 282, merit: "", id: "TE-2616151", name: "MD. MOHSINUL MOMIN MAHIN", dept: "TE", section: "C", batch: "26" },
+  { sl: 283, merit: "", id: "TE-2616152", name: "LAMISA AKTHER MEHERIMA", dept: "TE", section: "C", batch: "26" },
+  { sl: 284, merit: "", id: "TE-2616153", name: "NUSRAT JAHAN MISHU", dept: "TE", section: "C", batch: "26" },
+  { sl: 285, merit: "", id: "TE-2616154", name: "Sumiya Jannat Shaba", dept: "TE", section: "C", batch: "26" },
+  { sl: 286, merit: "", id: "TE-2616155", name: "MD. TAWSIM MAHMUD", dept: "TE", section: "C", batch: "26" },
+  { sl: 287, merit: "", id: "TE-2616156", name: "ABEDUL ISLAM OVIK", dept: "TE", section: "C", batch: "26" },
+  { sl: 288, merit: "", id: "TE-2616157", name: "MAYSHA AHAMED", dept: "TE", section: "C", batch: "26" },
+  { sl: 289, merit: "", id: "TE-2616158", name: "AHSANUR RAHMAN MUBIN", dept: "TE", section: "C", batch: "26" },
+  { sl: 290, merit: "", id: "TE-2616159", name: "MD. ARIF HASNAT", dept: "TE", section: "C", batch: "26" },
+  { sl: 291, merit: "", id: "TE-2616160", name: "TAHARIM FARHAN TURJO", dept: "TE", section: "D", batch: "26" },
+  { sl: 292, merit: "", id: "TE-2616161", name: "MD. ISHTIAQ MAHMUD SIAM", dept: "TE", section: "D", batch: "26" },
+  { sl: 293, merit: "", id: "TE-2616162", name: "FAYAZ UDDIN TAOHID", dept: "TE", section: "D", batch: "26" },
+  { sl: 294, merit: "", id: "TE-2616163", name: "ALVINA TASNIM SHAHID", dept: "TE", section: "D", batch: "26" },
+  { sl: 295, merit: "", id: "TE-2616164", name: "ARIYAN AL SAMI", dept: "TE", section: "D", batch: "26" },
+  { sl: 296, merit: "", id: "TE-2616165", name: "TASNIMUL ALAM TUSHON", dept: "TE", section: "D", batch: "26" },
+  { sl: 297, merit: "", id: "TE-2616166", name: "FUYAD HASAN ADIB", dept: "TE", section: "D", batch: "26" },
+  { sl: 298, merit: "", id: "TE-2616167", name: "MD TOUFIK HASAN LAM", dept: "TE", section: "D", batch: "26" },
+  { sl: 299, merit: "", id: "TE-2616168", name: "MD. MOSHIUR RAHMAN", dept: "TE", section: "D", batch: "26" },
+  { sl: 300, merit: "", id: "TE-2616169", name: "MD SHIAM RAHMAN", dept: "TE", section: "D", batch: "26" },
+  { sl: 301, merit: "", id: "TE-2616170", name: "IRFAD RANA", dept: "TE", section: "D", batch: "26" },
+  { sl: 302, merit: "", id: "TE-2616171", name: "NOOR HASAN", dept: "TE", section: "D", batch: "26" },
+  { sl: 303, merit: "", id: "TE-2616172", name: "LUMINA AHMAD RUYEENA", dept: "TE", section: "D", batch: "26" },
+  { sl: 304, merit: "", id: "TE-2616173", name: "EUSUF MD MUKSITUDDIN", dept: "TE", section: "D", batch: "26" },
+  { sl: 305, merit: "", id: "TE-2616174", name: "MD. AR RAFI KHAN RAFI", dept: "TE", section: "D", batch: "26" },
+  { sl: 306, merit: "", id: "TE-2616175", name: "ADITRY BARUA", dept: "TE", section: "D", batch: "26" },
+  { sl: 307, merit: "", id: "TE-2616176", name: "AFTAB AHAMMAD SANI", dept: "TE", section: "D", batch: "26" },
+  { sl: 308, merit: "", id: "TE-2616177", name: "ABID ABDULLAH", dept: "TE", section: "D", batch: "26" },
+  { sl: 309, merit: "", id: "TE-2616178", name: "MEHEDI HASAN MAHI", dept: "TE", section: "D", batch: "26" },
+  { sl: 310, merit: "", id: "TE-2616179", name: "SK. AKIBUR RAHMAN", dept: "TE", section: "D", batch: "26" },
+  { sl: 311, merit: "", id: "TE-2616180", name: "ABID ISLAM PROTIK", dept: "TE", section: "D", batch: "26" },
+  { sl: 312, merit: "", id: "TE-2616181", name: "ZARIN BUSHRA", dept: "TE", section: "D", batch: "26" },
+  { sl: 313, merit: "", id: "TE-2616182", name: "SIAM AHMED", dept: "TE", section: "D", batch: "26" },
+  { sl: 314, merit: "", id: "TE-2616183", name: "AMITRA DAS", dept: "TE", section: "D", batch: "26" },
+  { sl: 315, merit: "", id: "TE-2616184", name: "TAWHIDUL ISLAM RIYON", dept: "TE", section: "D", batch: "26" },
+  { sl: 316, merit: "", id: "TE-2616185", name: "MST. ZARIN SHUBAH OYSHI", dept: "TE", section: "D", batch: "26" },
+  { sl: 317, merit: "", id: "TE-2616186", name: "PAROMA SAHA", dept: "TE", section: "D", batch: "26" },
+  { sl: 318, merit: "", id: "TE-2616187", name: "MD. IFTIYAR HOSSAIN", dept: "TE", section: "D", batch: "26" },
+  { sl: 319, merit: "", id: "TE-2616188", name: "ASMA UL HUSNA AHONA", dept: "TE", section: "D", batch: "26" },
+  { sl: 320, merit: "", id: "TE-2616189", name: "MD. SADIKUR RAHMAN SAJOL", dept: "TE", section: "D", batch: "26" },
+  { sl: 321, merit: "", id: "TE-2616190", name: "ADIBA ISLAM DIBA", dept: "TE", section: "D", batch: "26" },
+  { sl: 322, merit: "", id: "TE-2616191", name: "MD.REDONE KARIM MAHI", dept: "TE", section: "D", batch: "26" },
+  { sl: 323, merit: "", id: "TE-2616192", name: "MST SUMAIA KHANOM", dept: "TE", section: "D", batch: "26" },
+  { sl: 324, merit: "", id: "TE-2616193", name: "HUZAIFA BIN MOSTOFA HANI", dept: "TE", section: "D", batch: "26" },
+  { sl: 325, merit: "", id: "TE-2616194", name: "SADIT HASAN", dept: "TE", section: "D", batch: "26" },
+  { sl: 326, merit: "", id: "TE-2616195", name: "MD. RASEL TALUKDER", dept: "TE", section: "D", batch: "26" },
+  { sl: 327, merit: "", id: "TE-2616196", name: "FARHAN LABIB", dept: "TE", section: "D", batch: "26" },
+  { sl: 328, merit: "", id: "TE-2616197", name: "ABDUL MONTAKIM SABAB", dept: "TE", section: "D", batch: "26" },
+  { sl: 329, merit: "", id: "TE-2616198", name: "ABDUR RAHMAN SHIHAB", dept: "TE", section: "D", batch: "26" },
+  { sl: 330, merit: "", id: "TE-2616199", name: "MOST. ANIKA EIBNAT", dept: "TE", section: "D", batch: "26" },
+  { sl: 331, merit: "", id: "TE-2616200", name: "SABAB AL NAHIAN", dept: "TE", section: "D", batch: "26" },
+  { sl: 332, merit: "", id: "TE-2616201", name: "ADITY RANI MISTRY", dept: "TE", section: "D", batch: "26" },
+  { sl: 333, merit: "", id: "TE-2616202", name: "AFRA ADRITA KHAN", dept: "TE", section: "D", batch: "26" },
+  { sl: 334, merit: "", id: "TE-2616203", name: "NUR-A-ZANNAT AL-SABA", dept: "TE", section: "D", batch: "26" },
+  { sl: 335, merit: "", id: "TE-2616204", name: "JM MAHMUD RAHMAN MARUF", dept: "TE", section: "D", batch: "26" },
+  { sl: 336, merit: "", id: "TE-2616205", name: "SUBROTO GHOS", dept: "TE", section: "D", batch: "26" },
+  { sl: 337, merit: "", id: "TE-2616206", name: "RUPANTI KUNDU RIMI", dept: "TE", section: "D", batch: "26" },
+  { sl: 338, merit: "", id: "TE-2616207", name: "NUSRAT YEASMIN NISHAT", dept: "TE", section: "D", batch: "26" },
+  { sl: 339, merit: "", id: "TE-2616208", name: "MD : AJIMUL HOQUE KHAN AJIMU", dept: "TE", section: "D", batch: "26" },
+  { sl: 340, merit: "", id: "TE-2616209", name: "MD. MEHERAB HOSSAIN", dept: "TE", section: "D", batch: "26" },
+  { sl: 341, merit: "", id: "TE-2616210", name: "ANIKA TABASSUM OISHY", dept: "TE", section: "D", batch: "26" },
+  { sl: 342, merit: "", id: "TE-2616211", name: "Md. Muaz Hossain", dept: "TE", section: "D", batch: "26" }
+    ];
+
     var seed = {
       version: 1,
       clubs: clubs,
@@ -1447,6 +2166,45 @@
       complaints: complaints,
       events: events,
       memberships: [],
+      ads: [
+        {
+          id: "ad-codestorm", clubId: "computer-club",
+          title: "CodeStorm 2026 — Registrations Open",
+          tagline: "48 hours. Real problems. Campus-wide bragging rights. Register before the deadline.",
+          media: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1400&q=70&fm=jpg",
+          mediaType: "image",
+          link: { type: "club", value: "computer-club" },
+          status: "active", createdAt: new Date().toISOString()
+        },
+        {
+          id: "ad-cv-clinic", clubId: "career-club",
+          title: "CV Clinic & Mock Interviews",
+          tagline: "HR professionals will review your CV and run real mock interviews — bring a printed copy.",
+          media: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1400&q=70&fm=jpg",
+          mediaType: "image",
+          link: { type: "club", value: "career-club" },
+          status: "active", createdAt: new Date().toISOString()
+        },
+        {
+          id: "ad-cultural-auditions", clubId: "cultural-club",
+          title: "Annual Cultural Program — Auditions",
+          tagline: "Singers, dancers and performers — your moment on the big stage is here.",
+          media: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+          mediaType: "video",
+          link: { type: "club", value: "cultural-club" },
+          status: "active", createdAt: new Date().toISOString()
+        },
+        {
+          id: "ad-football-league", clubId: "games-sports-club",
+          title: "Inter-Department Football League",
+          tagline: "Department teams, knockout rounds, one champion. Gear up and represent your batch!",
+          media: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1400&q=70&fm=jpg",
+          mediaType: "image",
+          link: { type: "club", value: "games-sports-club" },
+          status: "active", createdAt: new Date().toISOString()
+        }
+      ],
+      students: studentRoster,
       config: {
         institute: "National Institute of Textile Engineering and Research (NITER)",
         semesters: semesters
@@ -1478,11 +2236,22 @@
       d.version = typeof d.version === "number" ? d.version : 1;
       if (!Array.isArray(d.complaints)) d.complaints = [];
       if (!Array.isArray(d.submissions)) d.submissions = [];
+      if (!Array.isArray(d.ads)) d.ads = [];
       if (!Array.isArray(d.events)) d.events = [];
       if (!Array.isArray(d.memberships)) d.memberships = [];
+      // Student roster — backfill into existing databases (never wipes real data).
+      if (!Array.isArray(d.students) || !d.students.length) d.students = studentRoster.slice();
       (d.events || []).forEach(function (ev) {
         if (!ev.venue) ev.venue = "";
         if (!ev.description) ev.description = "";
+      });
+      (d.ads || []).forEach(function (ad) {
+        if (!ad.status) ad.status = "active";
+        if (!ad.mediaType) {
+          ad.mediaType = /^data:video\//.test(ad.media || "") || /\/video\/|\.mp4$|\.webm$|\.ogv$/i.test(ad.media || "") ? "video" : "image";
+        }
+        if (!ad.link) ad.link = { type: "", value: "" };
+        if (!ad.createdAt) ad.createdAt = new Date().toISOString();
       });
       (d.memberships || []).forEach(function (m) {
         if (!m.status) m.status = "pending";
@@ -1513,7 +2282,7 @@
         } else {
           c.executives = c.executives.map(function (r) {
             if (typeof r === "string") return { role: r, name: "" };
-            return { role: (r && r.role) || "", name: (r && r.name) || "" };
+            return { role: (r && r.role) || "", name: (r && r.name) || "", photo: (r && r.photo) || "" };
           });
         }
       });
@@ -1531,7 +2300,7 @@
     }
 
     /* ---------------- Persistence + Firebase sync ---------------- */
-    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events"];
+    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events", "ads"];
     var RESTRICTED_COLLECTIONS = ["submissions", "complaints", "memberships"]; // only readable by club staff (or the student themselves for memberships)
     var currentDb = null;   // the db object the app is currently using
     var lastSynced = null;  // snapshot of the last known cloud state
@@ -1644,6 +2413,12 @@
           });
           cb(null, items);
         }).catch(function (err) { cb(err, null); });
+        return;
+      }
+      if (name === "complaints" && readScope && readScope.role === "it-staff") {
+        // IT staff (admin-granted) read only the IT helpdesk complaints.
+        dbRef.collection(name).where("clubId", "==", "it").get().then(function (snap) { cb(null, mapSnap(snap)); })
+          .catch(function (err) { cb(err, null); });
         return;
       }
       if (RESTRICTED_COLLECTIONS.indexOf(name) !== -1) {
@@ -1925,22 +2700,71 @@
     var DEMO_CODE = "niter2025";
     var PAYMENT_OPTIONS = ["bKash", "Nagad", "Rocket", "Bank transfer", "Cash (at venue)", "Other"];
 
+    /* Real NITER campus photos — shown on the student dashboard / public
+       profile. Copied into ./campus/ from the official site's photo set. A
+       fresh random one is picked on every login (never the same as the
+       previous login), and kept stable for the rest of that session. */
+    var CAMPUS_PHOTOS = [
+      "campus/front-banner.jpg",
+      "campus/Convocation_2021.jpg",
+      "campus/DSC_2886-(1).jpg"
+    ];
+
+    /* Pick (or reuse) the campus photo for the current session. Pass forceNew
+       = true right after a login to roll a new random one (the previous
+       login's photo is excluded so consecutive logins differ). */
+    function campusPhoto(forceNew) {
+      if (!forceNew) {
+        try {
+          var sess = sessionStorage.getItem("niter-campus-photo");
+          if (sess && CAMPUS_PHOTOS.indexOf(sess) !== -1) {
+            state.campusPhoto = sess;
+            return sess;
+          }
+        } catch (e) { /* ignore */ }
+        if (state.campusPhoto) return state.campusPhoto;
+      }
+      var last = null;
+      try { last = localStorage.getItem("niter-campus-photo"); } catch (e) { /* ignore */ }
+      var pool = CAMPUS_PHOTOS.filter(function (p) { return p !== last; });
+      if (!pool.length) pool = CAMPUS_PHOTOS;
+      var pick = pool[Math.floor(Math.random() * pool.length)];
+      state.campusPhoto = pick;
+      try { sessionStorage.setItem("niter-campus-photo", pick); } catch (e) { /* ignore */ }
+      try { localStorage.setItem("niter-campus-photo", pick); } catch (e) { /* ignore */ }
+      return pick;
+    }
+
+    function campusBannerHTML() {
+      return '<div class="campus-banner">' +
+        '<img src="' + esc(campusPhoto()) + '" alt="NITER campus" loading="lazy">' +
+        '<span class="campus-banner-cap">🏫 NITER Campus</span>' +
+        "</div>";
+    }
+
     var pendingPhotoUploads = 0; // in-flight Storage uploads
 
     var state = {
       session: null,       // { clubId }
       user: null,          // Firebase profile { uid, email, name, role, clubs }
+      gated: false,        // entry gate shown (visitor must sign in / create an account)
+      campusPhoto: "",      // campus banner image for the current session
       usersLoading: false, // members list being fetched
       portalTab: "notices",
       portalNotice: null,  // notice being composed/edited
       builder: null,       // form builder draft
       subFormId: null,     // form whose submissions are open
+      adEditing: null,     // null = ad list, "" = new ad, id = editing
+      adIndex: 0,          // active slide in the homepage ad carousel
+      studentDept: "",      // "" | "CSE" | "TE" — students directory filter
       analysisFormId: null, // form whose analytics are open
       lastSub: null,        // last submitted form submission (for export)
       clubsFilter: "",
       noticeQuery: "",
       noticeClub: "",
-      eventEditing: null    // event being composed/edited (portal)
+      eventEditing: null,   // event being composed/edited (portal)
+      appFilter: "",        // dashboard applications filter: "" | pending | approved | declined
+      appCollapsed: {}      // dashboard sections the student has collapsed (by section key)
     };
 
     /* ================= Utilities ================= */
@@ -2064,6 +2888,27 @@
       }).sort(function (a, b) { return (b.submittedAt || "").localeCompare(a.submittedAt || ""); });
     }
 
+    /* Permanently link submissions to the signed-in account. Submissions made
+       as a visitor (typed email) carry no userId yet — after any sign-in we
+       backfill userId (plus missing name/ID) onto every submission whose
+       submitter email matches, so the dashboard keeps showing them even if
+       the account email changes later and club staff see the linked account. */
+    function linkSubmissionsToUser(profile) {
+      if (!profile || !profile.uid || !profile.email) return 0;
+      var email = (profile.email || "").toLowerCase();
+      var linked = 0;
+      (db.submissions || []).forEach(function (s) {
+        if (!s.userId && s.submitterEmail && s.submitterEmail.toLowerCase() === email) {
+          s.userId = profile.uid;
+          if (!s.submitterName && profile.name) s.submitterName = profile.name;
+          if (!s.submitterStudentId && profile.studentId) s.submitterStudentId = profile.studentId;
+          linked++;
+        }
+      });
+      if (linked) save();
+      return linked;
+    }
+
     function toast(msg, kind) {
       var root = document.getElementById("toast-root");
       if (!root) return;
@@ -2077,6 +2922,44 @@
         el.style.transform = "translateY(8px)";
         setTimeout(function () { el.remove(); }, 320);
       }, 2600);
+    }
+
+    /* Full-screen success checkmark shown briefly after signing in, before the
+       dashboard / portal renders underneath. Respects reduced motion by
+       shortening the hold. Calls done() once the overlay is gone. */
+    function showSuccessOverlay(message, done) {
+      var overlay = document.createElement("div");
+      overlay.className = "success-overlay";
+      overlay.setAttribute("role", "status");
+      overlay.setAttribute("aria-live", "polite");
+      overlay.innerHTML =
+        '<svg class="success-check" viewBox="0 0 52 52" aria-hidden="true">' +
+          '<circle class="success-circle" cx="26" cy="26" r="23"/>' +
+          '<path class="success-mark" d="M14 27l8 8 16-16"/>' +
+        '</svg>' +
+        '<div class="success-text">' + esc(message || "Signed in!") + '</div>';
+      document.body.appendChild(overlay);
+      var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var hold = reduced ? 350 : 1150;
+      setTimeout(function () {
+        overlay.classList.add("success-hide");
+        setTimeout(function () {
+          if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+          if (done) done();
+        }, reduced ? 0 : 260);
+      }, hold);
+    }
+
+    /* Shake the login card when credentials are rejected — pairs with the
+       error toast. Shakes the nearest .login-card (or .export-box on the
+       form-success screen), falling back to the element itself. */
+    function shakeLogin(el) {
+      if (!el) return;
+      var card = el.closest ? (el.closest(".login-card") || el.closest(".export-box")) : null;
+      if (!card) card = el;
+      card.classList.remove("shake");
+      void card.offsetWidth; /* restart the animation if it just played */
+      card.classList.add("shake");
     }
 
     function save() {
@@ -2220,9 +3103,34 @@
     function render() {
       var parts = parseRoute();
       var app = document.getElementById("app");
+      // No site-wide entry gate — anyone can browse the site freely. Instead,
+      // tapping a specific club pops up the sign-in overlay for visitors who
+      // haven't signed in yet (the club page renders behind it).
+      state.gated = parts[0] === "club" && gateRequired();
+      document.body.classList.toggle("gate-locked", !!state.gated);
       updateNav(parts);
       var dashLink = document.getElementById("nav-dashboard");
       if (dashLink) dashLink.style.display = state.user ? "" : "none";
+      var itDeskLink = document.getElementById("nav-it-desk");
+      if (itDeskLink) itDeskLink.style.display = canManageIT() ? "" : "none";
+      var navSignout = document.getElementById("nav-signout");
+      if (navSignout) navSignout.style.display = (state.user || siteSession()) ? "" : "none";
+      // (re)start or stop the ad rotation depending on whether the page shows the carousel
+      if (parts.length === 0 || parts[0] === "home") {
+        if (activeAds().length) adStartTimer(); else adStopTimer();
+      } else {
+        adStopTimer();
+      }
+      // Nav avatar: the signed-in user's initials, or the generic account icon.
+      // When signed in it links to the dashboard; otherwise to the portal.
+      var navAvatar = document.getElementById("nav-avatar");
+      if (navAvatar) navAvatar.textContent = state.user && state.user.name ? initialsOf(state.user.name) : "👤";
+      var navCta = document.getElementById("nav-cta");
+      if (navCta) {
+        navCta.setAttribute("href", state.user ? "#/dashboard" : "#/portal");
+        navCta.setAttribute("aria-label", state.user ? "My Dashboard" : "Member Portal");
+        navCta.setAttribute("title", state.user ? (state.user.name || state.user.email) + " — " + roleLabel(state.user.role) : "Member Portal");
+      }
       if (parts.length === 0 || parts[0] === "home") {
         app.innerHTML = viewHome();
       } else if (parts[0] === "notices") {
@@ -2241,6 +3149,12 @@
         app.innerHTML = viewPortal();
       } else if (parts[0] === "complaint") {
         app.innerHTML = viewComplaintNew(decodeURIComponent(parts[1] || ""));
+      } else if (parts[0] === "it-support") {
+        app.innerHTML = viewItComplaint();
+      } else if (parts[0] === "it-desk") {
+        app.innerHTML = viewItDesk();
+      } else if (parts[0] === "students") {
+        app.innerHTML = viewStudents();
       } else {
         app.innerHTML = viewNotFound(parts);
       }
@@ -2263,11 +3177,27 @@
       } else if (parts[0] === "complaint") {
         var tcc = clubById(decodeURIComponent(parts[1] || ""));
         document.title = (tcc ? "Complaint box — " + tcc.name + " — " : "") + "NITER Clubs Portal";
+      } else if (parts[0] === "it-support") {
+        document.title = "Report a website issue — NITER Clubs Portal";
+      } else if (parts[0] === "it-desk") {
+        document.title = "IT Helpdesk — NITER Clubs Portal";
+      } else if (parts[0] === "students") {
+        document.title = "Student directory — NITER Clubs Portal";
       } else {
         document.title = titles[parts[0]] || "NITER Clubs Portal — One portal for every club";
       }
       tick();
       window.scrollTo(0, 0);
+      // Club-page sign-in popup — drawn over the club page that rendered above.
+      var gateEl = document.querySelector(".gate-screen");
+      if (gateEl && !state.gated) gateEl.parentNode.removeChild(gateEl);
+      if (state.gated && !gateEl) {
+        var gd = document.createElement("div");
+        gd.innerHTML = viewGate();
+        document.body.appendChild(gd.firstChild);
+        var firstInput = document.getElementById("gate-email");
+        if (firstInput) firstInput.focus();
+      }
     }
 
     /* ================= Shared bits ================= */
@@ -2366,6 +3296,81 @@
     }
 
     /* ================= Home ================= */
+    /* ================= Club ads (moderator-published) ================= */
+    function activeAds() {
+      return (db.ads || []).filter(function (a) { return a.status === "active"; })
+        .sort(function (a, b) { return (b.createdAt || "").localeCompare(a.createdAt || ""); });
+    }
+    function adMediaHTML(ad) {
+      if (ad.mediaType === "video") {
+        return '<video class="ads-media" src="' + esc(ad.media) + '" autoplay muted loop playsinline preload="metadata"></video>';
+      }
+      return '<img class="ads-media" src="' + esc(ad.media) + '" alt="" loading="lazy">';
+    }
+    function adLinkHref(ad) {
+      var l = ad.link || {};
+      if (l.type === "external" && l.value) return l.value;
+      if (l.type === "form" && l.value) return "#/form/" + esc(l.value);
+      if (l.type === "club" && l.value) return "#/club/" + esc(l.value);
+      return "#/clubs";
+    }
+    function adLinkTarget(ad) {
+      return (ad.link || {}).type === "external" ? '_blank rel="noopener"' : "";
+    }
+    function adSlideHTML(ad, i) {
+      var club = clubById(ad.clubId);
+      var label = (ad.link && ad.link.type === "form") ? "Apply now →" : "Learn more →";
+      return '<div class="ads-slide' + (i === state.adIndex ? " active" : "") + '">' +
+        adMediaHTML(ad) +
+        '<div class="ads-overlay"><div class="ads-copy">' +
+        '<span class="ad-club">' + esc(club ? club.icon + " " + club.name : "📣 " + (ad.clubId || "")) + "</span>" +
+        "<h3>" + esc(ad.title) + "</h3>" +
+        (ad.tagline ? "<p>" + esc(ad.tagline) + "</p>" : "") +
+        '<a class="ad-cta" href="' + adLinkHref(ad) + '" ' + adLinkTarget(ad) + ">" + label + "</a>" +
+        "</div></div></div>";
+    }
+    function adsCarouselHTML() {
+      var list = activeAds();
+      if (!list.length) return "";
+      if (state.adIndex == null) state.adIndex = 0;
+      if (state.adIndex >= list.length) state.adIndex = 0;
+      var slides = list.map(adSlideHTML).join("");
+      var dots = list.map(function (a, i) {
+        return '<button type="button" class="' + (i === state.adIndex ? "active" : "") + '" data-action="ad-dot" data-index="' + i + '" aria-label="Go to ad ' + (i + 1) + '"></button>';
+      }).join("");
+      return (
+        '<section class="section"><div class="container">' +
+        '<div class="section-head"><div><h2>📣 Sponsored by our clubs</h2>' +
+        '<p class="sub">Events and campaigns published by NITER clubs — tap to learn more.</p></div>' +
+        '<span class="live-badge"><span class="live-dot"></span> SPONSORED</span></div>' +
+        '<div class="ads-carousel" id="ads-carousel">' + slides +
+        (list.length > 1 ?
+          '<button type="button" class="ads-nav prev" data-action="ad-prev" aria-label="Previous ad">‹</button>' +
+          '<button type="button" class="ads-nav next" data-action="ad-next" aria-label="Next ad">›</button>' +
+          '<div class="ads-dots">' + dots + "</div>" : "") +
+        "</div></div></section>"
+      );
+    }
+    /* Rotate the carousel automatically (skipped for reduced motion). */
+    var adTimer = null;
+    function adGoTo(i, list) {
+      if (!list) list = activeAds();
+      if (!list.length) return;
+      state.adIndex = ((i % list.length) + list.length) % list.length;
+      render();
+    }
+    function adStartTimer() {
+      adStopTimer();
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      adTimer = setInterval(function () {
+        var list = activeAds();
+        if (list.length > 1) adGoTo((state.adIndex || 0) + 1, list);
+      }, 6000);
+    }
+    function adStopTimer() {
+      if (adTimer) { clearInterval(adTimer); adTimer = null; }
+    }
+
     function viewHome() {
       var latest = db.notices.slice().sort(function (a, b) {
         if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
@@ -2407,6 +3412,7 @@
         "</div>" +
         "</div>" +
         "</section>" +
+        adsCarouselHTML() +
         '<div class="container"><div class="stats-strip">' +
         '<div class="stat-card" data-live-stat="open-forms" data-live-one="form open now" data-live-many="forms open now"><span class="sc-icon">📝</span><div><b>' + db.forms.filter(isOpen).length + '</b><span class="live-label">forms open now</span></div></div>' +
         '<div class="stat-card" data-live-stat="subs" data-live-one="total submission" data-live-many="total submissions"><span class="sc-icon">📥</span><div><b class="live-count">' + totalSubs + '</b><span class="live-label">total submissions</span></div></div>' +
@@ -2754,11 +3760,15 @@
         .map(function (r) {
           var role = typeof r === "string" ? r : ((r && r.role) || "");
           var name = typeof r === "string" ? "" : ((r && r.name) || "");
-          return name ? { role: role, name: name } : null;
+          return name ? { role: role, name: name, photo: (r && r.photo) || "" } : null;
         })
         .filter(Boolean)
         .map(function (r) {
-          return '<li><span class="role">' + esc(r.role) + "</span><span class='who'>" + esc(r.name) + "</span></li>";
+          var photo = r.photo
+            ? '<img class="exec-photo" src="' + esc(r.photo) + '" alt="' + esc(r.name) + '" loading="lazy">'
+            : '<span class="exec-avatar">' + esc(initialsOf(r.name)) + "</span>";
+          return '<div class="exec-card">' + photo +
+            "<div class='exec-who'><b>" + esc(r.name) + "</b><span class='role'>" + esc(r.role) + "</span></div></div>";
         }).join("");
 
       return (
@@ -2824,8 +3834,10 @@
 
         '<div class="panel"><h3>Executive committee' + (c.panel ? " · " + esc(c.panel) : "") + "</h3>" +
         (execs
-          ? '<ul class="exec-list">' + execs + "</ul>" +
-            '<p class="small muted mb-0 mt-1">Compiled from official club Facebook pages &amp; NITER sources. Verify with the club for the latest panel.</p>'
+          ? '<div class="exec-grid">' + execs + "</div>" +
+            (c.committeeMeta && c.committeeMeta.at
+              ? '<p class="small muted mb-0 mt-1">🕒 Committee updated by <b>' + esc(c.committeeMeta.by || "a club moderator") + '</b> · <span data-ago data-ts="' + esc(c.committeeMeta.at) + '"></span></p>'
+              : '<p class="small muted mb-0 mt-1">Committee as listed on official club pages. Club moderators can update members &amp; photos from the portal.</p>')
           : '<p class="muted small mb-0">Committee panel not listed yet — check the club\u2019s Facebook page for the latest updates.</p>') +
         "</div>" +
 
@@ -2899,6 +3911,7 @@
         var studentPanel = state.user
           ? '<div class="export-box" style="margin-top:16px"><p class="export-hint">Signed in as <b>' + esc(state.user.name || state.user.email) + '</b> — track this application from <a href="#/dashboard">My Dashboard</a>.</p></div>'
           : '<div class="export-box" style="margin-top:16px"><p class="export-hint">🎓 Track your application — create your student login (your answers are pre-filled):</p>' +
+            (DB.cloudEnabled() ? googleButtonHTML() : "") +
             '<form id="student-create" style="margin-top:10px">' +
             '<div class="two-col">' +
             '<div class="field"><label for="sc-name">Full name</label><input type="text" id="sc-name" value="' + preName + '"></div>' +
@@ -3035,6 +4048,17 @@
         }
         return "";
       }
+      // Verify the student ID against the official roster. When the form itself
+      // asks for a student ID, the typed value is what gets checked; otherwise
+      // the signed-in profile's ID is used. Typos and made-up IDs are blocked.
+      var sid = (state.user && state.user.studentId) || pickField(["studentId", "studentID", "idNo"]) || "";
+      var typedSid = pickField(["studentId", "studentID", "idNo"]) || "";
+      var vcheck = verifyStudentId(typedSid || sid);
+      if (!vcheck.ok) {
+        toast(studentIdError(typedSid || sid, vcheck.reason), "err");
+        return;
+      }
+      toast("✓ Student verified: " + studentVerifiedLabel(vcheck.student), "ok");
       var sub = {
         id: DB.uid("s"),
         formId: formId,
@@ -3043,7 +4067,7 @@
         submittedAt: new Date().toISOString(),
         submitterEmail: (state.user && state.user.email) || pickField(["email", "emailAddress", "contactEmail"]) || "",
         submitterName: (state.user && state.user.name) || pickField(["name", "fullName", "studentName"]) || "",
-        submitterStudentId: (state.user && state.user.studentId) || pickField(["studentId", "studentID", "idNo"]) || "",
+        submitterStudentId: sid,
         userId: (state.user && state.user.uid) || ""
       };
       db.submissions.push(sub);
@@ -3096,6 +4120,13 @@
       var studentId = (document.getElementById("pf-student").value || "").trim();
       if (!name) { toast("Your name is required.", "err"); return; }
       if (!studentId) { toast("Your NITER student ID is required.", "err"); return; }
+      // Student ID must exist in the official roster before it can be saved.
+      var pcheck = verifyStudentId(studentId);
+      if (!pcheck.ok) {
+        toast(studentIdError(studentId, pcheck.reason), "err");
+        return;
+      }
+      toast("✓ Student verified: " + studentVerifiedLabel(pcheck.student), "ok");
       state.user.name = name;
       state.user.studentId = studentId;
       if (window.FirebaseNS) {
@@ -3128,10 +4159,140 @@
       return portalDashboard();
     }
 
+    /* Pill-shaped "Sign in with Google" button (official Google UI) + the
+       "or use email" divider. Shown on cloud-mode login cards. */
+    function googleButtonHTML() {
+      return (
+        '<button type="button" class="btn-google" data-action="google-signin" aria-label="Sign in with Google">' +
+        '<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">' +
+        '<path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>' +
+        '<path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>' +
+        '<path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>' +
+        '<path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>' +
+        "</svg>Sign in with Google</button>" +
+        '<div class="google-divider">or use email</div>'
+      );
+    }
+
+    /* ================= Entry gate =================
+       Full-screen sign in / create-account popup shown to every visitor
+       before any site content. No guest path — you must have (or create) an
+       account to browse clubs, notices, events and forms. */
+    var gateMode = "signin"; // "signin" | "create"
+    function viewGate() {
+      var logo = document.querySelector(".brand .logo-img");
+      var logoSrc = logo ? logo.src : "";
+      return (
+        '<div class="gate-screen">' +
+        '<div class="gate-card login-card" id="gate-card" role="dialog" aria-modal="true" aria-label="Sign in to NITER Clubs">' +
+        '<div class="gate-brand"><img class="logo-img" src="' + logoSrc + '" alt="NITER Clubs logo">' +
+        '<div><b>NITER Clubs</b><span>One portal · every club</span></div></div>' +
+        '<div class="lock-icon">🔐</div>' +
+        '<h2>This club is for members</h2>' +
+        '<p>Sign in or create a free account to view this club\u2019s page — the rest of the site stays open for everyone.</p>' +
+        (DB.cloudEnabled() ? googleButtonHTML() : "") +
+        '<div class="gate-tabs" role="tablist" aria-label="Sign in or create an account">' +
+        '<button type="button" role="tab" id="gate-tab-signin" class="active" data-action="gate-tab" data-mode="signin" aria-selected="true">Sign in</button>' +
+        '<button type="button" role="tab" id="gate-tab-create" data-action="gate-tab" data-mode="create" aria-selected="false">Create account</button>' +
+        "</div>" +
+        '<form id="gate-login" novalidate>' +
+        '<div class="form-body">' +
+        '<div class="field" id="gate-name-wrap"' + (gateMode === "create" ? "" : ' style="display:none"') + '><label>Full name</label>' +
+        '<input type="text" id="gate-name" placeholder="Your full name" autocomplete="name"></div>' +
+        '<div class="field"><label>Email <span class="req">*</span></label>' +
+        '<input type="email" id="gate-email" placeholder="you@example.com" autocomplete="email" required></div>' +
+        '<div class="field"><label>Password <span class="req">*</span></label>' +
+        '<input type="password" id="gate-pass" placeholder="At least 6 characters" autocomplete="current-password" required></div>' +
+        "</div>" +
+        '<div class="form-foot"><button class="btn btn-primary btn-block" type="submit" id="gate-submit">' +
+        (gateMode === "create" ? "Create account" : "Continue") + "</button></div>" +
+        "</form>" +
+        '<div class="gate-foot">🔒 By continuing you agree to the NITER Clubs community guidelines. Already filled a club form? Your student account signs in here too.<br>' +
+        '<a href="#/" style="color:var(--muted);text-decoration:underline;font-size:12px">← Back to the site — browse clubs &amp; notices without an account</a></div>' +
+        "</div></div>"
+      );
+    }
+
+    /* Gate submit — cloud uses Firebase email/password, offline demo uses
+       the local account store (no student ID required for visitors). */
+    function gateLoginSubmit() {
+      var name = (document.getElementById("gate-name").value || "").trim();
+      var email = (document.getElementById("gate-email").value || "").trim().toLowerCase();
+      var pass = document.getElementById("gate-pass").value || "";
+      var card = document.getElementById("gate-login");
+      if (gateMode === "create" && !name) { toast("Enter your name.", "err"); shakeLogin(card); return; }
+      if (!/^\S+@\S+\.\S+$/.test(email)) { toast("Enter a valid email address.", "err"); shakeLogin(card); return; }
+      if (pass.length < 6) { toast("Password must be at least 6 characters.", "err"); shakeLogin(card); return; }
+      var btn = document.getElementById("gate-submit");
+      function busy(b) { if (btn) setBtnBusy(btn, b, gateMode === "create" ? "Creating…" : "Signing in…", gateMode === "create" ? "Create account" : "Continue"); }
+
+      function enter(profile) {
+        state.user = profile;
+        state.session = null;
+        state.gated = false;
+        try { sessionStorage.removeItem("niter-portal-session"); } catch (e) { /* ignore */ }
+        rememberSiteSession(profile);
+        // Roll a fresh campus photo for this login.
+        campusPhoto(true);
+        // Claim any submissions made with this email as a visitor.
+        var linked = linkSubmissionsToUser(profile);
+        busy(false);
+        showSuccessOverlay("Welcome, " + (profile.name || profile.email) + "!", function () {
+          render();
+          toast("Welcome to NITER Clubs, " + (profile.name || profile.email) + "!" +
+            (linked ? " Linked " + linked + " form submission" + (linked === 1 ? "" : "s") + " to your account." : ""), "ok");
+        });
+      }
+
+      if (window.FirebaseNS) {
+        var auth = window.FirebaseNS.auth;
+        var req = gateMode === "create"
+          ? auth.createUserWithEmailAndPassword(email, pass)
+          : auth.signInWithEmailAndPassword(email, pass);
+        req.then(function (res) {
+          return bootstrapUser(res.user, name, "", false).then(enter);
+        }).catch(function (err) {
+          busy(false);
+          if (gateMode === "create" && err && err.code === "auth/email-already-in-use") {
+            // Already registered — sign them in instead.
+            window.FirebaseNS.auth.signInWithEmailAndPassword(email, pass).then(function (res2) {
+              return bootstrapUser(res2.user, "", "", false).then(enter);
+            }).catch(function (err2) {
+              shakeLogin(card);
+              toast(authErrorMessage(err2), "err");
+            });
+            return;
+          }
+          shakeLogin(card);
+          toast(authErrorMessage(err), "err");
+        });
+        return;
+      }
+
+      // Offline demo — localStorage accounts (shared store; no student ID needed).
+      var acc = studentAccounts();
+      if (gateMode === "create") {
+        if (!name) { busy(false); toast("Enter your name.", "err"); shakeLogin(card); return; }
+        if (acc[email]) { busy(false); shakeLogin(card); toast("That email is already registered — sign in instead.", "err"); return; }
+        acc[email] = { name: name, visitor: true, pass: pass };
+        saveStudentAccounts(acc);
+        enter({ uid: "local-" + email, email: email, name: name, role: "member", clubs: [] });
+        return;
+      }
+      var a = acc[email];
+      if (!a || a.pass !== pass) {
+        busy(false);
+        shakeLogin(card);
+        toast("Incorrect email or password.", "err");
+        return;
+      }
+      enter({ uid: "local-" + email, email: email, name: a.name, role: "member", clubs: [] });
+    }
+
     /* Offline fallback — the classic demo member-code card. */
     function demoLoginCard() {
       return (
-        '<section class="section"><div class="container">' +
+        '<section class="section login-screen"><div class="container">' +
         '<div class="form-card-lg login-card">' +
         '<div class="lock-icon">👤</div>' +
         "<h2>Club member portal</h2>" +
@@ -3154,11 +4315,12 @@
     /* Cloud login card — sign in or create an account (email + password). */
     function loginCard() {
       return (
-        '<section class="section"><div class="container">' +
+        '<section class="section login-screen"><div class="container">' +
         '<div class="form-card-lg login-card">' +
         '<div class="lock-icon">👤</div>' +
         "<h2>Club member portal</h2>" +
         '<p class="muted">Sign in to manage your club — notices, forms, submissions and complaints.</p>' +
+        googleButtonHTML() +
         '<form id="portal-login">' +
         '<div class="field"><label>Mode</label>' +
         '<select id="login-mode" data-action="login-mode">' +
@@ -3167,7 +4329,7 @@
         '<div class="field" id="login-name-field" style="display:none"><label for="login-name">Full name</label>' +
         '<input type="text" id="login-name" placeholder="Your name"></div>' +
         '<div class="field" id="login-student-field" style="display:none"><label for="login-student-id">NITER student ID</label>' +
-        '<input type="text" id="login-student-id" placeholder="e.g. 2023-CSE-045"></div>' +
+        '<input type="text" id="login-student-id" placeholder="e.g. CS-2607001"></div>' +
         '<div class="field"><label for="login-email">Email</label>' +
         '<input type="email" id="login-email" placeholder="you@niter.edu.bd" autocomplete="email"></div>' +
         '<div class="field"><label for="login-pass">Password</label>' +
@@ -3220,8 +4382,25 @@
       return [];
     }
 
+    /* May this session manage a club's restricted data (form submissions,
+       membership requests, complaints)? Cloud mode: admins manage all clubs,
+       executives only their assigned clubs. Offline demo mode has no roles, so
+       the portal session — which is scoped to one club — may manage that club. */
+    function canManageClub(clubId) {
+      if (!clubId) return false;
+      if (!DB.cloudEnabled()) {
+        return !!(state.session && state.session.clubId === clubId);
+      }
+      return allowedClubIds().indexOf(clubId) !== -1;
+    }
+
     function isPortalAdmin() {
       return !!(state.user && state.user.role === "admin");
+    }
+
+    /* Human-readable role for tooltips / labels. */
+    function roleLabel(role) {
+      return role === "admin" ? "Admin" : (role === "executive" ? "Club Executive" : (role === "it-staff" ? "IT Staff" : "Member"));
     }
 
     function portalDashboard() {
@@ -3234,6 +4413,7 @@
         { key: "submissions", label: "📥 Submissions" },
         { key: "members", label: "🤝 Membership requests" },
         { key: "events", label: "📅 Events" },
+        { key: "ads", label: "📣 Ads" },
         { key: "complaints", label: "📮 Complaints" },
         { key: "settings", label: "⚙️ Settings" }
       ];
@@ -3245,6 +4425,7 @@
         if (t.key === "submissions") count = db.submissions.filter(function (s) { return formById(s.formId) && formById(s.formId).clubId === club.id; }).length;
         if (t.key === "members") count = clubMemberships(club.id).filter(function (m) { return m.status === "pending"; }).length;
         if (t.key === "events") count = clubEvents(club.id).length;
+        if (t.key === "ads") count = (db.ads || []).filter(function (a) { return a.clubId === club.id && a.status === "active"; }).length;
         if (t.key === "complaints") count = db.complaints.filter(function (c) { return c.clubId === club.id; }).length;
         return '<button class="tab' + (tab === t.key ? " active" : "") + '" data-action="portal-tab" data-tab="' + t.key + '">' +
           t.label + (count ? '<span class="count">' + count + "</span>" : "") + "</button>";
@@ -3256,6 +4437,7 @@
       else if (tab === "submissions") content = portalSubmissions(club);
       else if (tab === "members") content = portalMembers(club);
       else if (tab === "events") content = portalEvents(club);
+      else if (tab === "ads") content = portalAds(club);
       else if (tab === "complaints") content = portalComplaints(club);
       else content = portalSettings(club);
 
@@ -3688,6 +4870,103 @@
       );
     }
 
+    /* --- Ads tab — moderators publish image/video ads for club events --- */
+    function adMediaTypeOf(media) {
+      if (!media) return "image";
+      return /^data:video\//.test(media) || /\/video\/|\.mp4$|\.webm$|\.ogv$/i.test(media) ? "video" : "image";
+    }
+    function portalAds(club) {
+      if (state.adEditing !== null) return adFormHTML(club);
+      var list = (db.ads || []).filter(function (a) { return a.clubId === club.id; })
+        .sort(function (a, b) { return (b.createdAt || "").localeCompare(a.createdAt || ""); });
+      return (
+        '<div class="panel">' +
+        '<div class="portal-toolbar mb-2"><h2>📣 Ads</h2>' +
+        '<button class="btn btn-primary btn-sm" data-action="ad-new">+ Publish ad</button></div>' +
+        '<p class="muted small mb-2">Publish an <b>image or video</b> ad — it appears in the sponsored carousel on the homepage and on the club page. Perfect for events and campaigns.</p>' +
+        (list.length
+          ? '<div class="ad-list">' + list.map(function (a) {
+            var thumb = a.mediaType === "video"
+              ? '<video class="ad-thumb" src="' + esc(a.media) + '" muted preload="metadata"></video>'
+              : '<img class="ad-thumb" src="' + esc(a.media) + '" alt="">';
+            var linkLabel = a.link && a.link.type === "external" ? "🔗 " + esc(a.link.value)
+              : (a.link && a.link.type === "form" ? "📝 Linked to a club form" : "🏛 Linked to club page");
+            return '<div class="ad-row">' + thumb +
+              '<div class="grow"><b>' + esc(a.title) + "</b>" +
+              '<div class="muted small">' + (a.mediaType === "video" ? "🎬 Video" : "🖼 Image") + " · " + esc(a.tagline || "") + "</div>" +
+              '<div class="muted small">' + linkLabel + "</div></div>" +
+              '<span class="status-pill status-' + (a.status === "active" ? "approved" : "pending") + '">' + (a.status === "active" ? "● Live" : "⏸ Paused") + "</span>" +
+              '<div class="n-actions">' +
+              '<button class="btn btn-outline btn-sm" data-action="ad-toggle" data-id="' + esc(a.id) + '">' + (a.status === "active" ? "Pause" : "Resume") + "</button>" +
+              '<button class="btn btn-outline btn-sm" data-action="ad-edit" data-id="' + esc(a.id) + '">Edit</button>' +
+              '<button class="btn btn-danger btn-sm" data-action="ad-delete" data-id="' + esc(a.id) + '">Delete</button>' +
+              "</div></div>";
+          }).join("") + "</div>"
+          : '<div class="empty-state"><div class="icon">📣</div><p>No ads yet. Publish your first image or video ad!</p></div>') +
+        "</div>"
+      );
+    }
+
+    function adFormHTML(club) {
+      var editing = state.adEditing ? (db.ads || []).find(function (x) { return x.id === state.adEditing; }) : null;
+      var link = editing && editing.link ? editing.link : { type: "club", value: club.id };
+      var linkType = link.type || "club";
+      var formOpts = '<option value="">— None —</option>' + clubForms(club.id).map(function (f) {
+        return '<option value="' + esc(f.id) + '"' + (linkType === "form" && link.value === f.id ? " selected" : "") + ">" + esc(f.title) + "</option>";
+      }).join("");
+      var mediaVal = editing ? (editing.media || "") : "";
+      var urlVal = mediaVal && mediaVal.indexOf("data:") !== 0 ? mediaVal : "";
+      return (
+        '<div class="panel">' +
+        '<div class="portal-toolbar mb-2"><h2>' + (editing ? "Edit ad" : "Publish an ad") + "</h2>" +
+        '<button class="btn btn-ghost btn-sm" data-action="ad-cancel">← Cancel</button></div>' +
+        '<form id="ad-form">' +
+        '<div class="field mb-2"><label>Ad title <span class="req">*</span></label>' +
+        '<input type="text" id="ad-title" value="' + esc(editing ? editing.title : "") + '" placeholder="e.g. CodeStorm 2026 — Registration Open"></div>' +
+        '<div class="field mb-2"><label>Tagline (optional)</label>' +
+        '<input type="text" id="ad-tagline" value="' + esc(editing ? (editing.tagline || "") : "") + '" placeholder="One line that sells the event…"></div>' +
+        '<div class="field mb-2"><label>Media — image or video <span class="req">*</span></label>' +
+        '<input type="file" id="ad-file" accept="image/*,video/*" data-ad-media style="display:none">' +
+        '<input type="hidden" id="ad-media-value" value="' + esc(mediaVal) + '">' +
+        '<div class="flex flex-wrap" style="gap:8px">' +
+        '<button type="button" class="btn btn-outline btn-sm" data-action="pick-ad-media">📁 Upload image / video</button>' +
+        '<span class="muted small" style="align-self:center">or paste a URL</span>' +
+        '<input type="url" id="ad-media-url" placeholder="https://…" value="' + esc(urlVal) + '" style="max-width:320px">' +
+        "</div>" +
+        '<div id="ad-preview" style="margin-top:10px;' + (mediaVal && !urlVal ? "" : "display:none") + '">' +
+        (mediaVal && !urlVal ? (adMediaTypeOf(mediaVal) === "video"
+          ? '<video class="ad-thumb-lg" src="' + esc(mediaVal) + '" muted controls></video>'
+          : '<img class="ad-thumb-lg" src="' + esc(mediaVal) + '" alt="">') : "") +
+        "</div>" +
+        '<span class="hint">Images are resized automatically. Videos must be under 15 MB and play muted on the carousel.</span></div>' +
+        '<div class="field mb-2"><label>Where should it link?</label>' +
+        '<select id="ad-link-type" data-action="ad-link-type">' +
+        '<option value="club"' + (linkType === "club" ? " selected" : "") + ">Club page</option>" +
+        '<option value="form"' + (linkType === "form" ? " selected" : "") + ">A club form (apply)</option>" +
+        '<option value="external"' + (linkType === "external" ? " selected" : "") + ">External URL</option>" +
+        "</select></div>" +
+        '<div class="field mb-2" id="ad-link-form-wrap"' + (linkType === "form" ? "" : ' style="display:none"') + "><label>Form to link</label><select id=\"ad-link-form\">" + formOpts + "</select></div>" +
+        '<div class="field mb-2" id="ad-link-ext-wrap"' + (linkType === "external" ? "" : ' style="display:none"') + "><label>URL</label>" +
+        '<input type="url" id="ad-link-ext" value="' + esc(linkType === "external" ? link.value : "") + '" placeholder="https://…"></div>' +
+        '<button class="btn btn-primary" type="submit" data-action="ad-save" data-id="' + esc(editing ? editing.id : "") + '">' + (editing ? "Save changes" : "Publish ad") + "</button>" +
+        "</form></div>"
+      );
+    }
+    function applyAdMedia(value, type) {
+      var hid = document.getElementById("ad-media-value");
+      var prev = document.getElementById("ad-preview");
+      var urlEl = document.getElementById("ad-media-url");
+      if (urlEl) urlEl.value = "";
+      if (hid) hid.value = value;
+      if (prev) {
+        prev.innerHTML = type === "video"
+          ? '<video class="ad-thumb-lg" src="' + esc(value) + '" muted controls></video>'
+          : '<img class="ad-thumb-lg" src="' + esc(value) + '" alt="">';
+        prev.style.display = "";
+      }
+      toast(type === "video" ? "Video ready." : "Image ready.", "ok");
+    }
+
     /* --- Cloud panel (settings) --- */
     function cloudPanelHTML() {
       var on = DB.cloudEnabled();
@@ -3720,7 +4999,7 @@
       var users = DB.loadDb().__users || [];
       var rows = users.map(function (u) {
         if (u.uid === (state.user && state.user.uid)) return "";
-        var roleOpts = ["admin", "executive", "member"].map(function (r) {
+        var roleOpts = ["admin", "executive", "it-staff", "member"].map(function (r) {
           return '<option value="' + r + '"' + (u.role === r ? " selected" : "") + ">" + r + "</option>";
         }).join("");
         var clubOpts = DB.loadDb().clubs.map(function (c) {
@@ -3739,10 +5018,28 @@
       return (
         '<div class="panel">' +
         '<div class="portal-toolbar mb-2"><h2>👥 Members &amp; roles</h2></div>' +
-        '<p class="muted small mb-2">Assign admin / executive roles and choose which clubs each executive manages.</p>' +
+        '<p class="muted small mb-2">Assign admin / executive roles and choose which clubs each executive manages. Grant <b>IT Staff</b> to let someone run the IT Helpdesk.</p>' +
         (rows || '<p class="muted small">No other users yet — share the portal with your team.</p>') +
         "</div>"
       );
+    }
+
+    /* --- Committee editor row (settings tab) --- */
+    function execEditRowHTML(r, i) {
+      r = r || {};
+      var photo = r.photo || "";
+      var preview = photo
+        ? '<img class="exec-photo" src="' + esc(photo) + '" alt="">'
+        : '<span class="exec-avatar">' + esc(initialsOf(r.name || "")) + "</span>";
+      return '<div class="exec-edit-row">' +
+        '<span data-exec-preview>' + preview + "</span>" +
+        '<input type="text" class="exec-role" data-exec-role placeholder="Role" value="' + esc(r.role || "") + '">' +
+        '<input type="text" class="exec-name" data-exec-name placeholder="Full name" value="' + esc(r.name || "") + '">' +
+        '<input type="url" class="grow" data-exec-photo-url placeholder="Photo URL (or upload a file)" value="' + esc(photo) + '" style="max-width:230px;min-width:150px">' +
+        '<button type="button" class="btn btn-outline btn-sm" data-action="pick-exec-photo" title="Upload photo">📁</button>' +
+        '<input type="file" accept="image/*" data-exec-photo style="display:none">' +
+        '<button type="button" class="btn btn-danger btn-sm" data-action="exec-remove" title="Remove member">✕</button>' +
+        "</div>";
     }
 
     /* --- Settings tab --- */
@@ -3768,6 +5065,14 @@
         '<div class="field"><label>Room / location</label><input type="text" id="nc-room"></div></div>' +
         '<button class="btn btn-primary" type="submit">Create club</button>' +
         "</form></div>" +
+
+        '<div class="panel">' +
+        '<div class="portal-toolbar mb-2"><h2>👥 Committee &amp; photos</h2>' +
+        '<button class="btn btn-outline btn-sm" data-action="exec-add">+ Add member</button></div>' +
+        '<p class="muted small mb-2">The committee shown on your club page — role, name and photo (upload an image or paste a URL).</p>' +
+        '<div id="exec-editor">' + (club.executives || []).map(execEditRowHTML).join("") + "</div>" +
+        '<button class="btn btn-primary mt-2" data-action="exec-save">Save committee</button>' +
+        "</div>" +
 
         '<div class="panel">' +
         '<div class="portal-toolbar mb-2"><h2>Data</h2></div>' +
@@ -3828,7 +5133,7 @@
             (c ? '<a class="btn btn-ghost btn-sm" href="#/club/' + esc(c.id) + '">View club →</a>' : "") +
             "</div>"
           : (c ? '<div class="flex flex-wrap mt-1"><a class="btn btn-ghost btn-sm" href="#/club/' + esc(c.id) + '">View club →</a></div>' : "");
-        return { ts: m.requestedAt || "", html: '<div class="complaint-card">' +
+        return { ts: m.requestedAt || "", statusKey: m.status === "rejected" ? "declined" : m.status, section: m.status === "approved" ? "membership" : "join", html: '<div class="complaint-card">' +
           '<div class="cc-head"><h3>' + esc(c ? c.icon + " " + c.name : "Club") + "</h3>" + pill + "</div>" +
           '<div class="cc-meta">🤝 Join request · ' + meta + '</div>' +
           actions +
@@ -3853,7 +5158,7 @@
         var reviewLine = (s.reviewStatus && s.reviewedBy)
           ? '<div class="cc-meta">Reviewed by ' + esc(s.reviewedBy) + (s.reviewedAt ? " · " + esc(relativeAgo(s.reviewedAt)) : "") + "</div>"
           : "";
-        return { ts: s.submittedAt || "", html: '<div class="complaint-card">' +
+        return { ts: s.submittedAt || "", statusKey: s.reviewStatus === "rejected" ? "declined" : (s.reviewStatus || "pending"), section: "application", html: '<div class="complaint-card">' +
           '<div class="cc-head"><h3>' + esc(sf ? sf.title : "Application") + "</h3>" + pill + "</div>" +
           '<div class="cc-meta">' + esc(sc ? sc.icon + " " + sc.name : "") + ' · ' + esc(relativeAgo(s.submittedAt)) + "</div>" +
           reviewLine +
@@ -3861,11 +5166,40 @@
             (sc ? '<a class="btn btn-ghost btn-sm" href="#/club/' + esc(sc.id) + '">Club page →</a>' : "") + "</div>" : "") +
           "</div>" };
       });
-      var appItems = submissionAppItems.concat(membershipAppItems)
-        .sort(function (a, b) { return (b.ts || "").localeCompare(a.ts || ""); })
-        .map(function (x) { return x.html; })
-        .join("");
+      var allAppItems = submissionAppItems.concat(membershipAppItems)
+        .sort(function (a, b) { return (b.ts || "").localeCompare(a.ts || ""); });
+      var filteredAppItems = state.appFilter
+        ? allAppItems.filter(function (x) { return x.statusKey === state.appFilter; })
+        : allAppItems;
       var appCount = mySubs.length + memberships.length;
+      var appFilters = [
+        { key: "", label: "All", count: allAppItems.length },
+        { key: "pending", label: "⏳ Pending", count: allAppItems.filter(function (x) { return x.statusKey === "pending"; }).length },
+        { key: "approved", label: "✓ Approved", count: allAppItems.filter(function (x) { return x.statusKey === "approved"; }).length },
+        { key: "declined", label: "✕ Declined", count: allAppItems.filter(function (x) { return x.statusKey === "declined"; }).length }
+      ];
+      var appFilterChips = '<div class="filter-chips mb-2">' + appFilters.map(function (f) {
+        return '<button class="chip' + (state.appFilter === f.key ? " active" : "") + '" data-action="app-filter" data-filter="' + esc(f.key) + '">' + f.label + " · " + f.count + "</button>";
+      }).join("") + "</div>";
+      /* Group the filtered items into labeled sections, hiding empty ones. */
+      var appSections = [
+        { key: "application", icon: "📝", label: "Applications", hint: "Forms you filled" },
+        { key: "join", icon: "🤝", label: "Join requests", hint: "Request-to-join status" },
+        { key: "membership", icon: "🎓", label: "Memberships", hint: "Clubs you've joined" }
+      ];
+      var appSectionHTML = appSections.map(function (sec) {
+        var items = filteredAppItems.filter(function (x) { return x.section === sec.key; });
+        if (!items.length) return "";
+        var collapsed = !!state.appCollapsed[sec.key];
+        return '<h3 class="app-section-head" role="button" tabindex="0" data-action="app-collapse" data-section="' + esc(sec.key) + '" aria-expanded="' + (!collapsed) + '">' +
+          '<span class="app-chevron">' + (collapsed ? "▸" : "▾") + "</span>" +
+          sec.icon + " " + sec.label +
+          '<span class="pill">' + items.length + "</span></h3>" +
+          '<div class="app-section-body"' + (collapsed ? ' style="display:none"' : "") + ">" +
+          '<p class="muted small mb-2">' + sec.hint + "</p>" +
+          '<div class="notice-list">' + items.map(function (x) { return x.html; }).join("") + "</div>" +
+          "</div>";
+      }).join("");
 
       return (
         '<div class="page-hero"><div class="container">' +
@@ -3875,7 +5209,7 @@
         '<span class="pill club">' + esc(state.user.role) + "</span></div>" +
         "</div></div>" +
         '<section class="section"><div class="container">' +
-
+        campusBannerHTML() +
         '<div class="dash-stats mb-2">' +
         '<div class="cl-stat s-subs" style="padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)"><b>' + approved.length + '</b><span class="live-label">club memberships</span></div>' +
         '<div class="cl-stat s-soon" style="padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)"><b>' + pending.length + '</b><span class="live-label">pending join requests</span></div>' +
@@ -3894,9 +5228,12 @@
 
         '<div class="panel"><h2>📋 My applications &amp; memberships (' + appCount + ")</h2>" +
         '<p class="muted small mb-2">Form applications, request-to-join status and club memberships — all in one place.</p>' +
-        (appItems
-          ? '<div class="notice-list">' + appItems + "</div>"
-          : '<div class="empty-state"><div class="icon">📋</div><p>No applications yet — fill a club form or hit Request to Join on any club page.</p></div>') +
+        (appCount ? appFilterChips : "") +
+        (appSectionHTML
+          ? appSectionHTML
+          : (appCount
+            ? '<div class="empty-state"><div class="icon">🔍</div><p>Nothing ' + esc(({pending: "pending", approved: "approved", declined: "declined"})[state.appFilter] || "") + ' here — try another filter.</p></div>'
+            : '<div class="empty-state"><div class="icon">📋</div><p>No applications yet — fill a club form or hit Request to Join on any club page.</p></div>')) +
         "</div>" +
 
         "</div>" +
@@ -3907,7 +5244,7 @@
         '<div class="field"><label for="pf-name">Full name</label>' +
         '<input type="text" id="pf-name" value="' + esc(state.user.name || "") + '"></div>' +
         '<div class="field"><label for="pf-student">NITER student ID</label>' +
-        '<input type="text" id="pf-student" value="' + esc(state.user.studentId || "") + '" placeholder="e.g. 2023-CSE-045"></div>' +
+        '<input type="text" id="pf-student" value="' + esc(state.user.studentId || "") + '" placeholder="e.g. CS-2607001"></div>' +
         '<button class="btn btn-primary btn-block" type="submit">Save profile</button>' +
         (state.user.email || state.user.uid
           ? '<a class="btn btn-ghost btn-block btn-sm mt-1" href="#/student/' + encodeURIComponent(state.user.email || state.user.uid) + '">👤 View public profile</a>'
@@ -3943,13 +5280,14 @@
         "<h1>My Dashboard</h1>" +
         '<p class="tagline">Your applications, clubs, join requests and event feed — in one place.</p>' +
         "</div></div>" +
-        '<section class="section"><div class="container form-shell">' +
+        '<section class="section login-screen"><div class="container form-shell">' +
         '<div class="form-card-lg login-card">' +
         '<div class="lock-icon">🎓</div>' +
         "<h2>Student sign in</h2>" +
         '<p class="muted">' + (cloud
           ? "Filled a club form? Sign in with that email — your applications, memberships and events appear here."
           : "Filled a club form? Create an account or sign in — your applications, memberships and events appear here.") + "</p>" +
+        (cloud ? googleButtonHTML() : "") +
         '<form id="student-login">' +
         '<div class="field"><label>Mode</label>' +
         '<select id="slogin-mode" data-action="slogin-mode">' +
@@ -3958,7 +5296,7 @@
         '<div class="field" id="slogin-name-field" style="display:none"><label for="slogin-name">Full name</label>' +
         '<input type="text" id="slogin-name" placeholder="Your name"></div>' +
         '<div class="field" id="slogin-student-field" style="display:none"><label for="slogin-student">NITER student ID</label>' +
-        '<input type="text" id="slogin-student" placeholder="e.g. 2023-CSE-045"></div>' +
+        '<input type="text" id="slogin-student" placeholder="e.g. CS-2607001"></div>' +
         '<div class="field"><label for="slogin-email">Email</label>' +
         '<input type="email" id="slogin-email" placeholder="you@niter.edu.bd" autocomplete="email"></div>' +
         '<div class="field"><label for="slogin-pass">Password</label>' +
@@ -4020,6 +5358,14 @@
       var isMe = state.user && (state.user.uid === s.key ||
         (state.user.email || "").toLowerCase() === s.key);
 
+      // Resolve the roster entry by the student's ID so the profile can show
+      // their department, session (batch) and section.
+      var rcheck = s.studentId ? verifyStudentId(s.studentId) : { ok: false };
+      var roster = rcheck.ok ? rcheck.student : null;
+      var rosterDept = roster ? studentDeptLabel(roster) : "";
+      var rosterSession = roster ? studentSessionOf(roster) : "";
+      var rosterSec = (roster && roster.section) || "";
+
       var memItems = s.memberships.map(function (m) {
         var c = clubById(m.clubId);
         var pill = m.status === "approved"
@@ -4061,10 +5407,18 @@
         (s.studentId ? "🎓 " + esc(s.studentId) : "NITER student") +
         (s.email ? " · " + esc(s.email) : "") +
         (isMe ? " · <b>this is you</b>" : "") +
-        "</p></div></div>" +
+        "</p>" +
+        (roster
+          ? '<div class="flex flex-wrap" style="gap:8px;margin-top:10px">' +
+            '<span class="stat-chip">🏛 ' + esc(rosterDept) + "</span>" +
+            (rosterSession ? '<span class="stat-chip">📅 Session ' + esc(rosterSession) + "</span>" : "") +
+            (rosterSec ? '<span class="stat-chip">🗂 Section ' + esc(rosterSec) + "</span>" : "") +
+            "</div>"
+          : "") +
+        "</div></div>" +
         "</div></div>" +
         '<section class="section"><div class="container">' +
-
+        campusBannerHTML() +
         '<div class="dash-stats mb-2">' +
         '<div class="cl-stat s-open" style="padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)"><b>' + approved.length + '</b><span class="live-label">clubs joined</span></div>' +
         '<div class="cl-stat s-soon" style="padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)"><b>' + pending.length + '</b><span class="live-label">pending requests</span></div>' +
@@ -4105,6 +5459,15 @@
     function statusLabel(s) {
       return s === "in-progress" ? "In progress" : (s === "resolved" ? "Resolved" : "Open");
     }
+    /* Who may manage the IT Helpdesk (website-issue complaints): the admin and
+       anyone the admin has granted the "it-staff" role. Offline demo mode has
+       no roles, so any signed-in user may preview the desk there. */
+    function canManageIT() {
+      if (!state.user) return false;
+      if (state.user.role === "admin" || state.user.role === "it-staff") return true;
+      if (!DB.cloudEnabled() && state.user) return true;
+      return false;
+    }
     function statusOptsHTML(c) {
       return ["open", "in-progress", "resolved"].map(function (s) {
         return '<option value="' + s + '"' + (c.status === s ? " selected" : "") + ">" + statusLabel(s) + "</option>";
@@ -4125,6 +5488,248 @@
     }
 
     var complaintCategories = ["Event / Notice issue", "Membership / Form issue", "Conduct of members", "Suggestion", "Other"];
+    var itComplaintCategories = ["Website bug / error", "Broken link or page", "Login / account issue", "Slow or not loading", "Suggestion", "Other"];
+
+    /* IT Complaint Box — report website / portal issues. Anyone may file;
+       only the admin + admin-granted IT staff see the helpdesk. */
+    function viewItComplaint() {
+      if (state.itDone) {
+        state.itDone = null;
+        var deskLink = canManageIT() ? ' <a class="btn btn-outline" href="#/it-desk">Open IT Helpdesk</a>' : "";
+        return '<div class="section"><div class="container form-shell">' +
+          '<div class="form-card-lg anim-in"><div class="form-success">' +
+          '<div class="ok-icon anim-pop">✓</div>' +
+          "<h2>Complaint submitted!</h2>" +
+          '<p class="muted">Thank you. The IT team will review it and reply as soon as possible.</p>' +
+          '<div class="flex" style="justify-content:center"><a class="btn btn-outline" href="#/">Go home</a>' + deskLink + "</div>" +
+          "</div></div></div></div>";
+      }
+
+      var catOpts = itComplaintCategories.map(function (cat) {
+        return '<option value="' + esc(cat) + '">' + esc(cat) + "</option>";
+      }).join("");
+
+      return (
+        '<div class="page-hero"><div class="container">' +
+        '<div class="crumbs"><a href="#/">Home</a> / IT Support</div>' +
+        "<h1>🖥 Report a website issue</h1>" +
+        '<p class="tagline">Found a bug, a broken link, or anything wrong with the portal? Tell us — the site admin and IT team will review it.</p>' +
+        "</div></div>" +
+        '<div class="section"><div class="container form-shell">' +
+        '<div class="form-card-lg anim-in" style="margin-top:0">' +
+        '<div class="form-head"><h1>IT Complaint Box</h1>' +
+        '<p>Your details are optional — reports can be filed anonymously.</p></div>' +
+        '<form id="it-complaint-form" novalidate>' +
+        '<div class="form-body">' +
+        '<div class="field"><label>Category</label><select id="icf-category">' + catOpts + "</select></div>" +
+        '<div class="field"><label>Subject <span class="req">*</span></label>' +
+        '<input type="text" id="icf-title" placeholder="e.g. The notices page won’t load"></div>' +
+        '<div class="field"><label>Details <span class="req">*</span></label>' +
+        '<textarea id="icf-body" placeholder="Describe the issue — what you were doing, what happened, how often…"></textarea></div>' +
+        '<div class="two-col">' +
+        '<div class="field"><label>Your name (optional)</label><input type="text" id="icf-name" placeholder="Anonymous"></div>' +
+        '<div class="field"><label>Contact (optional)</label><input type="text" id="icf-contact" placeholder="Email or phone"></div>' +
+        "</div>" +
+        "</div>" +
+        '<div class="form-foot"><button class="btn btn-primary btn-block" type="submit">Submit complaint</button></div>' +
+        "</form></div></div></div>"
+      );
+    }
+
+    /* IT Helpdesk — manage website-issue complaints. Admin + admin-granted
+       IT staff only (offline demo: any signed-in user). */
+    function viewItDesk() {
+      if (!canManageIT()) {
+        return '<div class="section"><div class="container form-shell">' +
+          '<div class="form-card-lg login-card">' +
+          '<div class="lock-icon">🛠</div>' +
+          "<h2>Restricted area</h2>" +
+          '<p class="muted">The IT Helpdesk is visible only to the site admin and users the admin has given permission. <a href="#/it-support">Report a website issue →</a></p>' +
+          "</div></div></div>";
+      }
+      var list = db.complaints.filter(function (c) { return c.clubId === "it"; })
+        .sort(function (a, b) { return b.createdAt.localeCompare(a.createdAt); });
+      var openCount = list.filter(function (c) { return c.status === "open"; }).length;
+      var progCount = list.filter(function (c) { return c.status === "in-progress"; }).length;
+      var doneCount = list.filter(function (c) { return c.status === "resolved"; }).length;
+      return (
+        '<div class="page-hero"><div class="container">' +
+        '<div class="crumbs"><a href="#/">Home</a> / IT Helpdesk</div>' +
+        "<h1>🛠 IT Helpdesk</h1>" +
+        '<p class="tagline">Website issues reported by students — reply and update the status to resolve them.</p>' +
+        "</div></div>" +
+        '<div class="container" style="margin-top:24px">' +
+        '<div class="stats-strip">' +
+        '<div class="stat-card"><span class="sc-icon">🕓</span><div><b>' + openCount + "</b><span class='live-label'>open</span></div></div>" +
+        '<div class="stat-card"><span class="sc-icon">🔧</span><div><b>' + progCount + "</b><span class='live-label'>in progress</span></div></div>" +
+        '<div class="stat-card"><span class="sc-icon">✅</span><div><b>' + doneCount + "</b><span class='live-label'>resolved</span></div></div>" +
+        "</div>" +
+        '<div class="panel">' +
+        '<div class="portal-toolbar mb-2"><h2>IT complaints</h2></div>' +
+        (list.length
+          ? '<div class="notice-list">' + list.map(complaintManageHTML).join("") + "</div>"
+          : '<div class="empty-state"><div class="icon">🖥</div><p>No IT complaints yet.</p></div>') +
+        "</div></div>"
+      );
+    }
+
+    /* Break a student ID into its parts — <dept> <batch> <deptCode> <roll>,
+       e.g. CS-2607001 → CS (CSE), 26 (batch year), 07 (NITER dept code for
+       CSE), 001 (department roll number). Returns null when structurally
+       invalid. Separators (dashes/spaces) are ignored. */
+    function parseStudentId(id) {
+      if (!id) return null;
+      var norm = String(id).trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+      var m = norm.match(/^([A-Z]{1,5})(\d{2})(\d{2})(\d{1,4})$/);
+      if (!m) return null;
+      return { dept: m[1], batch: m[2], deptCode: m[3], roll: m[4] };
+    }
+
+    /* Verify a student ID against the official CSE 2025-2026 roster.
+       Returns { ok: true, student } when found, else { ok: false, reason:
+       "missing" | "format" | "notfound" }. Comparison ignores case/spacing/
+       dashes so CS-2607001, cs2607001 and CS 26 07 001 all match. */
+    function verifyStudentId(id) {
+      if (!id) return { ok: false, reason: "missing" };
+      var norm = String(id).trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+      if (!parseStudentId(norm)) return { ok: false, reason: "format" };
+      var hit = (db.students || []).find(function (s) {
+        return String(s.id || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "") === norm;
+      });
+      return hit ? { ok: true, student: hit } : { ok: false, reason: "notfound" };
+    }
+
+    /* Filter the students table by search text and department (select fires
+       "input" on modern browsers; the change listener below is a fallback). */
+    function applyStudentFilter() {
+      var tbody = document.querySelector(".roster-table tbody");
+      var info = document.getElementById("roster-info");
+      if (!tbody) return;
+      var qEl = document.getElementById("student-q");
+      var dEl = document.getElementById("student-dept");
+      var sq = (qEl ? qEl.value : "").toLowerCase().trim();
+      var dept = dEl ? dEl.value : "";
+      if (sq) state.studentQuery = sq; else state.studentQuery = "";
+      if (dept) state.studentDept = dept; else state.studentDept = "";
+      var deptNeedle = dept === "TE" ? "Textile" : (dept === "CSE" ? "CSE" : "");
+      var trs = tbody.querySelectorAll("tr");
+      var vis = 0;
+      for (var i = 0; i < trs.length; i++) {
+        var deptCell = trs[i].lastElementChild ? trs[i].lastElementChild.textContent : "";
+        var deptHit = !deptNeedle || deptCell.indexOf(deptNeedle) !== -1;
+        var qHit = !sq || trs[i].textContent.toLowerCase().indexOf(sq) !== -1;
+        trs[i].style.display = deptHit && qHit ? "" : "none";
+        if (deptHit && qHit) vis++;
+      }
+      var empty = document.getElementById("roster-empty");
+      if (empty) empty.style.display = vis ? "none" : "";
+      var parts = [];
+      if (sq) parts.push("matching \u201c" + qEl.value.trim() + "\u201d");
+      if (dept) parts.push("in " + (dept === "CSE" ? "Computer Science &amp; Engineering" : "Textile Engineering"));
+      if (info) info.textContent = "Showing " + vis + " of " + trs.length + " students" + (parts.length ? " " + parts.join(" ") : "");
+    }
+
+    /* Friendly explanation for a failed student-ID check. */
+    function studentIdError(sid, reason) {
+      if (reason === "format") {
+        return "That doesn\u2019t look like a NITER student ID. Format: <Dept><Batch><DeptCode><Roll> — e.g. CS-2607001 (CS = CSE, 26 = batch year, 07 = NITER CSE dept code, 001 = department roll).";
+      }
+      if (reason === "notfound") {
+        return "Student ID \u201c" + sid + "\u201d was not found in the NITER student directory. Double-check it (format like CS-2506001 or TE-2616001) or contact the club.";
+      }
+      return "Enter your NITER student ID — it must match the student directory.";
+    }
+
+    /* Session lookup by <DEPT><BATCH> — from the source lists: CS-25xx →
+       2024–2025 (CSE Sec A list), CS-26xx → 2025–2026 (official CSE
+       2025-2026 roster), TE-26xx → 2026–2027 (Textile sections list). */
+    var SESSION_BY_KEY = { CS25: "2024–2025", CS26: "2025–2026", TE26: "2026–2027" };
+
+    /* Session string for a roster student, e.g. "2026–2027". */
+    function studentSessionOf(s) {
+      var m = String((s && s.id) || "").toUpperCase().replace(/[^A-Z0-9]/g, "").match(/^([A-Z]{1,5})(\d{2})/);
+      var key = m ? m[1] + m[2] : "";
+      return SESSION_BY_KEY[key] || (m ? "20" + m[2] + "–20" + String(Number(m[2]) + 1) : "");
+    }
+
+    /* Confirmation text for a successfully verified student ID — name,
+       department, session (which batch they belong to) and section, e.g.
+       "RUFAIDA TASNIM HOQ ADIBA · Textile Engineering · Session 2026–2027 · Sec A". */
+    function studentVerifiedLabel(s) {
+      var m = String((s && s.id) || "").toUpperCase().replace(/[^A-Z0-9]/g, "").match(/^([A-Z]{1,5})(\d{2})/);
+      var dept = m ? (m[1] === "TE" ? "Textile Engineering" : "Computer Science & Engineering") : "";
+      var session = studentSessionOf(s);
+      var bits = [(s && s.name) || "", dept];
+      if (session) bits.push("Session " + session);
+      if (s && s.section) bits.push("Sec " + s.section);
+      return bits.filter(Boolean).join(" · ");
+    }
+
+    /* Student directory — searchable roster from the official CSE merit list. */
+    var DEPT_LABELS = {
+      CS: "Computer Science & Engineering (CSE)",
+      CSE: "Computer Science & Engineering (CSE)",
+      TE: "Textile Engineering (TE)"
+    };
+    function studentDeptLabel(s) {
+      var code = ((s && s.dept) || "").toUpperCase();
+      if (!code) {
+        var m = String((s && s.id) || "").match(/^([A-Z]{1,5})/);
+        code = m ? m[1].toUpperCase() : "";
+      }
+      return DEPT_LABELS[code] || (code || "Unknown");
+    }
+    function viewStudents() {
+      var q = (state.studentQuery || "").toLowerCase().trim();
+      var list = db.students || [];
+      var filtered = q
+        ? list.filter(function (s) {
+            return (s.id || "").toLowerCase().indexOf(q) !== -1 ||
+              (s.name || "").toLowerCase().indexOf(q) !== -1;
+          })
+        : list.slice();
+      // Per-department summary chips.
+      var byDept = {};
+      list.forEach(function (s) { var l = studentDeptLabel(s); byDept[l] = (byDept[l] || 0) + 1; });
+      var chips = Object.keys(byDept).map(function (d) {
+        return '<span class="stat-chip">🎓 <b>' + byDept[d] + '</b> <span class="live-label">' + esc(d) + "</span></span>";
+      }).join("");
+      var deptOpts = [
+        { v: "", label: "All departments" },
+        { v: "CSE", label: "Computer Science & Engineering" },
+        { v: "TE", label: "Textile Engineering" }
+      ].map(function (d) {
+        return '<option value="' + d.v + '"' + (state.studentDept === d.v ? " selected" : "") + ">" + d.label + "</option>";
+      }).join("");
+      var rows = filtered.map(function (s) {
+        var sec = s.section ? ' <span class="muted small">· Sec ' + esc(s.section) + "</span>" : "";
+        return '<tr><td>' + s.sl + '</td><td class="muted">' + (s.merit ? s.merit : "—") + '</td><td><code>' + esc(s.id) + "</code></td>" +
+          '<td><b>' + esc(s.name) + "</b></td><td>" + esc(studentDeptLabel(s)) + sec + "</td></tr>";
+      }).join("");
+      return (
+        '<div class="page-hero"><div class="container">' +
+        '<div class="crumbs"><a href="#/">Home</a> / Students</div>' +
+        "<h1>🎓 Student directory</h1>" +
+        '<p class="tagline">' + list.length + " students across NITER departments — find a classmate by name or student ID.</p>" +
+        '<div class="hero-badges">' + chips + "</div>" +
+        '<p class="small muted" style="margin-top:8px">Student ID format: <code>CS-2506001</code> → <b>CS</b> = department (CSE), <b>25</b> = batch year, <b>06</b> = NITER dept code, <b>001</b> = department roll.</p>' +
+        "</div></div>" +
+        '<div class="container" style="margin-top:24px">' +
+        '<div class="panel">' +
+        '<div class="portal-toolbar mb-2">' +
+        '<h2>Students</h2>' +
+        '<div class="flex" style="gap:10px;flex-wrap:wrap">' +
+        '<select id="student-dept" aria-label="Filter by department" style="max-width:230px">' + deptOpts + "</select>" +
+        '<input type="search" id="student-q" class="grow" style="max-width:300px" placeholder="Search by name or ID…" value="' + esc(q) + '">' +
+        "</div></div>" +
+        '<p class="muted small mb-2" id="roster-info">Showing <b>' + filtered.length + '</b> of ' + list.length + " students" + (q ? " matching \u201c" + esc(q) + "\u201d" : "") + ".</p>" +
+        (rows
+          ? '<div class="table-wrap"><table class="roster-table"><thead><tr><th>Sl.</th><th>Merit</th><th>Student ID</th><th>Name</th><th>Department</th></tr></thead><tbody>' + rows + "</tbody></table></div>"
+          : '<div class="empty-state" id="roster-empty"><div class="icon">🔍</div><p>No students match that search.</p></div>') +
+        "</div></div>"
+      );
+    }
+
     function viewComplaintNew(target) {
       var club = clubById(target);
       if (!club) return viewNotFound(["club", target]);
@@ -4421,6 +6026,7 @@
       "export-csv": function (el) {
         var f = formById(el.getAttribute("data-form"));
         if (!f) return;
+        if (!canManageClub(f.clubId)) { toast("You can only export submissions for your own club.", "err"); return; }
         var subs = formSubs(f.id);
         var headers = f.fields.map(function (fl) {
           return [fl.label].concat(fl.type === "payment" ? ["Transaction No"] : []);
@@ -4517,6 +6123,7 @@
       "complaint-reply": function (el) {
         var c = db.complaints.find(function (x) { return x.id === el.getAttribute("data-id"); });
         if (!c) return;
+        if (!canManageClub(c.clubId) && !(c.clubId === "it" && canManageIT())) { toast("Only this club's moderator can reply to its complaints.", "err"); return; }
         var inp = document.getElementById("cr-" + c.id);
         c.reply = inp ? inp.value.trim() : c.reply;
         save();
@@ -4539,8 +6146,143 @@
         state.eventEditing = null;
         try { sessionStorage.removeItem("niter-portal-session"); } catch (e) { /* ignore */ }
         forgetStudent();
+        clearSiteSession();
         if (window.FirebaseNS) window.FirebaseNS.auth.signOut().catch(function () { /* ignore */ });
+        state.gated = false;
         render(); toast("Signed out.", "ok");
+      },
+      "site-logout": function () {
+        clearSiteSession();
+        forgetStudent();
+        state.session = null;
+        state.user = null;
+        state.eventEditing = null;
+        try { sessionStorage.removeItem("niter-portal-session"); } catch (e) { /* ignore */ }
+        if (window.FirebaseNS) window.FirebaseNS.auth.signOut().catch(function () { /* ignore */ });
+        state.gated = false;
+        render();
+        toast("Signed out — see you soon!", "ok");
+      },
+      "gate-tab": function (el) {
+        gateMode = el.getAttribute("data-mode") || "signin";
+        var wrap = document.getElementById("gate-name-wrap");
+        if (wrap) wrap.style.display = gateMode === "create" ? "" : "none";
+        var btn = document.getElementById("gate-submit");
+        if (btn) btn.textContent = gateMode === "create" ? "Create account" : "Continue";
+        var t1 = document.getElementById("gate-tab-signin");
+        var t2 = document.getElementById("gate-tab-create");
+        if (t1) { t1.classList.toggle("active", gateMode === "signin"); t1.setAttribute("aria-selected", gateMode === "signin" ? "true" : "false"); }
+        if (t2) { t2.classList.toggle("active", gateMode === "create"); t2.setAttribute("aria-selected", gateMode === "create" ? "true" : "false"); }
+        var nameEl = document.getElementById("gate-name");
+        if (nameEl && gateMode === "create") nameEl.focus();
+      },
+      "ad-prev": function () { adGoTo((state.adIndex || 0) - 1); adStartTimer(); },
+      "ad-next": function () { adGoTo((state.adIndex || 0) + 1); adStartTimer(); },
+      "ad-dot": function (el) { adGoTo(parseInt(el.getAttribute("data-index") || "0", 10)); adStartTimer(); },
+      "pick-ad-media": function () { var f = document.getElementById("ad-file"); if (f) f.click(); },
+      "ad-link-type": function (el) {
+        var v = el.value;
+        var fw = document.getElementById("ad-link-form-wrap");
+        var ew = document.getElementById("ad-link-ext-wrap");
+        if (fw) fw.style.display = v === "form" ? "" : "none";
+        if (ew) ew.style.display = v === "external" ? "" : "none";
+      },
+      "ad-new": function () { state.adEditing = ""; render(); },
+      "ad-edit": function (el) { state.adEditing = el.getAttribute("data-id"); render(); },
+      "ad-cancel": function () { state.adEditing = null; render(); },
+      "ad-delete": function (el) {
+        var ad = (db.ads || []).find(function (x) { return x.id === el.getAttribute("data-id"); });
+        if (!ad) return;
+        if (!canManageClub(ad.clubId)) { toast("Only this club's moderator can delete its ads.", "err"); return; }
+        if (!confirm('Delete the ad "' + (ad.title || "") + '"?')) return;
+        db.ads = db.ads.filter(function (x) { return x.id !== ad.id; });
+        save(); render(); toast("Ad deleted.", "ok");
+      },
+      "ad-toggle": function (el) {
+        var ad = (db.ads || []).find(function (x) { return x.id === el.getAttribute("data-id"); });
+        if (!ad) return;
+        if (!canManageClub(ad.clubId)) { toast("Only this club's moderator can manage its ads.", "err"); return; }
+        ad.status = ad.status === "active" ? "paused" : "active";
+        save(); render(); toast(ad.status === "active" ? "Ad is now live on the homepage." : "Ad paused.", "ok");
+      },
+      "ad-save": function (el) {
+        var id = el.getAttribute("data-id") || "";
+        var club = clubById(state.session.clubId);
+        if (!club) return;
+        var title = (document.getElementById("ad-title").value || "").trim();
+        var tagline = (document.getElementById("ad-tagline").value || "").trim();
+        var media = (document.getElementById("ad-media-url").value || "").trim() || (document.getElementById("ad-media-value").value || "").trim();
+        if (!title) { toast("Give the ad a title.", "err"); return; }
+        if (!media) { toast("Add an image or video — upload a file or paste a URL.", "err"); return; }
+        var linkType = document.getElementById("ad-link-type").value;
+        var linkValue = linkType === "form"
+          ? document.getElementById("ad-link-form").value
+          : (linkType === "external" ? (document.getElementById("ad-link-ext").value || "").trim() : club.id);
+        if (linkType === "form" && !linkValue) { toast("Pick a form to link to.", "err"); return; }
+        if (linkType === "external" && !linkValue) { toast("Enter the external URL.", "err"); return; }
+        var existing = id ? (db.ads || []).find(function (x) { return x.id === id; }) : null;
+        if (existing) {
+          if (!canManageClub(existing.clubId)) { toast("Only this club's moderator can edit its ads.", "err"); return; }
+          existing.title = title; existing.tagline = tagline; existing.media = media;
+          existing.mediaType = adMediaTypeOf(media);
+          existing.link = { type: linkType, value: linkValue };
+        } else {
+          db.ads.push({
+            id: DB.uid("ad"), clubId: club.id, title: title, tagline: tagline,
+            media: media, mediaType: adMediaTypeOf(media),
+            link: { type: linkType, value: linkValue },
+            status: "active", createdAt: new Date().toISOString()
+          });
+        }
+        save(); state.adEditing = null; render();
+        toast(existing ? "Ad updated." : "Ad published! It's live on the homepage carousel now.", "ok");
+      },
+      "exec-add": function () {
+        var editor = document.getElementById("exec-editor");
+        if (!editor) return;
+        var div = document.createElement("div");
+        div.innerHTML = execEditRowHTML({ role: "", name: "", photo: "" });
+        editor.appendChild(div.firstChild);
+        var nameEl = div.firstChild.querySelector(".exec-name");
+        if (nameEl) nameEl.focus();
+      },
+      "exec-remove": function (el) {
+        var row = el.closest(".exec-edit-row");
+        if (row) row.remove();
+      },
+      "exec-save": function () {
+        var club = clubById(state.session.clubId);
+        if (!club) return;
+        // Only this club's moderator (or the admin) may update its committee.
+        if (!canManageClub(club.id)) {
+          toast("Only this club's moderator can edit its committee.", "err");
+          return;
+        }
+        var rows = document.querySelectorAll("#exec-editor .exec-edit-row");
+        var execs = [];
+        rows.forEach(function (row) {
+          var role = (row.querySelector(".exec-role").value || "").trim();
+          var name = (row.querySelector(".exec-name").value || "").trim();
+          var photo = (row.querySelector("[data-exec-photo-url]").value || "").trim();
+          if (!role && !name) return;
+          execs.push({ role: role || "Member", name: name, photo: photo });
+        });
+        var committeeChanged = JSON.stringify(club.executives) !== JSON.stringify(execs);
+        club.executives = execs;
+        // Record who updated the committee (and when) for the "last edited" note on the club page.
+        if (committeeChanged) {
+          club.committeeMeta = {
+            by: (state.user && (state.user.name || state.user.email)) || "a club moderator",
+            at: new Date().toISOString()
+          };
+        }
+        save(); render();
+        toast("Committee saved — the club page is updated.", "ok");
+      },
+      "pick-exec-photo": function (el) {
+        var row = el.closest(".exec-edit-row");
+        var f = row && row.querySelector('input[type="file"][data-exec-photo]');
+        if (f) f.click();
       },
       "student-forgot": function () {
         var email = (document.getElementById("slogin-email").value || "").trim().toLowerCase();
@@ -4549,6 +6291,51 @@
         window.FirebaseNS.auth.sendPasswordResetEmail(email).then(function () {
           toast("Password reset email sent — check your inbox.", "ok");
         }).catch(function (err) {
+          toast(authErrorMessage(err), "err");
+        });
+      },
+      "google-signin": function (el) {
+        if (!window.FirebaseNS) {
+          shakeLogin(el.closest(".login-card") || el.closest(".export-box") || el);
+          toast("Google sign-in is not available in offline demo mode — use the demo member code instead.", "err");
+          return;
+        }
+        // Gate card vs portal card vs student card / form-success panel —
+        // the student flows keep Google accounts as plain members (never admin).
+        var gateCard = !!document.getElementById("gate-login");
+        var portalCard = !!document.getElementById("portal-login");
+        var studentMode = !portalCard && !gateCard;
+        var card = el.closest(".login-card") || el.closest(".export-box") || el;
+        var btn = el;
+        var idle = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="btn-spinner"></span>Signing in…';
+        window.FirebaseNS.auth.signInWithPopup(new window.FirebaseNS.auth.GoogleAuthProvider()).then(function (res) {
+          return bootstrapUser(res.user, res.user.displayName || "", "", studentMode).then(function (profile) {
+            btn.disabled = false;
+            btn.innerHTML = idle;
+            state.user = profile;
+            state.session = null;
+            try { sessionStorage.removeItem("niter-portal-session"); } catch (e) { /* ignore */ }
+            if (studentMode) rememberStudent(profile.email);
+            if (gateCard) { rememberSiteSession(profile); state.gated = false; }
+            // Roll a fresh campus photo for this login.
+            campusPhoto(true);
+            // Claim any submissions made with this email as a visitor.
+            var linked = linkSubmissionsToUser(profile);
+            showSuccessOverlay("Welcome, " + (profile.name || profile.email) + "!", function () {
+              render();
+              toast("Signed in with Google — welcome, " + (profile.name || profile.email) + "!" +
+                (linked ? " Linked " + linked + " form submission" + (linked === 1 ? "" : "s") + " to your account." : ""), "ok");
+            });
+          });
+        }).catch(function (err) {
+          btn.disabled = false;
+          btn.innerHTML = idle;
+          var code = err && err.code ? err.code : "";
+          // User closing the popup is a cancel, not a rejection.
+          if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return;
+          shakeLogin(card);
           toast(authErrorMessage(err), "err");
         });
       },
@@ -4608,6 +6395,16 @@
         var club = clubById(clubId);
         if (!club) return;
         if (membershipFor(clubId)) { toast("You already have a request for this club.", "err"); return; }
+        // Membership requires a student ID that exists in the official roster.
+        var rsid = (state.user && state.user.studentId) || "";
+        var rcheck = verifyStudentId(rsid);
+        if (!rcheck.ok) {
+          toast(rcheck.reason === "missing"
+            ? "Add your NITER student ID to your profile first (My Dashboard → profile), then request to join."
+            : studentIdError(rsid, rcheck.reason), "err");
+          return;
+        }
+        toast("✓ Student verified: " + studentVerifiedLabel(rcheck.student), "ok");
         db.memberships.push({
           id: DB.uid("m"),
           userId: state.user.uid,
@@ -4634,6 +6431,7 @@
       "approve-membership": function (el) {
         var m = (db.memberships || []).find(function (x) { return x.id === el.getAttribute("data-id"); });
         if (!m) return;
+        if (!canManageClub(m.clubId)) { toast("Only this club's moderator can approve join requests.", "err"); return; }
         m.status = "approved";
         m.reviewedAt = new Date().toISOString();
         m.reviewedBy = (state.user && (state.user.name || state.user.email)) || "";
@@ -4642,14 +6440,27 @@
       "reject-membership": function (el) {
         var m = (db.memberships || []).find(function (x) { return x.id === el.getAttribute("data-id"); });
         if (!m) return;
+        if (!canManageClub(m.clubId)) { toast("Only this club's moderator can reject join requests.", "err"); return; }
         m.status = "rejected";
         m.reviewedAt = new Date().toISOString();
         m.reviewedBy = (state.user && (state.user.name || state.user.email)) || "";
         save(); render(); toast("Request rejected.", "ok");
       },
+      "app-filter": function (el) {
+        state.appFilter = el.getAttribute("data-filter") || "";
+        render();
+      },
+      "app-collapse": function (el) {
+        var sec = el.getAttribute("data-section") || "";
+        if (!sec) return;
+        if (state.appCollapsed[sec]) delete state.appCollapsed[sec];
+        else state.appCollapsed[sec] = true;
+        render();
+      },
       "approve-submission": function (el) {
         var s = (db.submissions || []).find(function (x) { return x.id === el.getAttribute("data-id"); });
         if (!s) return;
+        if (!canManageClub(s.clubId)) { toast("Only this club's moderator can approve its applications.", "err"); return; }
         s.reviewStatus = "approved";
         s.reviewedAt = new Date().toISOString();
         s.reviewedBy = (state.user && (state.user.name || state.user.email)) || "";
@@ -4658,6 +6469,7 @@
       "reject-submission": function (el) {
         var s = (db.submissions || []).find(function (x) { return x.id === el.getAttribute("data-id"); });
         if (!s) return;
+        if (!canManageClub(s.clubId)) { toast("Only this club's moderator can reject its applications.", "err"); return; }
         s.reviewStatus = "rejected";
         s.reviewedAt = new Date().toISOString();
         s.reviewedBy = (state.user && (state.user.name || state.user.email)) || "";
@@ -4682,6 +6494,32 @@
        stored in localStorage. */
     var STUDENT_KEY = "niter-student-accounts";
     var STUDENT_SESSION = "niter-student-session";
+
+    /* ================= Entry gate =================
+       Every visitor must sign in or create an account before browsing the
+       site. The gate is remembered for the tab session (sessionStorage), so
+       it pops up again on each new visit. Any signed-in account (Firebase,
+       student, or portal session) passes. */
+    var SITE_SESSION = "niter-site-session";
+    function siteSession() {
+      try { return JSON.parse(sessionStorage.getItem(SITE_SESSION) || "null") || null; } catch (e) { return null; }
+    }
+    function rememberSiteSession(profile) {
+      try {
+        sessionStorage.setItem(SITE_SESSION, JSON.stringify({ email: profile.email, name: profile.name || "" }));
+      } catch (e) { /* ignore */ }
+    }
+    function clearSiteSession() {
+      try { sessionStorage.removeItem(SITE_SESSION); } catch (e) { /* ignore */ }
+    }
+    function gateRequired() {
+      if (state.user) return false;                 // signed-in account
+      if (state.session && state.session.clubId) return false; // active portal session
+      if (siteSession()) return false;              // passed the gate this tab
+      if (studentSessionEmail()) return false;      // student session
+      return true;
+    }
+
     function studentAccounts() {
       try { return JSON.parse(localStorage.getItem(STUDENT_KEY) || "{}"); } catch (e) { return {}; }
     }
@@ -4708,17 +6546,26 @@
       if (!/^\S+@\S+\.\S+$/.test(email)) { toast("Enter a valid email address.", "err"); return; }
       if (pass.length < 6) { toast("Password must be at least 6 characters.", "err"); return; }
       var btn = document.querySelector('#student-login button[type="submit"]');
-      function busy(b) { if (btn) { btn.disabled = b; btn.textContent = b ? "Working…" : "Continue"; } }
+      function busy(b) { if (btn) setBtnBusy(btn, b, "Signing in…", "Continue"); }
       busy(true);
 
       function enter(profile) {
         state.user = profile;
         state.session = null;
+        state.gated = false;
         try { sessionStorage.removeItem("niter-portal-session"); } catch (e) { /* ignore */ }
         rememberStudent(profile.email);
+        rememberSiteSession(profile);
+        // Roll a fresh campus photo for this login.
+        campusPhoto(true);
+        // Claim any submissions made with this email as a visitor.
+        var linked = linkSubmissionsToUser(profile);
         busy(false);
-        render();
-        toast("Welcome, " + (profile.name || profile.email) + "!", "ok");
+        showSuccessOverlay("Welcome, " + (profile.name || profile.email) + "!", function () {
+          render();
+          toast("Welcome, " + (profile.name || profile.email) + "!" +
+            (linked ? " Linked " + linked + " form submission" + (linked === 1 ? "" : "s") + " to your account." : ""), "ok");
+        });
       }
 
       if (window.FirebaseNS) {
@@ -4729,10 +6576,12 @@
         req.then(function (res) {
           bootstrapUser(res.user, name, studentId, true).then(enter).catch(function (err) {
             busy(false);
+            shakeLogin(document.getElementById("student-login"));
             toast("Could not load your profile: " + (err && err.message), "err");
           });
         }).catch(function (err) {
           busy(false);
+          shakeLogin(document.getElementById("student-login"));
           toast(authErrorMessage(err), "err");
         });
         return;
@@ -4742,14 +6591,19 @@
       var acc = studentAccounts();
       if (mode === "signup") {
         if (!name) { busy(false); toast("Enter your name.", "err"); return; }
-        if (acc[email]) { busy(false); toast("That email is already registered — sign in instead.", "err"); return; }
+        if (acc[email]) { busy(false); shakeLogin(document.getElementById("student-login")); toast("That email is already registered — sign in instead.", "err"); return; }
         acc[email] = { name: name, studentId: studentId, pass: pass };
         saveStudentAccounts(acc);
         enter({ uid: "local-" + email, email: email, name: name, studentId: studentId, role: "member", clubs: [] });
         return;
       }
       var a = acc[email];
-      if (!a || a.pass !== pass) { busy(false); toast("Incorrect email or password.", "err"); return; }
+      if (!a || a.pass !== pass) {
+        busy(false);
+        shakeLogin(document.getElementById("student-login"));
+        toast("Incorrect email or password.", "err");
+        return;
+      }
       enter({ uid: "local-" + email, email: email, name: a.name, studentId: a.studentId, role: "member", clubs: [] });
     }
 
@@ -4765,18 +6619,27 @@
       if (!/^\S+@\S+\.\S+$/.test(email)) { toast("Enter a valid email address.", "err"); return; }
       if (pass.length < 6) { toast("Password must be at least 6 characters.", "err"); return; }
       var btn = document.querySelector('#student-create button[type="submit"]');
-      function busy(b) { if (btn) { btn.disabled = b; btn.textContent = b ? "Creating…" : "Create my student login"; } }
+      function busy(b) { if (btn) setBtnBusy(btn, b, "Creating…", "Create my student login"); }
       busy(true);
 
       function enter(profile) {
         state.user = profile;
         state.session = null;
+        state.gated = false;
         try { sessionStorage.removeItem("niter-portal-session"); } catch (e) { /* ignore */ }
         rememberStudent(profile.email);
+        rememberSiteSession(profile);
+        // Roll a fresh campus photo for this login.
+        campusPhoto(true);
+        // Claim any submissions made with this email as a visitor.
+        var linked = linkSubmissionsToUser(profile);
         busy(false);
-        navigate("dashboard");
-        render();
-        toast("Welcome, " + (profile.name || profile.email) + "! Your application is saved.", "ok");
+        showSuccessOverlay("Welcome, " + (profile.name || profile.email) + "!", function () {
+          navigate("dashboard");
+          render();
+          toast("Welcome, " + (profile.name || profile.email) + "! Your application is saved." +
+            (linked ? " Linked " + linked + " form submission" + (linked === 1 ? "" : "s") + " to your account." : ""), "ok");
+        });
       }
 
       if (window.FirebaseNS) {
@@ -4790,17 +6653,24 @@
               return bootstrapUser(res2.user, name, studentId, true).then(enter);
             }).catch(function (err2) {
               busy(false);
+              shakeLogin(document.getElementById("student-create"));
               toast(authErrorMessage(err2), "err");
             });
             return;
           }
+          shakeLogin(document.getElementById("student-create"));
           toast(authErrorMessage(err), "err");
         });
         return;
       }
 
       var acc = studentAccounts();
-      if (acc[email]) { busy(false); toast("That email is already registered — sign in instead.", "err"); return; }
+      if (acc[email]) {
+        busy(false);
+        shakeLogin(document.getElementById("student-create"));
+        toast("That email is already registered — sign in instead.", "err");
+        return;
+      }
       acc[email] = { name: name, studentId: studentId, pass: pass };
       saveStudentAccounts(acc);
       enter({ uid: "local-" + email, email: email, name: name, studentId: studentId, role: "member", clubs: [] });
@@ -4819,7 +6689,7 @@
       if (!/^\S+@\S+\.\S+$/.test(email)) { toast("Enter a valid email address.", "err"); return; }
       if (pass.length < 6) { toast("Password must be at least 6 characters.", "err"); return; }
       var btn = document.querySelector('#portal-login button[type="submit"]');
-      function busy(b) { if (btn) { btn.disabled = b; btn.textContent = b ? "Working…" : "Continue"; } }
+      function busy(b) { if (btn) setBtnBusy(btn, b, "Signing in…", "Continue"); }
       busy(true);
 
       function onSuccess(user) {
@@ -4828,10 +6698,13 @@
           state.session = null;
           try { sessionStorage.removeItem("niter-portal-session"); } catch (err) { /* ignore */ }
           busy(false);
-          render();
-          toast("Welcome, " + (profile.name || profile.email) + "!", "ok");
+          showSuccessOverlay("Welcome, " + (profile.name || profile.email) + "!", function () {
+            render();
+            toast("Welcome, " + (profile.name || profile.email) + "!", "ok");
+          });
         }).catch(function (err) {
           busy(false);
+          shakeLogin(document.getElementById("portal-login"));
           toast("Could not load your profile: " + (err && err.message), "err");
         });
       }
@@ -4841,8 +6714,16 @@
         : auth.signInWithEmailAndPassword(email, pass);
       req.then(function (res) { onSuccess(res.user); }).catch(function (err) {
         busy(false);
+        shakeLogin(document.getElementById("portal-login"));
         toast(authErrorMessage(err), "err");
       });
+    }
+
+    /* Show a spinner in the submit button while authenticating. */
+    function setBtnBusy(btn, busy, busyLabel, idleHTML) {
+      if (!btn) return;
+      btn.disabled = busy;
+      btn.innerHTML = busy ? '<span class="btn-spinner"></span>' + busyLabel : idleHTML;
     }
 
     function authErrorMessage(err) {
@@ -4949,9 +6830,23 @@
       else if (e.key === "ArrowRight") { galleryStep(1); e.preventDefault(); }
     });
 
+    // Enter / Space toggles a collapsible dashboard section header.
+    document.addEventListener("keydown", function (e) {
+      var t = e.target;
+      if (!t || !t.matches || !t.matches('[data-action="app-collapse"]')) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        var handler = actions["app-collapse"];
+        if (handler) handler(t, e);
+      }
+    });
+
     document.addEventListener("submit", function (e) {
       var form = e.target;
-      if (form.id === "student-create") {
+      if (form.id === "gate-login") {
+        e.preventDefault();
+        gateLoginSubmit();
+      } else if (form.id === "student-create") {
         e.preventDefault();
         studentCreateSubmit();
       } else if (form.id === "student-login") {
@@ -4963,7 +6858,7 @@
           // Offline demo mode — the classic member code.
           var clubId = document.getElementById("login-club").value;
           var code = (document.getElementById("login-code").value || "").trim();
-          if (code !== DEMO_CODE) { toast("Incorrect member code.", "err"); return; }
+          if (code !== DEMO_CODE) { shakeLogin(document.getElementById("portal-login")); toast("Incorrect member code.", "err"); return; }
           state.session = { clubId: clubId };
           state.portalTab = "notices";
           state.portalNotice = null; state.builder = null; state.subFormId = null; state.eventEditing = null;
@@ -5013,6 +6908,28 @@
         });
         save();
         state.complaintDone = target2;
+        render();
+        toast("Complaint submitted!", "ok");
+      } else if (form.id === "it-complaint-form") {
+        e.preventDefault();
+        var itTitle = (document.getElementById("icf-title").value || "").trim();
+        var itBody = (document.getElementById("icf-body").value || "").trim();
+        if (!itTitle || !itBody) { toast("Subject and details are required.", "err"); return; }
+        db.complaints.push({
+          id: DB.uid("c"),
+          clubId: "it",
+          category: document.getElementById("icf-category").value,
+          title: itTitle,
+          body: itBody,
+          submittedBy: (document.getElementById("icf-name").value || "").trim() || "Anonymous",
+          contact: (document.getElementById("icf-contact").value || "").trim(),
+          status: "open",
+          reply: "",
+          createdAt: new Date().toISOString(),
+          resolvedAt: ""
+        });
+        save();
+        state.itDone = true;
         render();
         toast("Complaint submitted!", "ok");
       } else if (form.id === "new-club-form") {
@@ -5066,6 +6983,10 @@
         for (var i2 = 0; i2 < nCards.length; i2++) {
           nCards[i2].style.display = nCards[i2].textContent.toLowerCase().indexOf(nq) !== -1 ? "" : "none";
         }
+        return;
+      }
+      if (t.matches && (t.matches("#student-q") || t.matches("#student-dept"))) {
+        applyStudentFilter();
         return;
       }
       if (t.matches && t.matches("#bf-title")) { if (state.builder) state.builder.title = t.value; return; }
@@ -5144,20 +7065,96 @@
         reader.readAsDataURL(file);
         return;
       }
+      if (t.matches && t.matches('input[type="file"][data-ad-media]')) {
+        var adFile = t.files && t.files[0];
+        if (!adFile) return;
+        var isVideo = /^video\//.test(adFile.type);
+        if (!isVideo && !/^image\//.test(adFile.type)) { toast("Please choose an image or video file.", "err"); t.value = ""; return; }
+        if (adFile.size > (isVideo ? 15 : 8) * 1024 * 1024) {
+          toast(isVideo ? "That video is too large — keep it under 15 MB." : "That image is too large — pick one under 8 MB.", "err");
+          t.value = ""; return;
+        }
+        var reader = new FileReader();
+        reader.onload = function () {
+          if (!isVideo) {
+            var img = new Image();
+            img.onload = function () {
+              var canvas = document.createElement("canvas");
+              var scale = Math.min(1, 1200 / img.width);
+              canvas.width = Math.max(1, Math.round(img.width * scale));
+              canvas.height = Math.max(1, Math.round(img.height * scale));
+              canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+              applyAdMedia(canvas.toDataURL("image/jpeg", 0.78), "image");
+            };
+            img.onerror = function () { toast("Could not read that image.", "err"); t.value = ""; };
+            img.src = reader.result;
+          } else {
+            applyAdMedia(reader.result, "video");
+          }
+        };
+        reader.readAsDataURL(adFile);
+        t.value = "";
+        return;
+      }
+      if (t.matches && t.matches('input[type="file"][data-exec-photo]')) {
+        var execFile = t.files && t.files[0];
+        if (!execFile) return;
+        if (!/^image\//.test(execFile.type)) { toast("Please choose an image file (JPG/PNG).", "err"); t.value = ""; return; }
+        if (execFile.size > 8 * 1024 * 1024) { toast("That image is too large — pick one under 8 MB.", "err"); t.value = ""; return; }
+        var reader = new FileReader();
+        reader.onload = function () {
+          var img = new Image();
+          img.onload = function () {
+            var canvas = document.createElement("canvas");
+            var scale = Math.min(1, 480 / img.width);
+            canvas.width = Math.max(1, Math.round(img.width * scale));
+            canvas.height = Math.max(1, Math.round(img.height * scale));
+            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+            var dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+            var row = t.closest(".exec-edit-row");
+            var urlInp = row && row.querySelector("[data-exec-photo-url]");
+            var pv = row && row.querySelector("[data-exec-preview]");
+            if (urlInp) urlInp.value = dataUrl;
+            if (pv) pv.innerHTML = '<img class="exec-photo" src="' + dataUrl + '" alt="">';
+            toast("Photo added — save the committee to apply it.", "ok");
+          };
+          img.onerror = function () { toast("Could not read that image.", "err"); t.value = ""; };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(execFile);
+        t.value = "";
+        return;
+      }
       if (t.matches("[data-action='login-mode']")) {
         var showName = t.value === "signup";
         var nameField = document.getElementById("login-name-field");
-        if (nameField) nameField.style.display = showName ? "" : "none";
         var studentField = document.getElementById("login-student-field");
+        if (nameField) nameField.style.display = showName ? "" : "none";
         if (studentField) studentField.style.display = showName ? "" : "none";
+        if (showName) {
+          [nameField, studentField].forEach(function (f) {
+            if (!f) return;
+            f.classList.remove("dyn-in");
+            void f.offsetWidth; // restart the animation
+            f.classList.add("dyn-in");
+          });
+        }
         return;
       }
       if (t.matches("[data-action='slogin-mode']")) {
         var sShow = t.value === "signup";
         var sNameField = document.getElementById("slogin-name-field");
-        if (sNameField) sNameField.style.display = sShow ? "" : "none";
         var sStudentField = document.getElementById("slogin-student-field");
+        if (sNameField) sNameField.style.display = sShow ? "" : "none";
         if (sStudentField) sStudentField.style.display = sShow ? "" : "none";
+        if (sShow) {
+          [sNameField, sStudentField].forEach(function (f) {
+            if (!f) return;
+            f.classList.remove("dyn-in");
+            void f.offsetWidth;
+            f.classList.add("dyn-in");
+          });
+        }
         return;
       }
       if (t.matches("[data-action='builder-type']")) {
@@ -5177,13 +7174,43 @@
       }
       if (t.matches("[data-action='complaint-status']")) {
         var c = db.complaints.find(function (x) { return x.id === t.getAttribute("data-id"); });
-        if (c) {
+        if (c && (canManageClub(c.clubId) || (c.clubId === "it" && canManageIT()))) {
           c.status = t.value;
           c.resolvedAt = t.value === "resolved" ? new Date().toISOString() : "";
           save();
           render();
           toast("Status updated to " + statusLabel(c.status) + ".", "ok");
         }
+      }
+    });
+
+    /* Committee photo fallback: if a member's photo can't load (offline,
+       removed URL…), swap it for the initials avatar instead of a broken icon. */
+    document.addEventListener("error", function (e) {
+      var t = e.target;
+      if (t && t.tagName === "IMG" && t.classList && t.classList.contains("exec-photo")) {
+        var span = document.createElement("span");
+        span.className = "exec-avatar";
+        span.textContent = initialsOf(t.getAttribute("alt") || "");
+        if (t.parentNode) t.parentNode.replaceChild(span, t);
+      }
+    }, true);
+
+    /* Live committee previews: typing a photo URL or a name updates the avatar. */
+    document.addEventListener("input", function (e) {
+      var t = e.target;
+      if (!t || !t.matches) return;
+      var row = t.closest && t.closest(".exec-edit-row");
+      if (!row) return;
+      var pv = row.querySelector("[data-exec-preview]");
+      if (!pv) return;
+      if (t.matches("[data-exec-photo-url]")) {
+        var v = (t.value || "").trim();
+        pv.innerHTML = v
+          ? '<img class="exec-photo" src="' + esc(v) + '" alt="">'
+          : '<span class="exec-avatar">' + esc(initialsOf((row.querySelector(".exec-name").value || ""))) + "</span>";
+      } else if (t.matches("[data-exec-name]") && !(row.querySelector("[data-exec-photo-url]").value || "").trim()) {
+        pv.innerHTML = '<span class="exec-avatar">' + esc(initialsOf((t.value || ""))) + "</span>";
       }
     });
 
@@ -5226,6 +7253,10 @@
       }
     } catch (e) { /* ignore */ }
 
+    /* No site-wide entry gate — the sign-in popup only appears when a visitor
+       taps a specific club (render() decides per route). */
+    state.gated = false;
+
     if (window.FirebaseNS) {
       // Cloud mode — pull data from Firestore, then keep polling for updates.
       DB.hydrate(function (changed) { if (changed) render(); });
@@ -5266,11 +7297,10 @@
       if (stuEmail) {
         var stuAcc = studentAccounts()[stuEmail];
         if (stuAcc) {
-          state.user = { uid: "local-" + stuEmail, email: stuEmail, name: stuAcc.name, studentId: stuAcc.studentId, role: "member", clubs: [] };
-        } else {
-          forgetStudent();
-        }
+          state.user = { uid: "local-" + stuEmail, email: stuEmail, name: stuAcc.name, studentId: stuAcc.studentId, role: "member", clubs: [] };      } else {
+        forgetStudent();
       }
+    }
     }
 
     /* theme button reflects current mode */
@@ -5283,6 +7313,18 @@
     var headerLogo = document.querySelector(".brand .logo-img");
     var footerLogo = document.querySelector(".footer-logo");
     if (headerLogo && footerLogo) footerLogo.src = headerLogo.src;
+
+    /* Pause the ad carousel while hovering, resume on leave. */
+    document.addEventListener("mouseover", function (e) {
+      if (e.target && e.target.closest && e.target.closest("#ads-carousel")) adStopTimer();
+    });
+    document.addEventListener("mouseout", function (e) {
+      if (e.target && e.target.closest && e.target.closest("#ads-carousel") &&
+          !document.querySelector("#ads-carousel:hover")) {
+        var adList = activeAds();
+        if (adList.length > 1) adStartTimer();
+      }
+    });
 
     window.addEventListener("hashchange", render);
     render();

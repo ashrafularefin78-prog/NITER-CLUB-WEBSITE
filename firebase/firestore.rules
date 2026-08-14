@@ -17,6 +17,9 @@ service cloud.firestore {
         (userDoc().role == 'admin' || userDoc().role == 'executive') &&
         clubId in (userDoc().clubs == null ? [] : userDoc().clubs);
     }
+    function isItStaff() {
+      return signedIn() && userDoc().role == 'it-staff';
+    }
 
     /* ---------- site config (public read; admin write) ---------- */
     match /config/site {
@@ -66,11 +69,12 @@ service cloud.firestore {
       allow update, delete: if isAdmin() || execOf(resource.data.clubId);
     }
 
-    /* ---------- complaints (anyone may file; admins & club staff manage) ---------- */
+    /* ---------- complaints (anyone may file; admins, club staff & admin-
+       granted IT staff manage) ---------- */
     match /complaints/{id} {
       allow create: if true;
-      allow read: if isAdmin() || execOf(resource.data.clubId);
-      allow update, delete: if isAdmin() || execOf(resource.data.clubId);
+      allow read: if isAdmin() || isItStaff() || execOf(resource.data.clubId);
+      allow update, delete: if isAdmin() || isItStaff() || execOf(resource.data.clubId);
     }
 
     /* ---------- memberships (junction table: student <-> club) ----------
@@ -95,6 +99,13 @@ service cloud.firestore {
 
     /* ---------- events (public read; club staff & admins post) ---------- */
     match /events/{id} {
+      allow read: if true;
+      allow create: if isAdmin() || execOf(request.resource.data.clubId);
+      allow update, delete: if isAdmin() || execOf(resource.data.clubId);
+    }
+
+    /* ---------- ads (public read; club staff & admins publish) ---------- */
+    match /ads/{id} {
       allow read: if true;
       allow create: if isAdmin() || execOf(request.resource.data.clubId);
       allow update, delete: if isAdmin() || execOf(resource.data.clubId);

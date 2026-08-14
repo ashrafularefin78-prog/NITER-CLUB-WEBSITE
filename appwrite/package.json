@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "setup": "node setup-appwrite.mjs",
-    "setup:dry-run": "node setup-appwrite.mjs --dry-run"
+    "setup:dry-run": "node setup-appwrite.mjs --dry-run",
+    "seed:students": "node seed-students.mjs",
+    "seed:students:dry-run": "node seed-students.mjs --dry-run"
   },
   "engines": {
     "node": ">=18"

@@ -12,14 +12,16 @@ import {
 } from "react";
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut as fbSignOut,
 } from "firebase/auth";
 import { doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
 import type { PortalUser, Session } from "./types";
 import { getCloudAuth, getCloudDb } from "./firebase";
-import { getDb, setReadScope } from "./store";
+import { getDb, linkSubmissionsToUser, setReadScope } from "./store";
 
 export const DEMO_CODE = "niter2025";
 const SESSION_KEY = "niter-portal-session";
@@ -88,6 +90,7 @@ interface AuthState {
     mode: "signin" | "signup",
     name?: string
   ) => Promise<string | null>;
+  loginWithGoogle: () => Promise<string | null>;
   signOut: () => void;
 }
 
@@ -119,6 +122,7 @@ async function bootstrapUser(
       name: d.name || name || user.displayName || "",
       role: d.role || "member",
       clubs: d.clubs || [],
+      studentId: d.studentId || "",
     };
   }
 
@@ -169,8 +173,7 @@ async function loadProfile(user: {
 }): Promise<PortalUser> {
   const db = getCloudDb();
   if (!db) throw new Error("Cloud disabled");
-  const snap = await getDoc(doc(db, "users", user.uid));
-  if (snap.exists()) {
+  const snap = await getDoc(doc(db, "users", user.uid));    if (snap.exists()) {
     const d = snap.data() as Partial<PortalUser>;
     return {
       uid: user.uid,
@@ -178,6 +181,7 @@ async function loadProfile(user: {
       name: d.name || user.displayName || "",
       role: d.role || "member",
       clubs: d.clubs || [],
+      studentId: d.studentId || "",
     };
   }
   return bootstrapUser(user, user.displayName || "");
@@ -204,7 +208,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (fbUser) {
           const profile = await loadProfile(fbUser);
           setUser(profile);
-          setReadScope({ role: profile.role, clubs: profile.clubs });
+          setReadScope({ role: profile.role, clubs: profile.clubs, uid: profile.uid, email: profile.email });
           const savedClub = readSavedSession()?.clubId;
           const canUseSaved = profile.role === "admin" || (profile.clubs || []).includes(savedClub || "");
           if (savedClub && canUseSaved) {
@@ -260,9 +264,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             : await signInWithEmailAndPassword(auth, email, pass);
         const profile = await bootstrapUser(req.user, name || "");
         setUser(profile);
-        setReadScope({ role: profile.role, clubs: profile.clubs });
+        setReadScope({ role: profile.role, clubs: profile.clubs, uid: profile.uid, email: profile.email });
         setSession(null);
         persistSession(null);
+        // Claim any submissions made with this email as a visitor.
+        linkSubmissionsToUser({ uid: profile.uid, email: profile.email, name: profile.name, studentId: profile.studentId });
         return null;
       } catch (err) {
         return authErrorMessage(err);
@@ -270,6 +276,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     []
   );
+
+  const loginWithGoogle = useCallback(async (): Promise<string | null> => {
+    const auth = getCloudAuth();
+    if (!auth) return "Google sign-in is not available in demo mode.";
+    try {
+      const provider = new GoogleAuthProvider();
+      const res = await signInWithPopup(auth, provider);
+      const profile = await bootstrapUser(res.user, res.user.displayName || "");
+      setUser(profile);
+      setReadScope({ role: profile.role, clubs: profile.clubs, uid: profile.uid, email: profile.email });
+      setSession(null);
+      persistSession(null);
+      // Claim any submissions made with this email as a visitor.
+      linkSubmissionsToUser({ uid: profile.uid, email: profile.email, name: profile.name, studentId: profile.studentId });
+      return null;
+    } catch (err) {
+      const code = (err as { code?: string })?.code ?? "";
+      if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return null;
+      return authErrorMessage(err);
+    }
+  }, []);
 
   const signOut = useCallback(() => {
     setSession(null);
@@ -280,8 +307,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [cloud]);
 
   const value = useMemo<AuthState>(
-    () => ({ user, session, loading, cloud, setClubSession, loginWithCode, loginEmail, signOut }),
-    [user, session, loading, cloud, setClubSession, loginWithCode, loginEmail, signOut]
+    () => ({ user, session, loading, cloud, setClubSession, loginWithCode, loginEmail, loginWithGoogle, signOut }),
+    [user, session, loading, cloud, setClubSession, loginWithCode, loginEmail, loginWithGoogle, signOut]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

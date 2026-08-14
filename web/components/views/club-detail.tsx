@@ -1,18 +1,65 @@
 "use client";
 
 import Link from "next/link";
-import { useDb } from "@/lib/store";
-import { clubForms, clubNotices, isClosed, nextDeadline, statusOf } from "@/lib/utils";
+import { useDb, mutate } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
+import { clubForms, clubNotices, isClosed, nextDeadline, relativeAgo, statusOf, uid } from "@/lib/utils";
+import { studentIdError, studentVerifiedText, verifyStudentId } from "@/lib/students";
+import { useToast } from "@/components/providers";
 import { FormGrid, NoticeCard } from "@/components/cards";
 import { Countdown } from "@/components/countdown";
 import { EmptyState, PageHero, Skeleton } from "@/components/ui";
 
 export default function ClubDetailView({ clubId }: { clubId: string }) {
   const db = useDb();
+  const auth = useAuth();
+  const toast = useToast();
   const club = db?.clubs.find((c) => c.id === clubId) ?? null;
 
   if (!db) return <ClubDetailSkeleton />;
   if (!club) return <ClubMissing />;
+
+  const me = auth.cloud ? auth.user : null;
+  const myMembership = me
+    ? (db.memberships || []).find((m) => m.userId === me.uid && m.clubId === club.id)
+    : null;
+
+  const requestJoin = () => {
+    if (!me) {
+      toast.toast("Sign in to request membership.", "err");
+      return;
+    }
+    if (myMembership) {
+      toast.toast("You already have a request for this club.", "err");
+      return;
+    }
+    const check = verifyStudentId(db, me.studentId || "");
+    if (!check.ok) {
+      toast.toast(
+        check.reason === "missing"
+          ? "Add your NITER student ID to your profile first (My Dashboard → profile), then request to join."
+          : studentIdError(me.studentId || "", check.reason ?? "missing"),
+        "err"
+      );
+      return;
+    }
+    toast.toast("✓ Student verified: " + studentVerifiedText(check.student), "ok");
+    mutate((draft) => {
+      draft.memberships.push({
+        id: uid("m"),
+        userId: me.uid,
+        clubId: club.id,
+        status: "pending",
+        requestedAt: new Date().toISOString(),
+        reviewedAt: "",
+        reviewedBy: "",
+        userName: me.name || me.email,
+        userEmail: me.email,
+        studentId: me.studentId || "",
+      });
+    });
+    toast.toast("Join request sent to " + club.name + "!", "ok");
+  };
 
   const notices = clubNotices(db, club.id);
   const forms = clubForms(db, club.id);
@@ -96,22 +143,39 @@ export default function ClubDetailView({ clubId }: { clubId: string }) {
             <p className="m-0 mt-1 text-[13px] text-muted">
               Apply through our membership form and our team will get back to you.
             </p>
-            <div className="mt-3">
+            <div className="mt-3 space-y-2.5">
+              {myMembership ? (
+                <span
+                  className={`inline-block w-full rounded-md px-3 py-2 text-[13px] font-bold ${
+                    myMembership.status === "approved"
+                      ? "bg-emerald-100 text-emerald-800"
+                      : myMembership.status === "rejected"
+                        ? "bg-rose-100 text-rose-700"
+                        : "bg-amber-100 text-amber-800"
+                  }`}
+                >
+                  {myMembership.status === "approved"
+                    ? "✓ You're a member"
+                    : myMembership.status === "rejected"
+                      ? "✕ Request declined"
+                      : "⏳ Join request pending"}
+                </span>
+              ) : me ? (
+                <button className="btn btn-primary w-full" onClick={requestJoin}>
+                  Request to join
+                </button>
+              ) : null}
               {membership ? (
                 isClosed(membership) ? (
                   <button className="btn btn-outline w-full" disabled>
                     Applications closed
                   </button>
                 ) : (
-                  <Link href={`/form/${membership.id}`} className="btn btn-primary w-full no-underline">
-                    Apply now
+                  <Link href={`/form/${membership.id}`} className="btn btn-outline w-full no-underline">
+                    Apply via form
                   </Link>
                 )
-              ) : (
-                <button className="btn btn-outline w-full" disabled>
-                  No application form yet
-                </button>
-              )}
+              ) : null}
             </div>
           </div>
 
@@ -174,17 +238,40 @@ export default function ClubDetailView({ clubId }: { clubId: string }) {
             </h3>
             {execs.length ? (
               <>
-                <ul className="m-0 mt-3 list-none space-y-2.5 p-0">
+                <ul className="m-0 mt-3 grid list-none grid-cols-1 gap-2 p-0 sm:grid-cols-2">
                   {execs.map((e, i) => (
-                    <li key={i} className="flex items-baseline justify-between gap-3 text-[13.5px]">
-                      <span className="shrink-0 font-semibold text-muted">{e.role}</span>
-                      <span className="text-right font-semibold text-ink">{e.name}</span>
+                    <li
+                      key={i}
+                      className="flex items-center gap-2.5 rounded-xl border border-line bg-surface-2 px-3 py-2"
+                    >
+                      {e.photo ? (
+                        <img
+                          src={e.photo}
+                          alt={e.name}
+                          loading="lazy"
+                          onError={(ev) => ((ev.target as HTMLImageElement).style.display = "none")}
+                          className="h-10 w-10 shrink-0 rounded-full object-cover"
+                        />
+                      ) : null}
+                      <span
+                        aria-hidden="true"
+                        className="inline-grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-br from-gold to-amber-400 text-[13px] font-extrabold text-navy"
+                      >
+                        {initialsOf(e.name)}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-[13px] font-bold text-ink">{e.name}</span>
+                        <span className="block text-[11.5px] font-semibold text-muted">{e.role}</span>
+                      </span>
                     </li>
                   ))}
                 </ul>
                 <p className="m-0 mt-3 text-[11.5px] text-muted">
-                  Compiled from official club Facebook pages & NITER sources. Verify with the club for the
-                  latest panel.
+                  {club.committeeMeta?.at
+                    ? `🕒 Committee updated by ${club.committeeMeta.by || "a club moderator"} · ${relativeAgo(
+                        club.committeeMeta.at
+                      )}`
+                    : "Compiled from official club Facebook pages & NITER sources. Verify with the club for the latest panel."}
                 </p>
               </>
             ) : (
@@ -229,6 +316,12 @@ function ClubMissing() {
       </Link>
     </div>
   );
+}
+
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "?";
+  return ((parts[0][0] || "") + (parts[parts.length - 1][0] || "")).toUpperCase();
 }
 
 function ClubDetailSkeleton() {

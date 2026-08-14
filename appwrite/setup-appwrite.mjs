@@ -95,6 +95,25 @@ const COLLECTIONS = [
     ],
   },
   {
+    id: "students",
+    name: "Students",
+    // Official student directory (name + student ID + merit rank) — the
+    // reference list used to verify student IDs. Rows are imported by
+    // seed-students.mjs. department/session defaults imply optional fields.
+    attributes: [
+      s("name", 255),
+      s("studentId", 64),
+      i("merit", false),
+      i("sl", false),
+      s("department", 128, false, "CSE"),
+      s("session", 64, false, "2025-2026"),
+    ],
+    indexes: [
+      idx("u_studentId", ["studentId"], DatabasesIndexType.Unique),
+      idx("i_merit", ["merit"]),
+    ],
+  },
+  {
     id: "events",
     name: "Events",
     attributes: [

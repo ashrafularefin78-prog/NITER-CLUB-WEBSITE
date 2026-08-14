@@ -5,6 +5,7 @@ Two things live in this folder:
 | File | Purpose |
 |---|---|
 | `setup-appwrite.mjs` | **Provisioning script** — connects to your Appwrite instance with the Node.js SDK and creates the database, collections, attributes, indexes and storage buckets required by `document/02-TRD.md`. |
+| `seed-students.mjs` | **Seed script** — imports the official student roster (B.Sc. CSE, Session 2025-2026, 83 students) into the `students` collection; idempotent. |
 | `mcp.json` / `mcp.cloud.json` | **MCP server configs** — connect Claude Desktop, Cursor, VS Code, Claude Code, etc. to the official [Appwrite MCP server](https://github.com/appwrite/mcp) so an AI assistant can inspect and operate this backend directly. |
 | `package.json` | Node deps (`node-appwrite` SDK + `dotenv`). |
 | `.env.example` | Template for connection settings. Copy to `.env` and fill in. |
@@ -60,6 +61,7 @@ Appwrite auto-provisions the system attributes `$id`, `$createdAt`, `$updatedAt`
 | Collection | Attributes (per TRD §4) | Indexes |
 |---|---|---|
 | `users` | name, email, passwordHash, studentId, department, role `enum(member, executive, admin)`, status `enum(pending, approved, rejected, active, deactivated)` | **unique** email, **unique** studentId, key(role), key(status, role) |
+| `students` | name, studentId, merit (int), sl (int), department (default `CSE`), session (default `2025-2026`) — official student directory used to verify student IDs | **unique** studentId, key(merit) |
 | `events` | title, description, startsAt (datetime), venue, bannerUrl, capacity (int), registrationDeadline (datetime), status `enum(draft, published, cancelled)` | key(status), key(startsAt ↑), key(status, startsAt ↑) |
 | `event_registrations` | userId, eventId | **unique**(userId, eventId) — stops duplicate registrations, key(userId), key(eventId) |
 | `applications` | userId, reason, status `enum(pending, approved, rejected)`, reviewedAt, reviewedBy | key(status), key(userId) |
@@ -77,6 +79,18 @@ Appwrite auto-provisions the system attributes `$id`, `$createdAt`, `$updatedAt`
 | `notice-attachments` | Notice attachments (TRD `attachmentUrl`) | 5 MB | pdf, jpg, jpeg, png, webp, doc, docx | public read |
 
 Buckets are **publicly readable** (visitors must be able to see banners, photos and attachments without logging in) but **not publicly writable** — uploads go through your server API key, matching the TRD's signed-upload flow.
+
+### Seed the student roster
+
+`npm run setup` provisions the `students` collection; then import the 83 CSE students (Session 2025-2026) with:
+
+```bash
+cd appwrite
+npm run seed:students          # import what's missing (idempotent)
+npm run seed:students:dry-run  # preview without writing
+```
+
+Each row stores `name`, `studentId` (e.g. `CS-2607001` — `CS` = CSE, `26` = batch year, `07` = NITER dept code, `001` = roll), `merit`, `sl`, `department` (`CSE`), and `session` (`2025-2026`). Rows whose `studentId` already exists are skipped, so re-running never duplicates or clobbers.
 
 > **Note on collections:** collections are created with **no public permissions** (server-side only). This matches the TRD architecture, where the Express backend owns all reads/writes via its API key and roles are enforced server-side. If you later wire the Appwrite Web SDK directly into the React frontend, add `read("any")` on the public collections (events, notices, albums, photos, executives).
 
@@ -158,6 +172,6 @@ For **your own Appwrite instance**. Requires [`uv`](https://docs.astral.sh/uv/) 
 
 ## 6. Next steps
 
-- **Seed content** (first admin user, sample events/notices) — ask your AI assistant via the connected MCP server, or add a `seed-appwrite.mjs`.
+- **Seed content** (first admin user, sample events/notices) — ask your AI assistant via the connected MCP server, or add a `seed-appwrite.mjs`. The student roster is already covered by `seed-students.mjs`.
 - **Build the backend** (Express + `node-appwrite`) against the schema above.
 - If you want the frontend to talk to Appwrite directly, revisit the collection permissions note in §3.
