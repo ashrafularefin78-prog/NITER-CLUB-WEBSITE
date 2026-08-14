@@ -10,6 +10,7 @@ import { clubById, formById, fmtDate, relativeAgo } from "@/lib/utils";
 import { studentIdError, studentVerifiedText, verifyStudentId, type StudentCheck } from "@/lib/students";
 import { useToast } from "@/components/providers";
 import { EmptyState, GoogleButton, OrDivider, PageHero, Skeleton } from "@/components/ui";
+import { mirrorUser } from "@/lib/appwrite-write";
 import CampusBanner, { campusPhoto } from "@/components/campus-banner";
 import type { Membership, ReviewStatus } from "@/lib/types";
 
@@ -93,7 +94,16 @@ export default function DashboardView() {
   // restored session on page load is not a new login, so no new roll.
   const prevUserRef = useRef<UserLike | null>(user);
   if (prevUserRef.current !== user) {
-    if (!prevUserRef.current && user) campusPhoto(true);
+    if (!prevUserRef.current && user) {
+      campusPhoto(true);
+      // Mirror the student account into the Appwrite users registry (best-effort).
+      void mirrorUser({
+        email: user.email,
+        name: user.name,
+        studentId: user.studentId,
+        role: user.role,
+      });
+    }
     prevUserRef.current = user;
   }
 

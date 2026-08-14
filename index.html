@@ -1158,7 +1158,7 @@
             <li><a href="#/notices">Notices</a></li>
             <li><a href="#/portal">Member portal</a></li>
             <li><a href="#/dashboard">My Dashboard</a></li>
-            <li><a href="#/students">🎓 Student directory</a></li>
+            <li id="foot-students-link"><a href="#/students">🎓 Student directory</a></li>
             <li><a href="#/it-support">🖥 Report a website issue</a></li>
           </ul>
         </div>
@@ -1256,12 +1256,13 @@
         panel: "2025–26",
         executives: [
           // Real 2025–26 panel, pulled from the club's own public database
-          // (nitercomputerclub.tech). Photos: President + VP are the club's
-          // published portraits (local copies); the rest render as gold
-          // initials avatars until the moderators upload them via the editor.
+          // (nitercomputerclub.tech). Photos: President, VP and GS are the
+          // club's published portraits (local copies); the rest render as
+          // gold initials avatars until the moderators upload them via the
+          // editor.
           { role: "President", name: "Farhan Kabir Sifat", photo: "committee/farhan-pres.jpg" },
           { role: "Vice President", name: "Niloy Chandra Sarker", photo: "committee/niloy-vp.jpg" },
-          { role: "General Secretary", name: "MD. Abir Habib" },
+          { role: "General Secretary", name: "MD. Abir Habib", photo: "committee/abir-gs.jpg" },
           { role: "Joint Secretary", name: "Adnan Saki" },
           { role: "Organizing Secretary", name: "Chinmoy Bhakta" },
           { role: "Assistant Organizing Secretary", name: "Shahanur Rashid Safin" },
@@ -3129,6 +3130,9 @@
       if (itDeskLink) itDeskLink.style.display = canManageIT() ? "" : "none";
       var navSignout = document.getElementById("nav-signout");
       if (navSignout) navSignout.style.display = (state.user || siteSession()) ? "" : "none";
+      // Student directory is admin-only — hide the footer link for everyone else.
+      var footStudents = document.getElementById("foot-students-link");
+      if (footStudents) footStudents.style.display = isPortalAdmin() ? "" : "none";
       // (re)start or stop the ad rotation depending on whether the page shows the carousel
       if (parts.length === 0 || parts[0] === "home") {
         if (activeAds().length) adStartTimer(); else adStopTimer();
@@ -3909,6 +3913,59 @@
       subjectPrefix: "[NITER Clubs]"
     };
 
+    /* Appwrite mirroring — set DATA_API.origin to the Next.js app's base URL
+       (e.g. "http://127.0.0.1:3210") to also persist student accounts and form
+       submissions to the Appwrite backend via its API routes. The local save
+       is always primary; every mirror call is fire-and-forget and silent. */
+    window.DATA_API = { origin: "" };
+
+    function apiOrigin() {
+      return (window.DATA_API && window.DATA_API.origin) || "";
+    }
+
+    function mirrorSubmission(sub) {
+      var origin = apiOrigin();
+      if (!origin || !sub || !sub.formId || !sub.clubId) return;
+      try {
+        // text/plain content type — a "simple" CORS request, so no preflight
+        // round-trip and no preflight-dependent environments to break on.
+        // The server parses the JSON body regardless of content type.
+        fetch(origin + "/api/submissions", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({
+            id: sub.id,
+            formId: sub.formId,
+            clubId: sub.clubId,
+            data: sub.data,
+            submittedAt: sub.submittedAt,
+            submitterName: sub.submitterName,
+            submitterEmail: sub.submitterEmail,
+            submitterStudentId: sub.submitterStudentId,
+            userId: sub.userId
+          })
+        }).catch(function () { /* mirror is optional */ });
+      } catch (e) { /* mirror is optional */ }
+    }
+
+    function mirrorUser(profile) {
+      var origin = apiOrigin();
+      if (!origin || !profile || !profile.email) return;
+      try {
+        // text/plain content type — no CORS preflight, robust everywhere.
+        fetch(origin + "/api/users", {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({
+            email: profile.email,
+            name: profile.name || "",
+            studentId: profile.studentId || "",
+            role: profile.role || "member"
+          })
+        }).catch(function () { /* mirror is optional */ });
+      } catch (e) { /* mirror is optional */ }
+    }
+
     /* Moderators of a club: the admin (all clubs) plus that club's executives.
        Cloud mode reads the users collection (Firestore rules allow admins and
        the user themself; an executive editor therefore can't resolve emails,
@@ -4206,6 +4263,8 @@
       };
       db.submissions.push(sub);
       save();
+      // Mirror the fill-up to Appwrite (best-effort, never blocks the local save).
+      mirrorSubmission(sub);
       state.formDone = formId;
       state.lastSub = sub;
       render();
@@ -5508,10 +5567,17 @@
       var s = studentByKey(key);
       // Signed-in students can always open their own profile (Firebase accounts
       // aren't in the local roster, so fall back to the session's own details).
-      if (!s && state.user && (key.toLowerCase() === (state.user.email || "").toLowerCase() ||
-          key.toLowerCase() === (state.user.uid || "").toLowerCase())) {
+      // The URL key arrives percent-encoded (e.g. ashraful%40niter.edu.bd) — it
+      // must be decoded before comparing with the session's email/uid, or a
+      // cloud-mode student with no club activity yet hits "Student not found".
+      var decoded = key;
+      try { decoded = decodeURIComponent(key || ""); } catch (e) { /* keep raw */ }
+      var dk = String(decoded || "").toLowerCase();
+      if (!s && state.user && (dk === (state.user.email || "").toLowerCase() ||
+          dk === (state.user.uid || "").toLowerCase() ||
+          dk === (state.user.studentId || "").toLowerCase())) {
         s = {
-          key: key.toLowerCase(),
+          key: dk,
           name: state.user.name || "",
           studentId: state.user.studentId || "",
           email: state.user.email || "",
@@ -5847,6 +5913,17 @@
       return DEPT_LABELS[code] || (code || "Unknown");
     }
     function viewStudents() {
+      // The full roster (names + IDs) is sensitive — admins only.
+      if (!isPortalAdmin()) {
+        return (
+          '<section class="section"><div class="container" style="text-align:center;padding:60px 0">' +
+          '<div style="font-size:56px">🔒</div>' +
+          "<h1>Admins only</h1>" +
+          '<p class="muted">The full student directory is restricted — only site admins can browse it.</p>' +
+          '<div class="mt-2"><a class="btn btn-primary" href="#/">Go home</a></div>' +
+          "</div></section>"
+        );
+      }
       var q = (state.studentQuery || "").toLowerCase().trim();
       var list = db.students || [];
       var filtered = q
@@ -6012,7 +6089,10 @@
       } else if (route === "student" && parts[1]) {
         title = "Student not found";
         msg = "We couldn\u2019t find a public profile for that student — they may not have joined a club or filled a form yet.";
-        extra = '<div class="mt-2"><a class="btn btn-outline" href="#/students">Browse the student directory</a></div>';
+        // The directory is admin-only — don't advertise it to others.
+        extra = isPortalAdmin()
+          ? '<div class="mt-2"><a class="btn btn-outline" href="#/students">Browse the student directory</a></div>'
+          : "";
       } else if (route === "cover" || route === "cgpa") {
         title = "That page has been removed";
         msg = "The " + (route === "cgpa" ? "CGPA calculator" : "assignment cover page maker") + " is no longer part of this site.";
@@ -6738,6 +6818,8 @@
         try { sessionStorage.removeItem("niter-portal-session"); } catch (e) { /* ignore */ }
         rememberStudent(profile.email);
         rememberSiteSession(profile);
+        // Mirror the student account into the Appwrite users registry (best-effort).
+        mirrorUser(profile);
         // Roll a fresh campus photo for this login.
         campusPhoto(true);
         // Claim any submissions made with this email as a visitor.
@@ -6811,6 +6893,8 @@
         try { sessionStorage.removeItem("niter-portal-session"); } catch (e) { /* ignore */ }
         rememberStudent(profile.email);
         rememberSiteSession(profile);
+        // Mirror the student account into the Appwrite users registry (best-effort).
+        mirrorUser(profile);
         // Roll a fresh campus photo for this login.
         campusPhoto(true);
         // Claim any submissions made with this email as a visitor.

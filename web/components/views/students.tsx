@@ -3,13 +3,20 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useDb } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
+import { useAppwriteStudents } from "@/lib/appwrite-students";
 import { PageHero, Skeleton } from "@/components/ui";
 
 export default function StudentsView() {
   const db = useDb();
+  const auth = useAuth();
   const [q, setQ] = useState("");
+  const roster = useAppwriteStudents();
 
-  const students = useMemo(() => db?.students ?? [], [db]);
+  const students = useMemo(() => {
+    if (roster.status === "live") return roster.students;
+    return db?.students ?? [];
+  }, [roster, db]);
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -19,7 +26,25 @@ export default function StudentsView() {
     );
   }, [students, q]);
 
-  if (!db) return <DirectorySkeleton />;
+  // The full roster (names + IDs) is sensitive — admins only.
+  if (!auth.loading && auth.user?.role !== "admin") {
+    return (
+      <div className="container-x py-20 text-center">
+        <div className="text-6xl">🔒</div>
+        <h1 className="mt-3 text-2xl font-extrabold text-ink">Admins only</h1>
+        <p className="mx-auto mt-2 max-w-md text-[14px] text-muted">
+          The full student directory is restricted — only site admins can browse it.
+        </p>
+        <div className="mt-5 flex justify-center gap-3">
+          <Link href="/" className="btn btn-primary no-underline">
+            Go home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!db && roster.status !== "live") return <DirectorySkeleton />;
 
   const deptOf = (s: { id: string; department?: string }) => {
     const d = (s.department || "").toLowerCase();
@@ -31,7 +56,11 @@ export default function StudentsView() {
 
   return (
     <>
-      <PageHero eyebrow="NITER · All departments" title="🎓 Student directory" sub={`Find a classmate by name or student ID — ${students.length} students.`} />
+      <PageHero
+        eyebrow="NITER · All departments"
+        title="🎓 Student directory"
+        sub={`Find a classmate by name or student ID — ${students.length} students.`}
+      />
       <div className="container-x py-10">
         <p className="m-0 -mt-4 mb-6 text-[12.5px] text-muted">
           Student ID format: <code className="rounded bg-surface-2 px-1.5 py-0.5 font-mono text-[12px]">CS-2506001</code> →{" "}
@@ -39,7 +68,17 @@ export default function StudentsView() {
         </p>
         <div className="card p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="m-0 text-[18px] font-bold text-ink">Students</h2>
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="m-0 text-[18px] font-bold text-ink">Students</h2>
+              {roster.status === "live" && (
+                <span
+                  className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800"
+                  title="Roster loaded live from the Appwrite students collection"
+                >
+                  ● live from Appwrite
+                </span>
+              )}
+            </div>
             <input
               type="search"
               value={q}

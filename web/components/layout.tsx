@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useTheme } from "@/components/providers";
+import { useAuth } from "@/lib/auth";
+import { AdminOnlyDirectoryLink } from "@/components/admin-links";
 
 const NAV = [
   { href: "/", label: "Home", match: "/" },
   { href: "/notices", label: "Notices", match: "/notices" },
   { href: "/clubs", label: "Clubs", match: "/clubs" },
-  { href: "/students", label: "Students", match: "/students" },
   { href: "/dashboard", label: "My Dashboard", match: "/dashboard" },
   { href: "/it-support", label: "IT Help", match: "/it-support" },
 ];
@@ -62,6 +63,8 @@ function ThemeToggle({ dark = false }: { dark?: boolean }) {
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
 
   const isActive = (match: string) => (match === "/" ? pathname === "/" : pathname.startsWith(match));
 
@@ -85,6 +88,18 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                href="/students"
+                className={`rounded-md px-3.5 py-2 text-[14px] font-medium no-underline transition ${
+                  isActive("/students")
+                    ? "bg-white/10 text-white shadow-[inset_0_-2px_0_#FFB606]"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                Students
+              </Link>
+            )}
             <div className="ml-2">
               <ThemeToggle dark />
             </div>
@@ -120,6 +135,17 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                href="/students"
+                onClick={() => setOpen(false)}
+                className={`rounded-md px-3 py-3 text-sm font-medium no-underline ${
+                  isActive("/students") ? "bg-white/10 text-white" : "text-white/80"
+                }`}
+              >
+                Students
+              </Link>
+            )}
             <Link
               href="/portal"
               onClick={() => setOpen(false)}
@@ -180,13 +206,16 @@ export function SiteFooter() {
               {col.title}
             </h4>
             <ul className="m-0 grid list-none gap-2.5 p-0 text-[14px]">
-              {col.links.map((l) => (
-                <li key={l.href + l.label}>
-                  <Link href={l.href} className="no-underline transition hover:text-gold">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
+              {col.links
+                .filter((l) => l.href !== "/students")
+                .map((l) => (
+                  <li key={l.href + l.label}>
+                    <Link href={l.href} className="no-underline transition hover:text-gold">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              {col.title === "Explore" && <AdminOnlyDirectoryLink />}
             </ul>
           </div>
         ))}

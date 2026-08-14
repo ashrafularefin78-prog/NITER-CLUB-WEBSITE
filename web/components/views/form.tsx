@@ -6,6 +6,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import type { Form, FormField, Submission } from "@/lib/types";
 import { clubById, fmtDateTime, statusOf } from "@/lib/utils";
 import { mutate, useDb } from "@/lib/store";
+import { mirrorSubmission } from "@/lib/appwrite-write";
 import { getCloudStorage } from "@/lib/firebase";
 import { useToast } from "@/components/providers";
 import { Countdown } from "@/components/countdown";
@@ -119,6 +120,7 @@ export default function FormView({ formId }: { formId: string }) {
                 setSubmitting(false);
                 setDone(sub);
                 toast.toast("Application submitted successfully!", "ok");
+                void mirrorSubmission(sub);
               }, 700);
             }}
           >

@@ -107,6 +107,7 @@ const COLLECTIONS = [
       i("sl", false),
       s("department", 128, false, "CSE"),
       s("session", 64, false, "2025-2026"),
+      s("section", 16, false),
     ],
     indexes: [
       idx("u_studentId", ["studentId"], DatabasesIndexType.Unique),
@@ -159,6 +160,48 @@ const COLLECTIONS = [
     indexes: [
       idx("i_status", ["status"]),
       idx("i_userId", ["userId"]),
+    ],
+  },
+  {
+    id: "forms",
+    name: "Forms",
+    // Club forms (membership/join forms etc.). `fields` holds the field
+    // definitions as a JSON string, so the schema stays stable when forms
+    // add or remove questions.
+    attributes: [
+      s("clubId", 64),
+      s("title", 255),
+      s("description", 4096, false),
+      d("openAt", false),
+      d("deadline", false),
+      s("fields", 16384, false),
+    ],
+    indexes: [
+      idx("i_clubId", ["clubId"]),
+      idx("i_clubId_title", ["clubId", "title"]),
+    ],
+  },
+  {
+    id: "submissions",
+    name: "Submissions",
+    // One document per form fill-up. `data` holds the answers as a JSON
+    // string; `reviewStatus` lets club moderators approve/reject later.
+    attributes: [
+      s("formId", 64),
+      s("clubId", 64),
+      s("submitterName", 255, false),
+      s("submitterEmail", 255, false),
+      s("submitterStudentId", 64, false),
+      s("userId", 255, false),
+      s("data", 16384),
+      e("reviewStatus", ["pending", "approved", "rejected"], false, "pending"),
+      d("reviewedAt", false),
+      d("submittedAt", false),
+    ],
+    indexes: [
+      idx("i_formId", ["formId"]),
+      idx("i_clubId", ["clubId"]),
+      idx("i_email", ["submitterEmail"]),
     ],
   },
   {
@@ -430,17 +473,30 @@ async function ensureBuckets(storage) {
       console.log(`  ${dim("dry-run")}  would create bucket "${bucket.name}" (${bucket.id})`);
       continue;
     }
-    await storage.createBucket(
-      bucket.id,
-      bucket.name,
-      [Permission.read(Role.any())], // public read; writes stay server-side only
-      false,                          // fileSecurity — bucket-level permissions apply to all files
-      true,                           // enabled
-      bucket.maxSize,
-      bucket.extensions,
-    );
-    console.log(`  ${green("created")}  bucket "${bucket.name}" (${bucket.id})`);
+    try {
+      await storage.createBucket(
+        bucket.id,
+        bucket.name,
+        [Permission.read(Role.any())], // public read; writes stay server-side only
+        false,                          // fileSecurity — bucket-level permissions apply to all files
+        true,                           // enabled
+        bucket.maxSize,
+        bucket.extensions,
+      );
+      console.log(`  ${green("created")}  bucket "${bucket.name}" (${bucket.id})`);
+    } catch (err) {
+      // Free plans cap the number of buckets (usually 1). Don't abort the
+      // whole run — report it and move on; the DB schema is unaffected.
+      if (err && err.code === 403 && /bucket/i.test(err.message || "")) {
+        console.log(`  ${yellow("skipped")}  bucket "${bucket.name}" (${bucket.id}) — plan bucket limit reached`);
+        console.log(dim(`    ${err.message} — upgrade the plan or consolidate buckets in BUCKETS.`));
+        continue;
+      }
+      throw err;
+    }
   }
+  console.log(dim("\nNote: on plans with a 1-bucket limit, uploads for events/galleries/notices"));
+  console.log(dim("can share a single bucket — see the BUCKETS array at the top of this script."));
 }
 
 /* ------------------------------------------------------------------ */

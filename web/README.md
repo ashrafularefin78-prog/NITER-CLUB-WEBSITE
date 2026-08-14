@@ -39,6 +39,34 @@ Firebase config defaults to the live `niter-club-website` project (public by
 design — security lives in the Firestore rules under `../firebase/`). To point
 at your own project, copy `.env.example` to `.env.local` and fill in the values.
 
+**Appwrite** (optional, server-side only): the student directory is backed by
+the live Appwrite `students` collection via `GET /api/students` when these
+env vars are set in `.env.local` (values live in `../appwrite/.env`):
+
+- `APPWRITE_ENDPOINT` — e.g. `https://sgp.cloud.appwrite.io/v1`
+- `APPWRITE_PROJECT_ID`
+- `APPWRITE_API_KEY` — server key with `databases.read` (never sent to the browser)
+
+The route paginates the collection, maps it to the app's `Student` shape and
+sorts by `sl`. If Appwrite is unconfigured or unreachable the directory
+silently falls back to the bundled roster, so the page always works offline.
+
+**Writes — student data & form fill-ups** mirror into Appwrite on the same
+three env vars, always best-effort (the local/Firestore save is primary; a
+slow or offline Appwrite never blocks the student):
+
+- `POST /api/submissions` — saves a club form fill-up to the `submissions`
+  collection (idempotent per form + submitter email; photo data-URLs are
+dropped and the payload is capped). Called by this app after every submit
+and by the static main site (`index.html`) when its `DATA_API.origin` is set.
+- `POST /api/users` — upserts a student account into the `users` collection
+  (name, email, student ID, department, role; **never** passwords). Called on
+  sign-up/sign-in in both apps.
+
+Both routes are CORS-open so the static `index.html` can call them from
+another origin. Seed existing forms/submissions with `npm run seed:site` in
+`../appwrite/`.
+
 ## Committee-edit email notifications
 
 When a moderator or admin saves a committee, the app emails the club's

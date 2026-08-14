@@ -74,7 +74,12 @@ function resolveStudent(db: Database, me: UserLike | null, rawKey: string): Prof
       return { key: k, name: hit.name || "", studentId: hit.id, email: "", memberships: [], submissions: [] };
     }
   }
-  if (me && ((me.email || "").toLowerCase() === k || (me.uid || "").toLowerCase() === k)) {
+  if (
+    me &&
+    ((me.email || "").toLowerCase() === k ||
+      (me.uid || "").toLowerCase() === k ||
+      (me.studentId || "").toLowerCase() === k)
+  ) {
     return {
       key: k,
       name: me.name || "",
@@ -114,6 +119,8 @@ function ProfileSkeleton() {
 }
 
 function StudentMissing() {
+  const auth = useAuth();
+  const canBrowse = !auth.loading && auth.user?.role === "admin";
   return (
     <div className="container-x py-16 text-center">
       <div className="text-6xl">🧑‍🎓</div>
@@ -122,9 +129,11 @@ function StudentMissing() {
         We couldn’t find a public profile for that student — they may not have joined a club or filled a form yet.
       </p>
       <div className="mt-5 flex justify-center gap-3">
-        <Link href="/students" className="btn btn-outline no-underline">
-          Browse the student directory
-        </Link>
+        {canBrowse && (
+          <Link href="/students" className="btn btn-outline no-underline">
+            Browse the student directory
+          </Link>
+        )}
         <Link href="/" className="btn btn-primary no-underline">
           Go home
         </Link>
