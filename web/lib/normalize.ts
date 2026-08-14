@@ -426,6 +426,13 @@ export function normalizeDb(d: Database): Database {
           : { role: r.role || "", name: r.name || "", photo: r.photo || "" }
       );
     }
+    // Migrate a legacy single "last edited" note into the edit history.
+    const legacy = (c as { committeeMeta?: { by?: string; at?: string } }).committeeMeta;
+    if (!Array.isArray(c.committeeHistory) && legacy?.at) {
+      c.committeeHistory = [{ by: legacy.by || "a club moderator", at: legacy.at, summary: "updated the committee" }];
+      delete (c as { committeeMeta?: unknown }).committeeMeta;
+    }
+    if (!Array.isArray(c.committeeHistory)) c.committeeHistory = [];
   });
   d.notices.forEach((n) => {
     if (!n.createdAt) n.createdAt = (n.date || "") + "T09:00:00";

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { Form, FormField, Membership, Notice, PortalUser, Submission } from "@/lib/types";
+import type { Executive, Form, FormField, Membership, Notice, PortalUser, Submission } from "@/lib/types";
 import {
   clubById,
   clubForms,
@@ -1521,21 +1521,68 @@ function CommitteeEditor({ clubId }: { clubId: string }) {
         photo: (r.photo || "").trim(),
       }))
       .filter((r) => r.role || r.name);
+    let summary = "";
+    let clubName = "";
     mutate((draft) => {
       const club = draft.clubs.find((c) => c.id === clubId);
       if (!club) return;
+      clubName = club.name;
       const next = clean.map((r) => ({ role: r.role || "Member", name: r.name, photo: r.photo }));
-      const changed = JSON.stringify(club.executives) !== JSON.stringify(next);
+      const prev = club.executives;
+      const changed = JSON.stringify(prev) !== JSON.stringify(next);
       club.executives = next;
-      // Record who updated the committee (and when) for the "last edited" note on the club page.
+      // Log every committee save (who, when, what changed) for the club-page history.
       if (changed) {
-        club.committeeMeta = {
-          by: auth.user?.name || auth.user?.email || "a club moderator",
+        const by = auth.user?.name || auth.user?.email || "a club moderator";
+        if (!Array.isArray(club.committeeHistory)) club.committeeHistory = [];
+        summary = committeeChangeSummary(prev, next);
+        club.committeeHistory.unshift({
+          by,
           at: new Date().toISOString(),
-        };
+          summary,
+        });
       }
     });
     toast.toast("Committee saved — the club page is updated.", "ok");
+    // Email the club's moderators about the change (resolved from the users cache).
+    if (summary) notifyCommitteeEdit(clubName, summary);
+  };
+
+  /* Email the club's moderators (admins + that club's executives) about the edit.
+     Cloud mode populates db.__users; demo mode has none, so we fall back to a toast. */
+  const notifyCommitteeEdit = (name: string, change: string) => {
+    const by = auth.user?.name || auth.user?.email || "a club moderator";
+    const mods: { email: string; name?: string }[] = [];
+    (db.__users || []).forEach((u) => {
+      if (!u?.email) return;
+      if (u.role === "admin" || (u.role === "executive" && (u.clubs || []).includes(clubId))) {
+        mods.push({ email: u.email, name: u.name || u.email });
+      }
+    });
+    if (!mods.length) {
+      toast.toast("Committee saved — no moderator emails on file to notify (admins can add them in Members & roles).");
+      return;
+    }
+    fetch("/api/committee-notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        clubName: name,
+        editor: by,
+        summary: change,
+        url: `${window.location.origin}/club/${encodeURIComponent(clubId)}`,
+        to: mods,
+      }),
+    })
+      .then((r) => r.json().catch(() => null))
+      .then((res) => {
+        if (res && res.sent) {
+          toast.toast(`Committee saved — emailed ${res.sent} moderator${res.sent === 1 ? "" : "s"}.`, "ok");
+        } else {
+          toast.toast(`Committee saved — notification could not be sent (${res?.skipped || "unknown error"}).`, "err");
+        }
+      })
+      .catch(() => toast.toast("Committee saved — notification could not be sent.", "err"));
   };
 
   return (
@@ -1602,6 +1649,32 @@ function CommitteeEditor({ clubId }: { clubId: string }) {
       </button>
     </div>
   );
+}
+
+function committeeChangeSummary(prev: Executive[], next: { role: string; name: string; photo: string }[]): string {
+  const key = (r: { name?: string }) => (r.name || "").trim().toLowerCase();
+  const prevMap = new Map<string, Executive>();
+  const nextMap = new Map<string, { role: string; name: string; photo: string }>();
+  prev.forEach((r) => r.name && prevMap.set(key(r), r));
+  next.forEach((r) => r.name && nextMap.set(key(r), r));
+  let added = 0;
+  let removed = 0;
+  let updated = 0;
+  next.forEach((r) => {
+    if (!r.name) return;
+    const p = prevMap.get(key(r));
+    if (!p) {
+      added++;
+      return;
+    }
+    if ((p.role || "") !== (r.role || "") || (p.photo || "") !== (r.photo || "")) updated++;
+  });
+  prev.forEach((r) => r.name && !nextMap.has(key(r)) && removed++);
+  const parts: string[] = [];
+  if (added) parts.push(`added ${added}`);
+  if (removed) parts.push(`removed ${removed}`);
+  if (updated) parts.push(`updated ${updated}`);
+  return parts.length ? parts.join(", ") : "reordered the panel";
 }
 
 function initialsOf(name: string): string {

@@ -309,6 +309,12 @@
     .exec-card .exec-who b { display: block; font-size: 13.5px; line-height: 1.25; }
     .exec-card .exec-who .role { display: block; font-size: 11.5px; color: var(--muted); font-weight: 600; margin-top: 1px; }
 
+    /* Committee edit history (club page) */
+    .committee-history { margin-top: 10px; padding-top: 9px; border-top: 1px dashed var(--line); }
+    .committee-history ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+    .committee-history li { font-size: 12px; color: var(--muted); line-height: 1.45; }
+    .committee-history li b { color: var(--ink); font-weight: 700; }
+
     /* Committee editor (portal settings) */
     .exec-edit-row {
       display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
@@ -763,6 +769,8 @@
     .roster-table th, .roster-table td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
     .roster-table th { background: #f4f6fb; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .4px; }
     .roster-table tbody tr:last-child td { border-bottom: 0; }
+    .roster-link { color: var(--crimson); text-decoration: none; }
+    .roster-link:hover { text-decoration: underline; }
     .roster-table tbody tr:hover { background: #f7f9ff; }
     .roster-table code { background: #eef1f8; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; color: var(--navy); }
     [data-theme="dark"] .roster-table th { background: #141d3d; }
@@ -2285,6 +2293,12 @@
             return { role: (r && r.role) || "", name: (r && r.name) || "", photo: (r && r.photo) || "" };
           });
         }
+        // Migrate a legacy single "last edited" note into the edit history.
+        if (!Array.isArray(c.committeeHistory) && c.committeeMeta && c.committeeMeta.at) {
+          c.committeeHistory = [{ by: c.committeeMeta.by || "a club moderator", at: c.committeeMeta.at, summary: "updated the committee" }];
+          delete c.committeeMeta;
+        }
+        if (!Array.isArray(c.committeeHistory)) c.committeeHistory = [];
       });
       (d.notices || []).forEach(function (n) {
         if (!n.createdAt) n.createdAt = (n.date || "") + "T09:00:00";
@@ -3834,16 +3848,136 @@
 
         '<div class="panel"><h3>Executive committee' + (c.panel ? " · " + esc(c.panel) : "") + "</h3>" +
         (execs
-          ? '<div class="exec-grid">' + execs + "</div>" +
-            (c.committeeMeta && c.committeeMeta.at
-              ? '<p class="small muted mb-0 mt-1">🕒 Committee updated by <b>' + esc(c.committeeMeta.by || "a club moderator") + '</b> · <span data-ago data-ts="' + esc(c.committeeMeta.at) + '"></span></p>'
-              : '<p class="small muted mb-0 mt-1">Committee as listed on official club pages. Club moderators can update members &amp; photos from the portal.</p>')
+          ? '<div class="exec-grid">' + execs + "</div>" + committeeHistoryHTML(c)
           : '<p class="muted small mb-0">Committee panel not listed yet — check the club\u2019s Facebook page for the latest updates.</p>') +
         "</div>" +
 
         "</div>" +
         "</div></div></section>"
       );
+    }
+
+    /* Compact "what changed" summary for a committee save. */
+    function committeeChangeSummary(prev, next) {
+      var key = function (r) { return (r.name || "").trim().toLowerCase(); };
+      var prevMap = {}, nextMap = {};
+      (prev || []).forEach(function (r) { if (r.name) prevMap[key(r)] = r; });
+      (next || []).forEach(function (r) { if (r.name) nextMap[key(r)] = r; });
+      var added = 0, removed = 0, changed = 0;
+      (next || []).forEach(function (r) {
+        if (!r.name) return;
+        var k = key(r);
+        if (!prevMap[k]) { added++; return; }
+        var p = prevMap[k];
+        if ((p.role || "") !== (r.role || "") || (p.photo || "") !== (r.photo || "")) changed++;
+      });
+      (prev || []).forEach(function (r) { if (r.name && !nextMap[key(r)]) removed++; });
+      var parts = [];
+      if (added) parts.push("added " + added);
+      if (removed) parts.push("removed " + removed);
+      if (changed) parts.push("updated " + changed);
+      return parts.length ? parts.join(", ") : "reordered the panel";
+    }
+
+    /* Last few committee edits, shown under the exec grid on the club page. */
+    function committeeHistoryHTML(c) {
+      var hist = (c.committeeHistory || []).filter(function (h) { return h && h.at; });
+      if (!hist.length) {
+        return '<p class="small muted mb-0 mt-1">Committee as listed on official club pages. Club moderators can update members &amp; photos from the portal.</p>';
+      }
+      var shown = hist.slice(0, 3).map(function (h) {
+        return '<li><b>' + esc(h.by || "a club moderator") + "</b> " + esc(h.summary || "updated the committee") +
+          ' · <span data-ago data-ts="' + esc(h.at) + '"></span></li>';
+      }).join("");
+      var more = hist.length > 3
+        ? '<p class="small muted mb-0 mt-1">…and ' + (hist.length - 3) + " earlier edit" + (hist.length - 3 === 1 ? "" : "s") + "</p>"
+        : "";
+      return '<div class="committee-history"><p class="small muted mb-1">🕒 Committee edit history</p><ul>' + shown + "</ul>" + more + "</div>";
+    }
+
+    /* ---------------- Committee edit email notifications ----------------
+       Emails the club's moderators whenever the committee is saved, naming
+       the editor and what changed. No mail infrastructure is bundled, so the
+       default provider is FormSubmit's AJAX endpoint (free, zero-config, and
+       CORS-enabled — the first email to each address asks the owner to confirm
+       it). Swap providers by changing EMAIL_NOTIFY.provider, or set
+       EMAIL_NOTIFY.enabled = false to turn notifications off entirely. */
+    var EMAIL_NOTIFY = {
+      enabled: true,
+      provider: "formsubmit",                     // "formsubmit" | "off"
+      formsubmitEndpoint: "https://formsubmit.co/ajax/",  // recipient email is appended
+      subjectPrefix: "[NITER Clubs]"
+    };
+
+    /* Moderators of a club: the admin (all clubs) plus that club's executives.
+       Cloud mode reads the users collection (Firestore rules allow admins and
+       the user themself; an executive editor therefore can't resolve emails,
+       so the caller reports an honest fallback). Demo mode has no users at all. */
+    function clubModerators(clubId, cb) {
+      var out = [];
+      if (!window.FirebaseNS) { cb(out); return; }
+      var users = DB.loadDb().__users;
+      var done = function () {
+        (users || []).forEach(function (u) {
+          if (!u || !u.email) return;
+          if (u.role === "admin" || (u.role === "executive" && (u.clubs || []).indexOf(clubId) !== -1)) {
+            out.push({ email: u.email, name: u.name || u.email });
+          }
+        });
+        cb(out);
+      };
+      if (users) { done(); return; }
+      window.FirebaseNS.db.collection("users").get().then(function (snap) {
+        users = [];
+        snap.forEach(function (ds) { var d = ds.data(); d.uid = ds.id; users.push(d); });
+        DB.loadDb().__users = users;
+        done();
+      }).catch(function () { done(); });
+    }
+
+    function sendCommitteeEmail(to, club, editorName, summary) {
+      var cfg = EMAIL_NOTIFY;
+      if (!cfg.enabled || !to || !to.email) return Promise.resolve({ ok: false, reason: "disabled" });
+      var url = (location.origin || "") + "/#/club/" + encodeURIComponent(club.id);
+      var subject = cfg.subjectPrefix + " Committee updated — " + club.name;
+      var body =
+        "The executive committee for " + club.name + " was just updated.\n\n" +
+        "Edited by: " + editorName + "\n" +
+        "What changed: " + (summary || "the committee") + "\n\n" +
+        "View it: " + url;
+      if (cfg.provider === "formsubmit") {
+        return fetch(cfg.formsubmitEndpoint + encodeURIComponent(to.email), {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ _subject: subject, name: to.name || to.email, message: body, _template: "table" })
+        }).then(function (r) { return { ok: r.ok, reason: r.ok ? "" : "HTTP " + r.status }; })
+          .catch(function (e) { return { ok: false, reason: e.message }; });
+      }
+      return Promise.resolve({ ok: false, reason: "provider '" + cfg.provider + "' not configured" });
+    }
+
+    /* Fired after a committee save: email the club's moderators (or report why not). */
+    function notifyCommitteeEdit(club, editorName, summary) {
+      if (!EMAIL_NOTIFY.enabled) return;
+      clubModerators(club.id, function (mods) {
+        if (!mods.length) {
+          toast("Committee saved. No moderator emails on file to notify — admins can see them in Settings → Members & roles.");
+          return;
+        }
+        var sent = 0;
+        var pending = mods.length;
+        mods.forEach(function (m) {
+          sendCommitteeEmail(m, club, editorName, summary).then(function (res) {
+            if (res.ok) sent++;
+            if (--pending === 0) {
+              toast(sent === mods.length
+                ? "Committee saved — " + sent + " moderator" + (sent === 1 ? "" : "s") + " emailed."
+                : "Committee saved — emailed " + sent + " of " + mods.length + " moderators.",
+                sent ? "ok" : "err");
+            }
+          });
+        });
+      });
     }
 
     /* ================= Form filling ================= */
@@ -5335,9 +5469,29 @@
     }
     function studentByKey(key) {
       key = decodeURIComponent(key || "").toLowerCase();
+      // A signed-up student (offline demo accounts) always has a public profile,
+      // even before they join a club or submit a form.
+      var acc = studentAccounts() || {};
+      var emailKey = key.indexOf("local-") === 0 ? key.slice(6) : key;
+      var accRec = acc[emailKey];
+      if (accRec) {
+        return { key: key, name: accRec.name || "", studentId: accRec.studentId || "", email: emailKey, memberships: [], submissions: [] };
+      }
       var ms = (db.memberships || []).filter(function (m) {
         return m.userId === key || (m.userEmail || "").toLowerCase() === key;
       });
+      // Directory roster fallback — a student ID (e.g. CS-2607001) resolves
+      // straight to the roster entry, so every directory row links to a working
+      // profile even before the student has memberships or submissions.
+      var normKey = key.replace(/[^a-z0-9]/g, "").toUpperCase();
+      if (/^[A-Z]{1,5}\d{5,8}$/.test(normKey)) {
+        var rosterHit = (db.students || []).filter(function (st) {
+          return String(st.id || "").replace(/[^A-Z0-9]/g, "").toUpperCase() === normKey;
+        })[0];
+        if (rosterHit) {
+          return { key: key, name: rosterHit.name || "", studentId: rosterHit.id, email: "", memberships: [], submissions: [] };
+        }
+      }
       var subs = (db.submissions || []).filter(function (s) {
         return s.userId === key || (s.submitterEmail || "").toLowerCase() === key;
       });
@@ -5352,6 +5506,19 @@
     }
     function viewStudent(key) {
       var s = studentByKey(key);
+      // Signed-in students can always open their own profile (Firebase accounts
+      // aren't in the local roster, so fall back to the session's own details).
+      if (!s && state.user && (key.toLowerCase() === (state.user.email || "").toLowerCase() ||
+          key.toLowerCase() === (state.user.uid || "").toLowerCase())) {
+        s = {
+          key: key.toLowerCase(),
+          name: state.user.name || "",
+          studentId: state.user.studentId || "",
+          email: state.user.email || "",
+          memberships: userMemberships(),
+          submissions: userSubmissions()
+        };
+      }
       if (!s) return viewNotFound(["student", key]);
       var approved = s.memberships.filter(function (m) { return m.status === "approved"; });
       var pending = s.memberships.filter(function (m) { return m.status === "pending"; });
@@ -5704,7 +5871,7 @@
       var rows = filtered.map(function (s) {
         var sec = s.section ? ' <span class="muted small">· Sec ' + esc(s.section) + "</span>" : "";
         return '<tr><td>' + s.sl + '</td><td class="muted">' + (s.merit ? s.merit : "—") + '</td><td><code>' + esc(s.id) + "</code></td>" +
-          '<td><b>' + esc(s.name) + "</b></td><td>" + esc(studentDeptLabel(s)) + sec + "</td></tr>";
+          '<td><a class="roster-link" href="#/student/' + encodeURIComponent(s.id) + '" title="View ' + esc(s.name) + " — public profile\"><b>" + esc(s.name) + "</b></a></td><td>" + esc(studentDeptLabel(s)) + sec + "</td></tr>";
       }).join("");
       return (
         '<div class="page-hero"><div class="container">' +
@@ -5842,6 +6009,10 @@
         title = "Form not found";
         msg = "That form isn\u2019t accepting responses right now — it may have closed, or the link may be out of date.";
         extra = '<div class="mt-2"><a class="btn btn-outline" href="#/clubs">See open forms by club</a></div>';
+      } else if (route === "student" && parts[1]) {
+        title = "Student not found";
+        msg = "We couldn\u2019t find a public profile for that student — they may not have joined a club or filled a form yet.";
+        extra = '<div class="mt-2"><a class="btn btn-outline" href="#/students">Browse the student directory</a></div>';
       } else if (route === "cover" || route === "cgpa") {
         title = "That page has been removed";
         msg = "The " + (route === "cgpa" ? "CGPA calculator" : "assignment cover page maker") + " is no longer part of this site.";
@@ -6267,14 +6438,25 @@
           if (!role && !name) return;
           execs.push({ role: role || "Member", name: name, photo: photo });
         });
-        var committeeChanged = JSON.stringify(club.executives) !== JSON.stringify(execs);
+        var prevExecs = club.executives;
+        var committeeChanged = JSON.stringify(prevExecs) !== JSON.stringify(execs);
         club.executives = execs;
-        // Record who updated the committee (and when) for the "last edited" note on the club page.
+        // Log every committee save (who, when, what changed) for the club-page history.
         if (committeeChanged) {
-          club.committeeMeta = {
-            by: (state.user && (state.user.name || state.user.email)) || "a club moderator",
-            at: new Date().toISOString()
-          };
+          var editorName = (state.user && (state.user.name || state.user.email)) || "a club moderator";
+          if (!Array.isArray(club.committeeHistory)) club.committeeHistory = [];
+          // Fold a legacy single "last edited" note into the history.
+          if (club.committeeMeta && club.committeeMeta.at) {
+            club.committeeHistory.unshift({ by: club.committeeMeta.by || editorName, at: club.committeeMeta.at, summary: "updated the committee" });
+            delete club.committeeMeta;
+          }
+          club.committeeHistory.unshift({
+            by: editorName,
+            at: new Date().toISOString(),
+            summary: committeeChangeSummary(prevExecs, execs)
+          });
+          // Email the club's moderators about the change.
+          notifyCommitteeEdit(club, editorName, committeeChangeSummary(prevExecs, execs));
         }
         save(); render();
         toast("Committee saved — the club page is updated.", "ok");

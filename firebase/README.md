@@ -91,7 +91,28 @@ After the first admin signs in: portal → Settings → Cloud → **Load sample 
 to cloud** to publish them to Firestore (only the missing docs are added, so it
 is safe to press repeatedly).
 
-## 7 · Going live
+## 7 · Committee-edit email notifications
+
+When a moderator or admin saves a committee, the club page records the edit and
+the site emails the club's moderators (admins + that club's executives), naming
+who edited it and what changed. No mail server is bundled, so the default
+provider is **FormSubmit** (`https://formsubmit.co/ajax/<email>`) — free,
+zero-config and CORS-enabled; the first email to each address asks the owner to
+confirm it.
+
+The static site config lives in the `EMAIL_NOTIFY` global in `index.html`:
+
+- `enabled` — set `false` to turn notifications off entirely
+- `provider` — `"formsubmit"` (default) or `"off"`
+- `formsubmitEndpoint` / `subjectPrefix` — tweak the endpoint and subject
+
+Moderator emails come from the `users` collection. Firestore rules only let an
+**admin** read other users, so an executive editor's save falls back to an
+in-app note instead of an email — that's by design, not a bug. To use a
+different provider (EmailJS, SMTP, Resend…), extend `sendCommitteeEmail()` in
+`index.html` the same way the Next.js app's `/api/committee-notify` route does.
+
+## 8 · Going live
 
 The site is a static file, so you can host it anywhere — Firebase Hosting,
 GitHub Pages, Netlify, or even keep opening `index.html` locally (the SDK works

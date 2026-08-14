@@ -58,6 +58,30 @@ const SESSION_BY_KEY: Record<string, string> = {
   TE26: "2026–2027",
 };
 
+const DEPT_LABELS: Record<string, string> = {
+  CS: "Computer Science & Engineering (CSE)",
+  CSE: "Computer Science & Engineering (CSE)",
+  TE: "Textile Engineering (TE)",
+};
+
+/** Department label for a roster student, e.g. "Textile Engineering (TE)". */
+export function studentDeptLabel(s: Student | null | undefined): string {
+  const d = (s?.department || "").toLowerCase();
+  if (d.includes("textile")) return "Textile Engineering (TE)";
+  if (d.includes("cse") || d.includes("computer")) return "Computer Science & Engineering (CSE)";
+  const m = /^([A-Z]{1,5})/i.exec(s?.id || "");
+  const code = m ? m[1].toUpperCase() : "";
+  return DEPT_LABELS[code] || (code || "Unknown");
+}
+
+/** Session (batch) a roster student belongs to, derived from their ID — e.g.
+ *  CS-26xx → "2025–2026". Empty when the ID is unparsable. */
+export function studentSessionOf(s: Student | null | undefined): string {
+  const m = String(s?.id || "").toUpperCase().replace(/[^A-Z0-9]/g, "").match(/^([A-Z]{1,5})(\d{2})/);
+  const key = m ? m[1] + m[2] : "";
+  return SESSION_BY_KEY[key] || (m ? `20${m[2]}–20${Number(m[2]) + 1}` : "");
+}
+
 /** Confirmation text for a successfully verified student ID — name, department,
  *  session (which batch they belong to) and section, e.g.
  *  "RUFAIDA TASNIM HOQ ADIBA · Textile Engineering · Session 2026–2027 · Sec A". */

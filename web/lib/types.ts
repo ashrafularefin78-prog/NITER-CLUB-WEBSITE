@@ -33,7 +33,7 @@ export interface Club {
   facebook?: string;
   panel: string;
   executives: Executive[];
-  committeeMeta?: { by: string; at: string };
+  committeeHistory?: { by: string; at: string; summary: string }[];
   weekly: string;
 }
 

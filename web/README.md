@@ -39,6 +39,23 @@ Firebase config defaults to the live `niter-club-website` project (public by
 design — security lives in the Firestore rules under `../firebase/`). To point
 at your own project, copy `.env.example` to `.env.local` and fill in the values.
 
+## Committee-edit email notifications
+
+When a moderator or admin saves a committee, the app emails the club's
+moderators (admins + that club's executives) via `POST /api/committee-notify`,
+naming who edited it and what changed. The route sends through **FormSubmit**
+by default (free, zero-config; the first email to each address asks the owner
+to confirm it). Configure on the server:
+
+- `COMMITTEE_EMAIL_NOTIFY` — `"off"` disables sending
+- `COMMITTEE_EMAIL_PROVIDER` — `"formsubmit"` (default) or `"off"`
+- `COMMITTEE_EMAIL_SUBJECT` — subject prefix (default `[NITER Clubs]`)
+
+Moderator emails come from the `users` collection cached in `db.__users`
+(populated in cloud mode); in demo mode there are no users, so the save shows
+an in-app note instead. Swap providers by extending the `provider` branch in
+`app/api/committee-notify/route.ts`.
+
 ## Architecture
 
 ```

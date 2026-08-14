@@ -10,63 +10,11 @@ import { clubById, formById, fmtDate, relativeAgo } from "@/lib/utils";
 import { studentIdError, studentVerifiedText, verifyStudentId, type StudentCheck } from "@/lib/students";
 import { useToast } from "@/components/providers";
 import { EmptyState, GoogleButton, OrDivider, PageHero, Skeleton } from "@/components/ui";
+import CampusBanner, { campusPhoto } from "@/components/campus-banner";
 import type { Membership, ReviewStatus } from "@/lib/types";
 
 const STUDENT_ACCOUNTS_KEY = "niter-student-accounts";
 const STUDENT_SESSION_KEY = "niter-student-session";
-
-/* Real NITER campus photos — served from web/public/images/ (from the
-   official site's photo set). A fresh random one is picked on every login
-   (never the same as the previous login). */
-const CAMPUS_PHOTOS = [
-  "/images/front-banner.jpg",
-  "/images/Convocation_2021.jpg",
-  "/images/DSC_2886-(1).jpg",
-];
-
-/** Pick (or reuse) the campus photo for this session. Pass forceNew right
- *  after a login to roll a new random one (the previous login's photo is
- *  excluded so consecutive logins differ). */
-function campusPhoto(forceNew?: boolean): string {
-  if (!forceNew) {
-    try {
-      const sess = sessionStorage.getItem("niter-campus-photo");
-      if (sess && CAMPUS_PHOTOS.includes(sess)) return sess;
-    } catch {
-      /* ignore */
-    }
-  }
-  let last: string | null = null;
-  try {
-    last = localStorage.getItem("niter-campus-photo");
-  } catch {
-    /* ignore */
-  }
-  let pool = CAMPUS_PHOTOS.filter((p) => p !== last);
-  if (!pool.length) pool = CAMPUS_PHOTOS;
-  const pick = pool[Math.floor(Math.random() * pool.length)];
-  try {
-    sessionStorage.setItem("niter-campus-photo", pick);
-    localStorage.setItem("niter-campus-photo", pick);
-  } catch {
-    /* ignore */
-  }
-  return pick;
-}
-
-function CampusBanner() {
-  const [src] = useState(() => campusPhoto());
-  return (
-    <div className="relative h-52 overflow-hidden rounded-2xl shadow-[0_6px_20px_rgba(0,33,71,0.14)]">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="NITER campus" className="h-full w-full object-cover" loading="lazy" />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent" />
-      <span className="absolute bottom-3 left-3 rounded-full bg-navy/80 px-3 py-1 text-[13px] font-semibold text-white">
-        🏫 NITER Campus
-      </span>
-    </div>
-  );
-}
 
 interface DemoAccount {
   name: string;
@@ -523,9 +471,17 @@ function DashboardHome({
                   <p className="m-0 font-semibold text-ink">{dbUser.name || "—"}</p>
                   <p className="mb-1 mt-3 text-muted">Student ID</p>
                   <p className="m-0 font-mono text-[13px] font-semibold text-ink">{dbUser.studentId || "—"}</p>
-                  <button className="btn btn-outline btn-sm mt-4" onClick={() => setEditing(true)}>
-                    Edit profile
-                  </button>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <button className="btn btn-outline btn-sm" onClick={() => setEditing(true)}>
+                      Edit profile
+                    </button>
+                    <Link
+                      href={`/student/${encodeURIComponent(dbUser.email || dbUser.uid)}`}
+                      className="btn btn-ghost btn-sm no-underline"
+                    >
+                      View public profile →
+                    </Link>
+                  </div>
                 </div>
               ) : (
                 <div className="mt-3 grid gap-3">

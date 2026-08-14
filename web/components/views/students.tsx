@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useDb } from "@/lib/store";
 import { PageHero, Skeleton } from "@/components/ui";
@@ -73,7 +74,15 @@ export default function StudentsView() {
                         {s.id}
                       </code>
                     </td>
-                    <td className="px-4 py-2.5 font-semibold text-ink">{s.name}</td>
+                    <td className="px-4 py-2.5">
+                      <Link
+                        href={`/student/${encodeURIComponent(s.id)}`}
+                        className="font-semibold text-ink no-underline hover:text-crimson hover:underline"
+                        title={`View ${s.name}'s public profile`}
+                      >
+                        {s.name}
+                      </Link>
+                    </td>
                     <td className="px-4 py-2.5 text-muted">{deptOf(s)}</td>
                   </tr>
                 ))}

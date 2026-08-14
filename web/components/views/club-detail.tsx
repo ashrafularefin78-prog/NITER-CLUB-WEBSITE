@@ -266,13 +266,30 @@ export default function ClubDetailView({ clubId }: { clubId: string }) {
                     </li>
                   ))}
                 </ul>
-                <p className="m-0 mt-3 text-[11.5px] text-muted">
-                  {club.committeeMeta?.at
-                    ? `🕒 Committee updated by ${club.committeeMeta.by || "a club moderator"} · ${relativeAgo(
-                        club.committeeMeta.at
-                      )}`
-                    : "Compiled from official club Facebook pages & NITER sources. Verify with the club for the latest panel."}
-                </p>
+                {club.committeeHistory?.length ? (
+                  <div className="mt-3 border-t border-dashed border-line pt-2">
+                    <p className="m-0 text-[11.5px] font-semibold text-muted">🕒 Committee edit history</p>
+                    <ul className="m-0 mt-1 list-none space-y-1 p-0">
+                      {club.committeeHistory.slice(0, 3).map((h, i) => (
+                        <li key={i} className="text-[11.5px] text-muted">
+                          <b className="font-bold text-ink">{h.by || "a club moderator"}</b>{" "}
+                          {h.summary || "updated the committee"} · {relativeAgo(h.at)}
+                        </li>
+                      ))}
+                    </ul>
+                    {club.committeeHistory.length > 3 ? (
+                      <p className="m-0 mt-1 text-[11px] text-muted">
+                        …and {club.committeeHistory.length - 3} earlier edit
+                        {club.committeeHistory.length - 3 === 1 ? "" : "s"}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : (
+                  <p className="m-0 mt-3 text-[11.5px] text-muted">
+                    Compiled from official club Facebook pages & NITER sources. Verify with the club for the
+                    latest panel.
+                  </p>
+                )}
               </>
             ) : (
               <p className="m-0 mt-2 text-[13px] text-muted">
