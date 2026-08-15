@@ -183,6 +183,13 @@ service cloud.firestore {
       allow update, delete: if isAdmin() || execOf(resource.data.clubId);
     }
 
+    /* ---------- event feedback (signed-in students post; staff read) ---------- */
+    match /feedback/{id} {
+      allow create: if signedIn();
+      allow read: if isStaff();
+      allow update, delete: if isAdmin();
+    }
+
     /* ---------- user profiles ----------
        The very first account in the project becomes admin (it also creates
        the meta/bootstrap marker in the same batch, so it can only happen once).

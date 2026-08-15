@@ -186,7 +186,7 @@
     }
 
     /* ---------------- Sections & cards ---------------- */
-    .section { padding: 56px 0; }
+    .section { padding: 48px 0; }
     .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
     .section-head h2 { font-size: clamp(22px, 3vw, 28px); margin-bottom: 4px; }
     .section-head .sub { color: var(--muted); margin: 0; }
@@ -1211,6 +1211,14 @@
     /* ---- Futuristic layer ---- */
     .nav-icon-btn { position: relative; background: none; border: 0; font-size: 17px; cursor: pointer; padding: 6px 8px; border-radius: 8px; color: var(--ink); }
     .nav-icon-btn:hover { background: rgba(127, 127, 127, .14); }
+    .ai-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 16px; padding: 6px 8px; flex: none;
+      background: linear-gradient(135deg, #d946ef, #8b5cf6);
+      box-shadow: 0 2px 8px rgba(139, 92, 246, .35);
+    }
+    .ai-btn:hover { background: linear-gradient(135deg, #d946ef, #8b5cf6); filter: brightness(1.12); }
+    .ai-btn.active { outline: 2px solid rgba(255, 255, 255, .55); outline-offset: -2px; }
     .notif-badge { position: absolute; top: -3px; right: -5px; min-width: 16px; height: 16px; padding: 0 4px; background: #dc2626; color: #fff; font-size: 10px; font-weight: 800; border-radius: 999px; display: none; align-items: center; justify-content: center; line-height: 1; }
     .fy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
     .fy-col { min-width: 0; }
@@ -1307,6 +1315,11 @@
     .mod-body { flex: 1; min-width: 0; }
     .mod-body b { font-size: 13px; display: block; }
     .mod-body small { display: block; color: var(--muted); font-size: 11.5px; }
+    /* Portal audit log — severity markers and brute-force anomaly flags */
+    .audit-sev { display: inline-block; margin-left: 6px; }
+    .audit-sev.flag { color: #dc2626; font-size: 11px; font-weight: 700; }
+    .audit-sev.warn { color: #b45309; font-size: 11px; font-weight: 700; }
+    .audit-sev.info { color: var(--muted); font-size: 11px; }
     .tag-picker { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; }
     .tag-picker label { cursor: pointer; }
     .tag-picker input { width: auto; height: auto; }
@@ -1349,6 +1362,106 @@
     .nai-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 14px; border-top: 1px solid #f1f5f9; font-size: 11.5px; color: var(--muted); }
     .nai-foot .link { color: var(--muted); text-decoration: underline; }
 
+    /* ---- NITER AI agentic layer ---- */
+    .ai-draft { background: linear-gradient(135deg, #fffbeb, #fff); border: 1px dashed #fcd34d; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
+    .ai-draft-head { font-size: 13.5px; }
+    .ai-draft-head .muted { font-size: 12px; margin-left: 6px; }
+    .ai-notes { font-size: 12.5px; color: #92400e; margin-top: 6px; line-height: 1.5; }
+    .ai-notes b { color: #7c2d12; }
+    .ai-slot { font-size: 11.5px; margin-top: 6px; }
+    .ai-digest { background: linear-gradient(135deg, #eff6ff, #f8fafc); border: 1px solid #bfdbfe; border-radius: 14px; padding: 14px 16px; margin: 14px 0; }
+    .ai-digest-head { display: flex; align-items: baseline; gap: 10px; font-size: 15px; margin-bottom: 8px; }
+    .ai-digest-head .muted { font-size: 11.5px; }
+    .ai-digest-list { margin: 0; padding-left: 4px; list-style: none; }
+    .ai-digest-list li { font-size: 13.5px; line-height: 1.7; padding: 4px 0; border-bottom: 1px dashed #dbeafe; }
+    .ai-digest-list li:last-child { border-bottom: none; }
+    .club-faq-form { display: flex; gap: 8px; margin-top: 10px; }
+    .club-faq-res { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; font-size: 13px; margin-bottom: 10px; }
+    .club-faq-q { font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+    .club-faq-a { color: #334155; line-height: 1.55; }
+    .ai-resume { display: flex; flex-direction: column; gap: 8px; }
+    .ai-resume-line { display: flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px; font-size: 13px; line-height: 1.5; }
+    .ai-resume-line .mod-btn { margin-left: auto; flex: none; }
+    .ai-forecast { font-size: 12.5px; color: #1e293b; margin-top: 4px; }
+    .ai-forecast .muted { font-size: 11.5px; }
+    .ai-fb-digest { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 10px 12px; font-size: 13px; margin-top: 10px; line-height: 1.6; }
+
+    /* ---------------- Decluttered nav — "More" dropdown ---------------- */
+    .more-menu { position: relative; }
+    .more-toggle {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 8px 13px; border-radius: 8px; border: 0; background: none;
+      color: rgba(255,255,255,.85); font: inherit; font-weight: 600; font-size: 14px;
+      cursor: pointer; white-space: nowrap; transition: background .15s, color .15s;
+    }
+    .more-toggle:hover { background: rgba(255,255,255,.12); color: #fff; }
+    .more-toggle.active { background: rgba(255,255,255,.18); color: #fff; }
+    .more-panel {
+      position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
+      display: none; flex-direction: column; min-width: 236px;
+      background: var(--surface); color: var(--ink);
+      border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 32px rgba(15,23,42,.18);
+      padding: 6px; overflow: hidden;
+    }
+    .more-menu.open .more-panel { display: flex; }
+    .more-panel a, .more-panel .nav-signout {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px; box-sizing: border-box;
+      color: var(--ink); font-weight: 600; font-size: 14px; white-space: nowrap;
+    }
+    .more-panel a:hover, .more-panel .nav-signout:hover { background: #f1f3fa; color: var(--ink); text-decoration: none; }
+    .more-panel a.active { background: #eef1f8; color: var(--navy); }
+    .more-panel .nav-signout { border: 0; background: none; font: inherit; cursor: pointer; width: 100%; text-align: left; }
+    .more-panel .nav-signout:hover { color: var(--danger); background: rgba(220,38,38,.06); }
+    [data-theme="dark"] .more-panel { background: #0f1831; border-color: #233156; }
+    [data-theme="dark"] .more-panel a, [data-theme="dark"] .more-panel .nav-signout { color: #e6e9f2; }
+    [data-theme="dark"] .more-panel a:hover, [data-theme="dark"] .more-panel .nav-signout:hover,
+    [data-theme="dark"] .more-panel a.active { background: #1a2349; color: #fff; }
+
+    /* ---------------- Home "Campus live" tabs ---------------- */
+    .home-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .home-tabs .chip {
+      border: 1px solid var(--line); background: #fff; color: var(--muted);
+      padding: 7px 14px; border-radius: 999px; font: inherit; font-weight: 600; font-size: 13px; cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .home-tabs .chip:hover { border-color: var(--navy-2); color: var(--navy-2); }
+    .home-tabs .chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    [data-theme="dark"] .home-tabs .chip { background: #141d3a; border-color: #2a3a66; color: #c9d2ea; }
+    [data-theme="dark"] .home-tabs .chip:hover { border-color: #7f9cf5; color: #fff; }
+
+    /* ---------------- Portal tab groups ---------------- */
+    .portal-group {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+      color: var(--muted); padding: 14px 6px 2px; margin-top: 6px; border-top: 1px dashed var(--line);
+    }
+    .portal-tabs .portal-group:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+
+
+    /* ---------------- Automation engine ---------------- */
+    .auto-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+    .auto-card { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #fbfcfe; }
+    [data-theme="dark"] .auto-card { background: #101a36; border-color: #233156; }
+    .auto-card-head { display: flex; align-items: flex-start; gap: 10px; }
+    .auto-card-head > div { flex: 1; min-width: 0; }
+    .auto-card-head b { font-size: 14px; }
+    .auto-card-head p { margin: 2px 0 8px; font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .auto-icon {
+      width: 34px; height: 34px; border-radius: 10px; flex: none;
+      display: grid; place-items: center; font-size: 16px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: #fff;
+    }
+    .mod-btn.auto-on { border-color: var(--ok); color: var(--ok); background: rgba(21, 128, 61, .08); }
+    .share-kit { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+    .budget-bar { margin-top: 10px; }
+    .budget-track { height: 10px; border-radius: 999px; background: #eef1f8; overflow: hidden; margin: 6px 0 4px; }
+    [data-theme="dark"] .budget-track { background: #1a2349; }
+    .budget-fill { height: 100%; border-radius: 999px; transition: width .4s ease; }
+    .budget-label { font-size: 12.5px; font-weight: 700; }
+    .budget-label.ok { color: var(--ok); }
+    .budget-label.warn { color: var(--warn); }
+    .budget-label.over { color: var(--danger); }
+
 </style>
   <script>try{if(localStorage.getItem("niter-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark");}}catch(e){}</script>
 </head>
@@ -1364,21 +1477,32 @@
         <button class="theme-toggle" data-action="toggle-theme" title="Toggle dark mode">🌙</button>
         <button type="button" class="nav-icon-btn" data-action="palette-open" title="Search everything (Ctrl/Cmd+K)" aria-label="Search">🔍</button>
         <button type="button" class="nav-icon-btn" data-action="nav-notif" title="Notifications" aria-label="Notifications">🔔<span class="notif-badge" id="notif-badge"></span></button>
+        <a class="nav-icon-btn ai-btn" href="#/niter-ai" data-nav="niter-ai" title="NITER AI assistant" aria-label="NITER AI assistant">🧠</a>
         <nav class="nav-links">
           <a href="#/" data-nav="home">Home</a>
-          <a href="#/notices" data-nav="notices">Notices</a>
           <a href="#/clubs" data-nav="clubs">Clubs</a>
-          <a href="#/questions" data-nav="questions">Q&A</a>
-          <a href="#/leaderboard" data-nav="leaderboard">🏆 Ranks</a>
-          <a href="#/foryou" data-nav="foryou">✨ For You</a>
-          <a href="#/following" data-nav="following">👥 Following</a>
+          <a href="#/events" data-nav="events">📅 Events</a>
+          <a href="#/notices" data-nav="notices">Notices</a>
           <a href="#/opportunities" data-nav="opportunities">💼 Jobs</a>
-          <a href="#/niter-ai" data-nav="niter-ai">🧠 NITER AI</a>
-          <a href="#/dashboard" data-nav="dashboard" id="nav-dashboard" style="display:none">My Dashboard</a>
+          <div class="more-menu" id="more-menu">
+            <button type="button" class="more-toggle" data-action="more-toggle" aria-haspopup="true" aria-expanded="false">More ▾</button>
+            <div class="more-panel">
+              <a href="#/questions" data-nav="questions">💬 Q&A</a>
+              <a href="#/foryou" data-nav="foryou">✨ For You</a>
+              <a href="#/following" data-nav="following">👥 Following</a>
+              <a href="#/leaderboard" data-nav="leaderboard">🏆 Ranks</a>
+              <a href="#/dashboard" data-nav="dashboard" id="nav-dashboard" style="display:none">My Dashboard</a>
+              <a href="#/passport" data-nav="passport">🛂 Passport</a>
+              <a href="#/quiz" data-nav="quiz">🧭 Quiz</a>
+              <a href="#/notifications" data-nav="notifications">🔔 Notifications</a>
+              <a href="#/students" data-nav="students">🎓 Students</a>
+              <a href="#/privacy" data-nav="privacy">🔒 Privacy</a>
+              <button type="button" class="nav-signout" id="nav-signout" data-action="site-logout" style="display:none" title="Sign out" aria-label="Sign out">Sign out</button>
+            </div>
+          </div>
           <a href="#/portal" data-nav="portal" id="nav-cta" class="nav-cta" title="Member Portal" aria-label="Member Portal">
             <span class="nav-avatar" id="nav-avatar" aria-hidden="true">👤</span>
           </a>
-          <button type="button" class="nav-signout" id="nav-signout" data-action="site-logout" style="display:none" title="Sign out" aria-label="Sign out">Sign out</button>
         </nav>
       </div>
     </div>
@@ -2549,7 +2673,12 @@
       submissions: submissions,
       complaints: complaints,
       events: events,
-      memberships: [],
+      memberships: [
+        { id: "m-onboard-1", clubId: "computer-club", status: "approved", requestedAt: daysAgoAt(1, 9, 0), reviewedAt: daysAgoAt(1, 10, 0), reviewedBy: "Club staff", userName: "Tanvir Ahmed", userEmail: "tanvir.ahmed@niter.edu.bd", email: "tanvir.ahmed@niter.edu.bd", studentId: "CSE-2501001", expiresAt: daysAheadAt(360, 0, 0) },
+        { id: "m-dues-soon", clubId: "career-club", status: "approved", requestedAt: daysAgoAt(300, 9, 0), reviewedAt: daysAgoAt(299, 10, 0), reviewedBy: "Club staff", userName: "Nusrat Jahan", userEmail: "nusrat.jahan@niter.edu.bd", email: "nusrat.jahan@niter.edu.bd", studentId: "TE-2501094", expiresAt: daysAheadAt(5, 0, 0) },
+        { id: "m-dues-expired", clubId: "robotics-club", status: "approved", requestedAt: daysAgoAt(400, 9, 0), reviewedAt: daysAgoAt(399, 10, 0), reviewedBy: "Club staff", userName: "Rakib Hasan", userEmail: "rakib.hasan@niter.edu.bd", email: "rakib.hasan@niter.edu.bd", studentId: "IPE-2402033", expiresAt: daysAgoAt(2, 0, 0) },
+        { id: "m-pending-1", clubId: "science-society", status: "pending", requestedAt: daysAgoAt(0, 8, 30), userName: "Sadia Islam", userEmail: "sadia.islam@niter.edu.bd", email: "sadia.islam@niter.edu.bd", studentId: "TE-2601005" }
+      ],
       ads: [
         {
           id: "ad-codestorm", clubId: "computer-club",
@@ -2643,11 +2772,38 @@
       if (!Array.isArray(d.certificates)) d.certificates = [];
       if (!Array.isArray(d.polls)) d.polls = [];
       if (!Array.isArray(d.opportunities)) d.opportunities = [];
+      if (!Array.isArray(d.feedback)) d.feedback = [];
+      // Automation engine — run log, notification notes and per-club budgets.
+      if (!Array.isArray(d.autoLog)) d.autoLog = [];
+      if (!Array.isArray(d.autoNotes)) d.autoNotes = [];
+      if (!d.automations || typeof d.automations !== "object") d.automations = { enabled: {}, log: [] };
+      var defaultBudgets = {
+        "computer-club": { allocated: 50000, spent: 41500 },
+        "science-society": { allocated: 35000, spent: 30200 },
+        "career-club": { allocated: 20000, spent: 12400 },
+        "robotics-club": { allocated: 40000, spent: 15800 },
+        "cultural-club": { allocated: 30000, spent: 9200 },
+        "language-club": { allocated: 15000, spent: 4700 },
+        "games-sports-club": { allocated: 45000, spent: 13300 },
+        "film-photography-club": { allocated: 25000, spent: 7100 },
+        "journalism-society": { allocated: 18000, spent: 5300 },
+        "islamic-society": { allocated: 12000, spent: 3600 },
+        "social-welfare-club": { allocated: 22000, spent: 16900 }
+      };
+      (d.clubs || []).forEach(function (c) {
+        if (c.budget && typeof c.budget === "object") return;
+        var def = defaultBudgets[c.id];
+        c.budget = def ? { allocated: def.allocated, spent: def.spent } : { allocated: 0, spent: 0 };
+      });
       (d.opportunities || []).forEach(function (o) {
         if (!o.type) o.type = "job";
         if (!o.status) o.status = "open";
         if (!o.postedAt) o.postedAt = new Date().toISOString();
         if (!Array.isArray(o.requirements)) o.requirements = [];
+      });
+      (d.feedback || []).forEach(function (f) {
+        if (!f.at) f.at = new Date().toISOString();
+        if (!Array.isArray(f.autoFlagged)) f.autoFlagged = [];
       });
       (d.questions || []).forEach(function (q) {
         if (!Array.isArray(q.answers)) q.answers = [];
@@ -2665,6 +2821,8 @@
       (d.memberships || []).forEach(function (m) {
         if (!m.status) m.status = "pending";
         if (!m.requestedAt) m.requestedAt = new Date().toISOString();
+        if (!m.expiresAt) m.expiresAt = "";
+        if (!m.suspended) m.suspended = false;
       });
       (d.submissions || []).forEach(function (s) {
         // Backfill clubId from the submission's form so club staff can query
@@ -2724,7 +2882,7 @@
     }
 
     /* ---------------- Persistence + Firebase sync ---------------- */
-    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events", "ads", "questions", "warnings", "auditLog", "certificates", "polls", "opportunities"];
+    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events", "ads", "questions", "warnings", "auditLog", "certificates", "polls", "opportunities", "feedback"];
     var RESTRICTED_COLLECTIONS = ["submissions", "complaints", "memberships", "warnings", "auditLog"]; // only readable by club staff (or the student themselves for memberships)
     var currentDb = null;   // the db object the app is currently using
     var lastSynced = null;  // snapshot of the last known cloud state
@@ -3188,6 +3346,8 @@
       noticeClub: "",
       eventEditing: null,   // event being composed/edited (portal)
       appFilter: "",        // dashboard applications filter: "" | pending | approved | declined
+      auditFilter: "all",   // portal audit log severity filter: all | flag | warn | info
+      _auditSaving: false,   // re-entrancy guard: auditLog() persists itself
       appCollapsed: {}      // dashboard sections the student has collapsed (by section key)
     };
 
@@ -3453,6 +3613,11 @@
         }
       }
 
+      /* Automation engine — fires reminders, promotions, dues, budget
+         alerts, milestone certs, nudges and poll auto-close. */
+      runAutomations();
+      updateNotifBadge();
+
       /* shift the hero's "next deadline" block when a form opens or closes */
       var nextEl = document.querySelector("[data-next-id]");
       if (nextEl) {
@@ -3537,6 +3702,17 @@
       state.gated = parts[0] === "club" && gateRequired();
       document.body.classList.toggle("gate-locked", !!state.gated);
       updateNav(parts);
+      // The "More" dropdown closes on every navigation/render and highlights
+      // when the current route lives inside it.
+      var moreMenu = document.getElementById("more-menu");
+      if (moreMenu) {
+        moreMenu.classList.remove("open");
+        var moreBtn = moreMenu.querySelector(".more-toggle");
+        if (moreBtn) {
+          moreBtn.classList.toggle("active", !!moreMenu.querySelector("a.active"));
+          moreBtn.setAttribute("aria-expanded", "false");
+        }
+      }
       var dashLink = document.getElementById("nav-dashboard");
       if (dashLink) dashLink.style.display = state.user ? "" : "none";
       var itDeskLink = document.getElementById("nav-it-desk");
@@ -3940,39 +4116,37 @@
         "</div></div></section>" +
 
         '<section class="section alt"><div class="container">' +
-        '<div class="section-head"><div><h2>Forms open now</h2><p class="sub">Memberships, events and registrations — with live countdowns.</p></div>' +
-        '<a class="link" href="#/clubs">Browse by club →</a></div>' +
-        '<div class="club-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">' +
-        openForms.map(function (f) {
-          var club = clubById(f.clubId);
-          var st = statusOf(f);
-          var pill = st.key === "soon"
-            ? '<span class="cd-soon" data-countdown data-start="' + esc(f.openAt) + '"></span>'
-            : '<span data-countdown data-end="' + esc(f.deadline) + '"></span>';
-          return '<div class="form-card"><h3>' + esc(f.title) + "</h3>" +
-            '<p class="f-desc">' + esc(f.description || "") + "</p>" +
-            '<div class="f-meta"><span class="pill club">' + esc(club ? club.icon + " " + club.name : "") + "</span>" + pill + "</div>" +
-            (st.key === "soon"
-              ? '<a class="btn btn-outline btn-sm" href="#/form/' + esc(f.id) + '">Opens ' + esc(fmtDateTime(f.openAt)) + "</a>"
-              : '<a class="btn btn-primary btn-sm" href="#/form/' + esc(f.id) + '">Apply now · <span data-countdown data-compact data-end="' + esc(f.deadline) + '"></span></a>') +
-            "</div>";
-        }).join("") +
-        "</div></div></section>" +
-
-        '<section class="section alt"><div class="container">' +
-        '<div class="section-head"><div><h2>📅 Upcoming events</h2><p class="sub">Meetings and events coming up across NITER — posted by the clubs themselves.</p></div>' +
-        '<a class="link" href="#/clubs">Browse by club →</a></div>' +
-        (upcomingEvents().length
-          ? '<div class="event-grid">' + upcomingEvents().slice(0, 6).map(function (e) { return eventCardHTML(e, true); }).join("") + "</div>"
-          : '<div class="panel empty-state"><div class="icon">📅</div><p>No upcoming events posted yet — check back soon.</p></div>') +
-        "</div></section>" +
-
-        '<section class="section"><div class="container">' +
-        '<div class="section-head"><div><h2>Latest notices</h2><p class="sub">Everything happening across campus — pinned first.</p></div>' +
-        '<a class="link" href="#/notices">All notices →</a></div>' +
-        '<div class="notice-list">' +
-        latest.map(function (n) { return noticeCardHTML(n, true); }).join("") +
-        "</div></div></section>"
+        '<div class="section-head"><div><h2>📡 Campus live</h2><p class="sub">Events, open forms and fresh notices — one feed, three views.</p></div>' +
+        '<div class="home-tabs">' +
+        '<button class="chip' + ((state.homeTab || "events") === "events" ? " active" : "") + '" data-action="home-tab" data-tab="events">📅 Events</button>' +
+        '<button class="chip' + ((state.homeTab || "events") === "forms" ? " active" : "") + '" data-action="home-tab" data-tab="forms">📝 Forms</button>' +
+        '<button class="chip' + ((state.homeTab || "events") === "notices" ? " active" : "") + '" data-action="home-tab" data-tab="notices">📢 Notices</button>' +
+        "</div></div>" +
+        ((state.homeTab || "events") === "notices"
+          ? '<div class="notice-list">' + latest.map(function (n) { return noticeCardHTML(n, true); }).join("") + "</div>"
+          : (state.homeTab || "events") === "forms"
+            ? '<div class="club-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">' +
+              (openForms.length
+                ? openForms.map(function (f) {
+                    var club = clubById(f.clubId);
+                    var st = statusOf(f);
+                    var pill = st.key === "soon"
+                      ? '<span class="cd-soon" data-countdown data-start="' + esc(f.openAt) + '"></span>'
+                      : '<span data-countdown data-end="' + esc(f.deadline) + '"></span>';
+                    return '<div class="form-card"><h3>' + esc(f.title) + "</h3>" +
+                      '<p class="f-desc">' + esc(f.description || "") + "</p>" +
+                      '<div class="f-meta"><span class="pill club">' + esc(club ? club.icon + " " + club.name : "") + "</span>" + pill + "</div>" +
+                      (st.key === "soon"
+                        ? '<a class="btn btn-outline btn-sm" href="#/form/' + esc(f.id) + '">Opens ' + esc(fmtDateTime(f.openAt)) + "</a>"
+                        : '<a class="btn btn-primary btn-sm" href="#/form/' + esc(f.id) + '">Apply now · <span data-countdown data-compact data-end="' + esc(f.deadline) + '"></span></a>') +
+                      "</div>";
+                  }).join("")
+                : '<div class="panel empty-state"><div class="icon">📝</div><p>No forms open right now — check back soon.</p></div>') +
+              "</div>"
+            : (upcomingEvents().length
+                ? '<div class="event-grid">' + upcomingEvents().slice(0, 6).map(function (e) { return eventCardHTML(e, true); }).join("") + "</div>"
+                : '<div class="panel empty-state"><div class="icon">📅</div><p>No upcoming events posted yet — check back soon.</p></div>')) +
+        "</div></section>"
       );
     }
 
@@ -4344,6 +4518,8 @@
       '<a class="btn btn-outline btn-block btn-sm" href="#/complaint/' + esc(c.id) + '">File a complaint</a></div>' +
 
       similarClubsHTML(c.id) +
+
+      naiClubFaqPanelHTML(c) +
 
       '<div class="panel"><h3>Contact & info</h3><ul class="info-list">' +
         '<li><span class="k">Email</span><span>' + esc(c.email || "—") + "</span></li>" +
@@ -4787,12 +4963,14 @@
         venue: (document.getElementById("ev-venue").value || "").trim(),
         capacity: document.getElementById("ev-capacity").value
           ? Number(document.getElementById("ev-capacity").value)
-          : 0
+          : 0,
+        tags: (state.aiDraftTags || []).slice()
       };
       if (id && eventById(id)) {
         var ev = eventById(id);
         ev.title = payload.title; ev.description = payload.description;
         ev.startsAt = payload.startsAt; ev.venue = payload.venue; ev.capacity = payload.capacity;
+        if (payload.tags && payload.tags.length) ev.tags = payload.tags;
         toast("Event updated.", "ok");
       } else {
         db.events.push(Object.assign({
@@ -4926,6 +5104,7 @@
         state.session = null;
         state.gated = false;
         try { sessionStorage.removeItem("niter-portal-session"); } catch (e) { /* ignore */ }
+        auditLog("login_ok", gateMode === "create" ? "Account created & signed in" : "Signed in", "");
         rememberSiteSession(profile);
         // Roll a fresh campus photo for this login.
         campusPhoto(true);
@@ -4948,6 +5127,7 @@
           return bootstrapUser(res.user, name, "", false).then(enter);
         }).catch(function (err) {
           busy(false);
+          auditLog("login_fail", authErrorMessage(err), "");
           if (gateMode === "create" && err && err.code === "auth/email-already-in-use") {
             // Already registered — sign them in instead.
             window.FirebaseNS.auth.signInWithEmailAndPassword(email, pass).then(function (res2) {
@@ -4977,6 +5157,7 @@
       var a = acc[email];
       if (!a || a.pass !== pass) {
         busy(false);
+        auditLog("login_fail", "Incorrect email or password", "");
         shakeLogin(card);
         toast("Incorrect email or password.", "err");
         return;
@@ -5102,34 +5283,37 @@
       var club = clubById(state.session.clubId);
       var tab = state.portalTab;
 
-      var tabs = [
-        { key: "notices", label: "📢 Notices" },
-        { key: "forms", label: "📝 Forms" },
-        { key: "submissions", label: "📥 Submissions" },
-        { key: "members", label: "🤝 Membership requests" },
-        { key: "events", label: "📅 Events" },
-        { key: "ads", label: "📣 Ads" },
-        { key: "complaints", label: "📮 Complaints" },
-        { key: "polls", label: "🗳️ Polls" },
-        { key: "analytics", label: "📊 Analytics" },
-        { key: "moderation", label: "🛡️ Moderation" },
-        { key: "opportunities", label: "💼 Opportunities" },
-        { key: "settings", label: "⚙️ Settings" }
+      var tabLabels = {
+        notices: "📢 Notices", forms: "📝 Forms", submissions: "📥 Submissions",
+        members: "🤝 Membership requests", events: "📅 Events", ads: "📣 Ads",
+        complaints: "📮 Complaints", polls: "🗳️ Polls", analytics: "📊 Analytics",
+        moderation: "🛡️ Moderation", opportunities: "💼 Opportunities", ai: "🤖 AI",
+        automations: "🤖 Automations", audit: "🕵️ Audit log", settings: "⚙️ Settings"
+      };
+      var tabGroups = [
+        { label: "Manage", keys: ["notices", "forms", "submissions", "members", "events", "ads", "automations"] },
+        { label: "Engage", keys: ["complaints", "polls", "moderation", "opportunities"] },
+        { label: "Insights", keys: ["analytics", "ai"] },
+        { label: "Admin", keys: ["audit", "settings"] }
       ];
-
-      var tabsHTML = tabs.map(function (t) {
-        var count = 0;
-        if (t.key === "notices") count = clubNotices(club.id).length;
-        if (t.key === "forms") count = clubForms(club.id).length;
-        if (t.key === "submissions") count = db.submissions.filter(function (s) { return formById(s.formId) && formById(s.formId).clubId === club.id; }).length;
-        if (t.key === "members") count = clubMemberships(club.id).filter(function (m) { return m.status === "pending"; }).length;
-        if (t.key === "events") count = clubEvents(club.id).length;
-        if (t.key === "ads") count = (db.ads || []).filter(function (a) { return a.clubId === club.id && a.status === "active"; }).length;
-        if (t.key === "complaints") count = db.complaints.filter(function (c) { return c.clubId === club.id; }).length;
-        if (t.key === "polls") count = pollsFor(club.id).filter(function (p) { return p.open; }).length;
-        if (t.key === "opportunities") count = oppsFor(club.id).filter(function (o) { return o.status !== "closed"; }).length;
-        return '<button class="tab' + (tab === t.key ? " active" : "") + '" data-action="portal-tab" data-tab="' + t.key + '">' +
-          t.label + (count ? '<span class="count">' + count + "</span>" : "") + "</button>";
+      function portalTabCount(key) {
+        if (key === "notices") return clubNotices(club.id).length;
+        if (key === "forms") return clubForms(club.id).length;
+        if (key === "submissions") return db.submissions.filter(function (s) { return formById(s.formId) && formById(s.formId).clubId === club.id; }).length;
+        if (key === "members") return clubMemberships(club.id).filter(function (m) { return m.status === "pending"; }).length;
+        if (key === "events") return clubEvents(club.id).length;
+        if (key === "ads") return (db.ads || []).filter(function (a) { return a.clubId === club.id && a.status === "active"; }).length;
+        if (key === "complaints") return db.complaints.filter(function (c) { return c.clubId === club.id; }).length;
+        if (key === "polls") return pollsFor(club.id).filter(function (p) { return p.open; }).length;
+        if (key === "opportunities") return oppsFor(club.id).filter(function (o) { return o.status !== "closed"; }).length;
+        return 0;
+      }
+      var tabsHTML = tabGroups.map(function (g) {
+        return '<div class="portal-group">' + esc(g.label) + "</div>" + g.keys.map(function (key) {
+          var count = portalTabCount(key);
+          return '<button class="tab' + (tab === key ? " active" : "") + '" data-action="portal-tab" data-tab="' + key + '">' +
+            tabLabels[key] + (count ? '<span class="count">' + count + "</span>" : "") + "</button>";
+        }).join("");
       }).join("");
 
       var content = "";
@@ -5143,7 +5327,10 @@
       else if (tab === "polls") content = portalPolls(club);
       else if (tab === "analytics") content = portalAnalytics(club);
       else if (tab === "moderation") content = portalModeration(club);
+      else if (tab === "audit") content = portalAudit(club);
       else if (tab === "opportunities") content = portalOpportunities(club);
+      else if (tab === "ai") content = portalAI(club);
+      else if (tab === "automations") content = portalAutomations(club);
       else content = portalSettings(club);
 
       return (
@@ -5467,10 +5654,18 @@
     function membershipRequestHTML(m) {
       var club = clubById(m.clubId);
       var statusPill = m.status === "approved"
-        ? '<span class="status-pill status-approved">✓ Approved</span>'
+        ? (m.suspended
+          ? '<span class="status-pill status-pending">⏸ Suspended — dues</span>'
+          : '<span class="status-pill status-approved">✓ Approved</span>')
         : (m.status === "rejected"
           ? '<span class="status-pill status-rejected">✕ Rejected</span>'
           : '<span class="status-pill status-pending">⏳ Pending</span>');
+      var renewal = "";
+      if (m.status === "approved" && m.expiresAt) {
+        renewal = '<div class="cc-meta">💳 ' + (m.suspended ? "Expired — membership suspended until dues are paid." : "Renews " + esc(fmtDate(m.expiresAt))) + "</div>" +
+          '<div class="flex flex-wrap mt-1"><button class="btn btn-outline btn-sm" data-action="mem-renew" data-id="' + esc(m.id) + '">' +
+          (m.suspended ? "✓ Mark paid & renew" : "💳 Renew (+12 months)") + "</button></div>";
+      }
       var review = "";
       if (m.status === "pending") {
         review = '<div class="flex flex-wrap mt-1">' +
@@ -5489,6 +5684,7 @@
         (m.studentId ? '<div class="cc-meta">🎓 Student ID: ' + esc(m.studentId) + "</div>" : "") +
         (m.userEmail ? '<div class="cc-meta">✉️ ' + esc(m.userEmail) + "</div>" : "") +
         (profileLink ? '<div class="flex flex-wrap mt-1">' + profileLink + "</div>" : "") +
+        renewal +
         review +
         "</div>";
     }
@@ -5520,6 +5716,7 @@
         '<div class="panel">' +
         '<div class="portal-toolbar mb-2"><h2>' + (ev ? "Edit event" : "Post a new event") + "</h2>" +
         '<button class="btn btn-ghost btn-sm" data-action="cancel-event">← Cancel</button></div>' +
+        (!ev ? naiAiDraftPanelHTML() : "") +
         '<form id="event-form">' +
         '<div class="field mb-2"><label>Event title <span class="req">*</span></label>' +
         '<input type="text" id="ev-title" value="' + esc(ev ? ev.title : "") + '" placeholder="e.g. CodeStorm 2026 — Main Contest"></div>' +
@@ -5559,7 +5756,9 @@
             '<div class="n-actions mt-1">' +
             '<button class="btn btn-outline btn-sm" data-action="edit-event" data-id="' + esc(e.id) + '">Edit</button>' +
             '<button class="btn btn-danger btn-sm" data-action="delete-event" data-id="' + esc(e.id) + '">Delete</button>' +
-            "</div></div></div>";
+            "</div>" +
+            shareKitHTML(e) +
+            "</div></div>";
         }).join("") : "";
       }
       return (
@@ -5959,6 +6158,8 @@
             ? '<div class="empty-state"><div class="icon">🔍</div><p>Nothing ' + esc(({pending: "pending", approved: "approved", declined: "declined"})[state.appFilter] || "") + ' here — try another filter.</p></div>'
             : '<div class="empty-state"><div class="icon">📋</div><p>No applications yet — fill a club form or hit Request to Join on any club page.</p></div>')) +
         "</div>" +
+
+        naiResumePanelHTML() +
 
         "</div>" +
         '<div class="detail-side">' +
@@ -6654,6 +6855,10 @@
       "portal-tab": function (el) {
         state.portalTab = el.getAttribute("data-tab");
         state.portalNotice = null; state.builder = null; state.subFormId = null; state.analysisFormId = null; state.eventEditing = null;
+        render();
+      },
+      "audit-filter": function (el) {
+        state.auditFilter = el.getAttribute("data-filter");
         render();
       },
       "toggle-theme": function () {
@@ -7389,6 +7594,34 @@
         render();
       },
       "opp-tab": function (el) { state.oppType = el.getAttribute("data-tab") || "all"; render(); },
+      "more-toggle": function (el) {
+        var menu = document.getElementById("more-menu");
+        if (!menu) return;
+        var open = menu.classList.toggle("open");
+        var btn = menu.querySelector(".more-toggle");
+        if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+      },
+      "home-tab": function (el) { state.homeTab = el.getAttribute("data-tab") || "events"; render(); },
+      "auto-toggle": function (el) {
+        var cfg = automationsConfig();
+        var k = el.getAttribute("data-key");
+        cfg.enabled[k] = !cfg.enabled[k];
+        save(); render();
+        toast(cfg.enabled[k] ? "Automation turned on." : "Automation turned off.", "ok");
+      },
+      "auto-run": function () {
+        _lastAutoRun = 0;
+        runAutomations();
+        render();
+        toast("Automation checks ran — see the activity log below.", "ok");
+      },
+      "mem-renew": function (el) { renewMembership(el.getAttribute("data-id")); },
+      "share-copy": function (el) {
+        var ev = eventById(el.getAttribute("data-id"));
+        if (!ev) return;
+        fallbackCopy(shareTextFor(ev));
+        toast("Share text copied — paste it on WhatsApp, Facebook or anywhere.", "ok");
+      },
       "opp-new": function () { state.oppEditing = "new"; render(); },
       "opp-cancel": function () { state.oppEditing = null; render(); },
       "opp-edit": function (el) { state.oppEditing = el.getAttribute("data-id"); render(); },
@@ -7415,6 +7648,70 @@
         naiSaveChat([]);
         render();
         toast("Conversation cleared.", "ok");
+      },
+      "ai-draft-event": function () {
+        var txtEl = document.getElementById("ev-ai-text");
+        if (!txtEl) return;
+        var draft = naiParseEvent(txtEl.value);
+        state.aiDraftNotes = "";
+        var notes = [];
+        if (!draft.ok) {
+          state.aiDraftNotes = draft.notes.join(" ");
+          render();
+          return;
+        }
+        var titleEl = document.getElementById("ev-title");
+        var startsEl = document.getElementById("ev-starts");
+        var venueEl = document.getElementById("ev-venue");
+        if (titleEl) titleEl.value = draft.title;
+        if (startsEl && draft.startsAt) startsEl.value = draft.startsAt.slice(0, 16);
+        if (venueEl) venueEl.value = draft.venue || "";
+        state.aiDraftTags = draft.tags;
+        var tagStr = draft.tags.length ? " Tags: " + draft.tags.map(eventTagLabel).join(", ") : "";
+        var clashes = naiEventClashes(draft.startsAt);
+        notes.push("Drafted ✓ — title, time and venue filled" + tagStr + ".");
+        if (clashes.length) {
+          notes.push("⚠️ <b>Clashes with:</b> " + clashes.map(function (c) { return esc(c.title) + " (" + esc(fmtDateTime(c.startsAt)) + ")"; }).join(", ") + ".");
+        }
+        var slots = naiSuggestSlots(3);
+        if (slots.length) {
+          notes.push("✨ Clash-free alternatives: " + slots.map(function (s, i) {
+            return '<button class="mod-btn ai-slot" data-action="ai-slot" data-ts="' + s + '">' + esc(fmtDateTime(s)) + "</button>";
+          }).join(" "));
+        }
+        notes.push("<i>Review the fields below, then publish.</i>");
+        state.aiDraftNotes = notes.join("<br>");
+        render();
+      },
+      "ai-slot": function (el) {
+        var ts = el.getAttribute("data-ts");
+        var startsEl = document.getElementById("ev-starts");
+        if (ts && startsEl) startsEl.value = ts.slice(0, 16);
+        var notesEl = document.getElementById("ev-ai-notes");
+        if (notesEl) {
+          var extra = document.createElement("div");
+          extra.innerHTML = "<br>✅ Time updated to " + esc(fmtDateTime(ts)) + " — clash-free.";
+          notesEl.appendChild(extra);
+        }
+      },
+      "ai-copy": function (el) {
+        var t = el.getAttribute("data-text") || "";
+        function done() { toast("Copied to clipboard.", "ok"); }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(t).then(done).catch(function () { fallbackCopy(t); done(); });
+        } else { fallbackCopy(t); done(); }
+      },
+      "ai-clear-flag": function (el) {
+        var type = el.getAttribute("data-type");
+        var id = el.getAttribute("data-id");
+        var a = el.getAttribute("data-a");
+        if (type === "question") { var q = questionById(id); if (q) q.autoFlagged = []; }
+        else if (type === "answer") { var q2 = questionById(id); if (q2) { var an = (q2.answers || []).filter(function (x) { return x.id === a; })[0]; if (an) an.autoFlagged = []; } }
+        else if (type === "complaint") { var cp = (db.complaints || []).filter(function (x) { return x.id === id; })[0]; if (cp) cp.autoFlagged = []; }
+        else if (type === "feedback") { var fb = (db.feedback || []).filter(function (x) { return x.id === id; })[0]; if (fb) fb.autoFlagged = []; }
+        save();
+        render();
+        toast("Marked reviewed — removed from the flag queue.", "ok");
       },
       "club-verify": function (el) {
         if (!isPortalAdmin()) { toast("Only admins can change the verified badge.", "err"); return; }
@@ -7487,6 +7784,13 @@
         by: (state.user && (state.user.email || state.user.uid)) || (state.session && state.session.clubId ? "portal:" + state.session.clubId : "") || actorName(),
         at: new Date().toISOString()
       });
+      // Persist standalone audit rows immediately (login attempts, sign-outs)
+      // so they survive without a later save() from the calling action.
+      if (!state._auditSaving) {
+        state._auditSaving = true;
+        try { save(); } catch (e) { /* ignore */ }
+        state._auditSaving = false;
+      }
     }
 
     function questionsList() { return (db.questions || []); }
@@ -8325,7 +8629,9 @@
         "<span class=\"stat-mini\">🕒 " + esc(when) + "</span>" +
         (ev.venue ? "<span class=\"stat-mini\">📍 " + esc(ev.venue) + "</span>" : "") +
         (ev.capacity ? "<span class=\"stat-mini\">👥 " + esc(ev.capacity) + " spots</span>" : "") +
-        "</div></div>" +
+        "</div>" +
+        naiForecastHTML(ev) +
+        "</div>" +
         '<div class="hero-side">' + identityCard + rsvpHTML + "</div>" +
         "</div></section>" +
         '<div class="container" style="padding:24px 0">' +
@@ -8333,8 +8639,30 @@
         '<p class="muted">' + esc(ev.description || "No description yet — posted by the club.") + "</p>" +
         '<a class="btn btn-outline btn-sm" href="#/clubs">← All clubs</a></div>' +
         staffHTML +
+        eventFeedbackSectionHTML(ev) +
         "</div>"
       );
+    }
+    function eventFeedbackSectionHTML(ev) {
+      var isPast = ev.startsAt && new Date(ev.startsAt).getTime() < Date.now() - 3600000;
+      var list = feedbackFor(ev.id);
+      var digest = naiFeedbackDigestHTML(ev.id);
+      var me = meKey();
+      var rows = list.length
+        ? list.map(function (f) {
+          var s = naiSentiment(f.text);
+          return '<div class="mod-row"><div class="fy-icon fy-icon-sm">' + (s.score > 0.25 ? "😊" : s.score < -0.25 ? "😕" : "😐") + "</div>" +
+            '<div class="mod-body"><b>' + s.label + "</b><small>" + esc(f.text) + "</small></div>" +
+            "<small class='muted'>" + esc(relativeAgo(f.at)) + "</small></div>";
+        }).join("")
+        : '<div class="empty-state"><div class="icon">🗣</div><p>No feedback yet' + (isPast ? " — be the first to share how it went." : "") + "</p></div>";
+      var form = "";
+      if (isPast && me) {
+        form = '<form id="fb-form" data-event="' + esc(ev.id) + '" class="row">' +
+          '<input type="text" id="fb-text" placeholder="How was it? e.g. Great content, but the room was hot and we started late…" style="flex:1" maxlength="400">' +
+          '<button class="btn btn-outline btn-sm" type="submit">Submit</button></form>';
+      }
+      return '<div class="card"><h3>🗣 Event feedback</h3>' + digest + rows + form + "</div>";
     }
 
     function viewVerify(id) {
@@ -8561,6 +8889,7 @@
         "</ul></div></div></div></section>" +
         '<div class="container" style="padding:24px 0">' +
         teaser +
+        naiDigestHTML() +
         topHTML +
         '<div class="fy-grid">' +
         '<div class="fy-col">' + section("📅 Events for you", "#/events", "No upcoming events right now.", evCards) + "</div>" +
@@ -8597,6 +8926,11 @@
         if (personKeyOf(cert.person) !== me) return;
         var ev = eventById(cert.eventId);
         push("cert", "📜", "Your certificate for " + (ev ? ev.title : "an event") + " is ready to verify", "#/verify/" + cert.id, cert.issuedAt, cert.id);
+      });
+      // Automation engine — reminders, promotions, onboarding, dues, milestones, nudges.
+      (db.autoNotes || []).forEach(function (n) {
+        if (!n.to || n.to !== me) return;
+        push("auto", n.icon || "⚙️", n.text, n.href || "#/", n.when || now, n.id);
       });
       (db.questions || []).forEach(function (q) {
         if (q.authorKey !== me) return;
@@ -9226,9 +9560,9 @@
       auditLog("poll_vote", p.id + " -> option " + (idx + 1), p.clubId || "");
       save();
     }
-    function createPoll(clubId, question, options, createdBy) {
+    function createPoll(clubId, question, options, createdBy, deadline) {
       db.polls = db.polls || [];
-      var p = { id: DB.uid("pl"), clubId: clubId, question: question, options: options, voters: {}, open: true, createdAt: new Date().toISOString(), createdBy: createdBy || "" };
+      var p = { id: DB.uid("pl"), clubId: clubId, question: question, options: options, voters: {}, open: true, createdAt: new Date().toISOString(), createdBy: createdBy || "", deadline: deadline || "" };
       db.polls.push(p);
       auditLog("poll_create", p.id + " " + question, clubId);
       save();
@@ -9270,7 +9604,10 @@
       return '<div class="poll-card">' +
         '<div class="row" style="justify-content:space-between"><b>' + esc(p.question) + "</b>" +
         (p.open ? '<span class="qa-status open">Open</span>' : '<span class="qa-status closed">🔒 Closed</span>') + "</div>" +
-        '<div class="muted" style="font-size:12px;margin:4px 0 8px">🗳️ ' + esc(pollTotalVotes(p)) + " vote" + (pollTotalVotes(p) === 1 ? "" : "s") + " · by " + esc(p.createdBy || "a club") + "</div>" +
+        '<div class="muted" style="font-size:12px;margin:4px 0 8px">🗳️ ' + esc(pollTotalVotes(p)) + " vote" + (pollTotalVotes(p) === 1 ? "" : "s") + " · by " + esc(p.createdBy || "a club") +
+        (p.open && p.deadline ? " · ⏰ auto-closes " + esc(fmtDateTime(p.deadline)) : "") +
+        (p.closedBy === "auto" ? " · closed by automation" : "") +
+        "</div>" +
         pollVoteHTML(p) +
         (staff ? '<div class="row" style="gap:6px;margin-top:8px">' +
           '<button class="mod-btn" data-action="poll-toggle" data-id="' + esc(p.id) + '">' + (p.open ? "🔒 Close" : "🔓 Reopen") + "</button>" +
@@ -9289,6 +9626,8 @@
       return '<form id="poll-form" class="card" style="margin-bottom:12px">' +
         '<div class="field mb-2"><label>Question</label><input type="text" id="pl-question" maxlength="160" placeholder="e.g. Which theme should the next fest have?"></div>' +
         '<div class="field mb-2"><label>Options (2–6, one per line)</label><textarea id="pl-options" rows="4" placeholder="Option one&#10;Option two&#10;Option three"></textarea></div>' +
+        '<div class="field mb-2"><label>Auto-close at (optional — the poll closes and tallies itself)</label>' +
+        '<input type="datetime-local" id="pl-deadline"></div>' +
         '<div class="row"><button class="btn btn-primary btn-sm" type="submit">Create poll</button>' +
         '<button class="btn btn-ghost btn-sm" type="button" data-action="poll-cancel">Cancel</button></div>' +
         "</form>";
@@ -9357,6 +9696,27 @@
       var engHTML = allClubs.slice(0, 8).map(function (x) {
         return anBarHTML(x.c.icon + " " + x.c.name, x.score, engMax, x.c.color);
       }).join("");
+      var budget = club.budget || { allocated: 0, spent: 0 };
+      var pct = budget.allocated ? Math.min(100, Math.round((budget.spent / budget.allocated) * 100)) : 0;
+      var bCls = pct >= 100 ? "over" : (pct >= 80 ? "warn" : "ok");
+      var bCol = pct >= 100 ? "#dc2626" : (pct >= 80 ? "#d97706" : "#059669");
+      var budgetHTML =
+        '<div class="panel"><h2>💸 Budget</h2>' +
+        '<p class="muted small mb-2">Allocated vs spent — the 🤖 Automations tab alerts you automatically at 80% and 100%.</p>' +
+        '<form id="budget-form" class="builder-row mb-2">' +
+        '<div class="field"><label>Allocated (BDT)</label>' +
+        '<input type="number" id="bg-alloc" min="0" value="' + esc(budget.allocated || "") + '"></div>' +
+        '<div class="field"><label>Spent (BDT)</label>' +
+        '<input type="number" id="bg-spent" min="0" value="' + esc(budget.spent || "") + '"></div>' +
+        '<button class="btn btn-primary btn-sm" type="submit">Save budget</button>' +
+        "</form>" +
+        '<div class="budget-bar"><div class="row" style="justify-content:space-between;font-size:13px">' +
+        "<span>BDT " + esc(budget.spent) + " spent of BDT " + esc(budget.allocated) + " allocated</span>" +
+        '<span class="budget-label ' + bCls + '">' + pct + "% used</span></div>" +
+        '<div class="budget-track"><div class="budget-fill" style="width:' + pct + '%;background:' + bCol + '"></div></div>' +
+        (pct >= 100 ? '<p class="muted small" style="color:var(--danger)">⚠️ Over budget — the threshold alert has fired.</p>'
+          : pct >= 80 ? '<p class="muted small" style="color:var(--warn)">⚠️ Past 80% — the treasurer alert has fired.</p>' : "") +
+        "</div></div>";
       return (
         '<div class="panel"><h2>📈 Membership growth</h2>' +
         '<p class="muted small mb-2">Form submissions to ' + esc(club.name) + " per month (last 6 months).</p>" +
@@ -9366,7 +9726,8 @@
         '<div class="an-bars">' + attHTML + "</div></div>" +
         '<div class="panel"><h2>⚡ Engagement by club</h2>' +
         '<p class="muted small mb-2">Submissions + 2× check-ins + notices — the portal-wide picture.</p>' +
-        '<div class="an-bars">' + engHTML + "</div></div>"
+        '<div class="an-bars">' + engHTML + "</div></div>" +
+        budgetHTML
       );
     }
 
@@ -9408,7 +9769,7 @@
     function trendingSectionHTML() {
       var list = trendingEvents(3);
       if (!list.length) return "";
-      return '<section class="section alt"><div class="container">' +
+      return '<section class="section"><div class="container">' +
         '<div class="section-head"><div><h2>🔥 Trending this week</h2>' +
         '<p class="sub">Ranked live by RSVPs and waitlist pressure across all clubs.</p></div>' +
         '<a class="link" href="#/events">All events →</a></div>' +
@@ -9507,11 +9868,120 @@
           '<p class="muted small mb-2">' + sub + "</p>" + body + "</div>";
       }
       return (verifyRow ? '<div class="panel"><div class="portal-toolbar mb-2"><h2>✅ Verified badge</h2></div>' + verifyRow + "</div>" : "") +
+        panel("🚩 Auto-flagged content", "The AI filter catches posts worth a human look — mark them reviewed when you've dealt with them.", naiFlaggedListHTML()) +
         panel("🛡️ Moderation queue", "Warnings are append-only and staff-visible. Restore a hidden answer to undo a mistake.", wHTML + hHTML) +
         panel("📮 Open complaints", "Complaints filed against this club.", cHTML) +
         panel("🗳️ Closed polls", "Reopen a poll to accept more votes.", pHTML);
     }
 
+
+    /* ================= Security transparency — portal audit log =================
+       The web app's dedicated audit panel (portal-audit.tsx): admin-only,
+       severity-filterable, with brute-force anomaly flags for repeated failed
+       logins. index.html writes the same auditLog rows everywhere; this view
+       makes them readable in the portal instead of only describing them on the
+       privacy page. */
+
+    var AUDIT_SEVERITY = { info: 0, warn: 1, flag: 2 };
+    function auditSeverity(e) {
+      if (e.action === "login_fail" || e.flag) return AUDIT_SEVERITY.flag;
+      if (e.action === "login_ok") return AUDIT_SEVERITY.warn;
+      return AUDIT_SEVERITY.info;
+    }
+    function auditSeverityLabel(sev) {
+      return sev === 2 ? '<span class="audit-sev flag">🚩</span>' : (sev === 1 ? '<span class="audit-sev warn">⚠️</span>' : '<span class="audit-sev info">ℹ️</span>');
+    }
+    function auditActionLabel(a) {
+      var map = {
+        login_ok: "Signed in", login_fail: "Failed sign-in",
+        qa_ask: "Asked question", qa_answer: "Answered", qa_upvote: "Upvoted",
+        qa_best: "Marked best answer", qa_close: "Closed question", qa_reopen: "Reopened question",
+        qa_pin: "Pinned question", qa_unpin: "Unpinned question",
+        qa_hide_answer: "Hidden answer", qa_restore_answer: "Restored answer",
+        qa_delete_question: "Deleted question", qa_delete_answer: "Deleted answer", qa_warn: "Issued warning",
+        rsvp_join: "RSVP'd", rsvp_leave: "Left event", rsvp_waitlist_join: "Joined waitlist", rsvp_waitlist_leave: "Left waitlist",
+        event_checkin: "QR check-in", poll_vote: "Voted in poll", poll_create: "Created poll",
+        poll_close: "Closed poll", poll_reopen: "Reopened poll", poll_delete: "Deleted poll",
+        club_verified_toggle: "Changed verified badge",
+        opp_create: "Posted opportunity", opp_update: "Updated opportunity",
+        notice_create: "Posted notice", notice_update: "Updated notice", notice_delete: "Deleted notice",
+        form_create: "Published form", form_update: "Updated form", form_delete: "Deleted form",
+        submission_review: "Reviewed submission", member_approve: "Approved membership", member_reject: "Rejected membership"
+      };
+      return map[a] || a.replace(/_/g, " ");
+    }
+    function auditActorLabel(e) {
+      var a = e.by || "—";
+      if (a.indexOf("portal:") === 0) {
+        var c = clubById(a.slice(7));
+        return (c ? c.name : a.slice(7)) + " (staff)";
+      }
+      return a;
+    }
+    function failedLoginCount(log, actor, windowMs) {
+      var cutoff = Date.now() - (windowMs || 15 * 60000);
+      return log.filter(function (e) {
+        return e.action === "login_fail" && (e.by || "").toLowerCase() === String(actor || "").toLowerCase() && new Date(e.at).getTime() >= cutoff;
+      }).length;
+    }
+    function auditAnomalyActors(log) {
+      var seen = {};
+      var out = [];
+      log.forEach(function (e) {
+        if (e.action !== "login_fail" || !e.by) return;
+        var key = e.by.toLowerCase();
+        if (seen[key]) return;
+        seen[key] = 1;
+        var n = failedLoginCount(log, e.by);
+        if (n >= 5) out.push({ actor: e.by, count: n });
+      });
+      return out;
+    }
+    function portalAudit(club) {
+      if (!isPortalAdmin()) {
+        return '<div class="empty-state"><div class="icon">🕵️</div><p>Admins only — the audit log is the one place nobody can edit or delete a row once written.</p></div>';
+      }
+      var log = (db.auditLog || []).slice().sort(function (a, b) { return String(b.at || "").localeCompare(String(a.at || "")); });
+      var filter = state.auditFilter || "all";
+      var anomalies = auditAnomalyActors(log);
+      var anomalySet = {};
+      anomalies.forEach(function (a) { anomalySet[a.actor.toLowerCase()] = a.count; });
+
+      var chips = ["all", "flag", "warn", "info"].map(function (k) {
+        var label = k === "all" ? "All" : (k === "flag" ? "🚩 Anomalies" : (k === "warn" ? "⚠️ Warnings" : "ℹ️ Info"));
+        return '<button class="chip' + (filter === k ? " active" : "") + '" data-action="audit-filter" data-filter="' + k + '">' + label + "</button>";
+      }).join("");
+
+      var anomalyHTML = anomalies.length
+        ? '<div class="panel mb-2"><div class="portal-toolbar mb-2"><h2>🚨 Brute-force flags</h2></div>' +
+          anomalies.map(function (a) {
+            return '<div class="mod-row"><div class="fy-icon fy-icon-sm">🚩</div>' +
+              '<div class="mod-body"><b>' + esc(a.actor) + "</b><small>" + a.count + " failed logins in the last 15 minutes — possible brute-force attempt. Rate limits apply; check the rows below.</small></div></div>";
+          }).join("") + "</div>"
+        : "";
+
+      var rows = log.filter(function (e) {
+        if (filter === "all") return true;
+        if (filter === "flag") return auditSeverity(e) === 2;
+        if (filter === "warn") return auditSeverity(e) >= 1;
+        return auditSeverity(e) === 0;
+      }).slice(0, 80).map(function (e) {
+        var sev = auditSeverity(e);
+        var clubName = e.clubId ? (clubById(e.clubId) ? clubById(e.clubId).name : e.clubId) : "";
+        var anomaly = anomalySet[(e.by || "").toLowerCase()] ? '<span class="audit-sev flag">🚩 ' + anomalySet[(e.by || "").toLowerCase()] + " fails</span>" : "";
+        return '<div class="mod-row">' +
+          '<div class="fy-icon fy-icon-sm">' + auditSeverityLabel(sev) + "</div>" +
+          '<div class="mod-body"><b>' + esc(auditActionLabel(e.action)) + "</b>" +
+          (e.detail ? "<small>" + esc(e.detail) + "</small>" : "") +
+          "<small>" + esc(auditActorLabel(e)) + (clubName ? " · " + esc(clubName) : "") + " · " + esc(relativeAgo(e.at)) + anomaly + "</small></div></div>";
+      }).join("") || '<div class="empty-state"><div class="icon">🕵️</div><p>No audit events yet — sign-ins, submissions and every moderation action land here.</p></div>';
+
+      return anomalyHTML +
+        '<div class="panel"><div class="portal-toolbar mb-2"><h2>🕵️ Audit log</h2>' +
+        '<span class="muted small">' + log.length + " event" + (log.length === 1 ? "" : "s") + " · newest first</span></div>" +
+        '<p class="muted small mb-2">Every sensitive action — sign-ins, RSVPs, check-ins, Q&amp;A posts, votes, moderation, opportunities — is appended here. Append-only: nobody, not even an admin, can edit or delete a row once written. Repeated failed logins are auto-flagged as brute-force anomalies.</p>' +
+        '<div class="filter-chips mb-2">' + chips + "</div>" + rows + "</div>";
+    }
 
     /* ================= Opportunity board =================
        Alumni and companies post internships, jobs, scholarships and
@@ -9986,7 +10456,882 @@
     }
 
 
-    /* ================= Student accounts =================
+    function fallbackCopy(text) {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch (e) { /* ignore */ }
+    }
+
+    /* ================= NITER AI — agentic layer =================
+       Deterministic, offline "agent" helpers operating on the portal's own
+       data: natural-language event drafting, personalised digests, a smart
+       club FAQ, resume-ready write-ups, attendance forecasting, feedback
+       sentiment analysis, sponsorship & collaboration matching, club
+       health reports and lightweight content-moderation flags. */
+
+    /* ---- 1. Natural-language event drafting ---- */
+    function naiEventClashes(startsAt, excludeId) {
+      if (!startsAt) return [];
+      var t = new Date(startsAt).getTime();
+      if (isNaN(t)) return [];
+      return (db.events || []).filter(function (e) {
+        if (excludeId && e.id === excludeId) return false;
+        var s = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+        if (isNaN(s)) return false;
+        var dur = 2 * 3600000;
+        return t < s + dur && s < t + dur;
+      });
+    }
+    function naiSuggestSlots(count) {
+      var out = [];
+      var cur = new Date();
+      cur.setMinutes(0, 0, 0);
+      cur.setHours(cur.getHours() + 1);
+      if (cur.getHours() < 9) cur.setHours(9);
+      var tries = 0;
+      while (out.length < (count || 3) && tries < 300) {
+        tries++;
+        if (cur.getHours() >= 9 && cur.getHours() <= 20 && !naiEventClashes(cur.toISOString()).length) out.push(cur.toISOString());
+        cur.setHours(cur.getHours() + 1);
+        if (cur.getHours() > 20) { cur.setHours(9); cur.setDate(cur.getDate() + 1); }
+      }
+      return out;
+    }
+    function naiParseEvent(raw) {
+      var s = String(raw || "").trim().replace(/\s+/g, " ");
+      var out = { title: "", startsAt: "", venue: "", tags: [], notes: [], ok: false };
+      if (s.length < 6) {
+        out.notes.push("Give a bit more detail — e.g. \"Robotics workshop, Thursday 3pm, Lab 2, free pizza\".");
+        return out;
+      }
+      var lower = s.toLowerCase();
+      var hour = -1, min = 0;
+      var t12 = lower.match(/(?:^|[^\d])(\d{1,2})(?::(\d{2}))?\s*(a\.?m\.?|p\.?m\.?)/);
+      var t24 = lower.match(/(?:^|[^\d])([01]?\d|2[0-3]):([0-5]\d)(?!\s*(?:a\.?m\.?|p\.?m\.?))/);
+      if (t12) {
+        hour = parseInt(t12[1], 10); min = t12[2] ? parseInt(t12[2], 10) : 0;
+        var pm = /p/i.test(t12[3]);
+        if (pm && hour < 12) hour += 12;
+        if (!pm && hour === 12) hour = 0;
+      } else if (t24) {
+        hour = parseInt(t24[1], 10); min = parseInt(t24[2], 10);
+      }
+      if (hour === -1 && /\b(noon|midday)\b/.test(lower)) { hour = 12; min = 0; }
+      var dayIdx = -1;
+      ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"].forEach(function (d, i) {
+        if (lower.indexOf(d) !== -1) dayIdx = i;
+      });
+      if (dayIdx === -1) {
+        var shortDays = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
+        Object.keys(shortDays).forEach(function (k) {
+          if (dayIdx === -1 && lower.indexOf(k) !== -1) dayIdx = shortDays[k];
+        });
+      }
+      var rel = 0;
+      if (/day after tomorrow/.test(lower)) rel = 2;
+      else if (/tomorrow|next day/.test(lower)) rel = 1;
+      else if (/next week/.test(lower)) rel = 7;
+      var venue = "";
+      var vPat = lower.match(/(?:at|in\s+)?(?:the\s+)?((?:auditorium|main\s+hall|main\s+field|campus\s+gate\b[^,.;]*|lab(?:oratory)?[\s-]?[0-9]*|room\s?[0-9]+|seminar\s+hall|gym(?:nasium)?(?: hall)?))/i);
+      if (vPat) {
+        venue = vPat[1].trim().replace(/[,;.]$/, "");
+        // Remove the venue phrase so the title cut below is clean.
+        s = s.replace(new RegExp(vPat[0], "i"), " ").replace(/\s+/g, " ").trim();
+        lower = s.toLowerCase();
+      }
+      var tags = [];
+      if (/\b(pizza|food|snacks|lunch|dinner|refreshments|free food)\b/i.test(lower)) tags.push("free-food");
+      if (/\b(certificates?|certs?)\b/i.test(lower)) tags.push("certificate");
+      if (/\b(hands[- ]on|practical|bring your)\b/i.test(lower)) tags.push("hands-on");
+      if (/\b(beginner|intro(?:ductory)?|no experience|for everyone)\b/i.test(lower)) tags.push("beginner");
+      if (/\b(workshop|bootcamp|training|lab session)\b/i.test(lower)) tags.push("workshop");
+      if (/\b(contest|competition|hackathon|tournament|challenge)\b/i.test(lower)) tags.push("contest");
+      var now = new Date();
+      if (dayIdx === -1 && rel === 0) {
+        var cand = new Date(now);
+        cand.setHours(hour >= 0 ? hour : 17, min, 0, 0);
+        if (cand.getTime() <= now.getTime() + 1800000) cand.setDate(cand.getDate() + 1);
+        out.startsAt = cand.toISOString();
+        out.notes.push("No day mentioned — set to " + fmtDateTime(cand.toISOString()) + ".");
+      } else {
+        var d = new Date(now);
+        if (dayIdx !== -1) {
+          var diff = (dayIdx - now.getDay() + 7) % 7;
+          if (rel === 1) diff = 1;
+          else if (rel === 2) diff = 2;
+          else if (rel === 7) diff = 7;
+          else if (diff === 0) {
+            var tc = new Date(now);
+            tc.setHours(hour >= 0 ? hour : 17, min, 0, 0);
+            if (hour === -1 || tc.getTime() <= now.getTime() + 1800000) diff = 7;
+          }
+          d.setDate(now.getDate() + diff);
+        } else {
+          d.setDate(now.getDate() + rel);
+        }
+        d.setHours(hour >= 0 ? hour : 17, min, 0, 0);
+        out.startsAt = d.toISOString();
+      }
+      var title = s;
+      var ci = title.indexOf(",");
+      if (ci !== -1) {
+        title = title.slice(0, ci);
+      } else {
+        var tm = title.match(/\s+(day after tomorrow|tomorrow|next week|(?:sun(?:day)?|mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?)|\d{1,2}(?::\d{2})?\s*(?:a\.?m\.?|p\.?m\.?))\b/i);
+        if (tm) title = title.slice(0, tm.index);
+      }
+      title = title.replace(/\s+(?:at|in|on|the)\s*$/i, "").replace(/\b(?:a|an|the)\s+/, "").trim().replace(/[,;\s]+$/, "");
+      if (title) title = title.charAt(0).toUpperCase() + title.slice(1);
+      out.title = title || "Untitled event";
+      out.venue = venue;
+      out.tags = tags;
+      out.ok = true;
+      if (hour === -1 && dayIdx === -1) out.notes.push("No time given — set to 5:00 PM.");
+      return out;
+    }
+    function naiAiDraftPanelHTML() {
+      return '<div class="ai-draft">' +
+        '<div class="ai-draft-head">🤖 <b>Draft with AI</b><span class="muted"> — describe the event in plain words and I\'ll fill the form below</span></div>' +
+        '<div class="row" style="gap:8px;margin:10px 0">' +
+        '<input type="text" id="ev-ai-text" class="nai-input" placeholder="e.g. Robotics workshop, Thursday 3pm, Lab 2, free pizza" style="flex:1">' +
+        '<button type="button" class="btn btn-outline btn-sm" data-action="ai-draft-event">✨ Draft</button></div>' +
+        '<div id="ev-ai-notes" class="ai-notes">' + (state.aiDraftNotes || "") + "</div>" +
+        "</div>";
+    }
+
+    /* ---- 2. Personalised digest (members) ---- */
+    function naiMyDigest() {
+      var me = meKey();
+      if (!me) return null;
+      var followed = follows();
+      var week = Date.now() + 7 * 86400000;
+      var fed = (db.events || []).filter(function (e) {
+        if (followed.indexOf(e.clubId) === -1) return false;
+        var t = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+        return !isNaN(t) && t >= Date.now() && t <= week;
+      });
+      var mine = (db.events || []).filter(function (e) {
+        if ((e.rsvps || []).indexOf(me) === -1) return false;
+        var t = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+        return isNaN(t) || t >= Date.now() - 3600000;
+      }).sort(function (a, b) { return (a.startsAt || "").localeCompare(b.startsAt || ""); });
+      var myForms = {};
+      (db.submissions || []).forEach(function (s) {
+        if (String(s.submitterEmail || s.email || "").toLowerCase() === me && s.formId) myForms[s.formId] = true;
+      });
+      var dls = (db.forms || []).filter(function (f) {
+        if (!myForms[f.id] || !f.deadline || statusOf(f).key !== "open") return false;
+        var t = new Date(f.deadline).getTime();
+        return !isNaN(t) && t <= Date.now() + 48 * 3600000;
+      });
+      var opps = openOpps().filter(function (o) { return followed.indexOf(o.clubId) !== -1; });
+      var qs = (db.questions || []).filter(function (q) {
+        return !q.bestAnswerId && q.authorKey !== me && qaStatus(q) === "open";
+      });
+      var parts = [];
+      if (fed.length) parts.push("🗓 " + fed.length + " event" + (fed.length === 1 ? "" : "s") + " this week from clubs you follow");
+      if (mine.length) {
+        var first = mine[0];
+        parts.push("🎟 You're RSVP'd to <b>" + esc(first.title) + "</b> — " + esc(fmtDateTime(first.startsAt)) +
+          (mine.length > 1 ? " (and " + (mine.length - 1) + " more)" : ""));
+      }
+      if (dls.length) parts.push("⏰ <b>" + esc(dls[0].title) + "</b> closes " + esc(fmtDateTime(dls[0].deadline)) +
+        (dls.length > 1 ? " — " + (dls.length - 1) + " other deadline" + (dls.length === 2 ? "" : "s") + " soon" : ""));
+      if (opps.length) parts.push("💼 " + opps.length + " opening" + (opps.length === 1 ? "" : "s") + " from clubs you follow");
+      if (qs.length) parts.push("💬 " + qs.length + " open question" + (qs.length === 1 ? "" : "s") + " you could answer");
+      return parts.length ? parts : null;
+    }
+    function naiDigestHTML() {
+      var d = naiMyDigest();
+      var me = meKey();
+      var inner;
+      if (!me) {
+        inner = '<p class="muted" style="font-size:13px;margin:0">Sign in (or add an identity) and your digest builds itself from <b>your</b> follows, RSVPs and deadlines.</p>';
+      } else if (!d) {
+        inner = '<p class="muted" style="font-size:13px;margin:0">Nothing time-sensitive on your plate right now — follow a club or RSVP to an event and this digest will build itself.</p>';
+      } else {
+        inner = '<ul class="ai-digest-list">' + d.map(function (x) { return "<li>" + x + "</li>"; }).join("") + "</ul>";
+      }
+      return '<div class="ai-digest"><div class="ai-digest-head">📬 <b>Your AI digest</b><span class="muted">regenerated live from your activity</span></div>' + inner + "</div>";
+    }
+
+    /* ---- 3. Smart club FAQ (members) ---- */
+    function naiClubFaq(clubId, q) {
+      var c = clubById(clubId);
+      if (!c) return "I don't recognise that club.";
+      var n = naiNorm(q);
+      var openF = clubForms(clubId).filter(isOpen);
+      var up = clubEvents(clubId).filter(function (e) {
+        var t = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+        return !isNaN(t) && t >= Date.now();
+      });
+      if (/room|where|located|find (?:you|the club)|location|address/i.test(n)) {
+        return "📍 " + c.name + " is in " + (c.room || "a room on campus (not listed yet)") + ". For directions and the latest updates, check the club's Facebook page.";
+      }
+      if (/email|contact|reach|facebook|page/i.test(n)) {
+        return "📧 " + c.name + " can be reached at " + (c.email || "an email not listed yet") + (c.facebook ? " — and its official Facebook page is " + c.facebook : "") + ".";
+      }
+      if (/meeting|weekly|regular|session|when do you (?:meet|gather)|schedule/i.test(n)) {
+        return c.weekly ? "🗓 " + c.weekly + "." : "Regular sessions aren't listed yet — check the notices or the club's Facebook page for the schedule.";
+      }
+      if (/join|member|apply|recruit|how do i get in/i.test(n)) {
+        if (openF.length) return "🤝 Membership is open! " + c.name + " currently has " + openF.length + " open form" + (openF.length === 1 ? "" : "s") + ": \"" + openF[0].title + "\" (closes " + (openF[0].deadline ? fmtDate(openF[0].deadline) : "TBA") + "). Fill it and the executives will contact you for the interview.";
+        return "🤝 No membership forms are open right now, but you can still follow " + c.name + " and watch the notices — drives open seasonally.";
+      }
+      if (/event|upcoming|next (?:thing|activity)/i.test(n)) {
+        return up.length ? "📅 The next one is \"" + up[0].title + "\" on " + fmtDateTime(up[0].startsAt) + (up[0].venue ? " at " + up[0].venue : "") + " — RSVP on the event page." : "📅 No upcoming events posted yet — check back soon.";
+      }
+      if (/committee|executive|who (?:runs|leads)|president|panel/i.test(n)) {
+        var execs = (c.executives || []).filter(function (r) { return r && r.name; });
+        return execs.length ? "👥 The " + (c.panel || "current") + " panel has " + execs.length + " members, led by " + execs[0].role + " " + execs[0].name + ". The full committee is on the club page." : "👥 The committee panel isn't listed yet — check the club page later.";
+      }
+      if (/about|what do you do|what is this club|activities|purpose/i.test(n)) {
+        return "✨ " + c.name + " — " + (c.tagline || "") + " " + (c.about || "");
+      }
+      return "Here's what I know about " + c.name + ": " + (c.about || c.tagline || "") + " You can ask me about its room, email, weekly sessions, membership, events or committee.";
+    }
+    function naiClubFaqPanelHTML(c) {
+      var res = "";
+      if (state.clubFaq && state.clubFaq.clubId === c.id) {
+        res = '<div class="club-faq-res"><div class="club-faq-q">💬 ' + esc(state.clubFaq.q) + "</div>" +
+          '<div class="club-faq-a">🤖 ' + esc(state.clubFaq.a) + "</div></div>";
+      }
+      return '<div class="panel"><h3>🤖 Ask about this club</h3>' +
+        '<p class="muted small mb-2">Questions students always repeat — the AI answers instantly: room, email, weekly sessions, membership, events, committee.</p>' +
+        res +
+        '<form id="club-faq-form" class="club-faq-form" data-club="' + esc(c.id) + '">' +
+        '<input type="text" id="cfq-input" class="nai-input" placeholder="e.g. Where is the club room? When is the next event?" style="flex:1">' +
+        '<button class="btn btn-outline btn-sm" type="submit">Ask</button></form></div>';
+    }
+
+    /* ---- 4. Resume-ready write-ups (members) ---- */
+    function naiResumeBullets() {
+      var me = meKey();
+      var out = [];
+      if (!me) return out;
+      var subs = (db.submissions || []).filter(function (s) { return String(s.submitterEmail || s.email || "").toLowerCase() === me; });
+      var byForm = {};
+      subs.forEach(function (s) { byForm[s.formId] = byForm[s.formId] || []; byForm[s.formId].push(s); });
+      Object.keys(byForm).forEach(function (fid) {
+        var f = formById(fid);
+        if (!f) return;
+        var c = clubById(f.clubId);
+        out.push("• Engaged with " + (c ? c.name : "a NITER club") + " — completed \"" + f.title + "\" (submitted " + fmtDate(byForm[fid][0].submittedAt) + ")");
+      });
+      var att = 0, names = [];
+      (db.events || []).forEach(function (e) {
+        (e.checkIns || []).forEach(function (ch) {
+          if (personKeyOf(ch) === me) { att++; if (names.length < 3 && names.indexOf(e.title) === -1) names.push(e.title); }
+        });
+      });
+      if (att) out.push("• Participated in " + att + " campus event" + (att === 1 ? "" : "s") + " with verified attendance" + (names.length ? " (" + names.join(", ") + ")" : ""));
+      var ans = 0, up = 0;
+      (db.questions || []).forEach(function (q) {
+        (q.answers || []).forEach(function (a) { if (a.authorKey === me) { ans++; up += (a.upvotes || []).length; } });
+      });
+      if (ans) out.push("• Contributed to the campus Q&A community — posted " + ans + " answer" + (ans === 1 ? "" : "s") + " earning " + up + " upvote" + (up === 1 ? "" : "s"));
+      var certs = (db.certificates || []).filter(function (crt) { return personKeyOf(crt.person) === me; });
+      if (certs.length) out.push("• Earned " + certs.length + " verifiable certificate" + (certs.length === 1 ? "" : "s") + " for event participation");
+      return out;
+    }
+    function naiResumePanelHTML() {
+      var bullets = naiResumeBullets();
+      var inner;
+      if (!bullets.length) {
+        inner = '<p class="muted small mb-0">Nothing logged yet — attend events (with check-in), submit club forms and answer Q&A, and the AI will draft your bullets here.</p>';
+      } else {
+        inner = '<div class="ai-resume">' + bullets.map(function (b) {
+          return '<div class="ai-resume-line">' + b + '<button class="mod-btn" data-action="ai-copy" data-text="' + esc(b.replace(/^• /, "")) + '">Copy</button></div>';
+        }).join("") + "</div>";
+      }
+      return '<div class="panel"><div class="portal-toolbar mb-2"><h2>📄 AI resume bullets</h2></div>' +
+        '<p class="muted small mb-2">Drafted from your verified activity — check-ins, submissions, certificates and Q&A. Paste into your CV and polish.</p>' +
+        inner + "</div>";
+    }
+
+    /* ---- 5. Attendance forecasting (officers) ---- */
+    function naiForecast(e) {
+      var similar = (db.events || []).filter(function (x) {
+        return x.clubId === e.clubId && x.id !== e.id && (x.checkIns || []).length > 0;
+      });
+      var avg = 0;
+      if (similar.length) {
+        avg = Math.round(similar.reduce(function (s, x) { return s + (x.checkIns || []).length; }, 0) / similar.length);
+      }
+      var rsvps = (e.rsvps || []).length, wl = (e.waitlist || []).length;
+      var pred = Math.round((avg || 0) * 0.5 + rsvps * 0.9 + wl * 0.35);
+      if (e.capacity) pred = Math.min(pred, e.capacity);
+      var basis = similar.length ? "from " + similar.length + " past event" + (similar.length === 1 ? "" : "s") + " by this club + current RSVPs" : "no past data yet — estimate from RSVPs";
+      return { pred: pred, avg: avg, rsvps: rsvps, wl: wl, basis: basis };
+    }
+    function naiForecastHTML(e) {
+      var f = naiForecast(e);
+      var arrow = f.pred >= f.rsvps ? "📈" : "📉";
+      return '<div class="ai-forecast">' + arrow + " <b>AI turnout forecast: ~" + f.pred + "</b>" +
+        '<span class="muted"> · ' + esc(f.basis) + "</span></div>";
+    }
+
+    /* ---- 6. Feedback + sentiment analysis (officers) ---- */
+    var NAI_POS = ["great", "awesome", "excellent", "amazing", "loved", "enjoyed", "helpful", "useful", "fun", "well", "good", "nice", "best", "fantastic", "clear", "organized", "organised", "informative", "inspiring", "perfect", "smooth", "satisfying", "impressive"];
+    var NAI_NEG = ["bad", "boring", "confusing", "waste", "terrible", "worst", "late", "delay", "crowded", "overpriced", "poor", "disappointing", "unclear", "hard", "difficult", "slow", "cancelled", "noisy", "chaotic", "disorganised", "disorganized"];
+    function naiSentiment(text) {
+      var t = " " + String(text || "").toLowerCase() + " ";
+      var p = 0, n = 0;
+      NAI_POS.forEach(function (w) { if (t.indexOf(w) !== -1) p++; });
+      NAI_NEG.forEach(function (w) { if (t.indexOf(w) !== -1) n++; });
+      var score = (p - n) / Math.max(1, p + n);
+      var label = score > 0.25 ? "😊 Positive" : (score < -0.25 ? "😕 Needs attention" : "😐 Mixed");
+      return { score: score, label: label, p: p, n: n };
+    }
+    function naiFeedbackThemes(text) {
+      var themes = [
+        { key: "🍕 Food & refreshments", words: ["food", "pizza", "snacks", "tea", "lunch", "refreshment"] },
+        { key: "📍 Venue & logistics", words: ["venue", "room", "space", "crowd", "aircon", "seating", "loud", "noise"] },
+        { key: "🕒 Timing & schedule", words: ["time", "late", "delay", "early", "long", "short", "schedule", "started", "ended"] },
+        { key: "🎤 Content & speakers", words: ["speaker", "content", "slides", "session", "topic", "talk", "material", "learned", "learn"] },
+        { key: "🎟 Organisation & entry", words: ["organis", "organiz", "entry", "queue", "line", "registration", "check", "ticket"] }
+      ];
+      var t = " " + String(text || "").toLowerCase() + " ";
+      return themes.filter(function (th) { return th.words.some(function (w) { return t.indexOf(w) !== -1; }); }).map(function (th) { return th.key; }).slice(0, 3);
+    }
+    function feedbackFor(eventId) { return (db.feedback || []).filter(function (f) { return f.eventId === eventId; }).sort(function (a, b) { return (a.at || "").localeCompare(b.at || ""); }); }
+    function naiFeedbackDigestHTML(eventId) {
+      var list = feedbackFor(eventId);
+      if (!list.length) return "";
+      var labels = list.map(function (f) { return naiSentiment(f.text); });
+      var pos = labels.filter(function (l) { return l.score > 0.25; }).length;
+      var neg = labels.filter(function (l) { return l.score < -0.25; }).length;
+      var themeCount = {};
+      list.forEach(function (f) { naiFeedbackThemes(f.text).forEach(function (k) { themeCount[k] = (themeCount[k] || 0) + 1; }); });
+      var themes = Object.keys(themeCount).sort(function (a, b) { return themeCount[b] - themeCount[a]; }).slice(0, 3);
+      var thumbs = pos + " positive · " + neg + " needs attention · " + (list.length - pos - neg) + " mixed";
+      return '<div class="ai-fb-digest"><b>🤖 Feedback digest</b> (' + list.length + " response" + (list.length === 1 ? "" : "s") + "): " + thumbs +
+        (themes.length ? '<span class="muted"> · Themes: ' + themes.map(function (k) { return esc(k); }).join(", ") + "</span>" : "") + "</div>";
+    }
+
+    /* ---- 7. Sponsorship matching (officers) ---- */
+    function naiSponsorMatches(clubId) {
+      var mine = CLUB_TAG_PROFILE[clubId] || [];
+      var by = {};
+      openOpps().forEach(function (o) {
+        var oc = CLUB_TAG_PROFILE[o.clubId] || [];
+        var overlap = 0;
+        mine.forEach(function (t) { if (oc.indexOf(t) !== -1) overlap++; });
+        var company = naiNorm(o.company || "");
+        var key = company || o.clubId;
+        if (!by[key]) by[key] = { company: o.company || "A company", club: clubById(o.clubId), score: 0, opps: 0, overlap: overlap };
+        by[key].opps++;
+        by[key].score += overlap + (o.clubId === clubId ? 2 : 0);
+        if (overlap > by[key].overlap) by[key].overlap = overlap;
+      });
+      return Object.keys(by).map(function (k) { return by[k]; })
+        .filter(function (x) { return x.score > 0; })
+        .sort(function (a, b) { return b.score - a.score; })
+        .slice(0, 4);
+    }
+    function naiSponsorHTML(club) {
+      var m = naiSponsorMatches(club.id);
+      if (!m.length) return '<div class="panel"><h2>🤝 Sponsorship matches</h2><p class="muted small mb-0">No matching sponsors yet — as companies post opportunities in overlapping fields, they\'ll be suggested here.</p></div>';
+      var rows = m.map(function (x) {
+        return '<div class="mod-row"><div class="fy-icon fy-icon-sm">🏢</div>' +
+          '<div class="mod-body"><b>' + esc(x.company) + "</b>" +
+          "<small>" + (x.club ? "active in " + esc(x.club.name) : "") + " · " + x.opps + " posting" + (x.opps === 1 ? "" : "s") + " · " + x.overlap + " shared interest" + (x.overlap === 1 ? "" : "s") + "</small></div>" +
+          '<a class="btn btn-outline btn-sm" href="#/opportunities">View →</a></div>';
+      }).join("");
+      return '<div class="panel"><h2>🤝 Sponsorship matches</h2>' +
+        '<p class="muted small mb-2">Companies and alumni whose interests overlap with this club — natural partners for sponsorships, guest talks or co-hosted events.</p>' +
+        rows + "</div>";
+    }
+
+    /* ---- 8. Club health reports (advisors) ---- */
+    function naiClubHealth(c) {
+      var m60 = Date.now() - 60 * 86400000;
+      var subs = (db.submissions || []).filter(function (s) { return s.clubId === c.id && s.submittedAt && new Date(s.submittedAt).getTime() >= m60; }).length;
+      var att = 0;
+      clubEvents(c.id).forEach(function (e) { att += (e.checkIns || []).length; });
+      var not = clubNotices(c.id).filter(function (n) { return n.createdAt && new Date(n.createdAt).getTime() >= m60; }).length;
+      var openF = clubForms(c.id).filter(isOpen).length;
+      var qa = 0;
+      (db.questions || []).forEach(function (q) { if (q.clubId === c.id) qa++; });
+      var score = subs * 2 + att * 2 + not * 3 + openF * 4 + Math.min(qa, 10);
+      var verdict, emoji;
+      if (score >= 12) { verdict = "Thriving"; emoji = "🚀"; }
+      else if (score >= 6) { verdict = "Steady"; emoji = "✅"; }
+      else { verdict = "Going quiet"; emoji = "🌙"; }
+      var lines = [];
+      if (openF) lines.push(openF + " form" + (openF === 1 ? "" : "s") + " open now");
+      else lines.push("no open forms");
+      if (att) lines.push(att + " check-ins across events");
+      if (not) lines.push(not + " notice" + (not === 1 ? "" : "s") + " in 60 days");
+      if (subs) lines.push(subs + " submission" + (subs === 1 ? "" : "s") + " in 60 days");
+      if (qa) lines.push(qa + " Q&A thread" + (qa === 1 ? "" : "s"));
+      return { verdict: verdict, emoji: emoji, score: score, lines: lines };
+    }
+    function naiHealthHTML(c) {
+      var h = naiClubHealth(c);
+      return '<div class="mod-row"><div class="fy-icon fy-icon-sm">' + h.emoji + "</div>" +
+        '<div class="mod-body"><b>' + esc(c.icon + " " + c.name) + " — " + h.verdict + "</b>" +
+        "<small>" + esc(h.lines.join(" · ")) + "</small></div></div>";
+    }
+
+    /* ---- 9. Cross-club collaboration matching ---- */
+    function naiCollabPairs() {
+      var clubs = db.clubs || [];
+      var pairs = [];
+      for (var i = 0; i < clubs.length; i++) {
+        for (var j = i + 1; j < clubs.length; j++) {
+          var a = CLUB_TAG_PROFILE[clubs[i].id] || [], b = CLUB_TAG_PROFILE[clubs[j].id] || [];
+          var ov = 0;
+          a.forEach(function (t) { if (b.indexOf(t) !== -1) ov++; });
+          if (ov >= 2) pairs.push({ a: clubs[i], b: clubs[j], overlap: ov });
+        }
+      }
+      return pairs.sort(function (x, y) { return y.overlap - x.overlap; }).slice(0, 3);
+    }
+    function naiCollabHTML() {
+      var pairs = naiCollabPairs();
+      if (!pairs.length) return "";
+      var rows = pairs.map(function (p) {
+        return '<div class="mod-row"><div class="fy-icon fy-icon-sm">🤝</div>' +
+          '<div class="mod-body"><b>' + esc(p.a.icon + " " + p.a.name) + " × " + esc(p.b.icon + " " + p.b.name) + "</b>" +
+          "<small>" + p.overlap + " shared interest" + (p.overlap === 1 ? "" : "s") + " — a joint event would probably do well</small></div>" +
+          '<a class="btn btn-outline btn-sm" href="#/club/' + esc(p.a.id) + '">View →</a></div>';
+      }).join("");
+      return '<div class="panel"><h2>🤝 Cross-club collaboration</h2>' +
+        '<p class="muted small mb-2">Clubs with enough overlapping interests that a co-hosted hackathon, fest or workshop would likely thrive.</p>' + rows + "</div>";
+    }
+
+    /* ---- 10. Lightweight content moderation ---- */
+    var NAI_BANNED = ["exam paper", "sell answers", "question leak", "cheat sheet", "buy exam", "drug", "hack my", "crack this", "cracked", "fraud", "scam", "lottery", "make money fast", "earn from home", "xxx", "porn", "dating site", "casino"];
+    function naiFlagText(text) {
+      var t = " " + String(text || "").toLowerCase() + " ";
+      return NAI_BANNED.filter(function (w) { return t.indexOf(w) !== -1; });
+    }
+    function naiFlaggedListHTML() {
+      var items = [];
+      (db.questions || []).forEach(function (q) {
+        if (q.autoFlagged && q.autoFlagged.length) items.push({ type: "question", id: q.id, a: q.id, title: q.title, terms: q.autoFlagged, href: "#/questions/" + q.id });
+        (q.answers || []).forEach(function (a) {
+          if (a.autoFlagged && a.autoFlagged.length) items.push({ type: "answer", id: q.id, a: a.id, title: "Answer on \"" + String(q.title).slice(0, 40) + "\"", terms: a.autoFlagged, href: "#/questions/" + q.id });
+        });
+      });
+      (db.complaints || []).forEach(function (cp) {
+        if (cp.autoFlagged && cp.autoFlagged.length) items.push({ type: "complaint", id: cp.id, a: "", title: "Complaint from " + (cp.name || "a student"), terms: cp.autoFlagged, href: "#/complaint/" + cp.clubId });
+      });
+      (db.feedback || []).forEach(function (fb) {
+        if (fb.autoFlagged && fb.autoFlagged.length) items.push({ type: "feedback", id: fb.id, a: "", title: "Event feedback", terms: fb.autoFlagged, href: "#/events" });
+      });
+      if (!items.length) return '<div class="empty-state"><div class="icon">🛡️</div><p>No auto-flagged content — the filter caught nothing worth a human look.</p></div>';
+      return items.slice(0, 10).map(function (it) {
+        return '<div class="mod-row"><div class="fy-icon fy-icon-sm">🚩</div>' +
+          '<div class="mod-body"><b>' + esc(it.title) + "</b>" +
+          "<small>flagged terms: " + esc(it.terms.join(", ")) + "</small></div>" +
+          '<a class="mod-btn" href="' + it.href + '">View</a>' +
+          '<button class="mod-btn" data-action="ai-clear-flag" data-type="' + it.type + '" data-id="' + esc(it.id) + '" data-a="' + esc(it.a) + '">✓ Reviewed</button></div>';
+      }).join("");
+    }
+
+    /* ---- Portal AI insights tab ---- */
+    function portalAI(club) {
+      var upcoming = clubEvents(club.id).filter(function (e) {
+        var t = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+        return !isNaN(t) && t >= Date.now();
+      }).slice(0, 3);
+      var fore = upcoming.map(function (e) {
+        return '<div class="mod-row"><div class="fy-icon fy-icon-sm">📈</div>' +
+          '<div class="mod-body"><b>' + esc(e.title) + "</b>" + naiForecastHTML(e) + "</div>" +
+          '<a class="btn btn-outline btn-sm" href="#/events/' + esc(e.id) + '">Event →</a></div>';
+      }).join("") || '<p class="muted small mb-0">No upcoming events to forecast.</p>';
+      var fbList = (db.feedback || []).filter(function (f) {
+        var ev = eventById(f.eventId);
+        return ev && ev.clubId === club.id;
+      });
+      var fbDigest = fbList.length
+        ? '<div class="panel"><h2>🗣 Feedback sentiment</h2>' +
+          '<p class="muted small mb-2">Reads open-text feedback and surfaces the actual themes instead of someone reading every response by hand.</p>' +
+          fbList.slice(-8).map(function (f) {
+            var ev = eventById(f.eventId);
+            var s = naiSentiment(f.text);
+            var th = naiFeedbackThemes(f.text);
+            return '<div class="mod-row"><div class="fy-icon fy-icon-sm">' + (s.score > 0.25 ? "😊" : s.score < -0.25 ? "😕" : "😐") + "</div>" +
+              '<div class="mod-body"><b>' + s.label + "</b> — <span class='muted'>" + esc(String(f.text).slice(0, 90)) + "</span>" +
+              "<small>" + esc(ev ? ev.title : "an event") + (th.length ? " · " + esc(th.join(", ")) : "") + "</small></div></div>";
+          }).join("") + "</div>"
+        : '<div class="panel"><h2>🗣 Feedback sentiment</h2><p class="muted small mb-0">Students can leave feedback on past events — themes and sentiment will surface here.</p></div>';
+      return (
+        '<div class="panel"><div class="portal-toolbar mb-2"><h2>🤖 AI insights — ' + esc(club.name) + "</h2></div>" +
+        '<p class="muted small mb-2">Everything here is derived live from the portal\'s data — no guessing, no manual spreadsheets.</p></div>' +
+        '<div class="panel"><h2>🩺 Club health</h2>' + naiHealthHTML(club) + "</div>" +
+        naiSponsorHTML(club) +
+        '<div class="panel"><h2>📈 Attendance forecasts</h2>' +
+        '<p class="muted small mb-2">Predicted turnout from similar past events plus current RSVP pressure — helps venue and catering decisions.</p>' + fore + "</div>" +
+        fbDigest +
+        '<div class="panel"><h2>🚩 Content moderation queue</h2>' +
+        '<p class="muted small mb-2">Posts worth a human look before they cause a problem.</p>' + naiFlaggedListHTML() + "</div>" +
+        naiCollabHTML()
+      );
+    }
+
+/* ================= Automation engine =================
+       The "boring" automations that fire on their own from the tick
+       loop — event reminders, no-show waitlist promotion, new-member
+       onboarding, dues/renewals, budget threshold alerts, milestone
+       certificates, re-engagement nudges and poll auto-close.
+       Everything derives from existing data; nothing needs a server.
+       Delivery channels: the per-student notification feed
+       (db.autoNotes) and the portal's 🤖 Automations activity log. */
+
+    var AUTOMATION_DEFS = [
+      { key: "reminders", icon: "⏰", title: "Event reminders", desc: "48h / 24h / 1h before every event, plus a next-morning thanks + feedback nudge." },
+      { key: "noShow", icon: "🎟", title: "No-show → waitlist promotion", desc: "After an event starts, RSVP spots that were never redeemed auto-release and the next waitlisted student is promoted." },
+      { key: "onboarding", icon: "👋", title: "New-member onboarding", desc: "The moment a membership is approved: welcome message, first-event invite and club links — automatically." },
+      { key: "dues", icon: "💳", title: "Dues & renewals", desc: "7-day renewal reminders; unpaid memberships auto-suspend at expiry; a recorded payment reactivates instantly." },
+      { key: "budget", icon: "💸", title: "Budget threshold alerts", desc: "The treasurer is alerted at 80% and 100% of the club's allocated spend." },
+      { key: "certs", icon: "📜", title: "Milestone certificates", desc: "Auto-issue a verifiable certificate the moment a member hits 3 verified event check-ins." },
+      { key: "nudge", icon: "💌", title: "Re-engagement nudge", desc: "Members who were active and go quiet for 60+ days get a gentle nudge back." },
+      { key: "pollClose", icon: "🗳️", title: "Poll auto-close + tally", desc: "Polls with a deadline close themselves at the deadline and the result is announced." }
+    ];
+
+    function automationsConfig() {
+      if (!db.automations || typeof db.automations !== "object") db.automations = { enabled: {}, log: [] };
+      var def = db.automations;
+      if (!def.enabled || typeof def.enabled !== "object") def.enabled = {};
+      if (!Array.isArray(def.log)) def.log = [];
+      AUTOMATION_DEFS.forEach(function (d) { if (typeof def.enabled[d.key] !== "boolean") def.enabled[d.key] = true; });
+      return def;
+    }
+    function autoLogKeys() { if (!Array.isArray(db.autoLog)) db.autoLog = []; return db.autoLog; }
+    function autoFired(key) { return autoLogKeys().indexOf(key) !== -1; }
+    function autoMark(key, clubId, icon, text, autoKey) {
+      autoLogKeys().push(key);
+      if (db.autoLog.length > 400) db.autoLog.splice(0, db.autoLog.length - 400);
+      var def = automationsConfig();
+      def.log.push({ id: DB.uid("au"), auto: autoKey || "", key: key, icon: icon, text: text, clubId: clubId || "", at: new Date().toISOString() });
+      if (def.log.length > 120) def.log.splice(0, def.log.length - 120);
+    }
+    function autoNote(icon, text, href, to, idKey) {
+      db.autoNotes = db.autoNotes || [];
+      db.autoNotes.push({ id: idKey || "auto-" + DB.uid("n"), icon: icon, text: text, href: href || "#/", when: new Date().toISOString(), to: to || "" });
+      if (db.autoNotes.length > 200) db.autoNotes.splice(0, db.autoNotes.length - 200);
+    }
+
+    var _lastAutoRun = 0;
+    function runAutomations() {
+      var now = Date.now();
+      if (now - _lastAutoRun < 20000) return; // at most every 20s — dedup keys make re-runs harmless
+      _lastAutoRun = now;
+      var cfg = automationsConfig();
+      var dirty = false;
+      function changed() { dirty = true; }
+      try {
+        autoRunReminders(cfg, now, changed);
+        autoRunNoShow(cfg, now, changed);
+        autoRunOnboarding(cfg, now, changed);
+        autoRunDues(cfg, now, changed);
+        autoRunBudget(cfg, now, changed);
+        autoRunCerts(cfg, now, changed);
+        autoRunNudge(cfg, now, changed);
+        autoRunPollClose(cfg, now, changed);
+      } catch (e) { /* an automation hiccup must never break the page */ }
+      if (dirty) save();
+    }
+
+    /* ---- ⏰ Multi-stage event reminders (48h / 24h / 1h + post-event) ---- */
+    function autoRunReminders(cfg, now, changed) {
+      if (!cfg.enabled.reminders) return;
+      (db.events || []).forEach(function (ev) {
+        if (!ev.startsAt) return;
+        var t = new Date(ev.startsAt).getTime();
+        if (isNaN(t) || t <= now) return;
+        var h = (t - now) / 3600000;
+        var club = clubById(ev.clubId);
+        var n = (ev.rsvps || []).length;
+        var stage = h > 24 ? "48h" : (h > 1 ? "24h" : "1h");
+        var key = "rem-" + ev.id + "-" + stage;
+        if (autoFired(key)) return;
+        var when = stage === "48h" ? "in 2 days" : (stage === "24h" ? "tomorrow" : "in under an hour");
+        (ev.rsvps || []).forEach(function (k) {
+          autoNote("⏰", "<b>" + esc(ev.title) + "</b> starts " + when + (ev.venue ? " — " + esc(ev.venue) : "") + ". See you there!", "#/events/" + ev.id, k, key + "-" + k);
+        });
+        autoMark(key, ev.clubId, "⏰", (club ? club.name + ": " : "") + esc(ev.title) + " — reminder sent to " + n + " RSVP'd student" + (n === 1 ? "" : "s") + " (" + stage + " before start)", "reminders");
+        changed();
+      });
+      // Next-morning "thanks + feedback" after the event wraps up (10–48h after start).
+      (db.events || []).forEach(function (ev) {
+        if (!ev.startsAt) return;
+        var t = new Date(ev.startsAt).getTime();
+        if (isNaN(t) || now - t < 10 * 3600000 || now - t > 48 * 3600000) return;
+        var key = "rem-after-" + ev.id;
+        if (autoFired(key)) return;
+        (ev.rsvps || []).forEach(function (k) {
+          autoNote("🙏", "Thanks for coming to <b>" + esc(ev.title) + "</b>! A minute of feedback helps the club plan better next time.", "#/events/" + ev.id, k, key + "-" + k);
+        });
+        autoMark(key, ev.clubId, "🙏", esc(ev.title) + " — post-event thanks + feedback reminder sent", "reminders");
+        changed();
+      });
+    }
+
+    /* ---- 🎟 No-show → waitlist auto-promotion (15-min grace after start) ---- */
+    function autoRunNoShow(cfg, now, changed) {
+      if (!cfg.enabled.noShow) return;
+      (db.events || []).forEach(function (ev) {
+        if (!ev.startsAt) return;
+        var t = new Date(ev.startsAt).getTime();
+        if (isNaN(t) || now < t + 15 * 60000) return;
+        var rsvps = ev.rsvps = ev.rsvps || [];
+        var wl = ev.waitlist = ev.waitlist || [];
+        var ci = ev.checkIns || [];
+        if (!wl.length) return;
+        var key = "noshow-" + ev.id;
+        if (autoFired(key)) return;
+        var released = 0;
+        for (var i = rsvps.length - 1; i >= 0; i--) {
+          if (!ci.some(function (c) { return personKeyOf(c) === rsvps[i]; })) { rsvps.splice(i, 1); released++; }
+        }
+        var promoted = 0;
+        while (wl.length && (!ev.capacity || rsvps.length < ev.capacity)) {
+          var next = wl.shift();
+          rsvps.push(next);
+          promoted++;
+          autoNote("🎟", "A spot opened for <b>" + esc(ev.title) + "</b> — you're confirmed! Arrive on time to get checked in.", "#/events/" + ev.id, next, key + "-promo-" + next);
+        }
+        if (released || promoted) {
+          autoMark(key, ev.clubId, "🎟", esc(ev.title) + " — " + released + " no-show spot" + (released === 1 ? "" : "s") + " released, " + promoted + " waitlisted student" + (promoted === 1 ? "" : "s") + " promoted", "noShow");
+          changed();
+        }
+      });
+    }
+
+    /* ---- 👋 New-member onboarding sequence (fires on approval, catch-up safe) ---- */
+    function autoRunOnboarding(cfg, now, changed) {
+      if (!cfg.enabled.onboarding) return;
+      (db.memberships || []).forEach(function (m) {
+        if (m.status !== "approved" || m.onboarded || m.suspended) return;
+        m.onboarded = true;
+        var club = clubById(m.clubId);
+        var keyEmail = String(m.email || m.userId || m.userEmail || "").toLowerCase();
+        var clubName = club ? club.name : "your club";
+        autoNote("👋", "Welcome to <b>" + esc(clubName) + "</b>! Your membership is active — introduce yourself and check the pinned posts.", "#/club/" + esc(m.clubId), keyEmail, "onb-welcome-" + m.id);
+        var next = (db.events || []).filter(function (ev) {
+          return ev.clubId === m.clubId && ev.startsAt && new Date(ev.startsAt).getTime() > now;
+        }).sort(function (a, b) { return (a.startsAt || "").localeCompare(b.startsAt || ""); })[0];
+        if (next) {
+          autoNote("📅", "First event invite: <b>" + esc(next.title) + "</b> on " + esc(fmtDateTime(next.startsAt)) + (next.venue ? " — " + esc(next.venue) : "") + ". RSVP to grab a spot.", "#/events/" + next.id, keyEmail, "onb-event-" + m.id);
+        }
+        autoMark("onb-" + m.id, m.clubId, "👋", (club ? club.name : "A club") + " — onboarding sequence sent to " + (m.userName || keyEmail || "a new member"), "onboarding");
+        changed();
+      });
+    }
+
+    /* ---- 💳 Dues & renewals: reminders, auto-suspend, reactivate on payment ---- */
+    function autoRunDues(cfg, now, changed) {
+      if (!cfg.enabled.dues) return;
+      (db.memberships || []).forEach(function (m) {
+        if (!m.expiresAt || m.status !== "approved") return;
+        var t = new Date(m.expiresAt).getTime();
+        if (isNaN(t)) return;
+        var club = clubById(m.clubId);
+        var keyEmail = String(m.email || m.userId || m.userEmail || "").toLowerCase();
+        var d = Math.ceil((t - now) / 86400000);
+        if (d > 0 && d <= 7 && !autoFired("dues-7d-" + m.id)) {
+          autoNote("💳", "Your <b>" + esc(club ? club.name : "club") + "</b> membership renews in " + d + " day" + (d === 1 ? "" : "s") + " — renew to keep your access.", "#/portal", keyEmail, "dues-7d-" + m.id);
+          autoMark("dues-7d-" + m.id, m.clubId, "💳", "Renewal reminder (" + d + "d) sent to " + (m.userName || keyEmail), "dues");
+          changed();
+        }
+        if (d <= 0 && !m.suspended) {
+          m.suspended = true;
+          autoNote("⏸", "Your <b>" + esc(club ? club.name : "club") + "</b> membership expired and is now suspended. Pay your dues to reactivate.", "#/portal", keyEmail, "dues-exp-" + m.id);
+          autoMark("dues-exp-" + m.id, m.clubId, "⏸", (m.userName || keyEmail) + " — membership auto-suspended (dues unpaid)", "dues");
+          changed();
+        }
+      });
+    }
+
+    /* ---- 💸 Budget threshold alerts (80% / 100% of allocated) ---- */
+    function autoRunBudget(cfg, now, changed) {
+      if (!cfg.enabled.budget) return;
+      (db.clubs || []).forEach(function (c) {
+        var b = c.budget;
+        if (!b || !b.allocated) return;
+        var pct = b.spent / b.allocated;
+        if (pct >= 1 && !autoFired("budget-100-" + c.id)) {
+          autoMark("budget-100-" + c.id, c.id, "💸", c.name + " — spend has hit 100% of the allocated budget (BDT " + b.spent + " / " + b.allocated + "). Freeze new spending until approved.", "budget");
+          changed();
+        } else if (pct >= 0.8 && !autoFired("budget-80-" + c.id)) {
+          autoMark("budget-80-" + c.id, c.id, "💸", c.name + " — spend is at " + Math.round(pct * 100) + "% of the allocated budget. Review the rest of the semester now, not at audit.", "budget");
+          changed();
+        }
+      });
+    }
+
+    /* ---- 📜 Milestone certificates: auto-issue at 3 verified check-ins ---- */
+    function autoRunCerts(cfg, now, changed) {
+      if (!cfg.enabled.certs) return;
+      var counts = {}, names = {};
+      (db.events || []).forEach(function (ev) {
+        (ev.checkIns || []).forEach(function (c) {
+          var k = personKeyOf(c);
+          if (!k) return;
+          counts[k] = (counts[k] || 0) + 1;
+          if (c.name && !names[k]) names[k] = c.name;
+        });
+      });
+      Object.keys(counts).forEach(function (k) {
+        if (counts[k] < 3) return;
+        var key = "cert-milestone-" + k + "-3";
+        if (autoFired(key)) return;
+        var cert = {
+          id: "CERT-" + Math.floor(10000 + Math.random() * 90000),
+          type: "milestone",
+          eventId: "",
+          clubId: "",
+          person: { name: names[k] || "", email: k },
+          issuedAt: new Date().toISOString(),
+          issuedBy: "Automation"
+        };
+        db.certificates = db.certificates || [];
+        db.certificates.push(cert);
+        autoNote("🎉", "You just hit <b>3 verified event check-ins</b> — a milestone certificate was issued to you automatically. Add it to your LinkedIn!", "#/verify/" + cert.id, k, key);
+        autoMark(key, "", "📜", "Milestone certificate " + cert.id + " auto-issued to " + (names[k] || k) + " (3 check-ins)", "certs");
+        changed();
+      });
+    }
+
+    /* ---- 💌 Re-engagement nudge after ~60 quiet days ---- */
+    function autoRunNudge(cfg, now, changed) {
+      if (!cfg.enabled.nudge) return;
+      var last = {}, counts = {}, names = {};
+      function act(k, name, at) {
+        if (!k) return;
+        if (name && !names[k]) names[k] = name;
+        counts[k] = (counts[k] || 0) + 1;
+        var t = at ? new Date(at).getTime() : now;
+        if (!isNaN(t) && (!last[k] || t > last[k])) last[k] = t;
+      }
+      (db.submissions || []).forEach(function (s) { act(String(s.submitterEmail || "").toLowerCase(), s.name || "", s.submittedAt); });
+      (db.events || []).forEach(function (ev) { (ev.checkIns || []).forEach(function (c) { act(personKeyOf(c), c.name || "", c.at); }); });
+      (db.questions || []).forEach(function (q) {
+        act(q.authorKey || "", q.authorName || "", q.createdAt);
+        (q.answers || []).forEach(function (a) { act(a.authorKey || "", a.authorName || "", a.createdAt); });
+      });
+      Object.keys(last).forEach(function (k) {
+        if (!last[k] || counts[k] < 2 || now - last[k] < 60 * 86400000) return;
+        var key = "nudge-" + k;
+        if (autoFired(key)) return;
+        autoNote("💌", "We miss you at NITER! Things are happening — see what's new this week.", "#/foryou", k, key);
+        autoMark(key, "", "💌", "Re-engagement nudge sent to " + (names[k] || k) + " (quiet for " + Math.round((now - last[k]) / 86400000) + " days)", "nudge");
+        changed();
+      });
+    }
+
+    /* ---- 🗳️ Poll auto-close + tally at the deadline ---- */
+    function autoPollWinnerText(p) {
+      var totals = pollTotals(p);
+      var best = 0, bestIdx = -1, tie = false;
+      (totals || []).forEach(function (n, i) {
+        if (n > best) { best = n; bestIdx = i; tie = false; }
+        else if (n === best && n > 0) tie = true;
+      });
+      if (bestIdx === -1) return "no votes";
+      return (p.options[bestIdx] || "?") + (tie ? " (tie)" : "") + " — " + best + " vote" + (best === 1 ? "" : "s");
+    }
+    function autoRunPollClose(cfg, now, changed) {
+      if (!cfg.enabled.pollClose) return;
+      (db.polls || []).forEach(function (p) {
+        if (!p.open || !p.deadline) return;
+        var t = new Date(p.deadline).getTime();
+        if (isNaN(t) || now < t) return;
+        p.open = false;
+        p.closedBy = "auto";
+        autoMark("poll-close-" + p.id, p.clubId, "🗳️", p.question + " — poll closed automatically and tallied: “" + autoPollWinnerText(p) + "”", "pollClose");
+        changed();
+      });
+    }
+
+    /* ---- 📣 Auto-share kit: one event, ready-to-post everywhere ---- */
+    function shareTextFor(ev) {
+      var club = clubById(ev.clubId);
+      return (club ? club.name + " — " : "") + ev.title +
+        (ev.startsAt ? " | " + fmtDateTime(ev.startsAt) : "") +
+        (ev.venue ? " | " + ev.venue : "") +
+        (ev.capacity ? " | " + ev.capacity + " spots" : "") +
+        ". More on the NITER Clubs Portal.";
+    }
+    function shareKitHTML(ev) {
+      var txt = shareTextFor(ev);
+      var base = location.href.split("#")[0];
+      var wa = "https://wa.me/?text=" + encodeURIComponent(txt);
+      var fb = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(base) + "&quote=" + encodeURIComponent(txt);
+      return '<div class="share-kit">' +
+        '<span class="muted small">📣 Auto-share</span>' +
+        '<button type="button" class="mod-btn" data-action="share-copy" data-id="' + esc(ev.id) + '">📋 Copy text</button>' +
+        '<a class="mod-btn" href="' + esc(wa) + '" target="_blank" rel="noopener">WhatsApp</a>' +
+        '<a class="mod-btn" href="' + esc(fb) + '" target="_blank" rel="noopener">Facebook</a>' +
+        "</div>";
+    }
+
+    /* ---- 💳 Dues renewal (payment marked as received) ---- */
+    function renewMembership(id) {
+      var m = (db.memberships || []).find(function (x) { return x.id === id; });
+      if (!m) return;
+      var wasSuspended = m.suspended;
+      m.status = "approved";
+      m.suspended = false;
+      m.duesPaid = true;
+      m.expiresAt = new Date(Date.now() + 365 * 86400000).toISOString();
+      auditLog("membership_renew", m.id + " -> " + (m.userName || m.userEmail || ""), m.clubId);
+      var keyEmail = String(m.email || m.userId || m.userEmail || "").toLowerCase();
+      if (keyEmail) {
+        var clubN = clubById(m.clubId);
+        autoNote("💳", "Your <b>" + esc(clubN ? clubN.name : "club") + "</b> membership is renewed — welcome back! Active for another year.", "#/portal", keyEmail, "renew-" + m.id);
+      }
+      save(); render();
+      toast(wasSuspended ? "Membership renewed and reactivated." : "Membership renewed (+12 months).", "ok");
+    }
+
+    /* ---- 🤖 Portal Automations tab ---- */
+    function portalAutomations(club) {
+      var cfg = automationsConfig();
+      var cards = AUTOMATION_DEFS.map(function (d) {
+        var lastEntry = null;
+        for (var i = cfg.log.length - 1; i >= 0; i--) {
+          if (cfg.log[i].auto === d.key) { lastEntry = cfg.log[i]; break; }
+        }
+        return '<div class="auto-card">' +
+          '<div class="auto-card-head"><span class="auto-icon">' + d.icon + "</span>" +
+          "<div><b>" + esc(d.title) + "</b><p>" + esc(d.desc) + "</p></div>" +
+          '<button class="mod-btn' + (cfg.enabled[d.key] ? " auto-on" : "") + '" data-action="auto-toggle" data-key="' + d.key + '">' +
+          (cfg.enabled[d.key] ? "✓ On" : "Off") + "</button></div>" +
+          '<div class="muted small">' + (lastEntry
+            ? "Last fired " + esc(relativeAgo(lastEntry.at)) + " — " + esc(lastEntry.text)
+            : "Waiting for a trigger…") + "</div>" +
+          "</div>";
+      }).join("");
+      var log = cfg.log.slice().reverse().slice(0, 14);
+      var logHTML = log.length
+        ? log.map(function (l) {
+            return '<div class="mod-row"><div class="fy-icon fy-icon-sm">' + l.icon + "</div>" +
+              '<div class="mod-body"><span>' + esc(l.text) + "</span>" +
+              "<small>" + esc(relativeAgo(l.at)) + (l.clubId ? " · " + esc(clubById(l.clubId) ? clubById(l.clubId).name : l.clubId) : " · portal-wide") + "</small></div></div>";
+          }).join("")
+        : '<div class="empty-state"><div class="icon">⚙️</div><p>Nothing fired yet — run a check now, or wait for a trigger (an event, a membership, a deadline…).</p></div>';
+      return (
+        '<div class="panel"><div class="portal-toolbar mb-2"><h2>🤖 Automations</h2>' +
+        '<button class="btn btn-primary btn-sm" data-action="auto-run">▶ Run checks now</button></div>' +
+        '<p class="muted small mb-2">These run automatically in your browser on the live tick — no officer has to remember anything. Student-facing messages land in the 🔔 notification feed; club-level events land in the log below.</p>' +
+        '<div class="auto-grid">' + cards + "</div></div>" +
+        '<div class="panel"><h2>🕘 Recent activity</h2>' + logHTML + "</div>"
+      );
+    }
+
+/* ================= Student accounts =================
        Students who filled a club form can sign in on the dashboard.
        Cloud mode: Firebase accounts (bootstrapUser with studentMode so a
        student is never auto-promoted to admin). Offline demo: accounts
@@ -10082,6 +11427,7 @@
           });
         }).catch(function (err) {
           busy(false);
+          auditLog("login_fail", authErrorMessage(err), "");
           shakeLogin(document.getElementById("student-login"));
           toast(authErrorMessage(err), "err");
         });
@@ -10101,6 +11447,7 @@
       var a = acc[email];
       if (!a || a.pass !== pass) {
         busy(false);
+        auditLog("login_fail", "Incorrect email or password", "");
         shakeLogin(document.getElementById("student-login"));
         toast("Incorrect email or password.", "err");
         return;
@@ -10200,6 +11547,7 @@
           state.user = profile;
           state.session = null;
           try { sessionStorage.removeItem("niter-portal-session"); } catch (err) { /* ignore */ }
+          auditLog("login_ok", mode === "signup" ? "Account created & signed in" : "Signed in", "");
           busy(false);
           showSuccessOverlay("Welcome, " + (profile.name || profile.email) + "!", function () {
             render();
@@ -10217,6 +11565,7 @@
         : auth.signInWithEmailAndPassword(email, pass);
       req.then(function (res) { onSuccess(res.user); }).catch(function (err) {
         busy(false);
+        auditLog("login_fail", authErrorMessage(err), "");
         shakeLogin(document.getElementById("portal-login"));
         toast(authErrorMessage(err), "err");
       });
@@ -10386,11 +11735,15 @@
           // Offline demo mode — the classic member code.
           var clubId = document.getElementById("login-club").value;
           var code = (document.getElementById("login-code").value || "").trim();
-          if (code !== DEMO_CODE) { shakeLogin(document.getElementById("portal-login")); toast("Incorrect member code.", "err"); return; }
+          if (code !== DEMO_CODE) {
+            auditLog("login_fail", "Wrong member code for " + (clubById(clubId) ? clubById(clubId).name : clubId), clubId);
+            shakeLogin(document.getElementById("portal-login")); toast("Incorrect member code.", "err"); return;
+          }
           state.session = { clubId: clubId };
           state.portalTab = "notices";
           state.portalNotice = null; state.builder = null; state.subFormId = null; state.eventEditing = null;
           try { sessionStorage.setItem("niter-portal-session", JSON.stringify(state.session)); } catch (err) { /* ignore */ }
+          auditLog("login_ok", "Signed in with member code", clubId);
           render();
           toast("Welcome, " + (clubById(clubId) ? clubById(clubId).name : "") + "!", "ok");
         } else {
@@ -10412,6 +11765,18 @@
       } else if (form.id === "event-form") {
         e.preventDefault();
         saveEventForm();
+      } else if (form.id === "budget-form") {
+        e.preventDefault();
+        if (!state.session) return;
+        var club = clubById(state.session.clubId);
+        if (!club) return;
+        club.budget = {
+          allocated: Number(document.getElementById("bg-alloc").value) || 0,
+          spent: Number(document.getElementById("bg-spent").value) || 0
+        };
+        auditLog("budget_update", "allocated=" + club.budget.allocated + " spent=" + club.budget.spent, club.id);
+        save(); render();
+        toast("Budget saved — threshold alerts will fire at 80% and 100%.", "ok");
       } else if (form.id === "profile-form") {
         e.preventDefault();
         saveProfileForm();
@@ -10434,10 +11799,13 @@
           createdAt: new Date().toISOString(),
           resolvedAt: ""
         });
+        var cpFlags = naiFlagText(title + " " + body);
+        var lastCp = db.complaints[db.complaints.length - 1];
+        if (cpFlags.length) { lastCp.autoFlagged = cpFlags; }
         save();
         state.complaintDone = target2;
         render();
-        toast("Complaint submitted!", "ok");
+        toast(cpFlags.length ? "Complaint submitted — held for a quick review." : "Complaint submitted!", cpFlags.length ? "err" : "ok");
       } else if (form.id === "it-complaint-form") {
         e.preventDefault();
         var itTitle = (document.getElementById("icf-title").value || "").trim();
@@ -10496,9 +11864,11 @@
         var qaCat = (document.getElementById("qa-category") || {}).value || "Other";
         var qaAnon = !!((document.getElementById("qa-anon") || {}).checked);
         var qNew = askQuestion(qaTitle, qaBody, qaCat, qaAnon);
+        var qFlags = naiFlagText(qaTitle + " " + qaBody);
+        if (qFlags.length) { qNew.autoFlagged = qFlags; save(); }
         state.qaAskOpen = false;
         render();
-        toast("Question posted!", "ok");
+        toast(qFlags.length ? "Question posted — held for a quick review." : "Question posted!", qFlags.length ? "err" : "ok");
         navigate("questions/" + qNew.id);
       } else if (form.id === "qa-answer-form") {
         e.preventDefault();
@@ -10515,9 +11885,11 @@
         var ansBody = (document.getElementById("qa-answer-body").value || "").trim();
         if (!ansBody) { toast("Write an answer first.", "err"); return; }
         var ansAnon = !!((document.getElementById("qa-answer-anon") || {}).checked);
-        addAnswer(qAns, ansBody, ansAnon);
+        var aNew = addAnswer(qAns, ansBody, ansAnon);
+        var aFlags = naiFlagText(ansBody);
+        if (aFlags.length) { aNew.autoFlagged = aFlags; save(); }
         render();
-        toast("Answer posted — it earns XP when upvoted.", "ok");
+        toast(aFlags.length ? "Answer posted — held for a quick review." : "Answer posted — it earns XP when upvoted.", aFlags.length ? "err" : "ok");
       } else if (form.id === "warn-form") {
         e.preventDefault();
         var qWarn = questionById(form.getAttribute("data-q"));
@@ -10570,15 +11942,39 @@
         if (!pQ) { toast("Give the poll a question.", "err"); return; }
         if (pOpts.length < 2) { toast("Add at least 2 options (one per line).", "err"); return; }
         if (pOpts.length > 6) { toast("Maximum 6 options.", "err"); return; }
-        createPoll(state.session.clubId, pQ, pOpts.slice(0, 6), actorName());
+        var pDeadline = (document.getElementById("pl-deadline").value || "");
+        createPoll(state.session.clubId, pQ, pOpts.slice(0, 6), actorName(), pDeadline ? new Date(pDeadline).toISOString() : "");
         state.pollEditing = false;
         render();
-        toast("Poll created — students can vote now.", "ok");
+        toast(pDeadline ? "Poll created — it will close and tally itself at the deadline." : "Poll created — students can vote now.", "ok");
       } else if (form.id === "niter-ai-form") {
         e.preventDefault();
         var naiQ = (document.getElementById("nai-input").value || "").trim();
         if (!naiQ) return;
         naiAskAndRender(naiQ);
+      } else if (form.id === "club-faq-form") {
+        e.preventDefault();
+        var cfq = (document.getElementById("cfq-input").value || "").trim();
+        if (!cfq) return;
+        state.clubFaq = { clubId: form.getAttribute("data-club"), q: cfq, a: naiClubFaq(form.getAttribute("data-club"), cfq) };
+        render();
+      } else if (form.id === "fb-form") {
+        e.preventDefault();
+        var fbText = (document.getElementById("fb-text").value || "").trim();
+        if (!fbText) { toast("Write a line of feedback first.", "err"); return; }
+        var fbFlags = naiFlagText(fbText);
+        db.feedback.push({
+          id: DB.uid("fb"),
+          eventId: form.getAttribute("data-event"),
+          text: fbText,
+          by: meKey() || "",
+          at: new Date().toISOString(),
+          autoFlagged: fbFlags
+        });
+        auditLog("feedback_add", form.getAttribute("data-event"), "");
+        save();
+        render();
+        toast(fbFlags.length ? "Feedback submitted — held for a quick review." : "Thanks — your feedback is logged.", fbFlags.length ? "err" : "ok");
       } else if (form.id === "opp-form") {
         e.preventDefault();
         var opTitle = (document.getElementById("op-title").value || "").trim();
