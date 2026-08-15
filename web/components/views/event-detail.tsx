@@ -65,6 +65,7 @@ export default function EventDetailView({ eventId }: { eventId: string }) {
       return;
     }
     const hadWaitlist = waitlistCount(ev) > 0;
+    const wasWaitlisted = !!waitlistOfPerson(ev, person);
     const res = toggleRsvp(db, ev, person);
     if (res === "confirmed") {
       toast.toast("✓ You're in — see you there!", "ok");
@@ -72,6 +73,9 @@ export default function EventDetailView({ eventId }: { eventId: string }) {
     } else if (res === "waitlisted") {
       toast.toast(`The event is full — you're #${waitlistCount(ev)} on the waitlist.`, "ok");
       logAudit("rsvp_waitlist", `Joined the waitlist for ${ev.title}`, "info", person.email, person.email);
+    } else if (wasWaitlisted) {
+      toast.toast("Removed from the waitlist.", "");
+      logAudit("rsvp_waitlist_leave", `Left the waitlist for ${ev.title}`, "info", person.email, person.email);
     } else {
       toast.toast(
         hadWaitlist ? "RSVP removed — the next waitlisted student was moved in." : "RSVP removed.",

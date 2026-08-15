@@ -227,6 +227,12 @@ export function checkInPerson(db: Database, ev: ClubEvent, person: Person, by = 
       at: new Date().toISOString(),
       by,
     });
+    // A waitlisted student who got in at the door no longer needs a waitlist
+    // spot — dropping them now prevents a later "promotion" after they've
+    // already attended.
+    if (Array.isArray(t.waitlist)) {
+      t.waitlist = t.waitlist.filter((w) => personKey(w) !== key);
+    }
     const club = clubById(d, ev.clubId);
     const cert: Certificate = {
       id: certId(),
