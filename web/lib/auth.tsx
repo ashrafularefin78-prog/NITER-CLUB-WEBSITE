@@ -22,6 +22,7 @@ import { doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
 import type { PortalUser, Session } from "./types";
 import { getCloudAuth, getCloudDb } from "./firebase";
 import { getDb, linkSubmissionsToUser, setReadScope } from "./store";
+import { logAudit } from "./audit";
 
 export const DEMO_CODE = "niter2025";
 const SESSION_KEY = "niter-portal-session";
@@ -243,8 +244,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginWithCode = useCallback(
     async (clubId: string, code: string): Promise<string | null> => {
-      if (code.trim() !== DEMO_CODE) return "Incorrect member code.";
+      if (code.trim() !== DEMO_CODE) {
+        logAudit("login_fail", "Wrong member code", "warn", clubId, "");
+        return "Incorrect member code.";
+      }
       setClubSession(clubId);
+      logAudit("login_ok", "Signed in with member code", "info", clubId, "");
       return null;
     },
     [setClubSession]
@@ -269,8 +274,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         persistSession(null);
         // Claim any submissions made with this email as a visitor.
         linkSubmissionsToUser({ uid: profile.uid, email: profile.email, name: profile.name, studentId: profile.studentId });
+        logAudit("login_ok", mode === "signup" ? "Account created & signed in" : "Signed in", "info", email, email);
         return null;
       } catch (err) {
+        logAudit("login_fail", "Failed sign-in attempt", "warn", authErrorMessage(err), email);
         return authErrorMessage(err);
       }
     },
@@ -290,10 +297,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       persistSession(null);
       // Claim any submissions made with this email as a visitor.
       linkSubmissionsToUser({ uid: profile.uid, email: profile.email, name: profile.name, studentId: profile.studentId });
+      logAudit("login_ok", "Signed in with Google", "info", profile.email, profile.email);
       return null;
     } catch (err) {
       const code = (err as { code?: string })?.code ?? "";
       if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return null;
+      logAudit("login_fail", "Failed Google sign-in", "warn", authErrorMessage(err), "");
       return authErrorMessage(err);
     }
   }, []);

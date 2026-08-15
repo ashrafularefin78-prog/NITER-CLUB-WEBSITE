@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useDb } from "@/lib/store";
-import { clubById, formById, isOpen, nextDeadline, sortNotices, statusOf } from "@/lib/utils";
+import { clubById, fmtDateTime, formById, isOpen, nextDeadline, sortNotices, statusOf } from "@/lib/utils";
+import { rsvpCount } from "@/lib/events";
 import { ClubGrid, FormGrid, NoticeCard } from "@/components/cards";
 import AdsCarousel from "@/components/ads";
 import { LiveBadge, SectionHead, Skeleton } from "@/components/ui";
@@ -248,6 +249,62 @@ export default function HomeView() {
         </Reveal>
       </section>
 
+      {/* ---------------- Upcoming events — shared campus calendar ---------------- */}
+      <section className="bg-surface-soft">
+        <div className="container-x py-16 md:py-20">
+          <SectionHead
+            title="🗓 Upcoming events"
+            sub="RSVP from the shared campus calendar — clash-free, with certificates at the door."
+            action={
+              <Link href="/events" className="text-sm font-semibold text-crimson no-underline hover:underline">
+                All events →
+              </Link>
+            }
+          />
+          <div className="mt-3 grid gap-4 md:grid-cols-3">
+            {nextUpcoming(db, 3).length ? (
+              nextUpcoming(db, 3).map((ev) => {
+                const club = clubById(db, ev.clubId);
+                return (
+                  <Link
+                    key={ev.id}
+                    href={`/events/${ev.id}`}
+                    className="card p-5 no-underline transition hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-[20px]"
+                        style={{ background: club?.color || "#eef2f7" }}
+                        aria-hidden="true"
+                      >
+                        {club?.icon ?? "🎪"}
+                      </span>
+                      <div className="min-w-0">
+                        <h3 className="m-0 truncate text-[15px] font-bold text-ink">{ev.title}</h3>
+                        <p className="m-0 text-[12px] text-muted">{club?.name}</p>
+                      </div>
+                    </div>
+                    <p className="m-0 mt-3 text-[12.5px] text-muted">
+                      🕒 {fmtDateTime(ev.startsAt)}
+                      {ev.venue ? ` · 📍 ${ev.venue}` : ""}
+                    </p>
+                    <p className="m-0 mt-1.5 text-[12px] font-semibold text-navy dark:text-gold">
+                      {rsvpCount(ev)} going — RSVP now
+                    </p>
+                  </Link>
+                );
+              })
+            ) : (
+              <div className="panel md:col-span-3">
+                <p className="m-0 text-center text-[13.5px] text-muted">
+                  No upcoming events right now — check back soon, or browse the full campus calendar.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* ---------------- Latest notices ---------------- */}
       <section className="container-x pb-16 md:pb-20">
         <Reveal>
@@ -305,6 +362,15 @@ export default function HomeView() {
 /* Counts up from 0 to `value` when first scrolled into view.
    Honors prefers-reduced-motion (instant) and realtime updates (jumps to
    the new value once the initial animation has finished). */
+/** Next few upcoming events across all clubs, nearest first. */
+function nextUpcoming(db: NonNullable<ReturnType<typeof useDb>>, n: number) {
+  const now = Date.now();
+  return (db.events || [])
+    .filter((ev) => new Date(ev.startsAt).getTime() >= now)
+    .sort((a, b) => a.startsAt.localeCompare(b.startsAt))
+    .slice(0, n);
+}
+
 function CountUp({ value, duration = 1100 }: { value: number; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(0);

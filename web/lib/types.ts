@@ -94,6 +94,15 @@ export interface Complaint {
   category?: string;
 }
 
+/** A student who RSVP'd to an event (or was checked in as a walk-in). */
+export interface EventPerson {
+  userId: string;
+  name: string;
+  email: string;
+  studentId?: string;
+  at: string;
+}
+
 export interface ClubEvent {
   id: string;
   clubId: string;
@@ -105,6 +114,92 @@ export interface ClubEvent {
   capacity: number;
   createdBy: string;
   createdAt: string;
+  /** 6-digit door code attendees quote (or scan) at the entrance. */
+  code?: string;
+  /** Students who RSVP'd ahead of time. */
+  rsvps?: EventPerson[];
+  /** Students actually checked in at the door (attendance). */
+  checkIns?: EventPerson[];
+}
+
+/** A verifiable participation certificate issued after a check-in. */
+export interface Certificate {
+  id: string;
+  eventId: string;
+  clubId: string;
+  /** Identity key — usually the attendee's email (lowercase). */
+  userId: string;
+  name: string;
+  email: string;
+  studentId?: string;
+  eventTitle: string;
+  eventDate: string;
+  clubName: string;
+  issuedAt: string;
+}
+
+export type QuestionStatus = "open" | "answered" | "closed";
+
+/** One answer on the student Q&A board. */
+export interface QuestionAnswer {
+  id: string;
+  authorKey: string;
+  authorName: string;
+  at: string;
+  body: string;
+  upvotes: number;
+  accepted: boolean;
+  /** Hidden by a moderator (spam/abuse) — invisible to normal students. */
+  hidden?: boolean;
+  hiddenAt?: string;
+  hiddenBy?: string;
+}
+
+/** A question on the NITER student Q&A board (semi-anonymous by choice). */
+export interface Question {
+  id: string;
+  title: string;
+  body: string;
+  category: string;
+  /** Identity key (email) — used only for ownership checks, never displayed. */
+  authorKey: string;
+  /** Display name — "Anonymous student" when `anonymous` is true. */
+  authorName: string;
+  anonymous: boolean;
+  at: string;
+  answers: QuestionAnswer[];
+  status: QuestionStatus;
+  /** Pinned by a moderator — helpful questions stay visible at the top. */
+  pinned?: boolean;
+  pinnedAt?: string;
+  pinnedBy?: string;
+}
+
+/** A moderation warning issued to a Q&A participant (repeat offenders flagged). */
+export interface Warning {
+  id: string;
+  /** Identity key of the warned person (email, lowercase). */
+  targetKey: string;
+  targetName: string;
+  targetEmail: string;
+  reason: string;
+  note?: string;
+  issuedBy: string;
+  issuedByEmail?: string;
+  at: string;
+}
+
+export type AuditSeverity = "info" | "warn" | "alert";
+
+/** One row of the admin audit log — who did what, when. */
+export interface AuditEvent {
+  id: string;
+  at: string;
+  actor: string;
+  action: string;
+  label: string;
+  severity: AuditSeverity;
+  detail?: string;
 }
 
 export type AdStatus = "active" | "paused";
@@ -125,6 +220,12 @@ export interface Ad {
   link: AdLink;
   status: AdStatus;
   createdAt: string;
+  /** Optional campaign window — the ad only runs while now is inside it. */
+  startsAt?: string;
+  endsAt?: string;
+  /** Analytics: impressions (deduped per viewer session) and CTA clicks. */
+  views?: number;
+  clicks?: number;
 }
 
 export type MembershipStatus = "pending" | "approved" | "rejected";
@@ -169,6 +270,10 @@ export interface Database {
   events: ClubEvent[];
   ads: Ad[];
   students: Student[];
+  certificates: Certificate[];
+  auditLog: AuditEvent[];
+  questions: Question[];
+  warnings: Warning[];
   config: Config;
   __users?: PortalUser[];
 }

@@ -7,6 +7,7 @@ import {
   clubById,
   clubForms,
   clubNotices,
+  doorCode,
   fmtDate,
   fmtDateTime,
   formById,
@@ -16,6 +17,7 @@ import {
   uid,
 } from "@/lib/utils";
 import { mutate, pushSampleToCloud, resetDb, setUsers, useDb } from "@/lib/store";
+import { logAudit } from "@/lib/audit";
 import { authErrorMessage, useAuth } from "@/lib/auth";
 import { getCloudAuth } from "@/lib/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
@@ -24,8 +26,10 @@ import { Countdown, RelativeTime } from "@/components/countdown";
 import { EmptyState, GoogleButton, OrDivider, Skeleton } from "@/components/ui";
 import { ComplaintManageCard } from "@/components/views/complaints";
 import { AdsTab } from "@/components/views/ads-tab";
+import { EventsTab } from "@/components/views/portal-events";
+import { AuditLogPanel } from "@/components/views/portal-audit";
 
-type Tab = "notices" | "forms" | "submissions" | "complaints" | "memberships" | "ads" | "settings";
+type Tab = "notices" | "forms" | "submissions" | "complaints" | "memberships" | "events" | "ads" | "settings";
 
 export default function PortalView() {
   const db = useDb();
@@ -75,6 +79,7 @@ export default function PortalView() {
     submissions: db.submissions.filter((s) => formById(db, s.formId)?.clubId === club.id).length,
     complaints: db.complaints.filter((c) => c.clubId === club.id).length,
     memberships: (db.memberships || []).filter((m) => m.clubId === club.id).length,
+    events: (db.events || []).filter((e) => e.clubId === club.id).length,
     ads: (db.ads || []).filter((a) => a.clubId === club.id).length,
     settings: 0,
   };
@@ -110,7 +115,7 @@ export default function PortalView() {
       </div>
       <div className="container-x py-8">
         <div className="tabs" role="tablist" aria-label="Dashboard sections">
-          {(["notices", "forms", "submissions", "complaints", "memberships", "ads", "settings"] as Tab[]).map((t) => (
+          {(["notices", "forms", "submissions", "complaints", "memberships", "events", "ads", "settings"] as Tab[]).map((t) => (
             <button
               key={t}
               role="tab"
@@ -149,6 +154,7 @@ export default function PortalView() {
           )}
           {tab === "complaints" && <ComplaintsTab clubId={club.id} />}
           {tab === "memberships" && <MembershipsTab clubId={club.id} />}
+          {tab === "events" && <EventsTab clubId={club.id} />}
           {tab === "ads" && <AdsTab clubId={club.id} />}
           {tab === "settings" && (
             <SettingsTab clubId={club.id} isAdmin={auth.user?.role === "admin"} />
@@ -166,6 +172,7 @@ const TAB_LABELS: Record<Tab, string> = {
   submissions: "📥 Submissions",
   complaints: "📮 Complaints",
   memberships: "🤝 Memberships",
+  events: "🗓 Events",
   settings: "⚙️ Settings",
 };
 
@@ -1424,6 +1431,13 @@ function MembershipsTab({ clubId }: { clubId: string }) {
       t.reviewedAt = new Date().toISOString();
       t.reviewedBy = auth.user?.name || auth.user?.email || "";
     });
+    logAudit(
+      "membership_review",
+      `${status === "approved" ? "Approved" : "Rejected"} membership for ${m.userName || m.userEmail}`,
+      status === "rejected" ? "warn" : "info",
+      m.clubId,
+      auth.user?.email || auth.user?.name || ""
+    );
     toast.toast(status === "approved" ? "Membership approved!" : "Membership rejected.", "ok");
   };
 
@@ -1775,6 +1789,8 @@ function SettingsTab({ clubId, isAdmin }: { clubId: string; isAdmin: boolean }) 
           </button>
         </div>
       </div>
+
+      {isAdmin && <AuditLogPanel />}
 
       {isAdmin && (
         <div className="panel lg:col-span-2">

@@ -4,7 +4,9 @@ import { useRef, useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import type { Ad } from "@/lib/types";
 import { mutate, useDb } from "@/lib/store";
-import { clubForms, clubAds } from "@/lib/utils";
+import { adScheduleState, clubForms, clubAds, fmtCount, fmtDate, fmtDateTime } from "@/lib/utils";
+import { logAudit } from "@/lib/audit";
+import { useAuth } from "@/lib/auth";
 import { getCloudStorage } from "@/lib/firebase";
 import { useToast } from "@/components/providers";
 import { EmptyState } from "@/components/ui";
@@ -30,7 +32,9 @@ export function AdsTab({ clubId }: { clubId: string }) {
 function AdList({ clubId, onEdit }: { clubId: string; onEdit: (a: Ad | "new") => void }) {
   const db = useDb()!;
   const toast = useToast();
+  const auth = useAuth();
   const list = clubAds(db, clubId);
+  const actor = auth.user?.email || auth.user?.name || "";
 
   return (
     <div className="panel">
@@ -41,8 +45,8 @@ function AdList({ clubId, onEdit }: { clubId: string; onEdit: (a: Ad | "new") =>
         </button>
       </div>
       <p className="mb-4 text-[13px] text-muted">
-        Publish an <b>image or video</b> ad — it appears in the sponsored carousel on the homepage. Perfect
-        for events and campaigns.
+        Publish an <b>image or video</b> ad — it appears in the sponsored carousel on the homepage. You can
+        schedule a campaign window, and every ad tracks <b>impressions &amp; clicks</b> automatically.
       </p>
       {list.length ? (
         <div className="space-y-3">
@@ -59,26 +63,27 @@ function AdList({ clubId, onEdit }: { clubId: string; onEdit: (a: Ad | "new") =>
                   {a.mediaType === "video" ? "🎬 Video" : "🖼 Image"} · {a.tagline || ""}
                 </div>
                 <div className="text-[12.5px] text-muted">{linkLabel(a)}</div>
+                <div className="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-surface-2 px-2.5 py-1 text-[11.5px] font-bold text-ink">
+                  👁 <span title={`${a.views || 0} impressions`}>{fmtCount(a.views || 0)}</span> · 👆{" "}
+                  <span title={`${a.clicks || 0} clicks`}>{fmtCount(a.clicks || 0)}</span> ·{" "}
+                  <span title={`${a.views ? Math.round(((a.clicks || 0) / a.views) * 100) : 0}% click-through rate`}>
+                    {ctrOf(a)}% CTR
+                  </span>
+                </div>
               </div>
-              <span
-                className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
-                  a.status === "active" ? "bg-ok/10 text-ok" : "bg-warn/10 text-warn"
-                }`}
-              >
-                {a.status === "active" ? "● Live" : "⏸ Paused"}
-              </span>
+              <AdStateChip a={a} />
               <div className="flex flex-wrap gap-2">
                 <button
                   className="btn btn-outline btn-sm"
                   onClick={() => {
+                    const toActive = a.status !== "active";
                     mutate((d) => {
                       const ad = (d.ads ?? []).find((x) => x.id === a.id);
-                      if (ad) ad.status = ad.status === "active" ? "paused" : "active";
+                      if (ad) ad.status = toActive ? "active" : "paused";
                     });
+                    logAudit("ad_status", `${toActive ? "Resumed" : "Paused"} ad: ${a.title}`, toActive ? "info" : "warn", "", actor);
                     toast.toast(
-                      a.status === "active"
-                        ? "Ad paused — hidden from the homepage."
-                        : "Ad is live on the homepage now.",
+                      toActive ? "Ad is live on the homepage now." : "Ad paused — hidden from the homepage.",
                       "ok"
                     );
                   }}
@@ -95,6 +100,7 @@ function AdList({ clubId, onEdit }: { clubId: string; onEdit: (a: Ad | "new") =>
                     mutate((d) => {
                       d.ads = (d.ads ?? []).filter((x) => x.id !== a.id);
                     });
+                    logAudit("ad_delete", `Deleted ad: ${a.title}`, "warn", "", actor);
                     toast.toast("Ad deleted.", "ok");
                   }}
                 >
@@ -119,9 +125,40 @@ function linkLabel(a: Ad): string {
   return "🏛 Linked to the club page";
 }
 
+function ctrOf(a: Ad): number {
+  return a.views ? Math.round(((a.clicks || 0) / a.views) * 100) : 0;
+}
+
+/** Schedule-aware status chip: Live / Scheduled / Expired / Paused. */
+function AdStateChip({ a }: { a: Ad }) {
+  const state = adScheduleState(a);
+  const chip =
+    state === "live"
+      ? "bg-ok/10 text-ok"
+      : state === "scheduled"
+        ? "bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-300"
+        : state === "expired"
+          ? "bg-surface-2 text-muted"
+          : "bg-warn/10 text-warn";
+  const label =
+    state === "live"
+      ? "● Live"
+      : state === "scheduled"
+        ? `🕒 From ${fmtDate(a.startsAt)}`
+        : state === "expired"
+          ? `⌛ Ended ${a.endsAt ? fmtDate(a.endsAt) : ""}`
+          : "⏸ Paused";
+  return (
+    <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${chip}`} title={a.endsAt ? `Campaign window: ${fmtDate(a.startsAt)} → ${fmtDate(a.endsAt)}` : "Runs indefinitely"}>
+      {label}
+    </span>
+  );
+}
+
 function AdForm({ clubId, initial, onDone }: { clubId: string; initial: Ad | null; onDone: () => void }) {
   const db = useDb()!;
   const toast = useToast();
+  const auth = useAuth();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [title, setTitle] = useState(initial?.title ?? "");
@@ -131,6 +168,8 @@ function AdForm({ clubId, initial, onDone }: { clubId: string; initial: Ad | nul
   const [linkValue, setLinkValue] = useState(
     initial?.link?.value ?? (initial?.link?.type === "form" ? "" : clubId)
   );
+  const [startsAt, setStartsAt] = useState(initial?.startsAt ? toLocalInput(initial.startsAt) : "");
+  const [endsAt, setEndsAt] = useState(initial?.endsAt ? toLocalInput(initial.endsAt) : "");
 
   const forms = clubForms(db, clubId);
   const mediaType = mediaTypeOf(media);
@@ -184,6 +223,11 @@ function AdForm({ clubId, initial, onDone }: { clubId: string; initial: Ad | nul
     }
     if (linkType === "club") value = clubId;
 
+    if (startsAt && endsAt && new Date(endsAt).getTime() <= new Date(startsAt).getTime()) {
+      toast.toast("The campaign end must be after its start.", "err");
+      return;
+    }
+
     mutate((d) => {
       const next: Ad = {
         id: initial?.id ?? `ad-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
@@ -195,6 +239,10 @@ function AdForm({ clubId, initial, onDone }: { clubId: string; initial: Ad | nul
         link: { type: linkType, value },
         status: initial?.status ?? "active",
         createdAt: initial?.createdAt ?? new Date().toISOString(),
+        startsAt: startsAt ? new Date(startsAt).toISOString() : undefined,
+        endsAt: endsAt ? new Date(endsAt).toISOString() : undefined,
+        views: initial?.views ?? 0,
+        clicks: initial?.clicks ?? 0,
       };
       if (initial) {
         const i = d.ads.findIndex((x) => x.id === initial.id);
@@ -204,6 +252,13 @@ function AdForm({ clubId, initial, onDone }: { clubId: string; initial: Ad | nul
         d.ads.push(next);
       }
     });
+    logAudit(
+      initial ? "ad_update" : "ad_publish",
+      `${initial ? "Updated" : "Published"} ad: ${title.trim()}`,
+      "info",
+      startsAt || endsAt ? `window ${fmtDateTime(startsAt)} → ${fmtDateTime(endsAt)}` : "no schedule",
+      auth.user?.email || auth.user?.name || ""
+    );
     onDone();
     toast.toast(initial ? "Ad updated." : "Ad published! It's live on the homepage carousel now.", "ok");
   };
@@ -344,6 +399,34 @@ function AdForm({ clubId, initial, onDone }: { clubId: string; initial: Ad | nul
             />
           </div>
         )}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="label" htmlFor="ad-starts">
+              Campaign starts (optional)
+            </label>
+            <input
+              id="ad-starts"
+              type="datetime-local"
+              className="input"
+              value={startsAt}
+              onChange={(e) => setStartsAt(e.target.value)}
+            />
+            <p className="hint mt-1">Leave empty to go live immediately.</p>
+          </div>
+          <div>
+            <label className="label" htmlFor="ad-ends">
+              Campaign ends (optional)
+            </label>
+            <input
+              id="ad-ends"
+              type="datetime-local"
+              className="input"
+              value={endsAt}
+              onChange={(e) => setEndsAt(e.target.value)}
+            />
+            <p className="hint mt-1">The ad auto-hides after this time.</p>
+          </div>
+        </div>
         <button className="btn btn-primary" type="submit" disabled={uploading}>
           {initial ? "Save changes" : "Publish ad"}
         </button>
@@ -352,7 +435,24 @@ function AdForm({ clubId, initial, onDone }: { clubId: string; initial: Ad | nul
   );
 }
 
-/* ---------------- media helpers ---------------- */
+/* ---------------- helpers ---------------- */
+
+function toLocalInput(iso: string): string {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const pad = (n: number) => (n < 10 ? "0" : "") + n;
+  return (
+    d.getFullYear() +
+    "-" +
+    pad(d.getMonth() + 1) +
+    "-" +
+    pad(d.getDate()) +
+    "T" +
+    pad(d.getHours()) +
+    ":" +
+    pad(d.getMinutes())
+  );
+}
 
 function mediaTypeOf(media: string): "image" | "video" {
   if (!media) return "image";

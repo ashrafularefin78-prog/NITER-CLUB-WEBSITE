@@ -8,6 +8,9 @@ import { getCloudDb } from "@/lib/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { clubById, formById, fmtDate, relativeAgo } from "@/lib/utils";
 import { studentIdError, studentVerifiedText, verifyStudentId, type StudentCheck } from "@/lib/students";
+import { logAudit } from "@/lib/audit";
+import { profileFor } from "@/lib/gamification";
+import { certificateUrl } from "@/lib/events";
 import { useToast } from "@/components/providers";
 import { EmptyState, GoogleButton, OrDivider, PageHero, Skeleton } from "@/components/ui";
 import { mirrorUser } from "@/lib/appwrite-write";
@@ -197,13 +200,18 @@ function DashboardLogin({
       acc[email] = { name: form.name.trim(), studentId: form.studentId.trim(), pass: form.pass };
       saveAccounts(acc);
       onDemoSignIn({ uid: "local-" + email, email, name: form.name.trim(), studentId: form.studentId.trim(), role: "member" });
+      logAudit("login_ok", "Demo account created & signed in", "info", email, email);
       toast.toast("Account created — welcome!", "ok");
       return;
     }
     const acc = loadAccounts();
     const a = acc[email];
-    if (!a || a.pass !== form.pass) return toast.toast("Incorrect email or password.", "err");
+    if (!a || a.pass !== form.pass) {
+      logAudit("login_fail", "Failed demo sign-in", "warn", "Incorrect email or password", email);
+      return toast.toast("Incorrect email or password.", "err");
+    }
     onDemoSignIn({ uid: "local-" + email, email, name: a.name, studentId: a.studentId, role: "member" });
+    logAudit("login_ok", "Signed in (demo account)", "info", email, email);
     toast.toast("Welcome back!", "ok");
   };
 
@@ -311,6 +319,17 @@ function DashboardHome({
 
   const approved = memberships.filter((m) => m.status === "approved");
   const myClubIds = approved.map((m) => m.clubId);
+  const myCerts = useMemo(
+    () =>
+      (db.certificates || []).filter(
+        (c) => (c.email || "").toLowerCase() === (dbUser.email || "").toLowerCase()
+      ),
+    [db.certificates, dbUser.email]
+  );
+  const myProfile = useMemo(
+    () => profileFor(db, { email: dbUser.email, userId: dbUser.uid }),
+    [db, dbUser.email, dbUser.uid]
+  );
   const upcoming = useMemo(
     () =>
       (db.events || [])
@@ -468,6 +487,45 @@ function DashboardHome({
                   <EmptyState icon="🗓">No upcoming events yet.</EmptyState>
                 )}
               </div>
+            {/* my certificates */}
+            <section className="card p-5">
+              <h2 className="m-0 text-[18px] font-bold text-ink">📜 My certificates ({myCerts.length})</h2>
+              <p className="m-0 mt-1 text-[13px] text-muted">
+                Earned by checking in to events — anyone can verify them at the certificate link.
+              </p>
+              <div className="mt-4 space-y-3">
+                {myCerts.length ? (
+                  myCerts.map((c) => {
+                    const club = clubById(db, c.clubId);
+                    return (
+                      <div key={c.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-hairline p-3">
+                        <span className="text-2xl" aria-hidden="true">
+                          📜
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[14.5px] font-semibold text-ink">{c.eventTitle}</div>
+                          <div className="text-[12.5px] text-muted">
+                            {club ? club.icon + " " + club.name : c.clubName} · {fmtDate(c.eventDate)} ·{" "}
+                            <code className="font-mono">{c.id}</code>
+                          </div>
+                        </div>
+                        <Link href={certificateUrl(c)} className="btn btn-outline btn-sm no-underline">
+                          View / verify
+                        </Link>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <EmptyState icon="📜">
+                    No certificates yet — check in to an event to earn your first one.
+                  </EmptyState>
+                )}
+              </div>
+              {myCerts.length > 0 && (
+                <Link href="/events" className="mt-3 inline-block text-[12.5px] font-semibold no-underline hover:underline">
+                  More events to attend →
+                </Link>
+              )}
             </section>
           </div>
 
@@ -529,10 +587,46 @@ function DashboardHome({
             </div>
 
             <div className="card p-5">
+              <h2 className="m-0 text-[16px] font-bold text-ink">🏆 My XP &amp; badges</h2>
+              <div className="mt-3 flex items-center gap-3">
+                <span className="grid h-12 w-12 place-items-center rounded-full bg-gold text-[18px] font-extrabold text-navy">
+                  {myProfile ? myProfile.xp : 0}
+                </span>
+                <div className="text-[12.5px] text-muted">
+                  <b className="block text-[15px] font-bold text-ink">
+                    {myProfile ? myProfile.xp + " XP" : "No XP yet"}
+                  </b>
+                  {myProfile
+                    ? `${myProfile.stats.checkIns} check-ins · ${myProfile.stats.rsvps} RSVPs · ${myProfile.stats.certificates} certificates`
+                    : "Attend events to start earning"}
+                </div>
+              </div>
+              {myProfile && myProfile.badges.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {myProfile.badges.map((b) => (
+                    <span
+                      key={b.id}
+                      title={b.desc}
+                      className="inline-flex items-center gap-1 rounded-full border border-hairline bg-surface-2 px-2 py-0.5 text-[11px] font-bold text-ink"
+                    >
+                      <span aria-hidden="true">{b.emoji}</span> {b.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+              <Link href="/leaderboard" className="mt-3 inline-block text-[12.5px] font-semibold no-underline hover:underline">
+                See the leaderboard →
+              </Link>
+            </div>
+
+            <div className="card p-5">
               <h2 className="m-0 text-[16px] font-bold text-ink">🔎 Explore</h2>
               <div className="mt-3 grid gap-2 text-[13.5px]">
                 <Link href="/students" className="no-underline hover:underline">🎓 Student directory</Link>
                 <Link href="/clubs" className="no-underline hover:underline">🏛 All clubs</Link>
+                <Link href="/events" className="no-underline hover:underline">🗓 Events & RSVP</Link>
+                <Link href="/questions" className="no-underline hover:underline">💬 Q&A board</Link>
+                <Link href="/leaderboard" className="no-underline hover:underline">🏆 Leaderboard</Link>
                 <Link href="/it-support" className="no-underline hover:underline">🖥 Report a website issue</Link>
               </div>
             </div>

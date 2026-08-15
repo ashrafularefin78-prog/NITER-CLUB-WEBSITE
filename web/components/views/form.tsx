@@ -6,6 +6,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import type { Form, FormField, Submission } from "@/lib/types";
 import { clubById, fmtDateTime, statusOf } from "@/lib/utils";
 import { mutate, useDb } from "@/lib/store";
+import { logAudit } from "@/lib/audit";
 import { mirrorSubmission } from "@/lib/appwrite-write";
 import { getCloudStorage } from "@/lib/firebase";
 import { useToast } from "@/components/providers";
@@ -117,6 +118,13 @@ export default function FormView({ formId }: { formId: string }) {
                 mutate((db) => {
                   db.submissions.push(sub);
                 });
+                logAudit(
+                  "submission",
+                  `Form submission: ${form.title}`,
+                  "info",
+                  (sub.data.name || sub.submitterEmail || "student") + (club ? " · " + club.name : ""),
+                  sub.submitterEmail || ""
+                );
                 setSubmitting(false);
                 setDone(sub);
                 toast.toast("Application submitted successfully!", "ok");

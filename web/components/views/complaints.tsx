@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { Complaint, ComplaintStatus } from "@/lib/types";
 import { uid } from "@/lib/utils";
 import { mutate, useDb } from "@/lib/store";
+import { logAudit } from "@/lib/audit";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/components/providers";
 import { EmptyState, LiveBadge, Skeleton } from "@/components/ui";
@@ -152,6 +153,7 @@ export function ComplaintView({ clubId, isIt = false }: { clubId?: string; isIt?
                 toast.toast("Please fill in the subject and details.", "err");
                 return;
               }
+              const submittedBy = (f.cfName.value as string).trim();
               mutate((db) => {
                 db.complaints.unshift({
                   id: uid("c"),
@@ -159,7 +161,7 @@ export function ComplaintView({ clubId, isIt = false }: { clubId?: string; isIt?
                   title: subject,
                   body,
                   category: f.cfCategory.value || "Other",
-                  submittedBy: (f.cfName.value as string).trim(),
+                  submittedBy,
                   contact: (f.cfContact.value as string).trim(),
                   status: "open",
                   reply: "",
@@ -167,6 +169,13 @@ export function ComplaintView({ clubId, isIt = false }: { clubId?: string; isIt?
                   resolvedAt: "",
                 } as Complaint);
               });
+              logAudit(
+                "complaint",
+                `Complaint filed: ${subject}`,
+                "info",
+                isIt ? "IT Helpdesk" : club!.name,
+                submittedBy || "anonymous"
+              );
               setDone(true);
               toast.toast("Complaint submitted!", "ok");
             }}

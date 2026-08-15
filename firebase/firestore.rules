@@ -20,6 +20,10 @@ service cloud.firestore {
     function isItStaff() {
       return signedIn() && userDoc().role == 'it-staff';
     }
+    function isStaff() {
+      return signedIn() &&
+        (userDoc().role == 'admin' || userDoc().role == 'executive' || userDoc().role == 'it-staff');
+    }
 
     /* ---------- site config (public read; admin write) ---------- */
     match /config/site {
@@ -97,11 +101,63 @@ service cloud.firestore {
         (signedIn() && resource.data.userId == request.auth.uid && resource.data.status == 'pending');
     }
 
-    /* ---------- events (public read; club staff & admins post) ---------- */
+    /* ---------- events (public read; club staff & admins post) ----------
+       Any signed-in student may RSVP or check themselves in: those actions only
+       touch the rsvps / checkIns arrays of an event, so the rule narrows
+       updates to exactly those keys (prevents editing the event itself). */
     match /events/{id} {
       allow read: if true;
       allow create: if isAdmin() || execOf(request.resource.data.clubId);
-      allow update, delete: if isAdmin() || execOf(resource.data.clubId);
+      allow update: if isAdmin() || execOf(resource.data.clubId) ||
+        (signedIn() &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rsvps', 'checkIns']));
+      allow delete: if isAdmin() || execOf(resource.data.clubId);
+    }
+
+    /* ---------- certificates (public read for /verify; issued on check-in) ---------- */
+    match /certificates/{id} {
+      allow read: if true;
+      allow create: if signedIn();
+      allow update, delete: if isAdmin();
+    }
+
+    /* ---------- student Q&A board (public read; signed-in students post) ----------
+       Anyone may add answers (only the answers array may change). The question
+       author may flip status (close / mark answered) via their stored email key.
+       Staff (admin / executive / it-staff) may additionally pin questions and
+       hide spam answers — those moderation actions only touch the pinned* /
+       hidden* fields (hiding an answer rewrites the answers array). */
+    match /questions/{id} {
+      allow read: if true;
+      allow create: if signedIn() &&
+        request.resource.data.authorKey is string &&
+        request.resource.data.authorKey != '';
+      allow update: if signedIn() && (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['answers']) ||
+        (request.auth.token.email == resource.data.authorKey &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])) ||
+        (isStaff() &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pinned', 'pinnedAt', 'pinnedBy', 'status']))
+      );
+      allow delete: if isAdmin() ||
+        (signedIn() && request.auth.token.email == resource.data.authorKey);
+    }
+
+    /* ---------- moderation warnings (staff only, append-only) ---------- */
+    match /warnings/{id} {
+      allow read: if isStaff();
+      allow create: if isStaff();
+      allow update, delete: if false;
+    }
+
+    /* ---------- audit log (security transparency panel) ----------
+       Append-only: any signed-in user may ADD rows (so failed logins from any
+       device reach the shared trail), but only admins can read, and nobody can
+       edit or delete a row once written. */
+    match /auditLog/{id} {
+      allow read: if isAdmin();
+      allow create: if signedIn();
+      allow update, delete: if false;
     }
 
     /* ---------- ads (public read; club staff & admins publish) ---------- */

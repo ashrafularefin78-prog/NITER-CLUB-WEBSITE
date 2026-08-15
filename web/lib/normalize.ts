@@ -1,5 +1,5 @@
 import type { Database, Form, Student } from "./types";
-import { PAYMENT_OPTIONS, uid } from "./utils";
+import { PAYMENT_OPTIONS, doorCode, uid } from "./utils";
 
 /* Official student roster — B.Sc. CSE, Session 2025-2026 (merit list import).
    ID format: CS (CSE) + 26 (batch year) + 07 (NITER dept code) + roll. */
@@ -382,6 +382,10 @@ export function normalizeDb(d: Database): Database {
   if (!Array.isArray(d.submissions)) d.submissions = [];
   if (!Array.isArray(d.memberships)) d.memberships = [];
   if (!Array.isArray(d.events)) d.events = [];
+  if (!Array.isArray(d.certificates)) d.certificates = [];
+  if (!Array.isArray(d.auditLog)) d.auditLog = [];
+  if (!Array.isArray(d.questions)) d.questions = [];
+  if (!Array.isArray(d.warnings)) d.warnings = [];
   // Ads — moderators publish image/video club ads; default missing fields so
   // legacy databases (without the feature) never break the carousel.
   if (!Array.isArray(d.ads)) d.ads = [];
@@ -398,6 +402,8 @@ export function normalizeDb(d: Database): Database {
     if (!a.link.type) a.link.type = "club";
     if (!a.status) a.status = "active";
     if (!a.createdAt) a.createdAt = new Date().toISOString();
+    if (typeof a.views !== "number") a.views = 0;
+    if (typeof a.clicks !== "number") a.clicks = 0;
   });
   // Student roster — backfill into existing databases (never wipes real data).
   if (!Array.isArray(d.students) || !d.students.length) d.students = STUDENT_ROSTER.slice();
@@ -428,6 +434,40 @@ export function normalizeDb(d: Database): Database {
   d.events.forEach((ev) => {
     if (!ev.description) ev.description = "";
     if (!ev.venue) ev.venue = "";
+    if (!ev.capacity || ev.capacity < 0) ev.capacity = 0;
+    if (!Array.isArray(ev.rsvps)) ev.rsvps = [];
+    if (!Array.isArray(ev.checkIns)) ev.checkIns = [];
+    if (!ev.code) ev.code = doorCode(ev.id);
+  });
+  // Student Q&A board — backfill defaults for questions written by older code.
+  d.questions.forEach((q) => {
+    if (!q.category) q.category = "Other";
+    if (!q.authorKey) q.authorKey = "";
+    if (!q.authorName) q.authorName = q.anonymous ? "Anonymous student" : "A student";
+    if (q.anonymous == null) q.anonymous = false;
+    if (!q.at) q.at = new Date().toISOString();
+    if (!Array.isArray(q.answers)) q.answers = [];
+    if (!q.status) q.status = q.answers.some((a) => a.accepted) ? "answered" : "open";
+    if (q.pinned == null) q.pinned = false;
+    if (!q.pinnedAt) q.pinnedAt = "";
+    if (!q.pinnedBy) q.pinnedBy = "";
+    q.answers.forEach((a) => {
+      if (!a.authorKey) a.authorKey = "";
+      if (!a.authorName) a.authorName = "A student";
+      if (!a.at) a.at = new Date().toISOString();
+      if (typeof a.upvotes !== "number") a.upvotes = 0;
+      if (a.accepted == null) a.accepted = false;
+      if (a.hidden == null) a.hidden = false;
+      if (!a.hiddenAt) a.hiddenAt = "";
+      if (!a.hiddenBy) a.hiddenBy = "";
+    });
+  });
+  // Moderation warnings — backfill any missing fields.
+  d.warnings.forEach((w) => {
+    if (!w.id) w.id = uid();
+    if (!w.at) w.at = new Date().toISOString();
+    if (!w.reason) w.reason = "Other";
+    if (!w.issuedBy) w.issuedBy = "";
   });
   d.clubs.forEach((c) => {
     if (!Array.isArray(c.executives)) {

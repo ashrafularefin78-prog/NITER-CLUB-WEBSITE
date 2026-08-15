@@ -31,8 +31,12 @@ const CLOUD_COLLECTIONS = [
   "events",
   "ads",
   "students",
+  "certificates",
+  "auditLog",
+  "questions",
+  "warnings",
 ] as const;
-const RESTRICTED_COLLECTIONS = new Set(["submissions", "complaints", "memberships"]);
+const RESTRICTED_COLLECTIONS = new Set(["submissions", "complaints", "memberships", "auditLog", "warnings"]);
 
 type ReadScope = { role: Role; clubs: string[]; uid?: string; email?: string } | null;
 
@@ -288,6 +292,15 @@ async function fetchCollection(
         return { err, items: null };
       }
     }
+    // Warnings (Q&A moderation): any staff role reads the full log — they have
+    // no clubId, so the club-scoped query below would return nothing.
+    if (name === "warnings" && (readScope.role === "executive" || readScope.role === "it-staff")) {
+      try {
+        return { items: mapSnap(await getDocs(collection(dbRef, name))) };
+      } catch (err) {
+        return { err, items: null };
+      }
+    }
     // Memberships: each student sees their own requests; staff see the clubs
     // they manage. Queries merge by id, and one unreadable query never fails
     // the rest.
@@ -405,6 +418,10 @@ function restrictedQuery(dbRef: Firestore, name: string): ReturnType<typeof quer
   if (name === "complaints" && readScope.role === "it-staff") {
     return query(collection(dbRef, name), where("clubId", "==", "it"));
   }
+  // Warnings: staff read the full moderation log (no clubId scoping).
+  if (name === "warnings" && (readScope.role === "executive" || readScope.role === "it-staff")) {
+    return query(collection(dbRef, name));
+  }
   const clubs = (readScope.clubs ?? []).slice();
   if (!clubs.length) return null;
   // Executives query only the clubs they manage — matching the security rules.
@@ -501,7 +518,21 @@ async function diffPush() {
   const cur = snapshotOf(db);
   const prev =
     lastSynced ??
-    { clubs: [], notices: [], forms: [], submissions: [], complaints: [], memberships: [], events: [], ads: [], students: [] };
+    {
+      clubs: [],
+      notices: [],
+      forms: [],
+      submissions: [],
+      complaints: [],
+      memberships: [],
+      events: [],
+      ads: [],
+      students: [],
+      certificates: [],
+      auditLog: [],
+      questions: [],
+      warnings: [],
+    };
   const next: Record<string, unknown[]> = {};
   CLOUD_COLLECTIONS.forEach((name) => (next[name] = []));
 

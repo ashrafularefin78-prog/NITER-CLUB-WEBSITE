@@ -114,11 +114,37 @@ export function formSubs(db: Database, formId: string) {
 }
 
 /* ---------------- ads ---------------- */
-/** Active ads across all clubs, newest first — the home carousel feed. */
+/** Active ads across all clubs, newest first — the home carousel feed.
+ *  An ad is live only when its status is "active" AND now falls inside its
+ *  optional campaign window (startsAt … endsAt). Legacy ads without a window
+ *  run indefinitely. */
 export function activeAds(db: Database) {
+  const now = Date.now();
   return (db.ads ?? [])
-    .filter((a) => a.status === "active")
+    .filter((a) => {
+      if (a.status !== "active") return false;
+      if (a.startsAt && new Date(a.startsAt).getTime() > now) return false;
+      if (a.endsAt && new Date(a.endsAt).getTime() < now) return false;
+      return true;
+    })
     .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+}
+
+/** Effective campaign state of an ad right now (for the portal list). */
+export type AdScheduleState = "live" | "scheduled" | "expired" | "paused";
+
+export function adScheduleState(a: { status: string; startsAt?: string; endsAt?: string }, now = Date.now()): AdScheduleState {
+  if (a.status === "paused") return "paused";
+  if (a.startsAt && new Date(a.startsAt).getTime() > now) return "scheduled";
+  if (a.endsAt && new Date(a.endsAt).getTime() < now) return "expired";
+  return "live";
+}
+
+/** Compact count for stats — 1,240 → "1.2k", 87 → "87". */
+export function fmtCount(n: number): string {
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+  return String(n);
 }
 
 /** A club's own ads (any status), newest first — the portal ads tab. */
@@ -149,3 +175,19 @@ export function nextDeadline(forms: Form[]): { form: Form; key: FormStatusKey; t
 }
 
 export const PAYMENT_OPTIONS = ["bKash", "Nagad", "Rocket", "Bank transfer", "Cash (at venue)", "Other"];
+
+/* ---------------- events ---------------- */
+/** Deterministic 6-digit door code derived from an event id — stable across
+ *  reloads/tabs so the code an organizer shares always matches. */
+export function doorCode(evId: string): string {
+  let h = 0;
+  for (let i = 0; i < evId.length; i++) h = (h * 31 + evId.charCodeAt(i)) >>> 0;
+  return String(100000 + (h % 900000));
+}
+
+/** Stable identity key for a person across the whole app (email first — demo
+ *  and cloud accounts can carry different uids for the same student). */
+export function personKey(person: { email?: string; userId?: string }): string {
+  const email = (person.email || "").trim().toLowerCase();
+  return email || person.userId || "";
+}

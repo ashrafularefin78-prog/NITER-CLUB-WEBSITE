@@ -10,6 +10,8 @@ import { AdminOnlyDirectoryLink } from "@/components/admin-links";
 const NAV = [
   { href: "/", label: "Home", match: "/" },
   { href: "/notices", label: "Notices", match: "/notices" },
+  { href: "/events", label: "Events", match: "/events" },
+  { href: "/questions", label: "Q&A", match: "/questions" },
   { href: "/clubs", label: "Clubs", match: "/clubs" },
   { href: "/dashboard", label: "My Dashboard", match: "/dashboard" },
   { href: "/it-support", label: "IT Help", match: "/it-support" },
@@ -177,7 +179,16 @@ const FOOTER_LINKS: { title: string; links: { label: string; href: string }[] }[
       { label: "My Dashboard", href: "/dashboard" },
       { label: "Member Portal", href: "/portal" },
       { label: "Browse forms", href: "/clubs" },
+      { label: "Q&A board", href: "/questions" },
       { label: "Report an issue", href: "/it-support" },
+    ],
+  },
+  {
+    title: "Community",
+    links: [
+      { label: "Events & RSVP", href: "/events" },
+      { label: "Leaderboard", href: "/leaderboard" },
+      { label: "Privacy & data", href: "/privacy" },
     ],
   },
 ];

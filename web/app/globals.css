@@ -940,6 +940,107 @@ body {
   transform: scale(1.25);
 }
 
+/* Honest "AD" label on each slide */
+.ad-chip {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  z-index: 6;
+  background: rgba(8, 20, 40, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+}
+
+/* Autoplay progress bar — re-fills for each slide */
+.ads-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.18);
+  z-index: 6;
+}
+.ads-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd64d, #f5a623);
+  transform-origin: left;
+  animation: adsProgress linear both;
+}
+.ads-progress-bar.paused {
+  animation-play-state: paused;
+}
+@keyframes adsProgress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Play/pause + slide counter (bottom-left) */
+.ads-controls {
+  position: absolute;
+  left: 16px;
+  bottom: 10px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.ads-control-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(10, 20, 40, 0.55);
+  color: #fff;
+  font-size: 10px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s;
+}
+.ads-control-btn:hover {
+  background: rgba(10, 20, 40, 0.85);
+}
+.ads-counter {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Keyboard focus on the carousel */
+.ads-carousel:focus-visible {
+  outline: 3px solid rgba(255, 214, 77, 0.6);
+  outline-offset: 3px;
+}
+
+/* Branded fallback when media fails to load */
+.ads-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+.ads-fallback b {
+  font-size: 22px;
+  max-width: 80%;
+}
+
 /* Ads list thumbnails + editor preview (portal) */
 .ad-thumb {
   width: 96px;
@@ -957,6 +1058,87 @@ body {
   border-radius: 10px;
   display: block;
   border: 1px solid var(--color-line);
+}
+
+/* ---------------- certificates (verify page) ---------------- */
+.cert-sheet {
+  background: #ffffff;
+  color: #1c2430;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 14px 40px rgba(0, 33, 71, 0.14);
+}
+.cert-frame {
+  border: 3px double #b98a1f;
+  border-radius: 10px;
+  padding: 34px 30px;
+  background:
+    linear-gradient(135deg, rgba(255, 182, 6, 0.06) 0%, rgba(255, 182, 6, 0) 45%),
+    #ffffff;
+}
+.cert-eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #002147;
+}
+.cert-title {
+  margin: 4px 0 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: #002147;
+  letter-spacing: 0.4px;
+}
+.cert-body {
+  margin: 26px 0 30px;
+  text-align: center;
+}
+.cert-line {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #4a5568;
+}
+.cert-name {
+  margin: 10px 0;
+  font-size: 34px;
+  font-weight: 700;
+  color: #002147;
+  letter-spacing: 0.6px;
+}
+.cert-sub {
+  margin: 12px 0 0;
+  font-size: 12px;
+  font-style: italic;
+  color: #8a94a6;
+}
+.cert-sign {
+  width: 190px;
+}
+.cert-sign-line {
+  border-top: 1.5px solid #002147;
+  margin-bottom: 5px;
+}
+
+@media print {
+  header,
+  footer,
+  .print-hide {
+    display: none !important;
+  }
+  body {
+    background: #ffffff !important;
+  }
+  .cert-sheet {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+  }
+  .cert-frame {
+    border-radius: 0;
+  }
 }
 
 @media (max-width: 640px) {
