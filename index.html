@@ -1115,6 +1115,160 @@
       .form-card-lg .form-body, .form-card-lg .form-head { padding: 20px; }
       .stats-strip { margin-top: -20px; }
     }
+
+    /* ============================================================
+       New features — Q&A board, leaderboard, club passport, quiz,
+       event RSVP / waitlist / certificates, weekly digest, verify.
+       Built on the same tokens as the rest of the site (dark mode safe).
+       ============================================================ */
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; box-shadow: var(--shadow); }
+    .card h3 { margin-top: 0; }
+    .muted { color: var(--muted); }
+    .stack { display: flex; flex-direction: column; gap: 12px; }
+    .stack-sm { display: flex; flex-direction: column; gap: 8px; }
+    .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .qa-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+    .qa-card h3 { margin: 6px 0 4px; font-size: 16px; line-height: 1.35; }
+    .qa-card h3 a { color: var(--ink); }
+    .qa-card h3 a:hover { color: var(--navy-2); text-decoration: none; }
+    .qa-body { color: var(--muted); font-size: 13.5px; margin: 0 0 10px; }
+    .qa-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--muted); }
+    .qa-status { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; }
+    .qa-status.open { background: #ecfdf5; color: #047857; }
+    .qa-status.answered { background: #eff6ff; color: #1d4ed8; }
+    .qa-status.closed { background: #f1f5f9; color: #64748b; }
+    .qa-status.pinned { background: #fffbeb; color: #b45309; }
+    .qa-cat { font-size: 11.5px; color: var(--navy-2); background: #eef1f8; padding: 2px 9px; border-radius: 999px; }
+    .answer-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow); }
+    .answer-card.hidden-ans { border-color: #fca5a5; background: #fef2f2; }
+    .answer-card.best { border-color: #fbbf24; box-shadow: 0 2px 10px -4px rgba(245, 158, 11, .45); }
+    .vote-btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 4px 10px; font-size: 12.5px; cursor: pointer; color: var(--ink); }
+    .vote-btn.voted { background: #eff6ff; border-color: var(--crimson); color: var(--navy-2); }
+    .vote-btn[disabled] { opacity: .5; cursor: not-allowed; }
+    .best-badge { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 999px; }
+    .hidden-chip { background: #fecaca; color: #991b1b; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; }
+    .warn-chip { background: #fef3c7; color: #92400e; font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; }
+    .offender-flag { background: #fee2e2; color: #b91c1c; font-size: 11.5px; font-weight: 800; padding: 2px 9px; border-radius: 999px; }
+    .mod-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .mod-btn { font-size: 11.5px; border: 1px solid var(--line); background: var(--surface); border-radius: 7px; padding: 3px 9px; cursor: pointer; color: var(--navy-2); }
+    .mod-btn:hover { border-color: var(--navy-2); }
+    .warn-form { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 10px; padding: 12px 14px; margin-top: 8px; }
+    .identity-prompt { background: #eff6ff; border: 1px dashed var(--crimson); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+    .lb-table { width: 100%; border-collapse: collapse; }
+    .lb-table th, .lb-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+    .lb-table th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+    .lb-rank { font-weight: 800; color: var(--navy-2); }
+    .rank-gold { color: #b45309; }
+    .rank-silver { color: #64748b; }
+    .rank-bronze { color: #92400e; }
+    .badge-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: #eef1f8; color: var(--navy-2); margin: 2px; }
+    .badge-chip.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; }
+    .stamp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .stamp { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 10px; text-align: center; box-shadow: var(--shadow); }
+    .stamp .s-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 6px; color: #fff; }
+    .stamp.locked { opacity: .45; filter: grayscale(1); }
+    .stamp .s-name { font-size: 12.5px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+    .stamp .s-count { font-size: 11px; color: var(--muted); }
+    .hopper-track { height: 10px; background: var(--line); border-radius: 999px; overflow: hidden; }
+    .hopper-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--gold), #f59e0b); transition: width .4s ease; }
+    .quiz-opt { display: block; width: 100%; text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer; font-size: 14px; color: var(--ink); }
+    .quiz-opt:hover { border-color: var(--navy-2); background: #f8fafc; }
+    .quiz-progress { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 10px 0 16px; }
+    .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--crimson), var(--navy-2)); transition: width .3s ease; }
+    .match-card { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; box-shadow: var(--shadow); }
+    .match-card .m-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; flex: none; }
+    .match-bar { height: 7px; background: var(--line); border-radius: 999px; overflow: hidden; margin-top: 4px; }
+    .match-bar-fill { height: 100%; background: linear-gradient(90deg, var(--crimson), var(--navy-2)); }
+    .digest-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+    .digest-col { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); }
+    .digest-col h3 { margin-top: 0; font-size: 15px; }
+    .digest-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: 13px; line-height: 1.45; }
+    .digest-item:last-child { border-bottom: 0; }
+    .digest-item .d-icon { flex: none; }
+    .digest-item a { font-weight: 600; }
+    .digest-count { background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: #fff; font-size: 11px; font-weight: 800; border-radius: 999px; padding: 1px 8px; }
+    .cert-sheet { max-width: 560px; margin: 0 auto; background: var(--surface); border: 2px solid var(--gold); border-radius: 14px; padding: 34px 28px; text-align: center; box-shadow: var(--shadow-lg); }
+    .cert-sheet .cert-seal { font-size: 40px; }
+    .cert-sheet h2 { color: var(--navy); margin: 6px 0 2px; }
+    .cert-sheet .cert-name { font-size: 22px; font-weight: 800; color: var(--navy); margin: 4px 0 2px; }
+    .cert-sheet .cert-line { color: var(--muted); font-size: 13.5px; margin: 4px 0; }
+    .verify-badge { display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; color: #047857; font-weight: 800; font-size: 12px; padding: 4px 12px; border-radius: 999px; margin-top: 10px; }
+    .rsvp-card { background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: #fff; border-radius: 12px; padding: 18px; }
+    .rsvp-card .big { font-size: 22px; font-weight: 800; }
+    .rsvp-card .small { font-size: 12px; opacity: .85; }
+    .rsvp-stats { display: flex; gap: 18px; margin-top: 10px; }
+    .rsvp-stats .rs { font-size: 12px; opacity: .9; }
+    .rsvp-stats .rs b { display: block; font-size: 17px; }
+    .waitlist-note { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; font-size: 12.5px; padding: 8px 12px; border-radius: 8px; margin-top: 8px; }
+    .staff-only { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 12px 14px; margin-top: 14px; }
+    .staff-only h4 { margin: 0 0 8px; font-size: 13px; color: #991b1b; }
+    .event-rsvp-actions { margin-top: 12px; }
+    .event-rsvp-link { margin-top: 10px; }
+    .stat-mini { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
+    .pinned-note { font-size: 12px; color: #b45309; background: #fffbeb; border-radius: 8px; padding: 6px 10px; }
+    .cert-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; font-size: 13px; }
+    .verify-note { font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+    /* ---- Futuristic layer ---- */
+    .nav-icon-btn { position: relative; background: none; border: 0; font-size: 17px; cursor: pointer; padding: 6px 8px; border-radius: 8px; color: var(--ink); }
+    .nav-icon-btn:hover { background: rgba(127, 127, 127, .14); }
+    .notif-badge { position: absolute; top: -3px; right: -5px; min-width: 16px; height: 16px; padding: 0 4px; background: #dc2626; color: #fff; font-size: 10px; font-weight: 800; border-radius: 999px; display: none; align-items: center; justify-content: center; line-height: 1; }
+    .fy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .fy-col { min-width: 0; }
+    .fy-card { display: flex; gap: 10px; background: var(--surface); border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+    .fy-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex: none; color: #fff; }
+    .fy-icon-sm { background: var(--navy); }
+    .fy-body { min-width: 0; flex: 1; }
+    .fy-body b { font-size: 13.5px; line-height: 1.35; display: block; }
+    .fy-body b a { color: var(--ink); }
+    .fy-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .fy-reason { font-size: 11.5px; color: #0369a1; margin-top: 4px; }
+    .fy-reason.hot { color: #b45309; }
+    .fy-reason.urgent { color: #dc2626; }
+    .top-pick { border: 2px solid var(--gold); }
+    .notif-group { margin-bottom: 14px; }
+    .notif-group h3 { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin: 0 0 8px; }
+    .notif-item { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; text-decoration: none; color: var(--ink); }
+    .notif-item:hover { border-color: var(--gold); }
+    .notif-icon { font-size: 18px; flex: none; }
+    .notif-text { flex: 1; font-size: 13px; line-height: 1.4; }
+    .notif-time { font-size: 11px; color: var(--muted); flex: none; }
+    .palette-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, .55); z-index: 999; display: flex; align-items: flex-start; justify-content: center; padding: 12vh 16px 16px; }
+    .palette-panel { width: 100%; max-width: 560px; background: var(--surface); border-radius: 14px; box-shadow: 0 24px 60px rgba(0, 0, 0, .35); overflow: hidden; }
+    .palette-input-row { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid #e5e7eb; }
+    .p-char { font-size: 11px; font-weight: 800; color: var(--muted); background: #e5e7eb; padding: 2px 6px; border-radius: 5px; }
+    .palette-input { flex: 1; border: 0; outline: none; background: transparent; font-size: 15px; color: var(--ink); }
+    .palette-esc { border: 1px solid #e5e7eb; background: none; color: var(--muted); font-size: 11px; border-radius: 6px; padding: 2px 8px; cursor: pointer; }
+    .palette-groups { max-height: 46vh; overflow-y: auto; padding: 8px; }
+    .palette-group { font-size: 11px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); padding: 10px 10px 4px; }
+    .palette-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; }
+    .palette-item.sel { background: var(--navy); color: #fff; }
+    .palette-item.sel small { color: rgba(255, 255, 255, .8); }
+    .p-icon { font-size: 16px; flex: none; }
+    .p-label { font-size: 13.5px; line-height: 1.3; }
+    .p-label small { display: block; color: var(--muted); font-size: 11.5px; }
+    .palette-empty { padding: 18px; text-align: center; color: var(--muted); font-size: 13px; }
+    .palette-foot { padding: 8px 14px; border-top: 1px solid #e5e7eb; font-size: 11px; color: var(--muted); }
+    .clash-chip { display: inline-block; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; font-size: 11.5px; padding: 2px 8px; border-radius: 999px; margin: 2px 4px 2px 0; }
+    .clash-chip a { color: #991b1b; font-weight: 700; }
+    .ev-row { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; }
+    .ev-body { flex: 1; min-width: 0; }
+    .ev-body b { font-size: 14px; }
+    .ev-side { text-align: right; flex: none; }
+    .ev-count { display: block; font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
+    .ev-clash { margin-top: 6px; }
+    .ev-search { border: 1px solid #e5e7eb !important; padding: 10px 14px !important; border-radius: 10px !important; width: 100%; }
+    .heatmap-wrap { overflow-x: auto; padding: 4px 0; }
+    .hm-grid { border-collapse: separate; border-spacing: 3px; }
+    .hm-grid td.hm { width: 11px; height: 11px; border-radius: 3px; }
+    .hm0 { background: #e5e7eb; }
+    .hm1 { background: #dbeafe; }
+    .hm2 { background: #93c5fd; }
+    .hm3 { background: #3b82f6; }
+    .hm4 { background: #1e3a8a; }
+    .hm-day { font-size: 9.5px; color: var(--muted); padding-right: 4px; }
+    .hm-month { font-size: 9.5px; color: var(--muted); text-align: left; }
+    .hm-legend { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
+
   </style>
   <script>try{if(localStorage.getItem("niter-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark");}}catch(e){}</script>
 </head>
@@ -1128,10 +1282,15 @@
       </a>
       <div class="nav-right">
         <button class="theme-toggle" data-action="toggle-theme" title="Toggle dark mode">🌙</button>
+        <button type="button" class="nav-icon-btn" data-action="palette-open" title="Search everything (Ctrl/Cmd+K)" aria-label="Search">🔍</button>
+        <button type="button" class="nav-icon-btn" data-action="nav-notif" title="Notifications" aria-label="Notifications">🔔<span class="notif-badge" id="notif-badge"></span></button>
         <nav class="nav-links">
           <a href="#/" data-nav="home">Home</a>
           <a href="#/notices" data-nav="notices">Notices</a>
           <a href="#/clubs" data-nav="clubs">Clubs</a>
+          <a href="#/questions" data-nav="questions">Q&A</a>
+          <a href="#/leaderboard" data-nav="leaderboard">🏆 Ranks</a>
+          <a href="#/foryou" data-nav="foryou">✨ For You</a>
           <a href="#/dashboard" data-nav="dashboard" id="nav-dashboard" style="display:none">My Dashboard</a>
           <a href="#/portal" data-nav="portal" id="nav-cta" class="nav-cta" title="Member Portal" aria-label="Member Portal">
             <span class="nav-avatar" id="nav-avatar" aria-hidden="true">👤</span>
@@ -1160,6 +1319,14 @@
             <li><a href="#/dashboard">My Dashboard</a></li>
             <li id="foot-students-link"><a href="#/students">🎓 Student directory</a></li>
             <li><a href="#/it-support">🖥 Report a website issue</a></li>
+            <li><a href="#/questions">💬 Student Q&A</a></li>
+            <li><a href="#/leaderboard">🏆 Leaderboard</a></li>
+            <li><a href="#/passport">🛂 Club Passport</a></li>
+            <li><a href="#/quiz">🧭 Which club fits you?</a></li>
+            <li><a href="#/foryou">✨ For You</a></li>
+            <li><a href="#/notifications">🔔 Notifications</a></li>
+            <li><a href="#/events">📅 Events calendar</a></li>
+            <li><a href="#/privacy">🔒 Privacy &amp; data</a></li>
           </ul>
         </div>
         <div>
@@ -2253,6 +2420,21 @@
       (d.events || []).forEach(function (ev) {
         if (!ev.venue) ev.venue = "";
         if (!ev.description) ev.description = "";
+        // Attendance engine — RSVP, waitlist and door check-ins.
+        if (!Array.isArray(ev.rsvps)) ev.rsvps = [];
+        if (!Array.isArray(ev.waitlist)) ev.waitlist = [];
+        if (!Array.isArray(ev.checkIns)) ev.checkIns = [];
+      });
+      // New collections — student Q&A, moderation warnings, audit trail,
+      // certificates. Backfilled so older stored databases never break.
+      if (!Array.isArray(d.questions)) d.questions = [];
+      if (!Array.isArray(d.warnings)) d.warnings = [];
+      if (!Array.isArray(d.auditLog)) d.auditLog = [];
+      if (!Array.isArray(d.certificates)) d.certificates = [];
+      (d.questions || []).forEach(function (q) {
+        if (!Array.isArray(q.answers)) q.answers = [];
+        if (!q.status) q.status = "open";
+        if (!q.authorKey) q.authorKey = "";
       });
       (d.ads || []).forEach(function (ad) {
         if (!ad.status) ad.status = "active";
@@ -2315,8 +2497,8 @@
     }
 
     /* ---------------- Persistence + Firebase sync ---------------- */
-    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events", "ads"];
-    var RESTRICTED_COLLECTIONS = ["submissions", "complaints", "memberships"]; // only readable by club staff (or the student themselves for memberships)
+    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events", "ads", "questions", "warnings", "auditLog", "certificates"];
+    var RESTRICTED_COLLECTIONS = ["submissions", "complaints", "memberships", "warnings", "auditLog"]; // only readable by club staff (or the student themselves for memberships)
     var currentDb = null;   // the db object the app is currently using
     var lastSynced = null;  // snapshot of the last known cloud state
     var syncTimer = null;   // debounce for pushing local changes
@@ -3062,6 +3244,9 @@
         var nKey = nx ? (nx.st.key === "soon" ? "soon" : "open") : "";
         if (nId !== curId || nKey !== curKey) render();
       }
+
+      /* live notification badge — recomputed from data every second */
+      updateNotifBadge();
     }
 
     function syncFromStorage() {
@@ -3173,6 +3358,24 @@
         app.innerHTML = viewItDesk();
       } else if (parts[0] === "students") {
         app.innerHTML = viewStudents();
+      } else if (parts[0] === "questions") {
+        app.innerHTML = parts[1] ? viewQuestionDetail(parts[1]) : viewQuestions();
+      } else if (parts[0] === "leaderboard") {
+        app.innerHTML = viewLeaderboard();
+      } else if (parts[0] === "passport") {
+        app.innerHTML = viewPassport();
+      } else if (parts[0] === "quiz") {
+        app.innerHTML = viewQuiz();
+      } else if (parts[0] === "foryou") {
+        app.innerHTML = viewForYou();
+      } else if (parts[0] === "notifications") {
+        app.innerHTML = viewNotifications();
+      } else if (parts[0] === "privacy") {
+        app.innerHTML = viewPrivacy();
+      } else if (parts[0] === "events") {
+        app.innerHTML = parts[1] ? viewEventDetail(parts[1]) : viewEventsList();
+      } else if (parts[0] === "verify") {
+        app.innerHTML = viewVerify(parts[1] || "");
       } else {
         app.innerHTML = viewNotFound(parts);
       }
@@ -3201,6 +3404,24 @@
         document.title = "IT Helpdesk — NITER Clubs Portal";
       } else if (parts[0] === "students") {
         document.title = "Student directory — NITER Clubs Portal";
+      } else if (parts[0] === "questions") {
+        document.title = (parts[1] ? "Question — " : "Student Q&A — ") + "NITER Clubs Portal";
+      } else if (parts[0] === "leaderboard") {
+        document.title = "Leaderboard — NITER Clubs Portal";
+      } else if (parts[0] === "foryou") {
+        document.title = "For You — NITER Clubs Portal";
+      } else if (parts[0] === "notifications") {
+        document.title = "Notifications — NITER Clubs Portal";
+      } else if (parts[0] === "passport") {
+        document.title = "Club Passport — NITER Clubs Portal";
+      } else if (parts[0] === "quiz") {
+        document.title = "Which club fits you? — NITER Clubs Portal";
+      } else if (parts[0] === "privacy") {
+        document.title = "Privacy & data — NITER Clubs Portal";
+      } else if (parts[0] === "events") {
+        document.title = (parts[1] ? "Event — " : "Events calendar — ") + "NITER Clubs Portal";
+      } else if (parts[0] === "verify") {
+        document.title = "Certificate verification — NITER Clubs Portal";
       } else {
         document.title = titles[parts[0]] || "NITER Clubs Portal — One portal for every club";
       }
@@ -3310,7 +3531,9 @@
         (e.venue ? '<span>📍 ' + esc(e.venue) + "</span>" : "") +
         (e.capacity ? '<span>👥 ' + esc(e.capacity) + " spots</span>" : "") +
         (showClub && club ? '<span class="pill club">' + esc(club.icon) + " " + esc(club.name) + "</span>" : "") +
-        "</div></div></div>";
+        "</div>" +
+        '<a class="btn btn-outline btn-sm event-rsvp-link" href="#/events/' + esc(e.id) + '">🎟 View &amp; RSVP</a>' +
+        "</div></div>";
     }
 
     /* ================= Home ================= */
@@ -3437,6 +3660,8 @@
         '<div class="stat-card" data-live-stat="week-notices" data-live-one="notice this week" data-live-many="notices this week"><span class="sc-icon">📢</span><div><b>' + weekNotices + '</b><span class="live-label">notices this week</span></div></div>' +
         '<div class="stat-card" data-live-stat="reactions" data-live-one="reaction" data-live-many="reactions"><span class="sc-icon">💬</span><div><b>' + totalReactions + '</b><span class="live-label">reactions</span></div></div>' +
         "</div></div>" +
+
+        digestHTML() +
 
         '<section class="section"><div class="container">' +
         '<div class="section-head"><div><h2>Our clubs</h2><p class="sub">Find your community — every club at NITER in one place.</p></div>' +
@@ -6746,8 +6971,1658 @@
         if (!confirm("Delete this event?")) return;
         db.events = db.events.filter(function (x) { return x.id !== ev.id; });
         save(); render(); toast("Event deleted.", "ok");
-      }
+      },
+      "qa-ask": function () { state.qaAskOpen = !state.qaAskOpen; render(); },
+      "qa-tab": function (el) { state.qaTab = el.getAttribute("data-tab"); render(); },
+      "qa-cat": function (el) { state.qaCat = el.getAttribute("data-cat"); render(); },
+      "qa-vote": function (el) {
+        var q = questionById(el.getAttribute("data-q"));
+        var a = q && answerById(q, el.getAttribute("data-a"));
+        if (q && a) { toggleAnswerUpvote(q, a); render(); }
+      },
+      "qa-best": function (el) {
+        var q = questionById(el.getAttribute("data-q"));
+        var a = q && answerById(q, el.getAttribute("data-a"));
+        if (q && a) { markBestAnswer(q, a); render(); toast("Best answer marked — +30 XP for " + (a.authorName || "the author") + ".", "ok"); }
+      },
+      "qa-close": function (el) {
+        var q = questionById(el.getAttribute("data-id"));
+        if (q) { setQuestionClosed(q, !q.closed); render(); toast(q.closed ? "Question closed." : "Question reopened.", "ok"); }
+      },
+      "qa-pin": function (el) {
+        var q = questionById(el.getAttribute("data-id"));
+        if (q) { togglePinQuestion(q); render(); }
+      },
+      "qa-hide": function (el) {
+        var q = questionById(el.getAttribute("data-q"));
+        var a = q && answerById(q, el.getAttribute("data-a"));
+        if (q && a) { setAnswerHidden(q, a, true); render(); toast("Answer hidden from students.", "ok"); }
+      },
+      "qa-restore": function (el) {
+        var q = questionById(el.getAttribute("data-q"));
+        var a = q && answerById(q, el.getAttribute("data-a"));
+        if (q && a) { setAnswerHidden(q, a, false); render(); toast("Answer restored.", "ok"); }
+      },
+      "qa-warn": function (el) {
+        state.warnTarget = {
+          type: el.getAttribute("data-type"),
+          id: el.getAttribute("data-id"),
+          qId: el.getAttribute("data-q"),
+          aId: el.getAttribute("data-a")
+        };
+        render();
+      },
+      "qa-warn-cancel": function () { state.warnTarget = null; render(); },
+      "qa-del": function (el) {
+        var q = questionById(el.getAttribute("data-id"));
+        if (!q) return;
+        if (!confirm("Delete this question and all its answers?")) return;
+        db.questions = db.questions.filter(function (x) { return x.id !== q.id; });
+        auditLog("qa_delete_question", q.id, "");
+        save();
+        navigate("questions");
+        render();
+        toast("Question deleted.", "ok");
+      },
+      "qa-del-answer": function (el) {
+        var q = questionById(el.getAttribute("data-q"));
+        var a = q && answerById(q, el.getAttribute("data-a"));
+        if (!q || !a) return;
+        if (!confirm("Delete this answer?")) return;
+        q.answers = q.answers.filter(function (x) { return x.id !== a.id; });
+        if (q.bestAnswerId === a.id) { q.bestAnswerId = ""; if (!q.closed) q.status = "open"; }
+        auditLog("qa_delete_answer", q.id + "/" + a.id, "");
+        save();
+        render();
+        toast("Answer deleted.", "ok");
+      },
+      "rsvp-event": function (el) {
+        var ev = eventById(el.getAttribute("data-id"));
+        if (ev) { toggleEventRsvp(ev); render(); }
+      },
+      "quiz-pick": function (el) { quizPick(Number(el.getAttribute("data-idx") || 0)); },
+      "quiz-restart": function () { state.quizStep = 0; state.quizAnswers = null; render(); },
+      "palette-open": function () { openPalette(); },
+      "palette-close": function () { closePalette(); },
+      "palette-panel": function () { /* keep the palette open when clicking inside */ },
+      "palette-backdrop": function (el, e) { if (e && e.target === el) closePalette(); },
+      "palette-go": function (el) { paletteGo(el.getAttribute("data-href")); },
+      "nav-notif": function () { navigate("notifications"); },
+      "ev-tab": function (el) { state.eventsTab = el.getAttribute("data-tab"); render(); }
     };
+
+    /* ================= New: student Q&A board =================
+       A semi-anonymous board where juniors can ask seniors about courses,
+       placements, the RMG industry and which clubs are worth joining.
+       Every action is audit-logged; staff can pin / hide / warn. */
+    var QA_IDENTITY_KEY = "niter-qa-identity";
+    var QA_CATEGORIES = [
+      "Academics & Courses", "Internships & Placements", "Textile / RMG Industry",
+      "Clubs & Extracurriculars", "Career & Higher Studies", "Projects & Skills",
+      "Campus Life", "Other"
+    ];
+    var QA_WARN_REASONS = ["Spam", "Harassment", "Off-topic", "Misinformation", "Plagiarism", "Other"];
+
+    /* Current identity: Firebase user > signed-in student > guest (this browser). */
+    function qaIdentity() {
+      if (state.user && state.user.email) {
+        return { key: String(state.user.email).toLowerCase(), name: state.user.name || state.user.email, email: state.user.email };
+      }
+      var sem = studentSessionEmail();
+      if (sem) {
+        var acc = studentAccounts()[sem];
+        if (acc) return { key: String(sem).toLowerCase(), name: acc.name || sem, email: sem };
+      }
+      try {
+        var g = JSON.parse(localStorage.getItem(QA_IDENTITY_KEY) || "null");
+        if (g && g.name && g.email) return { key: String(g.email).toLowerCase(), name: g.name, email: g.email };
+      } catch (e) { /* ignore */ }
+      return null;
+    }
+    function saveQaIdentity(name, email) {
+      try { localStorage.setItem(QA_IDENTITY_KEY, JSON.stringify({ name: name, email: email })); } catch (e) { /* ignore */ }
+    }
+    function meKey() {
+      var me = qaIdentity();
+      return me ? me.key : "";
+    }
+    /* Club staff: admins, executives, IT staff, or an active portal session. */
+    function isStaff() {
+      if (state.user && ["admin", "executive", "it-staff"].indexOf(state.user.role) !== -1) return true;
+      if (state.session && state.session.clubId) return true;
+      return false;
+    }
+    function actorName() {
+      var me = qaIdentity();
+      if (me && me.name) return me.name;
+      if (state.session && state.session.clubId) {
+        var c = clubById(state.session.clubId);
+        return c ? c.name + " (staff)" : "Club staff";
+      }
+      return "Guest";
+    }
+    /* Append-only audit trail — feeds the security-transparency story. */
+    function auditLog(action, detail, clubId) {
+      db.auditLog = db.auditLog || [];
+      db.auditLog.push({
+        id: DB.uid("a"),
+        action: action,
+        detail: detail || "",
+        clubId: clubId || "",
+        by: (state.user && (state.user.email || state.user.uid)) || (state.session && state.session.clubId ? "portal:" + state.session.clubId : "") || actorName(),
+        at: new Date().toISOString()
+      });
+    }
+
+    function questionsList() { return (db.questions || []); }
+    function questionById(id) { return questionsList().find(function (q) { return q.id === id; }); }
+    function answerById(q, id) { return (q.answers || []).find(function (a) { return a.id === id; }); }
+    function answerUpvotes(a) { return (a.upvoters || []).length; }
+    function qaVisibleAnswers(q) { return (q.answers || []).filter(function (a) { return !a.hidden; }); }
+    function qaAnswerCount(q) { return qaVisibleAnswers(q).length; }
+    function qaStatus(q) {
+      if (q.closed) return "closed";
+      if (q.bestAnswerId) return "answered";
+      return "open";
+    }
+    function qaSorted(list) {
+      return list.slice().sort(function (a, b) {
+        if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
+        return (b.createdAt || "").localeCompare(a.createdAt || "");
+      });
+    }
+    function askQuestion(title, body, category, anonymous) {
+      var me = qaIdentity();
+      var q = {
+        id: DB.uid("q"),
+        title: title,
+        body: body,
+        category: category || "Other",
+        authorKey: me ? me.key : "",
+        authorName: anonymous ? "Anonymous" : (me ? me.name : "Anonymous"),
+        createdAt: new Date().toISOString(),
+        answers: [], status: "open", closed: false, bestAnswerId: "",
+        pinned: false, pinnedAt: "", pinnedBy: "", views: 0
+      };
+      db.questions.push(q);
+      auditLog("qa_ask", q.title, "");
+      save();
+      return q;
+    }
+    function addAnswer(q, body, anonymous) {
+      var me = qaIdentity();
+      var a = {
+        id: DB.uid("ans"),
+        body: body,
+        authorKey: me ? me.key : "",
+        authorName: anonymous ? "Anonymous" : (me ? me.name : "Anonymous"),
+        createdAt: new Date().toISOString(),
+        upvoters: [], hidden: false, hiddenAt: "", hiddenBy: ""
+      };
+      q.answers.push(a);
+      auditLog("qa_answer", q.id, "");
+      save();
+      return a;
+    }
+    function toggleAnswerUpvote(q, a) {
+      var me = qaIdentity();
+      if (!me) { toast("Enter your name and email to vote (or sign in).", "err"); return; }
+      if (a.authorKey === me.key) { toast("You can't upvote your own answer.", "err"); return; }
+      var ups = a.upvoters = a.upvoters || [];
+      var i = ups.indexOf(me.key);
+      if (i !== -1) ups.splice(i, 1); else ups.push(me.key);
+      auditLog("qa_upvote", q.id + "/" + a.id, "");
+      save();
+    }
+    function markBestAnswer(q, a) {
+      q.bestAnswerId = a.id;
+      q.status = q.closed ? "closed" : "answered";
+      auditLog("qa_best", q.id + "/" + a.id, "");
+      save();
+    }
+    function setQuestionClosed(q, closed) {
+      q.closed = closed;
+      q.status = closed ? "closed" : (q.bestAnswerId ? "answered" : "open");
+      auditLog(closed ? "qa_close" : "qa_reopen", q.id, "");
+      save();
+    }
+    function togglePinQuestion(q) {
+      q.pinned = !q.pinned;
+      q.pinnedAt = q.pinned ? new Date().toISOString() : "";
+      q.pinnedBy = q.pinned ? actorName() : "";
+      auditLog(q.pinned ? "qa_pin" : "qa_unpin", q.id, "");
+      save();
+    }
+    function setAnswerHidden(q, a, hidden) {
+      if (hidden && q.bestAnswerId === a.id) {
+        q.bestAnswerId = "";
+        if (!q.closed) q.status = "open";
+      }
+      a.hidden = hidden;
+      a.hiddenAt = hidden ? new Date().toISOString() : "";
+      a.hiddenBy = hidden ? actorName() : "";
+      auditLog(hidden ? "qa_hide_answer" : "qa_restore_answer", q.id + "/" + a.id, "");
+      save();
+    }
+    function warnContent(type, q, a, reason, note) {
+      var targetId = type === "question" ? (q ? q.id : "") : (a ? a.id : "");
+      db.warnings = db.warnings || [];
+      db.warnings.push({
+        id: DB.uid("w"),
+        targetType: type,
+        targetId: targetId,
+        authorKey: (type === "question" ? (q ? q.authorKey : "") : (a ? a.authorKey : "")) || "",
+        reason: reason || "Other",
+        note: note || "",
+        by: actorName(),
+        at: new Date().toISOString(),
+        clubId: ""
+      });
+      auditLog("qa_warn", type + " " + targetId + " (" + reason + ")", "");
+      save();
+    }
+    function warnCount(type, id) {
+      return (db.warnings || []).filter(function (w) { return w.targetType === type && w.targetId === id; }).length;
+    }
+    function authorWarnCount(authorKey) {
+      if (!authorKey) return 0;
+      return (db.warnings || []).filter(function (w) { return w.authorKey === authorKey; }).length;
+    }
+
+    /* ---- gamified contribution matrix (derived live, nothing stored) ---- */
+    function leaderboardRows() {
+      var rows = {};
+      function add(key, name) {
+        if (!key) return;
+        if (!rows[key]) rows[key] = { key: key, name: name || key, subs: 0, events: 0, clubs: {}, answers: 0, best: 0, upvotes: 0, qaXp: 0, xp: 0 };
+      }
+      function bump(key, field, n) { if (rows[key]) rows[key][field] += n; }
+      (db.submissions || []).forEach(function (s) {
+        var email = String(s.submitterEmail || s.email || "").toLowerCase();
+        add(email, s.submitterName || s.name || "");
+        bump(email, "subs", 1);
+      });
+      (db.events || []).forEach(function (ev) {
+        (ev.checkIns || []).forEach(function (c) {
+          var email = personKeyOf(c);
+          add(email, (c.person && c.person.name) || c.name || "");
+          bump(email, "events", 1);
+          if (rows[email]) rows[email].clubs[ev.clubId || ""] = true;
+        });
+      });
+      // Q&A XP: +5 per upvote received (max 5 per answer) + 30 per accepted
+      // best answer, capped at 150 XP per author per calendar month.
+      var qaMonth = {};
+      (db.questions || []).forEach(function (q) {
+        (q.answers || []).forEach(function (a) {
+          if (a.hidden) return;
+          var email = String(a.authorKey || "").toLowerCase();
+          add(email, a.authorName || "");
+          bump(email, "answers", 1);
+          bump(email, "best", q.bestAnswerId === a.id ? 1 : 0);
+          bump(email, "upvotes", Math.min(5, (a.upvoters || []).length));
+          var mkey = email + "|" + (a.createdAt || "").slice(0, 7);
+          qaMonth[mkey] = (qaMonth[mkey] || 0) + Math.min(5, (a.upvoters || []).length) * 5 + (q.bestAnswerId === a.id ? 30 : 0);
+        });
+      });
+      Object.keys(qaMonth).forEach(function (m) {
+        var email = m.split("|")[0];
+        if (rows[email]) rows[email].qaXp += Math.min(150, qaMonth[m]);
+      });
+      Object.keys(rows).forEach(function (k) {
+        var r = rows[k];
+        r.xp = r.subs * 10 + r.events * 15 + r.qaXp;
+      });
+      return Object.keys(rows).map(function (k) { return rows[k]; })
+        .filter(function (r) { return r.xp > 0; })
+        .sort(function (a, b) { return b.xp - a.xp || (a.name < b.name ? -1 : 1); });
+    }
+    function badgesFor(r) {
+      var b = [];
+      if (r.events >= 3) b.push({ t: "🏅 Event Maestro", g: true });
+      if (Object.keys(r.clubs || {}).length >= 3) b.push({ t: "🎟 Club Hopper", g: true });
+      if (r.best >= 2 || r.upvotes >= 10) b.push({ t: "🧑‍🏫 Community Mentor", g: true });
+      if (r.xp >= 200) b.push({ t: "⭐ Top Contributor", g: true });
+      if (r.xp > 0) b.push({ t: "🌱 First Steps", g: false });
+      return b;
+    }
+
+    /* ---- events: RSVP, waitlist, door check-in, certificates ---- */
+    function personKeyOf(c) {
+      return String((c && (c.email || (c.person && c.person.email))) || "").toLowerCase();
+    }
+    function doorCode(ev) {
+      return "NITER" + String(ev.id || "").replace(/[^a-z0-9]/gi, "").toUpperCase().slice(-5);
+    }
+    function rsvpState(ev) {
+      var k = meKey();
+      var conf = (ev.rsvps || []).indexOf(k);
+      var wl = (ev.waitlist || []).indexOf(k);
+      var ci = (ev.checkIns || []).some(function (c) { return personKeyOf(c) === k; });
+      return {
+        key: k,
+        confirmed: conf !== -1,
+        waitlisted: wl !== -1,
+        checkedIn: ci,
+        position: wl === -1 ? 0 : wl + 1,
+        full: ev.capacity ? (ev.rsvps || []).length >= ev.capacity : false
+      };
+    }
+    function toggleEventRsvp(ev) {
+      var me = qaIdentity();
+      if (!me) { toast("Tell us who you are first — or sign in.", "err"); return; }
+      var k = me.key;
+      var rsvps = ev.rsvps = ev.rsvps || [];
+      var wl = ev.waitlist = ev.waitlist || [];
+      var ci = ev.checkIns = ev.checkIns || [];
+      if (ci.some(function (c) { return personKeyOf(c) === k; })) {
+        toast("You already checked in — you're all set.", "ok");
+        return;
+      }
+      var confirmed = rsvps.indexOf(k) !== -1;
+      var waitlisted = wl.indexOf(k) !== -1;
+      if (confirmed) {
+        rsvps.splice(rsvps.indexOf(k), 1);
+        if (wl.length) {
+          rsvps.push(wl.shift());
+          toast("RSVP removed — the next waitlisted student was moved in.", "ok");
+        } else {
+          toast("RSVP removed.", "ok");
+        }
+        auditLog("rsvp_leave", ev.id, ev.clubId);
+      } else if (waitlisted) {
+        wl.splice(wl.indexOf(k), 1);
+        toast("Removed from the waitlist.", "ok");
+        auditLog("rsvp_waitlist_leave", ev.id, ev.clubId);
+      } else if (ev.capacity && rsvps.length >= ev.capacity) {
+        wl.push(k);
+        toast("Event is full — you're #" + wl.length + " on the waitlist.", "ok");
+        auditLog("rsvp_waitlist_join", ev.id, ev.clubId);
+      } else {
+        rsvps.push(k);
+        toast("You're in! See you at the event.", "ok");
+        auditLog("rsvp_join", ev.id, ev.clubId);
+      }
+      save();
+    }
+    function checkInPerson(ev, email, name) {
+      var k = String(email || "").toLowerCase();
+      if (!k) { toast("Enter the student's email.", "err"); return null; }
+      var ci = ev.checkIns = ev.checkIns || [];
+      if (ci.some(function (c) { return personKeyOf(c) === k; })) {
+        toast("That student is already checked in.", "err");
+        return null;
+      }
+      ci.push({ email: k, name: name || "", at: new Date().toISOString(), by: actorName() });
+      // A checked-in student no longer needs their waitlist spot.
+      var wl = ev.waitlist = ev.waitlist || [];
+      var wi = wl.indexOf(k);
+      if (wi !== -1) wl.splice(wi, 1);
+      db.certificates = db.certificates || [];
+      var cert = {
+        id: "CERT-" + Math.floor(10000 + Math.random() * 90000),
+        eventId: ev.id,
+        clubId: ev.clubId,
+        person: { name: name || "", email: k },
+        issuedAt: new Date().toISOString(),
+        issuedBy: actorName()
+      };
+      db.certificates.push(cert);
+      auditLog("event_checkin", ev.id + " -> " + k, ev.clubId);
+      save();
+      return cert;
+    }
+    function certFor(ev, key) {
+      return (db.certificates || []).find(function (c) { return c.eventId === ev.id && personKeyOf(c.person) === key; });
+    }
+    function certById(id) {
+      return (db.certificates || []).find(function (c) { return c.id === id || c.code === id; });
+    }
+
+    /* ---- "Which club fits you?" quiz (browser-only; answers never stored) ---- */
+    var QUIZ_QUESTIONS = [
+      { q: "A free Friday afternoon appears. What do you actually do?", options: [
+        { label: "Build or break something — code, circuits, a side project", tags: { "computer-club": 2, "robotics-club": 2 } },
+        { label: "Rehearse a song, a scene or a monologue", tags: { "cultural-club": 2, "language-club": 1 } },
+        { label: "Play football or cricket with friends", tags: { "games-sports-club": 2 } },
+        { label: "Film, photograph or edit something", tags: { "film-photography-club": 2 } }
+      ]},
+      { q: "Which sounds most exciting as a project?", options: [
+        { label: "A mobile app for campus", tags: { "computer-club": 2, "robotics-club": 1 } },
+        { label: "A science fair experiment", tags: { "science-society": 2 } },
+        { label: "A documentary about NITER", tags: { "journalism-society": 2, "film-photography-club": 1 } },
+        { label: "A charity drive for a local community", tags: { "social-welfare-club": 2 } }
+      ]},
+      { q: "What do people usually come to you for?", options: [
+        { label: "Help with tech or debugging", tags: { "computer-club": 2 } },
+        { label: "Talking through a career or CV question", tags: { "career-club": 2 } },
+        { label: "A well-spoken argument or speech", tags: { "language-club": 2 } },
+        { label: "Organising people and getting things done", tags: { "social-welfare-club": 1, "cultural-club": 1 } }
+      ]},
+      { q: "Pick a room you'd rather be in at 4pm.", options: [
+        { label: "The computer lab", tags: { "computer-club": 2 } },
+        { label: "The auditorium stage", tags: { "cultural-club": 2, "language-club": 1 } },
+        { label: "The sports field", tags: { "games-sports-club": 2 } },
+        { label: "A quiet corner debating ideas", tags: { "science-society": 1, "journalism-society": 1 } }
+      ]},
+      { q: "Your ideal club event would be…", options: [
+        { label: "A hackathon or coding contest", tags: { "computer-club": 2 } },
+        { label: "A robotics showcase", tags: { "robotics-club": 2 } },
+        { label: "A photography walk around campus", tags: { "film-photography-club": 2 } },
+        { label: "A career talk with alumni", tags: { "career-club": 2 } }
+      ]},
+      { q: "What kind of content do you enjoy making?", options: [
+        { label: "Write-ups, reports, newsletters", tags: { "journalism-society": 2, "language-club": 1 } },
+        { label: "Presentations and public speaking", tags: { "language-club": 1, "career-club": 1 } },
+        { label: "Posters, videos, photos", tags: { "film-photography-club": 2, "cultural-club": 1 } },
+        { label: "Code and demos", tags: { "computer-club": 2, "robotics-club": 1 } }
+      ]},
+      { q: "Which matters most to you in a club?", options: [
+        { label: "Learning hard technical skills", tags: { "computer-club": 1, "robotics-club": 1, "science-society": 1 } },
+        { label: "Building a strong community", tags: { "islamic-society": 2, "social-welfare-club": 1 } },
+        { label: "Getting experience for my career", tags: { "career-club": 2 } },
+        { label: "Having fun and expressing myself", tags: { "cultural-club": 1, "games-sports-club": 1 } }
+      ]},
+      { q: "A friend asks: 'Which club should I join?' You say…", options: [
+        { label: "Join mine — you'll love the tech", tags: { "computer-club": 1, "robotics-club": 1 } },
+        { label: "Try the stage — it's a rush", tags: { "cultural-club": 1, "language-club": 1 } },
+        { label: "Something that builds your career", tags: { "career-club": 1 } },
+        { label: "Something that gives back", tags: { "social-welfare-club": 1, "islamic-society": 1 } }
+      ]}
+    ];
+    function quizPick(idx) {
+      var step = state.quizStep || 0;
+      var q = QUIZ_QUESTIONS[step];
+      if (!q) return;
+      var opt = q.options[idx];
+      if (!opt) return;
+      state.quizAnswers = state.quizAnswers || {};
+      Object.keys(opt.tags).forEach(function (cid) {
+        state.quizAnswers[cid] = (state.quizAnswers[cid] || 0) + opt.tags[cid];
+      });
+      state.quizStep = step + 1;
+      render();
+    }
+    function quizResults() {
+      var answers = state.quizAnswers || {};
+      var total = 0;
+      Object.keys(answers).forEach(function (k) { total += answers[k]; });
+      var list = Object.keys(answers).map(function (k) {
+        var c = clubById(k);
+        return { clubId: k, icon: c ? c.icon : "🎓", name: c ? c.name : k, color: c ? c.color : "#3b82f6", tagline: c ? c.tagline : "", score: answers[k] };
+      }).sort(function (a, b) { return b.score - a.score; }).slice(0, 3);
+      return { list: list, total: total };
+    }
+
+    /* ---- "This week at NITER" digest ---- */
+    function weekEvents() {
+      var now = Date.now();
+      var end = now + 7 * 86400000;
+      return upcomingEvents().filter(function (e) {
+        var t = new Date(e.startsAt).getTime();
+        return !isNaN(t) && t >= now && t <= end;
+      }).slice(0, 5);
+    }
+    function weekDeadlines() {
+      var now = Date.now();
+      var end = now + 7 * 86400000;
+      return db.forms.filter(function (f) {
+        var st = statusOf(f);
+        if (st.key === "open" && f.deadline) {
+          var t = new Date(f.deadline).getTime();
+          return !isNaN(t) && t >= now && t <= end;
+        }
+        if (st.key === "soon" && f.openAt) {
+          var t2 = new Date(f.openAt).getTime();
+          return !isNaN(t2) && t2 >= now && t2 <= end;
+        }
+        return false;
+      }).sort(function (a, b) {
+        var sa = statusOf(a).key === "open" ? new Date(a.deadline).getTime() : new Date(a.openAt).getTime();
+        var sb = statusOf(b).key === "open" ? new Date(b.deadline).getTime() : new Date(b.openAt).getTime();
+        return (isNaN(sa) ? 0 : sa) - (isNaN(sb) ? 0 : sb);
+      }).slice(0, 5);
+    }
+    function weekNotices() {
+      var ago = Date.now() - 7 * 86400000;
+      return db.notices.filter(function (n) {
+        return new Date(n.createdAt || n.date).getTime() >= ago;
+      }).sort(function (a, b) {
+        return (b.createdAt || b.date).localeCompare(a.createdAt || a.date);
+      }).slice(0, 5);
+    }
+    function digestHTML() {
+      var evs = weekEvents();
+      var dls = weekDeadlines();
+      var nts = weekNotices();
+      function item(icon, html) {
+        return '<div class="digest-item"><span class="d-icon">' + icon + "</span><span>" + html + "</span></div>";
+      }
+      function col(title, count, items, empty) {
+        return '<div class="digest-col"><h3>' + title + ' <span class="digest-count">' + count + "</span></h3>" +
+          (items || '<div class="muted" style="font-size:13px">' + empty + "</div>") + "</div>";
+      }
+      var evCol = evs.map(function (e) {
+        var club = clubById(e.clubId);
+        return item("📅", '<a href="#/events/' + esc(e.id) + '">' + esc(e.title) + "</a>" +
+          '<div class="muted" style="font-size:12px">' + esc(fmtDateTime(e.startsAt)) + (e.venue ? " · " + esc(e.venue) : "") + (club ? " · " + esc(club.name) : "") + "</div>" +
+          clashChipsHTML(e.id));
+      }).join("");
+      var dlCol = dls.map(function (f) {
+        var st = statusOf(f);
+        var when = st.key === "soon" ? "Opens " + fmtDateTime(f.openAt) : "Closes " + fmtDateTime(f.deadline);
+        return item(st.key === "soon" ? "⏳" : "⏰", '<a href="#/form/' + esc(f.id) + '">' + esc(f.title) + "</a>" +
+          '<div class="muted" style="font-size:12px">' + esc(when) + "</div>");
+      }).join("");
+      var ntCol = nts.map(function (n) {
+        var club = clubById(n.clubId);
+        return item("📢", (n.pinned ? "📌 " : "") + '<a href="#/notices">' + esc(n.title) + "</a>" +
+          '<div class="muted" style="font-size:12px">' + esc(club ? club.name : "") + " · " + esc(relativeAgo(n.createdAt || n.date)) + "</div>");
+      }).join("");
+      return '<section class="section alt"><div class="container">' +
+        '<div class="section-head"><div><h2>🗓 This week at NITER</h2>' +
+        '<p class="sub">Events, form deadlines and new notices — everything happening in the next 7 days.</p></div></div>' +
+        '<div class="digest-grid">' +
+        col("📅 Events", evs.length, evCol, "No events this week — check the calendar.") +
+        col("⏳ Deadlines", dls.length, dlCol, "No form deadlines this week.") +
+        col("📢 New notices", nts.length, ntCol, "Nothing new this week.") +
+        "</div></div></section>";
+    }
+
+    /* ================= New views ================= */
+    function viewQuestions() {
+      state.qaTab = state.qaTab || "all";
+      state.qaCat = state.qaCat || "";
+      var me = qaIdentity();
+      var list = questionsList();
+      if (state.qaTab === "open") list = list.filter(function (q) { return qaStatus(q) === "open"; });
+      else if (state.qaTab === "answered") list = list.filter(function (q) { return qaStatus(q) === "answered"; });
+      else if (state.qaTab === "closed") list = list.filter(function (q) { return qaStatus(q) === "closed"; });
+      if (state.qaCat) list = list.filter(function (q) { return q.category === state.qaCat; });
+      list = qaSorted(list);
+      var tabs = ["all", "open", "answered", "closed"].map(function (t) {
+        return '<button class="chip' + (state.qaTab === t ? " active" : "") + '" data-action="qa-tab" data-tab="' + t + '">' +
+          t.charAt(0).toUpperCase() + t.slice(1) + "</button>";
+      }).join("");
+      var cats = ['<button class="chip' + (state.qaCat === "" ? " active" : "") + '" data-action="qa-cat" data-cat="">All topics</button>'].concat(
+        QA_CATEGORIES.map(function (c) {
+          return '<button class="chip' + (state.qaCat === c ? " active" : "") + '" data-action="qa-cat" data-cat="' + esc(c) + '">' + esc(c) + "</button>";
+        })
+      ).join("");
+      var cards = list.map(function (q) {
+        var st = qaStatus(q);
+        var stPill = st === "closed" ? '<span class="qa-status closed">🔒 Closed</span>'
+          : (st === "answered" ? '<span class="qa-status answered">✓ Answered</span>'
+            : '<span class="qa-status open">Open</span>');
+        if (q.pinned) stPill += '<span class="qa-status pinned">📌 Pinned' + (q.pinnedBy ? " by " + esc(q.pinnedBy) : "") + "</span>";
+        var warnN = warnCount("question", q.id);
+        if (warnN) stPill += '<span class="warn-chip">⚠️ ' + warnN + " warning" + (warnN === 1 ? "" : "s") + "</span>";
+        return '<div class="qa-card">' +
+          '<div class="row">' + stPill +
+          (q.category ? '<span class="qa-cat">' + esc(q.category) + "</span>" : "") +
+          "</div>" +
+          '<h3><a href="#/questions/' + esc(q.id) + '">' + esc(q.title) + "</a></h3>" +
+          (q.body ? '<p class="qa-body">' + esc(q.body) + "</p>" : "") +
+          '<div class="qa-meta">' +
+          "<span>👤 " + esc(q.authorName || "Anonymous") + "</span>" +
+          "<span>🕒 " + esc(relativeAgo(q.createdAt)) + "</span>" +
+          "<span>💬 " + qaAnswerCount(q) + " answer" + (qaAnswerCount(q) === 1 ? "" : "s") + "</span>" +
+          "</div></div>";
+      }).join("");
+      var askForm = "";
+      if (state.qaAskOpen) {
+        askForm = '<div class="card" style="margin-bottom:16px">' +
+          "<h3>✍️ Ask a question</h3>" +
+          '<form id="qa-ask-form">' +
+          (me ? "" :
+            '<div class="identity-prompt">💡 One-time identity — your email is never shown publicly; it just lets you manage your own posts.<br>' +
+            '<div class="stack-sm" style="margin-top:8px">' +
+            '<input type="text" id="qa-i-name" placeholder="Your name" required>' +
+            '<input type="email" id="qa-i-email" placeholder="you@niter.edu.bd" required>' +
+            "</div></div>") +
+          '<div class="stack-sm">' +
+          '<input type="text" id="qa-title" placeholder="What do you want to ask?" maxlength="160" required>' +
+          '<select id="qa-category">' + QA_CATEGORIES.map(function (c) { return "<option>" + esc(c) + "</option>"; }).join("") + "</select>" +
+          '<textarea id="qa-body" rows="3" placeholder="Add some detail — courses, semesters, context…"></textarea>' +
+          '<label class="row"><input type="checkbox" id="qa-anon"> <span class="muted">🎭 Post anonymously (your name stays hidden)</span></label>' +
+          '<div class="row"><button class="btn btn-primary" type="submit">Post question</button>' +
+          '<button class="btn btn-ghost" type="button" data-action="qa-ask">Cancel</button></div>' +
+          "</div></form></div>";
+      } else {
+        askForm = '<button class="btn btn-primary" data-action="qa-ask">✍️ Ask a question</button>';
+      }
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>Student Q&amp;A board</h1>" +
+        '<p class="lead">Ask seniors and classmates anything — courses, placements, the RMG industry, which clubs are actually worth joining. Questions and answers are public; you can post anonymously.</p>' +
+        '</div><div class="hero-side">' +
+        '<div class="hero-card"><h3>💡 How it works</h3><ul class="hero-mini-list">' +
+        "<li>Helpful answers earn XP and badges on the leaderboard.</li>" +
+        "<li>Mark the best answer to help the next person.</li>" +
+        "<li>Moderators pin useful threads and hide spam.</li>" +
+        "</ul></div></div></div></section>" +
+        '<div class="container" style="padding:24px 0">' +
+        '<div class="section-head"><div><h2>Questions</h2>' +
+        '<p class="sub">' + list.length + " question" + (list.length === 1 ? "" : "s") + (state.qaCat ? " in " + esc(state.qaCat) : "") + "</p></div>" + askForm + "</div>" +
+        '<div class="filter-chips" style="margin-bottom:10px">' + tabs + "</div>" +
+        '<div class="filter-chips" style="margin-bottom:16px">' + cats + "</div>" +
+        (list.length ? '<div class="stack">' + cards + "</div>"
+          : '<div class="panel empty-state"><div class="icon">💬</div><p>No questions here yet — be the first to ask one!</p></div>') +
+        "</div>"
+      );
+    }
+
+    function viewQuestionDetail(id) {
+      var q = questionById(id);
+      if (!q) {
+        return '<div class="container" style="padding:40px 0"><div class="panel empty-state"><div class="icon">🤔</div>' +
+          "<p>That question doesn't exist or was deleted.</p>" +
+          '<a class="btn btn-outline btn-sm" href="#/questions">← Back to Q&amp;A</a></div></div>';
+      }
+      var me = qaIdentity();
+      var staff = isStaff();
+      var myKey = meKey();
+      var isAuthor = !!(me && q.authorKey === me.key);
+      var isAdminUser = !!(state.user && state.user.role === "admin");
+      var st = qaStatus(q);
+      var stPill = st === "closed" ? '<span class="qa-status closed">🔒 Closed</span>'
+        : (st === "answered" ? '<span class="qa-status answered">✓ Answered</span>'
+          : '<span class="qa-status open">Open</span>');
+      if (q.pinned) stPill += '<span class="qa-status pinned">📌 Pinned' + (q.pinnedBy ? " by " + esc(q.pinnedBy) : "") + "</span>";
+      var warnN = warnCount("question", q.id);
+      if (warnN) stPill += '<span class="warn-chip">⚠️ ' + warnN + " warning" + (warnN === 1 ? "" : "s") + "</span>";
+      if (authorWarnCount(q.authorKey) >= 2) stPill += '<span class="offender-flag">🚩 Repeat offender</span>';
+      var modBar = "";
+      if (staff || isAuthor) {
+        modBar = '<div class="mod-bar">' +
+          (staff ? '<button class="mod-btn" data-action="qa-pin" data-id="' + esc(q.id) + '">' + (q.pinned ? "📌 Unpin" : "📌 Pin") + "</button>" : "") +
+          (staff ? '<button class="mod-btn" data-action="qa-warn" data-type="question" data-id="' + esc(q.id) + '">⚠️ Warn</button>' : "") +
+          '<button class="mod-btn" data-action="qa-close" data-id="' + esc(q.id) + '">' + (st !== "closed" ? "🔒 Close" : "🔓 Reopen") + "</button>" +
+          (isAuthor || isAdminUser ? '<button class="mod-btn" data-action="qa-del" data-id="' + esc(q.id) + '">🗑 Delete</button>' : "") +
+          "</div>";
+      }
+      var answers = (q.answers || []).slice().sort(function (a, b) {
+        var ab = q.bestAnswerId === a.id ? 1 : 0;
+        var bb = q.bestAnswerId === b.id ? 1 : 0;
+        if (ab !== bb) return bb - ab;
+        var uv = (b.upvoters || []).length - (a.upvoters || []).length;
+        if (uv) return uv;
+        return (b.createdAt || "").localeCompare(a.createdAt || "");
+      });
+      var hiddenCount = (q.answers || []).filter(function (a) { return a.hidden; }).length;
+      var answerHTML = answers.map(function (a) {
+        var isMine = a.authorKey === myKey;
+        var voted = !isMine && (a.upvoters || []).indexOf(myKey) !== -1;
+        var hidden = a.hidden;
+        if (hidden && !staff) return "";
+        var card = '<div class="answer-card' + (q.bestAnswerId === a.id ? " best" : "") + (hidden ? " hidden-ans" : "") + '">' +
+          '<div class="row" style="justify-content:space-between">' +
+          "<b>" + esc(a.authorName || "Anonymous") + "</b>" +
+          '<span class="muted" style="font-size:12px">🕒 ' + esc(relativeAgo(a.createdAt)) + "</span>" +
+          "</div>" +
+          (q.bestAnswerId === a.id ? '<div style="margin:6px 0 2px"><span class="best-badge">★ Best answer</span></div>' : "") +
+          (hidden ? '<div style="margin:6px 0 2px"><span class="hidden-chip">🙈 Hidden by moderator' + (a.hiddenBy ? " — " + esc(a.hiddenBy) : "") + "</span></div>" : "") +
+          (authorWarnCount(a.authorKey) >= 2 ? '<div style="margin:6px 0 2px"><span class="offender-flag">🚩 Repeat offender</span></div>' : "") +
+          '<p class="qa-body" style="margin-top:8px">' + esc(a.body) + "</p>" +
+          '<div class="row" style="justify-content:space-between">' +
+          '<button class="vote-btn' + (voted ? " voted" : "") + '" data-action="qa-vote" data-q="' + esc(q.id) + '" data-a="' + esc(a.id) + '"' +
+          (isMine ? ' disabled title="You can\'t upvote your own answer"' : "") + ">▲ " + answerUpvotes(a) + "</button>" +
+          '<div class="row" style="gap:6px">' +
+          (q.bestAnswerId !== a.id && !hidden && (isAuthor || staff) ? '<button class="mod-btn" data-action="qa-best" data-q="' + esc(q.id) + '" data-a="' + esc(a.id) + '">★ Best answer</button>' : "") +
+          (staff ? '<button class="mod-btn" data-action="qa-warn" data-type="answer" data-q="' + esc(q.id) + '" data-a="' + esc(a.id) + '">⚠️ Warn</button>' : "") +
+          (staff ? (hidden ? '<button class="mod-btn" data-action="qa-restore" data-q="' + esc(q.id) + '" data-a="' + esc(a.id) + '">👁 Restore</button>' : '<button class="mod-btn" data-action="qa-hide" data-q="' + esc(q.id) + '" data-a="' + esc(a.id) + '">🙈 Hide</button>') : "") +
+          (isMine ? '<button class="mod-btn" data-action="qa-del-answer" data-q="' + esc(q.id) + '" data-a="' + esc(a.id) + '">🗑</button>' : "") +
+          "</div></div></div>";
+        return card;
+      }).join("");
+      var warnForm = "";
+      if (state.warnTarget) {
+        var wt = state.warnTarget;
+        warnForm = '<div class="warn-form"><b>⚠️ Issue a warning on ' + (wt.type === "question" ? "this question" : "this answer") + "</b>" +
+          '<form id="warn-form" data-type="' + esc(wt.type) + '" data-q="' + esc(q.id) + '" data-a="' + esc(wt.aId || "") + '">' +
+          '<div class="stack-sm" style="margin-top:8px">' +
+          '<select id="warn-reason">' + QA_WARN_REASONS.map(function (r) { return "<option>" + r + "</option>"; }).join("") + "</select>" +
+          '<textarea id="warn-note" rows="2" placeholder="Private note (staff only)"></textarea>' +
+          '<div class="row"><button class="btn btn-primary btn-sm" type="submit">Issue warning</button>' +
+          '<button class="btn btn-ghost btn-sm" type="button" data-action="qa-warn-cancel">Cancel</button></div>' +
+          "</div></form></div>";
+      }
+      var answerForm = "";
+      if (st !== "closed") {
+        answerForm = '<div class="card">' +
+          "<h3>Your answer</h3>" +
+          (me ? "" : '<div class="identity-prompt">💡 You can answer without an account — we\'ll just ask your name and email once (never shown publicly).</div>') +
+          '<form id="qa-answer-form" data-q="' + esc(q.id) + '">' +
+          '<div class="stack-sm">' +
+          (me ? "" :
+            '<div class="stack-sm" style="margin-bottom:8px">' +
+            '<input type="text" id="qa-i-name" placeholder="Your name" required>' +
+            '<input type="email" id="qa-i-email" placeholder="you@niter.edu.bd" required>' +
+            "</div>") +
+          '<textarea id="qa-answer-body" rows="3" placeholder="Share what you know — a course, a placement, an experience…" required></textarea>' +
+          '<label class="row"><input type="checkbox" id="qa-answer-anon"> <span class="muted">🎭 Answer anonymously</span></label>' +
+          '<button class="btn btn-primary" type="submit">Post answer</button>' +
+          "</div></form></div>";
+      } else {
+        answerForm = '<div class="panel empty-state"><div class="icon">🔒</div><p>This question is closed and no longer takes answers.</p></div>';
+      }
+      return (
+        '<div class="container" style="padding:28px 0;max-width:820px">' +
+        '<a class="link" href="#/questions">← Back to Q&amp;A</a>' +
+        '<div class="qa-card" style="margin-top:10px">' +
+        '<div class="row">' + stPill +
+        (q.category ? '<span class="qa-cat">' + esc(q.category) + "</span>" : "") +
+        "</div>" +
+        "<h2 style=\"margin:8px 0 4px\">" + esc(q.title) + "</h2>" +
+        (q.body ? '<p class="qa-body">' + esc(q.body) + "</p>" : "") +
+        '<div class="qa-meta">' +
+        "<span>👤 " + esc(q.authorName || "Anonymous") + "</span>" +
+        "<span>🕒 " + esc(relativeAgo(q.createdAt)) + "</span>" +
+        "</div>" +
+        modBar +
+        "</div>" +
+        (hiddenCount ? '<p class="muted" style="font-size:12.5px;margin:10px 0">🙈 ' + hiddenCount + " hidden answer" + (hiddenCount === 1 ? "" : "s") + " — visible to staff only.</p>" : "") +
+        (answerHTML ? '<h3 style="margin:20px 0 10px">Answers (' + qaAnswerCount(q) + ")</h3>" + answerHTML : "") +
+        warnForm +
+        '<div style="margin-top:16px">' + answerForm + "</div>" +
+        "</div>"
+      );
+    }
+
+    function viewLeaderboard() {
+      var rows = leaderboardRows();
+      var tr = rows.slice(0, 10).map(function (r, i) {
+        var rank = i === 0 ? '<span class="lb-rank rank-gold">🥇</span>'
+          : (i === 1 ? '<span class="lb-rank rank-silver">🥈</span>'
+            : (i === 2 ? '<span class="lb-rank rank-bronze">🥉</span>'
+              : '<span class="lb-rank">' + (i + 1) + "</span>"));
+        var badges = badgesFor(r).map(function (b) { return '<span class="badge-chip' + (b.g ? " gold" : "") + '">' + b.t + "</span>"; }).join("");
+        return "<tr><td>" + rank + "</td><td><b>" + esc(r.name) + "</b></td><td>" + r.xp + " XP</td><td>" + badges + "</td></tr>";
+      }).join("");
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>🏆 Contribution leaderboard</h1>" +
+        '<p class="lead">Recognition for members who show up, submit, answer and organise. Every point is derived live from real activity — nothing is awarded by hand.</p>' +
+        '</div><div class="hero-side">' +
+        '<div class="hero-card"><h3>How XP works</h3><ul class="hero-mini-list">' +
+        "<li>📝 +10 per form submitted</li>" +
+        "<li>🎟 +15 per event attended (checked in)</li>" +
+        "<li>💬 +5 per upvote on your answers (max 5 per answer)</li>" +
+        "<li>★ +30 per accepted best answer</li>" +
+        "<li>⏱ Q&amp;A XP capped at 150 per author per month</li>" +
+        "</ul></div></div></div></section>" +
+        '<div class="container" style="padding:24px 0">' +
+        '<div class="section-head"><div><h2>Top contributors</h2>' +
+        '<p class="sub">' + rows.length + " active member" + (rows.length === 1 ? "" : "s") + " with XP</p></div></div>" +
+        (rows.length ? '<div class="card"><table class="lb-table"><thead><tr><th>#</th><th>Member</th><th>XP</th><th>Badges</th></tr></thead><tbody>' + tr + "</tbody></table></div>"
+          : '<div class="panel empty-state"><div class="icon">🏆</div><p>No activity yet — submit a form, attend an event or help on the Q&amp;A board to earn your first XP.</p></div>') +
+        heatmapSectionHTML() +
+        "</div>"
+      );
+    }
+
+    function viewPassport() {
+      var me = qaIdentity();
+      if (!me) {
+        return (
+          '<section class="hero"><div class="container hero-grid"><div>' +
+          "<h1>🛂 Club Passport</h1>" +
+          '<p class="lead">Every event you check in to stamps your digital passport. Collect stamps across different clubs to unlock the Club Hopper badge.</p>' +
+          '</div></div></section>' +
+          '<div class="container" style="padding:24px 0;max-width:640px">' +
+          '<div class="identity-prompt">💡 Tell us who you are to see your passport — your identity is stored only in this browser (or your signed-in account).' +
+          '<form id="qa-identity-form" class="stack-sm" style="margin-top:10px">' +
+          '<input type="text" id="qa-i-name" placeholder="Your name" required>' +
+          '<input type="email" id="qa-i-email" placeholder="you@niter.edu.bd" required>' +
+          '<div><button class="btn btn-primary" type="submit">Show my passport</button></div>' +
+          "</form></div></div>"
+        );
+      }
+      var k = me.key;
+      var byClub = {};
+      var total = 0, first = "", latest = "";
+      (db.events || []).forEach(function (ev) {
+        (ev.checkIns || []).forEach(function (c) {
+          if (personKeyOf(c) !== k) return;
+          var cid = ev.clubId || "";
+          byClub[cid] = byClub[cid] || [];
+          byClub[cid].push(ev);
+          total++;
+          var at = c.at || "";
+          if (!first || at < first) first = at;
+          if (at > latest) latest = at;
+        });
+      });
+      var clubsVisited = Object.keys(byClub).length;
+      var stamps = db.clubs.map(function (c) {
+        var evs = byClub[c.id] || [];
+        if (!evs.length) {
+          return '<div class="stamp locked"><div class="s-icon" style="background:#cbd5e1">🔒</div><div class="s-name">' + esc(c.name) + '</div><div class="s-count">No stamp yet</div></div>';
+        }
+        return '<div class="stamp"><div class="s-icon" style="background:' + esc(c.color) + '">' + esc(c.icon) + "</div>" +
+          '<div class="s-name">' + esc(c.name) + "</div>" +
+          '<div class="s-count">' + evs.length + " event" + (evs.length === 1 ? "" : "s") + "</div>" +
+          '<div class="s-count" style="font-size:10.5px">' + evs.map(function (e) { return esc(fmtDate(e.startsAt)); }).join(" · ") + "</div></div>";
+      }).join("");
+      var pct = Math.min(100, Math.round((clubsVisited / 3) * 100));
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>🛂 Club Passport — " + esc(me.name) + "</h1>" +
+        '<p class="lead">Stamps come from real door check-ins, so every one is backed by an issued certificate.</p>' +
+        '</div><div class="hero-side">' +
+        '<div class="hero-card"><h3>Club Hopper</h3>' +
+        '<p class="muted" style="font-size:13px">Check in at 3 different clubs to unlock the Club Hopper badge.</p>' +
+        '<div class="hopper-track"><div class="hopper-fill" style="width:' + pct + '%"></div></div>' +
+        '<p class="muted" style="font-size:12px;margin-top:6px">' + clubsVisited + " / 3 clubs" + (clubsVisited >= 3 ? " — 🎟 unlocked!" : "") + "</p>" +
+        "</div></div></div></section>" +
+        '<div class="container" style="padding:24px 0">' +
+        '<div class="section-head"><div><h2>Your stamps</h2><p class="sub">' + total + " event" + (total === 1 ? "" : "s") + " · " + clubsVisited + " club" + (clubsVisited === 1 ? "" : "s") +
+        (latest ? " · latest " + esc(fmtDate(latest)) : "") + "</p></div></div>" +
+        '<div class="stamp-grid">' + stamps + "</div>" +
+        "</div>"
+      );
+    }
+
+    function viewQuiz() {
+      var step = state.quizStep || 0;
+      if (state.quizAnswers && step >= QUIZ_QUESTIONS.length) {
+        saveQuizInterests(state.quizAnswers); // remember what you like (browser-only)
+        var res = quizResults();
+        var matches = res.list.map(function (m) {
+          var pct = res.total ? Math.round((m.score / res.total) * 100) : 0;
+          return '<div class="match-card"><div class="m-icon" style="background:' + esc(m.color) + '">' + esc(m.icon) + "</div>" +
+            "<div style=\"flex:1\"><b>" + esc(m.name) + "</b>" +
+            (m.tagline ? '<div class="muted" style="font-size:12.5px">' + esc(m.tagline) + "</div>" : "") +
+            '<div class="match-bar"><div class="match-bar-fill" style="width:' + pct + '%"></div></div>' +
+            '<a class="btn btn-outline btn-sm" style="margin-top:8px" href="#/club/' + esc(m.clubId) + '">Visit club →</a></div>' +
+            "<b>" + pct + "%</b></div>";
+        }).join("");
+        return (
+          '<section class="hero"><div class="container hero-grid"><div>' +
+          "<h1>🧭 Your club matches</h1>" +
+          '<p class="lead">Based on your answers, these three clubs fit you best at NITER. Visit one — or send a join request straight from its page.</p>' +
+          '</div></div></section>' +
+          '<div class="container" style="padding:24px 0;max-width:640px">' + matches +
+          '<div class="row" style="margin-top:14px">' +
+          '<button class="btn btn-outline" data-action="quiz-restart">↻ Take it again</button>' +
+          '<a class="btn btn-primary" href="#/clubs">Explore all clubs →</a></div>' +
+          "</div>"
+        );
+      }
+      var q = QUIZ_QUESTIONS[step];
+      if (!q) { state.quizStep = 0; state.quizAnswers = null; q = QUIZ_QUESTIONS[0]; }
+      var opts = q.options.map(function (o, i) {
+        return '<button class="quiz-opt" data-action="quiz-pick" data-idx="' + i + '">' + esc(o.label) + "</button>";
+      }).join("");
+      var pct = Math.round((step / QUIZ_QUESTIONS.length) * 100);
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>🧭 Which club fits you?</h1>" +
+        '<p class="lead">Eight quick questions. Your answers are matched against every club at NITER — nothing is stored or sent anywhere.</p>' +
+        '</div></div></section>' +
+        '<div class="container" style="max-width:640px;padding:24px 0">' +
+        '<div class="card"><div class="row" style="justify-content:space-between"><b>Question ' + (step + 1) + " of " + QUIZ_QUESTIONS.length + "</b>" +
+        '<span class="muted" style="font-size:12px">' + pct + "%</span></div>" +
+        '<div class="quiz-progress"><div class="quiz-progress-fill" style="width:' + pct + '%"></div></div>' +
+        "<h3 style=\"margin:4px 0 14px\">" + esc(q.q) + "</h3>" +
+        opts + "</div></div>"
+      );
+    }
+
+    function viewPrivacy() {
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>🔒 Privacy &amp; transparency</h1>" +
+        '<p class="lead">How this portal handles your data — and the audit trail behind every action.</p>' +
+        '</div></div></section>' +
+        '<div class="container" style="padding:24px 0;max-width:760px">' +
+        '<div class="card"><h3>What we store</h3><p class="muted">This demo portal is local-first: data lives in your browser (localStorage) and, when enabled, syncs to a shared Firestore database. Form submissions, memberships, RSVPs, check-ins and Q&amp;A posts are stored so club staff can process them.</p></div>' +
+        '<div class="card"><h3>Q&amp;A and anonymous posting</h3><p class="muted">The student Q&amp;A board is public. You can post questions and answers anonymously — your name stays hidden, but your email is kept privately to identify you as the author of your own posts. Moderators (admins, executives, IT staff) can pin helpful threads, hide spam answers and issue warnings, which are visible to staff only.</p></div>' +
+        '<div class="card"><h3>Certificates</h3><p class="muted">When you check in to an event, a certificate is issued with a unique ID. Anyone can visit the verify page to confirm it is authentic — it shows only the name, event, club and date.</p></div>' +
+        '<div class="card"><h3>Audit trail</h3><p class="muted">Every meaningful action — RSVPs, check-ins, Q&amp;A posts, votes, moderation, warnings — is appended to an immutable audit log. Only admins can read it, and nobody can edit or delete a row once written.</p></div>' +
+        "</div>"
+      );
+    }
+
+    function viewEventDetail(id) {
+      var ev = eventById(id);
+      if (!ev) {
+        return '<div class="container" style="padding:40px 0"><div class="panel empty-state"><div class="icon">📅</div><p>That event doesn\'t exist.</p><a class="btn btn-outline btn-sm" href="#/clubs">← All clubs</a></div></div>';
+      }
+      var club = clubById(ev.clubId);
+      var me = qaIdentity();
+      var staff = isStaff();
+      var st = rsvpState(ev);
+      var d = ev.startsAt ? new Date(ev.startsAt) : null;
+      var when = d && !isNaN(d) ? fmtDateTime(ev.startsAt) : "Date to be announced";
+      var identityCard = "";
+      if (!me) {
+        identityCard = '<div class="identity-prompt" style="margin-bottom:10px">💡 RSVP, the waitlist and your passport need an identity — stored only in this browser.' +
+          '<form id="qa-identity-form" class="stack-sm" style="margin-top:8px">' +
+          '<input type="text" id="qa-i-name" placeholder="Your name" required>' +
+          '<input type="email" id="qa-i-email" placeholder="you@niter.edu.bd" required>' +
+          '<div><button class="btn btn-primary btn-sm" type="submit">Continue</button></div></form></div>';
+      }
+      var rsvpHTML = "";
+      if (st.checkedIn) {
+        var cert = certFor(ev, st.key);
+        rsvpHTML = '<div class="rsvp-card"><div class="big">✅ Checked in!</div>' +
+          '<p class="small">You attended this event — your certificate is ready.</p>' +
+          (cert ? '<a class="btn btn-primary btn-sm" style="margin-top:8px" href="#/verify/' + esc(cert.id) + '">📜 View certificate</a>' : "") +
+          "</div>";
+      } else {
+        var actionBtn = '<button class="btn ' + (st.confirmed || st.waitlisted ? "btn-outline" : "btn-primary") + '" data-action="rsvp-event" data-id="' + esc(ev.id) + '">' +
+          (st.confirmed ? "Cancel RSVP" : (st.waitlisted ? "Leave waitlist" : "🎟 RSVP")) + "</button>";
+        var head = st.confirmed ? '<div class="big">🎟 You\'re in!</div><p class="small">See you at the event.</p>'
+          : (st.waitlisted ? '<div class="big">⏳ On the waitlist</div><p class="small">Position #' + st.position + " — moved in automatically if a spot opens.</p>"
+            : '<div class="big">' + (st.full ? "Sold out" : "Open") + "</div>" +
+              '<p class="small">' + (ev.rsvps || []).length + (ev.capacity ? " / " + ev.capacity : "") + " confirmed" +
+              ((ev.waitlist || []).length ? " · " + (ev.waitlist || []).length + " waitlisted" : "") + "</p>");
+        rsvpHTML = '<div class="rsvp-card"><div class="row" style="justify-content:space-between;align-items:center">' + head + actionBtn + "</div></div>";
+      }
+      var staffHTML = "";
+      if (staff) {
+        var ciList = (ev.checkIns || []).map(function (c) {
+          return "<li>" + esc(c.name || c.email) + " · " + esc(c.email) + " · " + esc(fmtDateTime(c.at)) + " (by " + esc(c.by || "") + ")</li>";
+        }).join("");
+        var certList = (db.certificates || []).filter(function (c) { return c.eventId === ev.id; })
+          .map(function (c) { return '<a href="#/verify/' + esc(c.id) + '">' + esc(c.id) + "</a> — " + esc((c.person && c.person.name) || c.person.email); }).join("");
+        staffHTML = '<div class="staff-only"><h4>🎫 Door check-in console (staff)</h4>' +
+          '<p class="muted" style="font-size:12.5px;margin:0 0 8px">Door code: <b>' + esc(doorCode(ev)) + '</b> · Enter the student\'s email to check them in and issue their certificate.</p>' +
+          '<form id="checkin-form" data-event="' + esc(ev.id) + '" class="row">' +
+          '<input type="email" id="checkin-email" placeholder="student@niter.edu.bd" required style="flex:1;min-width:200px">' +
+          '<input type="text" id="checkin-name" placeholder="Name (optional)">' +
+          '<button class="btn btn-primary btn-sm" type="submit">✅ Check in</button></form>' +
+          (ciList ? '<div style="margin-top:10px"><b style="font-size:12.5px">Checked in (' + (ev.checkIns || []).length + '):</b><ul style="margin:6px 0 0;padding-left:18px">' + ciList + "</ul></div>" : "") +
+          (certList ? '<div class="cert-list"><b style="font-size:12.5px">Certificates:</b><div>' + certList + "</div></div>" : "") +
+          "</div>";
+      }
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        '<div class="row" style="margin-bottom:8px">' +
+        (club ? '<span class="pill club">' + esc(club.icon) + " " + esc(club.name) + "</span>" : "") +
+        '<span class="qa-status open">📅 Event</span></div>' +
+        "<h1>" + esc(ev.title) + "</h1>" +
+        (ev.description ? '<p class="lead">' + esc(ev.description) + "</p>" : "") +
+        clashChipsHTML(ev.id) +
+        '<div class="row">' +
+        "<span class=\"stat-mini\">🕒 " + esc(when) + "</span>" +
+        (ev.venue ? "<span class=\"stat-mini\">📍 " + esc(ev.venue) + "</span>" : "") +
+        (ev.capacity ? "<span class=\"stat-mini\">👥 " + esc(ev.capacity) + " spots</span>" : "") +
+        "</div></div>" +
+        '<div class="hero-side">' + identityCard + rsvpHTML + "</div>" +
+        "</div></section>" +
+        '<div class="container" style="padding:24px 0">' +
+        '<div class="card"><h3>About this event</h3>' +
+        '<p class="muted">' + esc(ev.description || "No description yet — posted by the club.") + "</p>" +
+        '<a class="btn btn-outline btn-sm" href="#/clubs">← All clubs</a></div>' +
+        staffHTML +
+        "</div>"
+      );
+    }
+
+    function viewVerify(id) {
+      var cert = certById(id);
+      if (!cert) {
+        return (
+          '<section class="hero"><div class="container hero-grid"><div>' +
+          "<h1>🔎 Certificate verification</h1>" +
+          '<p class="lead">No certificate was found for this code. Double-check the link — every certificate has its own unique ID.</p>' +
+          '</div></div></section>'
+        );
+      }
+      var ev = eventById(cert.eventId);
+      var club = clubById(cert.clubId);
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>🔎 Certificate verification</h1>" +
+        '<p class="lead">Confirm that a participation certificate issued by a NITER club is authentic.</p>' +
+        '</div></div></section>' +
+        '<div class="container" style="padding:24px 0">' +
+        '<div class="cert-sheet">' +
+        '<div class="cert-seal">🎓</div>' +
+        "<h2>Certificate of Participation</h2>" +
+        '<div class="cert-name">' + esc((cert.person && cert.person.name) || cert.person.email) + "</div>" +
+        '<div class="cert-line">successfully participated in</div>' +
+        '<div class="cert-line" style="font-weight:700;color:var(--navy)">' + esc(ev ? ev.title : "a NITER club event") + "</div>" +
+        (club ? '<div class="cert-line">' + esc(club.icon) + " " + esc(club.name) + "</div>" : "") +
+        '<div class="cert-line">Issued ' + esc(fmtDate(cert.issuedAt)) + "</div>" +
+        '<div class="verify-badge">✅ VERIFIED — authentic NITER club record</div>' +
+        '<div class="verify-note">Certificate ID: <b>' + esc(cert.id) + "</b></div>" +
+        "</div></div>"
+      );
+    }
+
+    /* ================= Futuristic layer =================
+       Smart "For You" recommendations, a notification centre, a
+       Ctrl/Cmd+K command palette, an event clash radar and GitHub-style
+       contribution heatmaps. Everything is derived live from the same
+       data — the only per-browser state is read-markers and quiz
+       interests (tiny localStorage keys). */
+
+    /* ---- Club personality tags (mirror the quiz match profiles) ---- */
+    var CLUB_TAG_PROFILE = {
+      "computer-club": ["Coding", "Tech", "AI", "Gaming"],
+      "science-society": ["Science", "Research", "Innovation"],
+      "career-club": ["Career", "Networking", "Leadership"],
+      "language-club": ["Language", "Debate", "Speaking"],
+      "cultural-club": ["Music", "Drama", "Arts"],
+      "games-sports-club": ["Sports", "Gaming", "Fitness"],
+      "islamic-society": ["Community", "Volunteering", "Faith"],
+      "robotics-club": ["Robotics", "Engineering", "Hardware"],
+      "film-photography-club": ["Film", "Photography", "Design"],
+      "journalism-society": ["Writing", "Media", "Reporting"],
+      "social-welfare-club": ["Community", "Volunteering", "Social Work"]
+    };
+    var INTEREST_KEY = "niter-interest-tags";
+    function loadQuizInterests() { try { return JSON.parse(localStorage.getItem(INTEREST_KEY) || "{}"); } catch (e) { return {}; } }
+    function saveQuizInterests(t) { try { localStorage.setItem(INTEREST_KEY, JSON.stringify(t || {})); } catch (e) { /* ignore */ } }
+
+    /* Build a live interest profile: club scores + Q&A categories the
+       current user engages with. Only the user's OWN activity counts. */
+    function interestProfile() {
+      var me = meKey();
+      var clubs = {};
+      var cats = {};
+      function row(cid) {
+        if (!cid || !clubById(cid)) return null;
+        if (!clubs[cid]) clubs[cid] = { quiz: 0, subs: 0, mem: 0, ev: 0 };
+        return clubs[cid];
+      }
+      var q = loadQuizInterests();
+      Object.keys(q).forEach(function (cid) { var r = row(cid); if (r) r.quiz += Number(q[cid]) || 0; });
+      if (me) {
+        (db.submissions || []).forEach(function (s) {
+          if (String(s.submitterEmail || s.email || "").toLowerCase() !== me) return;
+          var f = formById(s.formId);
+          var r = row(s.clubId || (f && f.clubId) || "");
+          if (r) r.subs += 1;
+        });
+        (db.memberships || []).forEach(function (m) {
+          if (String(m.email || m.userId || "").toLowerCase() !== me) return;
+          var r = row(m.clubId);
+          if (r) r.mem += 1;
+        });
+        (db.events || []).forEach(function (ev) {
+          var hit = (ev.rsvps || []).indexOf(me) !== -1 ||
+            (ev.checkIns || []).some(function (c) { return personKeyOf(c) === me; });
+          if (!hit) return;
+          var r = row(ev.clubId);
+          if (r) r.ev += 1;
+        });
+        (db.questions || []).forEach(function (qq) {
+          var mine = qq.authorKey === me;
+          var answered = (qq.answers || []).some(function (a) { return a.authorKey === me; });
+          if ((mine || answered) && qq.category) cats[qq.category] = (cats[qq.category] || 0) + 1;
+        });
+      }
+      return { me: me, clubs: clubs, cats: cats };
+    }
+    function clubProfileScore(c) { return (c.quiz || 0) + (c.subs || 0) * 2 + (c.mem || 0) * 2 + (c.ev || 0); }
+    function profileActive(p) {
+      var total = 0;
+      Object.keys(p.clubs).forEach(function (cid) { total += clubProfileScore(p.clubs[cid]); });
+      return total + Object.keys(p.cats).length > 0;
+    }
+    function profileReasons(p, cid) {
+      var c = p.clubs[cid];
+      if (!c) return [];
+      var out = [];
+      if (c.quiz > 0) out.push("into " + ((CLUB_TAG_PROFILE[cid] || []).slice(0, 2).join(" & ") || "this area"));
+      if (c.subs > 0) out.push("you applied here");
+      if (c.mem > 0) out.push("you requested membership");
+      if (c.ev > 0) out.push("you joined its events");
+      return out;
+    }
+
+    /* ---- "For You" recommendation engine (scored live) ---- */
+    function recommendations() {
+      var p = interestProfile();
+      var now = Date.now();
+      var active = profileActive(p);
+      var evs = (db.events || []).filter(function (e) {
+        var t = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+        return !isNaN(t) && t >= now;
+      }).map(function (e) {
+        var c = p.clubs[e.clubId];
+        var days = Math.round((new Date(e.startsAt).getTime() - now) / 86400000);
+        var score = (c ? clubProfileScore(c) * 3 : 0) +
+          Math.min(4, (e.waitlist || []).length) * 2 +
+          Math.max(0, 4 - days) * 0.5 +
+          Math.min(2, (e.rsvps || []).length / 10);
+        return { e: e, score: score, reason: c ? profileReasons(p, e.clubId) : [] };
+      }).sort(function (a, b) { return b.score - a.score; }).slice(0, 4);
+      var fs = (db.forms || []).filter(function (f) { return statusOf(f).key !== "closed"; }).map(function (f) {
+        var c = p.clubs[f.clubId];
+        var st = statusOf(f);
+        var daysLeft = f.deadline ? Math.round((new Date(f.deadline).getTime() - now) / 86400000) : 99;
+        var urgent = st.key === "open" && daysLeft >= 0 && daysLeft <= 3;
+        var score = (c ? clubProfileScore(c) * 2 : 0) + (st.key === "soon" ? 2 : 0) + (urgent ? 3 : 0) + Math.max(0, 4 - daysLeft) * 0.4;
+        return { f: f, score: score, st: st, urgent: urgent, reason: c ? profileReasons(p, f.clubId) : [] };
+      }).sort(function (a, b) { return b.score - a.score; }).slice(0, 4);
+      var qs = (db.questions || []).filter(function (q) { return !q.closed && q.authorKey !== p.me; }).map(function (q) {
+        var cat = p.cats[q.category] || 0;
+        var openQ = q.bestAnswerId ? 0 : 2;
+        var fresh = Math.max(0, 2 - Math.round((now - new Date(q.createdAt).getTime()) / 86400000));
+        return { q: q, score: cat + openQ + fresh };
+      }).sort(function (a, b) { return b.score - a.score; }).slice(0, 4);
+      return { p: p, active: active, events: evs, forms: fs, questions: qs };
+    }
+
+    function viewForYou() {
+      var r = recommendations();
+      var teaser = r.active
+        ? '<div class="identity-prompt" style="margin-bottom:14px">🧠 Picks are personalised from your quiz answers, submissions, RSVPs and Q&amp;A activity — they update live as the data changes.</div>'
+        : '<div class="identity-prompt" style="margin-bottom:14px">🧠 Take the 2-minute quiz so your picks actually match you (or just sign in and start joining clubs). Until then, here is what is trending campus-wide. <a class="link" href="#/quiz">Take the quiz →</a></div>';
+      function clubOf(cid) { return clubById(cid); }
+      function evCard(x) {
+        var e = x.e, club = clubOf(e.clubId);
+        return '<div class="fy-card">' +
+          '<div class="fy-icon" style="background:' + esc(club ? club.color : "#3b82f6") + '">' + esc(club ? club.icon : "📅") + "</div>" +
+          '<div class="fy-body"><b><a href="#/events/' + esc(e.id) + '">' + esc(e.title) + "</a></b>" +
+          '<div class="fy-meta">' + esc(fmtDateTime(e.startsAt)) + (e.venue ? " · " + esc(e.venue) : "") + "</div>" +
+          (x.reason.length ? '<div class="fy-reason">🎯 ' + esc(x.reason[0]) + "</div>" : "") +
+          ((e.waitlist && e.waitlist.length) ? '<div class="fy-reason hot">🔥 ' + e.waitlist.length + " on the waitlist</div>" : "") +
+          "</div></div>";
+      }
+      function formCard(x) {
+        var f = x.f, club = clubOf(f.clubId);
+        var when = x.st.key === "soon" ? "Opens " + fmtDateTime(f.openAt) : (f.deadline ? "Closes " + fmtDateTime(f.deadline) : "Open now");
+        return '<div class="fy-card">' +
+          '<div class="fy-icon" style="background:' + esc(club ? club.color : "#3b82f6") + '">' + esc(club ? club.icon : "📝") + "</div>" +
+          '<div class="fy-body"><b><a href="#/form/' + esc(f.id) + '">' + esc(f.title) + "</a></b>" +
+          '<div class="fy-meta">' + esc(when) + "</div>" +
+          (x.urgent ? '<div class="fy-reason urgent">⏰ Closes soon</div>' : "") +
+          (x.reason.length ? '<div class="fy-reason">🎯 ' + esc(x.reason[0]) + "</div>" : "") +
+          "</div></div>";
+      }
+      function qCard(x) {
+        var q = x.q;
+        return '<div class="fy-card">' +
+          '<div class="fy-icon fy-icon-sm">💬</div>' +
+          '<div class="fy-body"><b><a href="#/questions/' + esc(q.id) + '">' + esc(q.title) + "</a></b>" +
+          '<div class="fy-meta">' + esc(q.category || "Q&A") + " · " + esc(relativeAgo(q.createdAt)) + "</div>" +
+          '<div class="fy-reason">🤝 No best answer yet — you could help</div>' +
+          "</div></div>";
+      }
+      var topHTML = "";
+      if (r.events.length) {
+        var t = r.events[0], tclub = clubOf(t.e.id);
+        topHTML = '<div class="card top-pick">' +
+          '<div class="row" style="justify-content:space-between"><b style="font-size:15px">🎯 Top pick for you</b>' +
+          (tclub ? '<span class="pill club">' + esc(tclub.icon) + " " + esc(tclub.name) + "</span>" : "") + "</div>" +
+          '<h3 style="margin:10px 0 4px"><a href="#/events/' + esc(t.e.id) + '">' + esc(t.e.title) + "</a></h3>" +
+          '<p class="muted" style="font-size:13px">' + esc(fmtDateTime(t.e.startsAt)) + (t.e.venue ? " · " + esc(t.e.venue) : "") + "</p>" +
+          (t.reason.length ? '<p class="fy-reason" style="margin:0">🎯 ' + esc(t.reason.join(" · ")) + "</p>" : "") +
+          '<a class="btn btn-primary btn-sm" style="margin-top:12px" href="#/events/' + esc(t.e.id) + '">View event →</a></div>';
+      }
+      function section(title, seeAll, empty, cards) {
+        return '<div class="section-head" style="margin-top:24px"><div><h2>' + title + "</h2></div>" +
+          '<a class="link" href="' + seeAll + '">See all →</a></div>' +
+          (cards || '<div class="panel empty-state"><div class="icon">🔮</div><p>' + empty + "</p></div>");
+      }
+      var evCards = r.events.map(evCard).join("");
+      var formCards = r.forms.map(formCard).join("");
+      var qCards = r.questions.map(qCard).join("");
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>✨ For You</h1>" +
+        '<p class="lead">A live personal feed of events, deadlines and questions picked for you from everything happening across NITER — like an AI that knows your clubs.</p>' +
+        '</div><div class="hero-side"><div class="hero-card"><h3>How it thinks</h3><ul class="hero-mini-list">' +
+        "<li>Your quiz answers and club activity build an interest profile.</li>" +
+        "<li>Events and forms are scored against it every time you open this page.</li>" +
+        "<li>Waitlist pressure, urgency and freshness boost the score.</li>" +
+        "</ul></div></div></div></section>" +
+        '<div class="container" style="padding:24px 0">' +
+        teaser +
+        topHTML +
+        '<div class="fy-grid">' +
+        '<div class="fy-col">' + section("📅 Events for you", "#/events", "No upcoming events right now.", evCards) + "</div>" +
+        '<div class="fy-col">' + section("⏳ Deadlines for you", "#/clubs", "Nothing closing soon.", formCards) + "</div>" +
+        '<div class="fy-col">' + section("💬 Questions you could answer", "#/questions", "All questions are answered right now.", qCards) + "</div>" +
+        "</div></div>"
+      );
+    }
+
+    /* ---- Notification centre (derived live + per-browser read state) ---- */
+    var NOTIF_READ_KEY = "niter-notif-read";
+    function notifHash(s) {
+      var h = 5381;
+      for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+      return "n" + (h >>> 0).toString(36);
+    }
+    function readNotifs() { try { return JSON.parse(localStorage.getItem(NOTIF_READ_KEY) || "[]"); } catch (e) { return []; } }
+    function saveReadNotifs(list) { try { localStorage.setItem(NOTIF_READ_KEY, JSON.stringify(list)); } catch (e) { /* ignore */ } }
+    function isNotifRead(id) { return readNotifs().indexOf(id) !== -1; }
+    function markNotifRead(id) {
+      var r = readNotifs();
+      if (r.indexOf(id) === -1) { r.push(id); saveReadNotifs(r); }
+    }
+    function notificationsFor() {
+      var me = meKey();
+      var out = [];
+      if (!me) return out;
+      var now = Date.now();
+      function push(type, icon, text, href, when, target) {
+        out.push({ id: notifHash(type + "|" + (target || "") + "|" + (when || "")), type: type, icon: icon, text: text, href: href, when: when || now });
+      }
+      (db.certificates || []).forEach(function (cert) {
+        if (personKeyOf(cert.person) !== me) return;
+        var ev = eventById(cert.eventId);
+        push("cert", "📜", "Your certificate for " + (ev ? ev.title : "an event") + " is ready to verify", "#/verify/" + cert.id, cert.issuedAt, cert.id);
+      });
+      (db.questions || []).forEach(function (q) {
+        if (q.authorKey !== me) return;
+        (q.answers || []).forEach(function (a) {
+          if (a.authorKey === me) return;
+          push("qa", "💬", "New answer on your question: " + q.title, "#/questions/" + q.id, a.createdAt, q.id + a.id);
+        });
+        if (q.bestAnswerId) {
+          push("best", "★", "A best answer was marked on your question: " + q.title, "#/questions/" + q.id, q.createdAt, q.id + "best");
+        }
+      });
+      (db.warnings || []).forEach(function (w) {
+        if (w.authorKey !== me) return;
+        push("warn", "⚠️", "A moderator issued a warning on your " + (w.targetType === "question" ? "question" : "answer") + " (" + (w.reason || "Other") + ")", "#/questions", w.at, w.id);
+      });
+      (db.events || []).forEach(function (ev) {
+        if ((ev.rsvps || []).indexOf(me) === -1) return;
+        var t = ev.startsAt ? new Date(ev.startsAt).getTime() : NaN;
+        if (isNaN(t)) return;
+        var d = Math.round((t - now) / 86400000);
+        if (d < 0 || d > 7) return;
+        push("rsvp", "🎟", "You are RSVP'd to " + ev.title + (d === 0 ? " today" : d === 1 ? " tomorrow" : " in " + d + " days"), "#/events/" + ev.id, ev.createdAt || "", ev.id);
+      });
+      var myForms = {};
+      (db.submissions || []).forEach(function (s) {
+        if (String(s.submitterEmail || s.email || "").toLowerCase() === me && s.formId) myForms[s.formId] = true;
+      });
+      (db.forms || []).forEach(function (f) {
+        if (!myForms[f.id]) return;
+        var st = statusOf(f);
+        if (st.key !== "open" || !f.deadline) return;
+        var t = new Date(f.deadline).getTime();
+        if (isNaN(t)) return;
+        var h = Math.round((t - now) / 3600000);
+        if (h < 0 || h > 48) return;
+        push("deadline", "⏰", f.title + " closes " + (h < 1 ? "under an hour" : "in " + h + " hour" + (h === 1 ? "" : "s")), "#/form/" + f.id, f.deadline, f.id);
+      });
+      var myClubs = {};
+      (db.submissions || []).forEach(function (s) {
+        if (String(s.submitterEmail || s.email || "").toLowerCase() !== me) return;
+        var f = formById(s.formId);
+        var cid = s.clubId || (f && f.clubId) || "";
+        if (cid) myClubs[cid] = true;
+      });
+      (db.memberships || []).forEach(function (m) {
+        if (String(m.email || m.userId || "").toLowerCase() === me && m.clubId) myClubs[m.clubId] = true;
+      });
+      (db.notices || []).forEach(function (n) {
+        if (!myClubs[n.clubId]) return;
+        var t = n.createdAt || n.date ? new Date(n.createdAt || n.date).getTime() : NaN;
+        if (isNaN(t) || now - t > 3 * 86400000) return;
+        var c = clubById(n.clubId);
+        push("notice", "📢", (c ? c.name + ": " : "") + n.title, "#/notices", n.createdAt || n.date, n.id);
+      });
+      out.sort(function (a, b) { return (b.when || 0) - (a.when || 0); });
+      return out.slice(0, 30);
+    }
+    function unreadNotifCount() {
+      return notificationsFor().filter(function (n) { return !isNotifRead(n.id); }).length;
+    }
+    function markAllNotifsRead() {
+      var r = readNotifs();
+      var changed = false;
+      notificationsFor().forEach(function (n) { if (r.indexOf(n.id) === -1) { r.push(n.id); changed = true; } });
+      if (changed) saveReadNotifs(r);
+    }
+    function updateNotifBadge() {
+      var b = document.getElementById("notif-badge");
+      if (!b) return;
+      var n = unreadNotifCount();
+      b.textContent = n > 99 ? "99+" : n;
+      b.style.display = n ? "" : "none";
+    }
+    function viewNotifications() {
+      var me = meKey();
+      if (!me) {
+        return (
+          '<section class="hero"><div class="container hero-grid"><div>' +
+          "<h1>🔔 Notifications</h1>" +
+          '<p class="lead">A live inbox of everything that matters to you — certificates, answers on your questions, RSVPs and deadlines.</p>' +
+          '</div></div></section>' +
+          '<div class="container" style="padding:24px 0;max-width:640px">' +
+          '<div class="identity-prompt">💡 Tell us who you are to see your inbox — notifications are derived from your activity, nothing is tracked.' +
+          '<form id="qa-identity-form" class="stack-sm" style="margin-top:10px">' +
+          '<input type="text" id="qa-i-name" placeholder="Your name" required>' +
+          '<input type="email" id="qa-i-email" placeholder="you@niter.edu.bd" required>' +
+          '<div><button class="btn btn-primary" type="submit">Show my notifications</button></div>' +
+          "</form></div></div>"
+        );
+      }
+      var list = notificationsFor();
+      markAllNotifsRead();
+      var html = "";
+      function bucket(title, items) {
+        if (!items.length) return "";
+        return '<div class="notif-group"><h3>' + title + "</h3>" +
+          items.map(function (n) {
+            return '<a class="notif-item" href="' + esc(n.href) + '">' +
+              '<span class="notif-icon">' + n.icon + "</span>" +
+              '<span class="notif-text">' + esc(n.text) + "</span>" +
+              '<span class="notif-time">' + esc(relativeAgo(n.when)) + "</span></a>";
+          }).join("") + "</div>";
+      }
+      var now = Date.now();
+      var today = [], week = [], older = [];
+      list.forEach(function (n) {
+        var age = now - (n.when || now);
+        if (age < 86400000) today.push(n);
+        else if (age < 7 * 86400000) week.push(n);
+        else older.push(n);
+      });
+      html += bucket("Today", today) + bucket("This week", week) + bucket("Earlier", older);
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>🔔 Notifications</h1>" +
+        '<p class="lead">Certificates, answers on your questions, RSVP reminders and deadlines — all derived live from the data, nothing stored.</p>' +
+        '</div></div></section>' +
+        '<div class="container" style="padding:24px 0;max-width:640px">' +
+        '<div class="section-head"><div><h2>Your inbox</h2><p class="sub">' + list.length + " notification" + (list.length === 1 ? "" : "s") + "</p></div></div>" +
+        (html || '<div class="panel empty-state"><div class="icon">🔔</div><p>Nothing yet. Check in to an event, ask a question or RSVP and your inbox will light up.</p></div>') +
+        '<p class="muted" style="font-size:12px;margin-top:12px">Read state lives only in this browser. Notifications regenerate from real activity, so nothing can be faked.</p>' +
+        "</div>"
+      );
+    }
+
+    /* ---- Ctrl/Cmd+K command palette (intent parser + smart search) ---- */
+    function openPalette() {
+      state.palette = { q: "", sel: 0 };
+      renderPaletteOverlay();
+    }
+    function closePalette() {
+      state.palette = null;
+      var ov = document.getElementById("cmd-palette");
+      if (ov && ov.parentNode) ov.parentNode.removeChild(ov);
+    }
+    function renderPaletteOverlay() {
+      var ov = document.getElementById("cmd-palette");
+      if (!ov) {
+        ov = document.createElement("div");
+        ov.id = "cmd-palette";
+        ov.className = "palette-overlay";
+        ov.setAttribute("data-action", "palette-backdrop");
+        document.body.appendChild(ov);
+      }
+      ov.innerHTML = paletteHTML();
+      var inp = document.getElementById("palette-input");
+      if (inp) {
+        inp.focus();
+        var vlen = inp.value.length;
+        try { inp.setSelectionRange(vlen, vlen); } catch (e2) { /* ignore */ }
+      }
+    }
+    function paletteResults(q) {
+      var s = (q || "").trim().toLowerCase();
+      var res = [];
+      function add(group, icon, label, href, sub) { res.push({ group: group, icon: icon, label: label, href: href, sub: sub || "" }); }
+      if (!s) {
+        add("Quick actions", "✨", "For You — personalised picks", "#/foryou");
+        add("Quick actions", "🔔", "Notifications", "#/notifications");
+        add("Quick actions", "🛂", "My Club Passport", "#/passport");
+        add("Quick actions", "🧭", "Which club fits you? (quiz)", "#/quiz");
+        add("Quick actions", "📅", "All events", "#/events");
+        add("Quick actions", "💬", "Student Q&A board", "#/questions");
+        add("Quick actions", "🏆", "Leaderboard", "#/leaderboard");
+        add("Quick actions", "📢", "Notice board", "#/notices");
+        add("Quick actions", "🎓", "Student directory", "#/students");
+        add("Quick actions", "👤", "My dashboard", "#/dashboard");
+        add("Quick actions", "🔒", "Privacy & data", "#/privacy");
+        return res;
+      }
+      if (/event|calendar|upcoming|this week|weekend|today|tomorrow|friday|what.s on/i.test(s)) {
+        var evs = upcomingEvents().filter(function (e) {
+          if (/\btoday\b/.test(s)) { var d = new Date(e.startsAt); var n = new Date(); return d.toDateString() === n.toDateString(); }
+          if (/\bweek\b|weekend|tomorrow|friday/.test(s)) { var t = new Date(e.startsAt).getTime(); return !isNaN(t) && t - Date.now() <= 7 * 86400000; }
+          return true;
+        }).slice(0, 5);
+        evs.forEach(function (e) { add("Events", "📅", e.title, "#/events/" + e.id, fmtDateTime(e.startsAt) + (e.venue ? " · " + e.venue : "")); });
+        if (!evs.length) add("Events", "📅", "No events match right now", "#/events", "");
+      }
+      if (/deadline|clos|apply|join|register|form/i.test(s)) {
+        var fs = (db.forms || []).filter(function (f) { return statusOf(f).key !== "closed"; })
+          .sort(function (a, b) {
+            var sa = statusOf(a).key === "open" && a.deadline ? new Date(a.deadline).getTime() : 1e15;
+            var sb = statusOf(b).key === "open" && b.deadline ? new Date(b.deadline).getTime() : 1e15;
+            return sa - sb;
+          }).slice(0, 5);
+        fs.forEach(function (f) {
+          var st = statusOf(f);
+          add("Forms", "📝", f.title, "#/form/" + f.id, st.key === "soon" ? "Opens " + fmtDateTime(f.openAt) : (f.deadline ? "Closes " + fmtDateTime(f.deadline) : "Open"));
+        });
+        if (!fs.length) add("Forms", "📝", "No open forms right now", "#/clubs", "");
+      }
+      if (/leaderboard|rank|xp|top contributor|badge/i.test(s)) add("Go", "🏆", "Contribution leaderboard", "#/leaderboard");
+      if (/passport|stamp|check.?in|certificate|verify|cert/i.test(s)) {
+        var myCert = (db.certificates || []).find(function (c) { return personKeyOf(c.person) === meKey(); });
+        if (myCert) add("Go", "📜", "Verify my certificate (" + myCert.id + ")", "#/verify/" + myCert.id);
+        add("Go", "🛂", "Club Passport — your stamps", "#/passport");
+      }
+      if (/quiz|which club|fits|match/i.test(s)) add("Go", "🧭", "Which club fits you?", "#/quiz");
+      if (/qna|question|ask|answer|doubt/i.test(s)) add("Go", "💬", "Student Q&A board", "#/questions");
+      if (/notice|announcement|news|update/i.test(s)) add("Go", "📢", "Notice board", "#/notices");
+      if (/dashboard|my|profile|rsvp/i.test(s)) add("Go", "👤", "My dashboard", "#/dashboard");
+      if (/privacy|data|audit|secure/i.test(s)) add("Go", "🔒", "Privacy & transparency", "#/privacy");
+      if (/help|support|complaint|helpdesk|it desk|bug|issue/i.test(s)) add("Go", "🖥", "IT helpdesk / report an issue", "#/it-support");
+      (db.clubs || []).forEach(function (c) {
+        if ((c.name || "").toLowerCase().indexOf(s) !== -1 || (c.short || "").toLowerCase().indexOf(s) !== -1) {
+          add("Clubs", c.icon || "🎓", c.name, "#/club/" + c.id, c.tagline || "");
+        }
+      });
+      if (res.length < 10) {
+        (db.events || []).forEach(function (e) { if ((e.title || "").toLowerCase().indexOf(s) !== -1) add("Events", "📅", e.title, "#/events/" + e.id, fmtDateTime(e.startsAt)); });
+        (db.forms || []).forEach(function (f) { if ((f.title || "").toLowerCase().indexOf(s) !== -1) add("Forms", "📝", f.title, "#/form/" + f.id, ""); });
+        (db.notices || []).forEach(function (n) { if ((n.title || "").toLowerCase().indexOf(s) !== -1) add("Notices", "📢", n.title, "#/notices", relativeAgo(n.createdAt || n.date)); });
+        (db.questions || []).forEach(function (q) { if ((q.title || "").toLowerCase().indexOf(s) !== -1) add("Q&A", "💬", q.title, "#/questions/" + q.id, q.category || ""); });
+      }
+      var seen = {};
+      return res.filter(function (r) { if (seen[r.href]) return false; seen[r.href] = true; return true; }).slice(0, 14);
+    }
+    function paletteHTML() {
+      var q = (state.palette && state.palette.q) || "";
+      var res = paletteResults(q);
+      var sel = (state.palette && state.palette.sel) || 0;
+      var groups = {};
+      res.forEach(function (r) { (groups[r.group] = groups[r.group] || []).push(r); });
+      var idx = 0, html = "";
+      Object.keys(groups).forEach(function (g) {
+        html += '<div class="palette-group">' + esc(g) + "</div>";
+        groups[g].forEach(function (r) {
+          html += '<div class="palette-item' + (idx === sel ? " sel" : "") + '" data-action="palette-go" data-href="' + esc(r.href) + '">' +
+            '<span class="p-icon">' + r.icon + "</span>" +
+            '<span class="p-label">' + esc(r.label) + (r.sub ? "<small>" + esc(r.sub) + "</small>" : "") + "</span></div>";
+          idx++;
+        });
+      });
+      return '<div class="palette-panel" data-action="palette-panel">' +
+        '<div class="palette-input-row"><span class="p-char">⌘K</span>' +
+        '<input id="palette-input" class="palette-input" placeholder="Search clubs, events, forms, notices…  try “events this week” or “deadlines”" value="' + esc(q) + '" autocomplete="off" spellcheck="false">' +
+        '<button type="button" class="palette-esc" data-action="palette-close">ESC</button></div>' +
+        '<div class="palette-groups">' + (html || '<div class="palette-empty">No matches — try “events this week”, “deadlines” or a club name.</div>') + "</div>" +
+        '<div class="palette-foot">↑↓ navigate · ↵ open · esc close</div></div>';
+    }
+    function paletteGo(href) {
+      closePalette();
+      navigate(href.replace(/^#\//, ""));
+    }
+
+    /* ---- Event clash radar ---- */
+    function eventDuration(ev) { return 2 * 3600000; }
+    function eventClashList() {
+      var now = Date.now();
+      var evs = (db.events || []).filter(function (e) {
+        var t = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+        return !isNaN(t) && t >= now;
+      });
+      var out = [];
+      for (var i = 0; i < evs.length; i++) {
+        for (var j = i + 1; j < evs.length; j++) {
+          var a = evs[i], b = evs[j];
+          var as = new Date(a.startsAt).getTime(), ae = as + eventDuration(a);
+          var bs = new Date(b.startsAt).getTime(), be = bs + eventDuration(b);
+          if (as < be && bs < ae) out.push({ a: a, b: b });
+        }
+      }
+      return out;
+    }
+    function clashesFor(id) {
+      return eventClashList().filter(function (c) { return c.a.id === id || c.b.id === id; });
+    }
+    function clashChipsHTML(id) {
+      var cls = clashesFor(id);
+      if (!cls.length) return "";
+      return cls.map(function (c) {
+        var other = c.a.id === id ? c.b : c.a;
+        var oc = clubById(other.clubId);
+        return '<span class="clash-chip">⚠️ Clashes with <a href="#/events/' + esc(other.id) + '">' + esc(other.title) + "</a>" +
+          (oc ? " · " + esc(oc.name) : "") + "</span>";
+      }).join(" ");
+    }
+
+    /* ---- Events list page (with clash radar + filters) ---- */
+    function viewEventsList() {
+      state.eventsTab = state.eventsTab || "all";
+      state.eventsFilter = state.eventsFilter || "";
+      var now = Date.now();
+      var list = upcomingEvents().filter(function (e) {
+        var qq = state.eventsFilter.toLowerCase();
+        if (qq) {
+          var club = clubById(e.clubId);
+          var hay = (e.title + " " + (club ? club.name : "")).toLowerCase();
+          if (hay.indexOf(qq) === -1) return false;
+        }
+        if (state.eventsTab === "week") {
+          var t = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+          if (isNaN(t) || t > now + 7 * 86400000) return false;
+        }
+        if (state.eventsTab === "later") {
+          var t2 = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+          if (isNaN(t2) || t2 <= now + 7 * 86400000) return false;
+        }
+        return true;
+      });
+      var tabs = ["all", "week", "later"].map(function (t) {
+        return '<button class="chip' + (state.eventsTab === t ? " active" : "") + '" data-action="ev-tab" data-tab="' + t + '">' +
+          (t === "all" ? "All upcoming" : t === "week" ? "This week" : "Later") + "</button>";
+      }).join("");
+      var rows = list.map(function (e) {
+        var club = clubById(e.clubId);
+        var clash = clashChipsHTML(e.id);
+        return '<div class="ev-row">' +
+          '<div class="fy-icon" style="background:' + esc(club ? club.color : "#3b82f6") + '">' + esc(club ? club.icon : "📅") + "</div>" +
+          '<div class="ev-body"><b><a href="#/events/' + esc(e.id) + '">' + esc(e.title) + "</a></b>" +
+          '<div class="fy-meta">' + esc(fmtDateTime(e.startsAt)) + (e.venue ? " · " + esc(e.venue) : "") + (club ? " · " + esc(club.name) : "") + "</div>" +
+          (clash ? '<div class="ev-clash">' + clash + "</div>" : "") +
+          "</div>" +
+          '<div class="ev-side">' +
+          '<span class="ev-count">' + (e.rsvps || []).length + (e.capacity ? " / " + e.capacity : "") + " going" +
+          ((e.waitlist && e.waitlist.length) ? " · " + e.waitlist.length + " waitlisted" : "") + "</span>" +
+          '<a class="btn btn-outline btn-sm" href="#/events/' + esc(e.id) + '">View &amp; RSVP</a>' +
+          "</div></div>";
+      }).join("");
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>📅 Events calendar</h1>" +
+        '<p class="lead">Every event across every club, with a clash radar that flags two events landing on the same time — so you never have to choose.</p>' +
+        '</div><div class="hero-side"><div class="hero-card"><h3>Clash radar</h3>' +
+        '<p class="muted" style="font-size:13px">' + eventClashList().length + " clash" + (eventClashList().length === 1 ? "" : "es") + " detected across upcoming events.</p>" +
+        '<ul class="hero-mini-list"><li>Two events overlapping in time are flagged.</li><li>Pick your calendar with both in view.</li></ul>' +
+        "</div></div></div></section>" +
+        '<div class="container" style="padding:24px 0">' +
+        '<div class="filter-chips" style="margin-bottom:10px">' + tabs + "</div>" +
+        '<input class="palette-input ev-search" id="events-filter" placeholder="🔍 Filter events or clubs…" value="' + esc(state.eventsFilter) + '">' +
+        '<div class="section-head" style="margin-top:18px"><div><h2>' + list.length + " upcoming event" + (list.length === 1 ? "" : "s") + "</h2></div></div>" +
+        (rows || '<div class="panel empty-state"><div class="icon">📅</div><p>No events match this view.</p></div>') +
+        "</div>"
+      );
+    }
+
+    /* ---- GitHub-style contribution heatmap ---- */
+    function heatmapData(key) {
+      var days = {};
+      function add(ts) {
+        var d = new Date(ts);
+        if (isNaN(d.getTime())) return;
+        var iso = d.toISOString().slice(0, 10);
+        days[iso] = (days[iso] || 0) + 1;
+      }
+      (db.submissions || []).forEach(function (s) {
+        if (String(s.submitterEmail || s.email || "").toLowerCase() === key && s.submittedAt) add(new Date(s.submittedAt).getTime());
+      });
+      (db.events || []).forEach(function (ev) {
+        (ev.checkIns || []).forEach(function (c) { if (personKeyOf(c) === key && c.at) add(new Date(c.at).getTime()); });
+      });
+      (db.questions || []).forEach(function (q) {
+        (q.answers || []).forEach(function (a) { if (a.authorKey === key && a.createdAt) add(new Date(a.createdAt).getTime()); });
+      });
+      return days;
+    }
+    function heatmapHTML(key) {
+      var days = heatmapData(key);
+      var now = new Date();
+      now.setHours(0, 0, 0, 0);
+      var cursor = new Date(now);
+      cursor.setDate(cursor.getDate() - (26 * 7 - 1));
+      cursor.setDate(cursor.getDate() - cursor.getDay()); // align to Sunday
+      var weeks = [];
+      var total = 0;
+      for (var w = 0; w < 26; w++) {
+        var col = [];
+        for (var d = 0; d < 7; d++) {
+          var iso = cursor.toISOString().slice(0, 10);
+          var n = days[iso] || 0;
+          total += n;
+          col.push(n);
+          cursor.setDate(cursor.getDate() + 1);
+        }
+        weeks.push(col);
+      }
+      var header = "<tr><td></td>" + weeks.map(function (c, i) {
+        var f = new Date(now); f.setDate(f.getDate() - (26 * 7 - 1 - i * 7));
+        var m = f.toLocaleString("en", { month: "short" });
+        return "<td class=\"hm-month\">" + (i % 4 === 0 ? m : "") + "</td>";
+      }).join("") + "</tr>";
+      var rows = "";
+      var dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      for (var r = 0; r < 7; r++) {
+        rows += "<tr><td class=\"hm-day\">" + (r % 2 === 0 ? dayNames[r] : "") + "</td>";
+        for (var w2 = 0; w2 < 26; w2++) {
+          var n2 = weeks[w2][r];
+          var cls = n2 >= 5 ? 4 : (n2 >= 3 ? 3 : (n2 >= 2 ? 2 : (n2 >= 1 ? 1 : 0)));
+          rows += "<td class=\"hm hm" + cls + "\" title=\"" + n2 + " contribution" + (n2 === 1 ? "" : "s") + "\"></td>";
+        }
+        rows += "</tr>";
+      }
+      return '<div class="heatmap-wrap"><table class="hm-grid"><tbody>' + header + rows + "</tbody></table>" +
+        '<div class="hm-legend"><span class="muted" style="font-size:11.5px">' + total + " contribution" + (total === 1 ? "" : "s") + " in the last 26 weeks</span>" +
+        '<span style="margin-left:auto" class="muted" style="font-size:11px">Less</span>' +
+        '<span class="hm hm0"></span><span class="hm hm1"></span><span class="hm hm2"></span><span class="hm hm3"></span><span class="hm hm4"></span>' +
+        '<span class="muted" style="font-size:11px">More</span></div></div>';
+    }
+    function heatmapSectionHTML() {
+      var me = meKey();
+      if (!me) {
+        return '<div class="card" style="margin-top:20px"><h3>🔥 Your year in contribution</h3>' +
+          '<div class="identity-prompt">💡 Sign in or tell us who you are to see your own contribution heatmap.' +
+          '<form id="qa-identity-form" class="stack-sm" style="margin-top:10px">' +
+          '<input type="text" id="qa-i-name" placeholder="Your name" required>' +
+          '<input type="email" id="qa-i-email" placeholder="you@niter.edu.bd" required>' +
+          '<div><button class="btn btn-primary btn-sm" type="submit">Show mine</button></div></form></div></div>';
+      }
+      return '<div class="card" style="margin-top:20px"><h3>🔥 Your year in contribution</h3>' +
+        heatmapHTML(me) +
+        '<p class="muted" style="font-size:12px;margin-top:10px">Counts form submissions, event check-ins and Q&amp;A answers in the last 26 weeks.</p></div>';
+    }
 
     /* ================= Student accounts =================
        Students who filled a club form can sign in on the dashboard.
@@ -7096,6 +8971,31 @@
       else if (e.key === "ArrowRight") { galleryStep(1); e.preventDefault(); }
     });
 
+    /* Command palette: Ctrl/Cmd+K anywhere, arrow keys + Enter inside. */
+    document.addEventListener("keydown", function (e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === "k" || e.key === "K")) {
+        e.preventDefault();
+        if (state.palette) closePalette(); else openPalette();
+        return;
+      }
+      if (!state.palette) return;
+      if (e.key === "Escape") { closePalette(); return; }
+      var res = paletteResults(state.palette.q || "");
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        state.palette.sel = Math.min((state.palette.sel || 0) + 1, Math.max(0, res.length - 1));
+        renderPaletteOverlay();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        state.palette.sel = Math.max((state.palette.sel || 0) - 1, 0);
+        renderPaletteOverlay();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        var r = res[state.palette.sel || 0];
+        if (r) paletteGo(r.href);
+      }
+    });
+
     // Enter / Space toggles a collapsible dashboard section header.
     document.addEventListener("keydown", function (e) {
       var t = e.target;
@@ -7218,12 +9118,94 @@
         });
         save(); render();
         toast("Club created!", "ok");
+      } else if (form.id === "qa-ask-form") {
+        e.preventDefault();
+        var qaNameEl = document.getElementById("qa-i-name");
+        var qaEmailEl = document.getElementById("qa-i-email");
+        if (qaNameEl && qaEmailEl) {
+          var nm = (qaNameEl.value || "").trim();
+          var em = (qaEmailEl.value || "").trim().toLowerCase();
+          if (!nm || !/^\S+@\S+\.\S+$/.test(em)) { toast("Enter your name and a valid email.", "err"); return; }
+          saveQaIdentity(nm, em);
+        }
+        var qaTitle = (document.getElementById("qa-title").value || "").trim();
+        var qaBody = (document.getElementById("qa-body").value || "").trim();
+        if (!qaTitle) { toast("Give your question a title.", "err"); return; }
+        var qaCat = (document.getElementById("qa-category") || {}).value || "Other";
+        var qaAnon = !!((document.getElementById("qa-anon") || {}).checked);
+        var qNew = askQuestion(qaTitle, qaBody, qaCat, qaAnon);
+        state.qaAskOpen = false;
+        render();
+        toast("Question posted!", "ok");
+        navigate("questions/" + qNew.id);
+      } else if (form.id === "qa-answer-form") {
+        e.preventDefault();
+        var qAns = questionById(form.getAttribute("data-q"));
+        if (!qAns) return;
+        var aNameEl = document.getElementById("qa-i-name");
+        var aEmailEl = document.getElementById("qa-i-email");
+        if (aNameEl && aEmailEl) {
+          var nm2 = (aNameEl.value || "").trim();
+          var em2 = (aEmailEl.value || "").trim().toLowerCase();
+          if (!nm2 || !/^\S+@\S+\.\S+$/.test(em2)) { toast("Enter your name and a valid email.", "err"); return; }
+          saveQaIdentity(nm2, em2);
+        }
+        var ansBody = (document.getElementById("qa-answer-body").value || "").trim();
+        if (!ansBody) { toast("Write an answer first.", "err"); return; }
+        var ansAnon = !!((document.getElementById("qa-answer-anon") || {}).checked);
+        addAnswer(qAns, ansBody, ansAnon);
+        render();
+        toast("Answer posted — it earns XP when upvoted.", "ok");
+      } else if (form.id === "warn-form") {
+        e.preventDefault();
+        var qWarn = questionById(form.getAttribute("data-q"));
+        if (!qWarn) return;
+        var wtype = form.getAttribute("data-type") || "question";
+        var wAns = wtype === "answer" ? answerById(qWarn, form.getAttribute("data-a")) : null;
+        var wReason = (document.getElementById("warn-reason") || {}).value || "Other";
+        var wNote = ((document.getElementById("warn-note") || {}).value || "").trim();
+        warnContent(wtype, qWarn, wAns, wReason, wNote);
+        state.warnTarget = null;
+        render();
+        toast("Warning issued and audit-logged.", "ok");
+      } else if (form.id === "checkin-form") {
+        e.preventDefault();
+        var evCheck = eventById(form.getAttribute("data-event"));
+        if (!evCheck) return;
+        var checkEmail = (document.getElementById("checkin-email").value || "").trim();
+        var checkName = (document.getElementById("checkin-name").value || "").trim();
+        var cert = checkInPerson(evCheck, checkEmail, checkName);
+        render();
+        if (cert) toast("Checked in — certificate " + cert.id + " issued.", "ok");
+      } else if (form.id === "qa-identity-form") {
+        e.preventDefault();
+        var idName = (document.getElementById("qa-i-name").value || "").trim();
+        var idEmail = (document.getElementById("qa-i-email").value || "").trim().toLowerCase();
+        if (!idName || !/^\S+@\S+\.\S+$/.test(idEmail)) { toast("Enter your name and a valid email.", "err"); return; }
+        saveQaIdentity(idName, idEmail);
+        render();
+        toast("Thanks, " + idName + "!", "ok");
       }
     });
 
     /* Input delegation: form builder + club filter + notice search */
     document.addEventListener("input", function (e) {
       var t = e.target;
+      if (t.matches && t.matches("#palette-input")) {
+        state.palette.q = t.value;
+        state.palette.sel = 0;
+        renderPaletteOverlay();
+        return;
+      }
+      if (t.matches && t.matches("#events-filter")) {
+        state.eventsFilter = t.value;
+        var evRows = document.querySelectorAll(".ev-row");
+        var qq = t.value.toLowerCase();
+        for (var k2 = 0; k2 < evRows.length; k2++) {
+          evRows[k2].style.display = evRows[k2].textContent.toLowerCase().indexOf(qq) !== -1 ? "" : "none";
+        }
+        return;
+      }
       if (t.matches && t.matches("#club-filter")) {
         state.clubsFilter = t.value;
         var grid = document.getElementById("club-grid");
