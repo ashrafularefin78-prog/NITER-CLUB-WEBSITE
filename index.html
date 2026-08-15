@@ -1268,8 +1268,50 @@
     .hm-day { font-size: 9.5px; color: var(--muted); padding-right: 4px; }
     .hm-month { font-size: 9.5px; color: var(--muted); text-align: left; }
     .hm-legend { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
+    .announcement-bar { background: linear-gradient(90deg, #f59e0b, #fbbf24); color: #451a03; font-size: 13px; font-weight: 700; padding: 8px 0; text-align: center; }
+    .announcement-bar .container { padding-left: 16px; padding-right: 16px; }
+    .announcement-bar a { color: #451a03; text-decoration: underline; }
+    .rsvp-strip { margin-top: 0; }
+    /* ---- Community & intelligence layer ---- */
+    .follow-btn { margin-left: 10px; }
+    .similar-grid { display: flex; flex-direction: column; gap: 8px; }
+    .similar-card { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid #e5e7eb; border-radius: 10px; text-decoration: none; color: var(--ink); }
+    .similar-card:hover { border-color: var(--gold); }
+    .similar-card b { font-size: 13px; display: block; }
+    .similar-card small { display: block; color: var(--muted); font-size: 11.5px; }
+    .feed-list { display: flex; flex-direction: column; gap: 8px; }
+    .feed-item { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px 12px; text-decoration: none; color: var(--ink); }
+    .feed-item:hover { border-color: var(--gold); }
+    .feed-body { flex: 1; min-width: 0; }
+    .feed-body b { font-size: 13.5px; display: block; }
+    .feed-body small { color: var(--muted); font-size: 11.5px; }
+    .poll-card { background: var(--surface); border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+    .poll-opt { display: block; width: 100%; text-align: left; background: none; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; margin-bottom: 6px; font-size: 13.5px; cursor: pointer; color: var(--ink); }
+    .poll-opt:hover { border-color: var(--gold); background: #fffbeb; }
+    .poll-bar { height: 8px; background: #e5e7eb; border-radius: 999px; overflow: hidden; margin: 3px 0; }
+    .poll-bar-fill { height: 100%; background: var(--navy); border-radius: 999px; }
+    .poll-mine { color: #b45309; font-weight: 700; }
+    .poll-row { margin-bottom: 8px; }
+    .an-bars { display: flex; flex-direction: column; gap: 8px; }
+    .an-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .an-label { width: 150px; flex: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .an-track { flex: 1; height: 10px; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
+    .an-fill { height: 100%; border-radius: 999px; }
+    .an-val { width: 40px; text-align: right; font-weight: 700; flex: none; }
 
-  </style>
+      /* ---- Content & trust layer ---- */
+    .ev-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .ev-tag { font-size: 11px; font-weight: 700; background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; padding: 2px 8px; border-radius: 999px; }
+    .verified-chip { display: inline-block; font-size: 10.5px; font-weight: 800; color: #047857; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 999px; margin-left: 8px; vertical-align: middle; }
+    .mod-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+    .mod-body { flex: 1; min-width: 0; }
+    .mod-body b { font-size: 13px; display: block; }
+    .mod-body small { display: block; color: var(--muted); font-size: 11.5px; }
+    .tag-picker { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; }
+    .tag-picker label { cursor: pointer; }
+    .tag-picker input { width: auto; height: auto; }
+
+</style>
   <script>try{if(localStorage.getItem("niter-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark");}}catch(e){}</script>
 </head>
 <body>
@@ -1291,6 +1333,7 @@
           <a href="#/questions" data-nav="questions">Q&A</a>
           <a href="#/leaderboard" data-nav="leaderboard">🏆 Ranks</a>
           <a href="#/foryou" data-nav="foryou">✨ For You</a>
+          <a href="#/following" data-nav="following">👥 Following</a>
           <a href="#/dashboard" data-nav="dashboard" id="nav-dashboard" style="display:none">My Dashboard</a>
           <a href="#/portal" data-nav="portal" id="nav-cta" class="nav-cta" title="Member Portal" aria-label="Member Portal">
             <span class="nav-avatar" id="nav-avatar" aria-hidden="true">👤</span>
@@ -1300,6 +1343,8 @@
       </div>
     </div>
   </header>
+
+  <div id="announcement-bar" class="announcement-bar" style="display:none"></div>
 
   <main id="app"><!-- views render here --></main>
 
@@ -1324,6 +1369,7 @@
             <li><a href="#/passport">🛂 Club Passport</a></li>
             <li><a href="#/quiz">🧭 Which club fits you?</a></li>
             <li><a href="#/foryou">✨ For You</a></li>
+            <li><a href="#/following">👥 Following</a></li>
             <li><a href="#/notifications">🔔 Notifications</a></li>
             <li><a href="#/events">📅 Events calendar</a></li>
             <li><a href="#/privacy">🔒 Privacy &amp; data</a></li>
@@ -1414,6 +1460,7 @@
         short: "NCC",
         icon: "💻",
         color: "#3b82f6",
+        verified: true,
         tagline: "Where innovation meets code.",
         about:
           "The NITER Computer Club (NCC) is the home of programmers, developers and tech enthusiasts at NITER. We organize programming contests, coding bootcamps, tech talks, hackathons and workshops on web development, AI and competitive programming to sharpen the technical skills of students.",
@@ -1461,6 +1508,7 @@
         short: "NSS",
         icon: "🔬",
         color: "#0d9488",
+        verified: true,
         tagline: "Think, question, discover.",
         about:
           "NITER Science Society promotes scientific thinking and research culture among students. We run science fairs, olympiads, model exhibitions, seminars on emerging science and opportunities for undergraduate research.",
@@ -1593,6 +1641,7 @@
         short: "NRC",
         icon: "🤖",
         color: "#475569",
+        verified: true,
         tagline: "Build, program, compete.",
         about:
           "The NITER Robotics Club brings together students passionate about robotics, electronics and automation. Members learn to build and program robots through workshops, and compete in national and international robotics contests.",
@@ -1944,31 +1993,31 @@
         id: "e1", clubId: "computer-club",
         title: "Web Development Bootcamp — Week 1",
         description: "Hands-on HTML, CSS and JavaScript with live coding. Bring your laptop — seats are limited and certificates are provided.",
-        startsAt: daysAheadAt(4, 15, 0), venue: "Room 401, Academic Building", capacity: 60, createdBy: "", createdAt: daysAgoAt(1, 10, 0)
+        startsAt: daysAheadAt(4, 15, 0), venue: "Room 401, Academic Building", capacity: 60, tags: ["free-food", "certificate", "hands-on", "beginner"], createdBy: "", createdAt: daysAgoAt(1, 10, 0)
       },
       {
         id: "e2", clubId: "science-society",
         title: "Science Fair 2026 — Project Submission Deadline",
         description: "Submit your physics, chemistry, biology or math project for the annual science fair. Top projects advance to the national round.",
-        startsAt: daysAheadAt(7, 14, 0), venue: "Main Hall, Science Building", capacity: 120, createdBy: "", createdAt: daysAgoAt(2, 11, 0)
+        startsAt: daysAheadAt(7, 14, 0), venue: "Main Hall, Science Building", capacity: 120, tags: ["certificate", "contest"], createdBy: "", createdAt: daysAgoAt(2, 11, 0)
       },
       {
         id: "e3", clubId: "career-club",
         title: "CV Clinic & Mock Interviews",
         description: "Get your CV reviewed by HR professionals and practice real interview questions in small groups. Bring a printed copy of your CV.",
-        startsAt: daysAheadAt(2, 16, 0), venue: "Room 308, Academic Building", capacity: 40, createdBy: "", createdAt: daysAgoAt(3, 9, 30)
+        startsAt: daysAheadAt(2, 16, 0), venue: "Room 308, Academic Building", capacity: 40, tags: ["certificate", "free-food"], createdBy: "", createdAt: daysAgoAt(3, 9, 30)
       },
       {
         id: "e4", clubId: "robotics-club",
         title: "Line Follower Robot Workshop",
         description: "Assemble and program your own line-follower robot in one day. All components provided — participants keep their robot.",
-        startsAt: daysAheadAt(10, 10, 0), venue: "Robotics Lab, Room 505", capacity: 30, createdBy: "", createdAt: daysAgoAt(4, 12, 0)
+        startsAt: daysAheadAt(10, 10, 0), venue: "Robotics Lab, Room 505", capacity: 30, tags: ["hands-on", "workshop"], createdBy: "", createdAt: daysAgoAt(4, 12, 0)
       },
       {
         id: "e5", clubId: "cultural-club",
         title: "Annual Cultural Program — Auditions",
         description: "Auditions for the grand annual cultural program. Open to singers, dancers, actors, reciters and instrumentalists.",
-        startsAt: daysAheadAt(3, 17, 0), venue: "Auditorium", capacity: 80, createdBy: "", createdAt: daysAgoAt(1, 15, 45)
+        startsAt: daysAheadAt(3, 17, 0), venue: "Auditorium", capacity: 80, tags: ["free-food"], createdBy: "", createdAt: daysAgoAt(1, 15, 45)
       },
       {
         id: "e6", clubId: "games-sports-club",
@@ -2335,6 +2384,14 @@
 
     var seed = {
       version: 1,
+      config: {
+        institute: "National Institute of Textile Engineering and Research (NITER)",
+        established: "2009",
+        heroTitle: "Every club at NITER,",
+        heroAccent: "one portal.",
+        heroSub: "Discover notices, register for events, join clubs, and fill forms — all in one place. Club executives can post notices and publish membership forms in seconds.",
+        announcement: "🎉 New — try the ⌘K command palette (Ctrl/Cmd+K), the ✨ For You feed and the notification bell — all live and personalised."
+      },
       clubs: clubs,
       notices: notices,
       forms: forms,
@@ -2426,11 +2483,12 @@
         if (!Array.isArray(ev.checkIns)) ev.checkIns = [];
       });
       // New collections — student Q&A, moderation warnings, audit trail,
-      // certificates. Backfilled so older stored databases never break.
+      // certificates, live polls. Backfilled so older databases never break.
       if (!Array.isArray(d.questions)) d.questions = [];
       if (!Array.isArray(d.warnings)) d.warnings = [];
       if (!Array.isArray(d.auditLog)) d.auditLog = [];
       if (!Array.isArray(d.certificates)) d.certificates = [];
+      if (!Array.isArray(d.polls)) d.polls = [];
       (d.questions || []).forEach(function (q) {
         if (!Array.isArray(q.answers)) q.answers = [];
         if (!q.status) q.status = "open";
@@ -2493,11 +2551,20 @@
         if (f.deadline && f.deadline.length === 10) f.deadline += "T23:59";
         ensureStandardFields(f);
       });
+      // Live site config — hero copy, stats and the announcement strip.
+      // Backfilled so older stored databases never break.
+      if (!d.config || typeof d.config !== "object") d.config = {};
+      if (!d.config.institute) d.config.institute = "National Institute of Textile Engineering and Research (NITER)";
+      if (!d.config.established) d.config.established = "2009";
+      if (!d.config.heroTitle) d.config.heroTitle = "Every club at NITER,";
+      if (!d.config.heroAccent) d.config.heroAccent = "one portal.";
+      if (!d.config.heroSub) d.config.heroSub = "Discover notices, register for events, join clubs, and fill forms — all in one place. Club executives can post notices and publish membership forms in seconds.";
+      if (d.config.announcement == null) d.config.announcement = "";
       return d;
     }
 
     /* ---------------- Persistence + Firebase sync ---------------- */
-    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events", "ads", "questions", "warnings", "auditLog", "certificates"];
+    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events", "ads", "questions", "warnings", "auditLog", "certificates", "polls"];
     var RESTRICTED_COLLECTIONS = ["submissions", "complaints", "memberships", "warnings", "auditLog"]; // only readable by club staff (or the student themselves for memberships)
     var currentDb = null;   // the db object the app is currently using
     var lastSynced = null;  // snapshot of the last known cloud state
@@ -3199,6 +3266,7 @@
         "open-forms": function () { return db.forms.filter(isOpen).length; },
         "soon-forms": function () { return db.forms.filter(function (f) { return statusOf(f).key === "soon"; }).length; },
         "week-notices": function () { var wa = Date.now() - 7 * 86400000; return db.notices.filter(function (n) { return new Date(n.createdAt || n.date).getTime() >= wa; }).length; },
+        events: function () { return db.events.length; },
         subs: function () { return db.submissions.length; },
         reactions: function () { return db.notices.reduce(function (sum, n) { return sum + Object.keys(n.reactions || {}).reduce(function (s2, k) { return s2 + (n.reactions[k] || 0); }, 0); }, 0); }
       };
@@ -3370,6 +3438,8 @@
         app.innerHTML = viewForYou();
       } else if (parts[0] === "notifications") {
         app.innerHTML = viewNotifications();
+      } else if (parts[0] === "following") {
+        app.innerHTML = viewFollowing();
       } else if (parts[0] === "privacy") {
         app.innerHTML = viewPrivacy();
       } else if (parts[0] === "events") {
@@ -3412,6 +3482,8 @@
         document.title = "For You — NITER Clubs Portal";
       } else if (parts[0] === "notifications") {
         document.title = "Notifications — NITER Clubs Portal";
+      } else if (parts[0] === "following") {
+        document.title = "Following — NITER Clubs Portal";
       } else if (parts[0] === "passport") {
         document.title = "Club Passport — NITER Clubs Portal";
       } else if (parts[0] === "quiz") {
@@ -3426,6 +3498,7 @@
         document.title = titles[parts[0]] || "NITER Clubs Portal — One portal for every club";
       }
       tick();
+      updateAnnouncementBar();
       window.scrollTo(0, 0);
       // Club-page sign-in popup — drawn over the club page that rendered above.
       var gateEl = document.querySelector(".gate-screen");
@@ -3526,6 +3599,7 @@
         '<div class="event-body">' +
         "<h3>" + esc(e.title) + "</h3>" +
         '<p class="f-desc">' + esc(e.description || "") + "</p>" +
+        eventTagsHTML(e) +
         '<div class="event-meta">' +
         '<span>🕒 ' + esc(when) + "</span>" +
         (e.venue ? '<span>📍 ' + esc(e.venue) + "</span>" : "") +
@@ -3625,6 +3699,29 @@
       var weekAgo = Date.now() - 7 * 86400000;
       var weekNotices = db.notices.filter(function (n) { return new Date(n.createdAt || n.date).getTime() >= weekAgo; }).length;
 
+      // Live site identity — admins edit it in portal → Settings → Site settings.
+      var cfg = siteConfig();
+      // Personal strip: the signed-in student's upcoming RSVPs, derived live.
+      var meNow = meKey();
+      var myRsvps = [];
+      if (meNow) {
+        myRsvps = (db.events || []).filter(function (ev) {
+          if ((ev.rsvps || []).indexOf(meNow) === -1) return false;
+          var t = ev.startsAt ? new Date(ev.startsAt).getTime() : NaN;
+          return isNaN(t) || t >= Date.now() - 3600000;
+        }).sort(function (a, b) { return (a.startsAt || "").localeCompare(b.startsAt || ""); }).slice(0, 4);
+      }
+      var rsvpStrip = "";
+      if (meNow) {
+        rsvpStrip = '<section class="section"><div class="container">' +
+          '<div class="section-head"><div><h2>🎟 Your RSVPs</h2>' +
+          '<p class="sub">' + (myRsvps.length ? "Events you are signed up for — arrive on time to get checked in and earn your certificate." : "No upcoming RSVPs yet — browse the calendar and grab a spot.") + "</p></div>" +
+          (myRsvps.length ? '<a class="link" href="#/events">All events →</a>' : '<a class="btn btn-outline btn-sm" href="#/events">Browse events →</a>') +
+          "</div>" +
+          (myRsvps.length ? '<div class="event-grid">' + myRsvps.map(function (e) { return eventCardHTML(e, true); }).join("") + "</div>" : "") +
+          "</div></section>";
+      }
+
       var heroNotices = latest.map(function (n) {
         var club = clubById(n.clubId);
         return '<li><span class="dot">' + esc(club ? club.icon : "📢") + "</span>" +
@@ -3635,8 +3732,8 @@
       return (
         '<section class="hero"><div class="container hero-grid">' +
         "<div>" +
-        "<h1>One portal for every club at <span class='accent'>NITER</span>.</h1>" +
-        '<p class="lead">Discover notices, register for events, join clubs, and fill forms — all in one place. Club executives can post notices and publish membership forms in seconds.</p>' +
+        "<h1>" + esc(cfg.heroTitle) + " <span class='accent'>" + esc(cfg.heroAccent) + "</span></h1>" +
+        '<p class="lead">' + esc(cfg.heroSub) + "</p>" +
         '<div class="flex flex-wrap">' +
         '<a class="btn btn-primary" href="#/clubs">Explore Clubs →</a>' +
         "</div>" +
@@ -3655,13 +3752,19 @@
         "</section>" +
         adsCarouselHTML() +
         '<div class="container"><div class="stats-strip">' +
+        '<div class="stat-card"><span class="sc-icon">🏛️</span><div><b>' + esc(cfg.established) + '</b><span class="live-label">established</span></div></div>' +
+        '<div class="stat-card" data-live-stat="events" data-live-one="event hosted" data-live-many="events hosted"><span class="sc-icon">🎪</span><div><b>' + db.events.length + '</b><span class="live-label">events hosted</span></div></div>' +
         '<div class="stat-card" data-live-stat="open-forms" data-live-one="form open now" data-live-many="forms open now"><span class="sc-icon">📝</span><div><b>' + db.forms.filter(isOpen).length + '</b><span class="live-label">forms open now</span></div></div>' +
         '<div class="stat-card" data-live-stat="subs" data-live-one="total submission" data-live-many="total submissions"><span class="sc-icon">📥</span><div><b class="live-count">' + totalSubs + '</b><span class="live-label">total submissions</span></div></div>' +
         '<div class="stat-card" data-live-stat="week-notices" data-live-one="notice this week" data-live-many="notices this week"><span class="sc-icon">📢</span><div><b>' + weekNotices + '</b><span class="live-label">notices this week</span></div></div>' +
         '<div class="stat-card" data-live-stat="reactions" data-live-one="reaction" data-live-many="reactions"><span class="sc-icon">💬</span><div><b>' + totalReactions + '</b><span class="live-label">reactions</span></div></div>' +
         "</div></div>" +
 
+        rsvpStrip +
+
         digestHTML() +
+
+        trendingSectionHTML() +
 
         '<section class="section"><div class="container">' +
         '<div class="section-head"><div><h2>Our clubs</h2><p class="sub">Find your community — every club at NITER in one place.</p></div>' +
@@ -4017,8 +4120,10 @@
       return (
         '<div class="page-hero" style="background:linear-gradient(120deg,#002147,' + esc(c.color) + ')"><div class="container">' +
         '<div class="crumbs"><a href="#/">Home</a> / <a href="#/clubs">Clubs</a> / ' + esc(c.name) + "</div>" +
-        '<div class="flex" style="gap:16px"><span style="font-size:44px">' + esc(c.icon) + "</span>" +
-        "<div><h1>" + esc(c.name) + "</h1><p class='tagline'>" + esc(c.tagline) + "</p></div></div>" +
+        '<div class="flex" style="gap:16px;align-items:center"><span style="font-size:44px">' + esc(c.icon) + "</span>" +
+        "<div><h1>" + esc(c.name) + verifiedChipHTML(c) + "</h1><p class='tagline'>" + esc(c.tagline) + "</p></div>" +
+        followButtonHTML(c.id) +
+        "</div>" +
         "</div></div>" +
 
         '<section class="section"><div class="container">' +
@@ -4049,6 +4154,8 @@
           : '<div class="empty-state"><div class="icon">📅</div><p>No upcoming events posted yet.</p></div>') +
         "</div>" +
 
+        clubPollsPanelHTML(c) +
+
         "</div>" +
         '<div class="detail-side">' +
 
@@ -4067,6 +4174,8 @@
         '<div class="panel"><h3>📮 Complaint box</h3>' +
       '<p class="muted small mb-2">Something wrong with this club\u2019s events, forms or members? File a confidential complaint — the executives will review it.</p>' +
       '<a class="btn btn-outline btn-block btn-sm" href="#/complaint/' + esc(c.id) + '">File a complaint</a></div>' +
+
+      similarClubsHTML(c.id) +
 
       '<div class="panel"><h3>Contact & info</h3><ul class="info-list">' +
         '<li><span class="k">Email</span><span>' + esc(c.email || "—") + "</span></li>" +
@@ -4833,6 +4942,9 @@
         { key: "events", label: "📅 Events" },
         { key: "ads", label: "📣 Ads" },
         { key: "complaints", label: "📮 Complaints" },
+        { key: "polls", label: "🗳️ Polls" },
+        { key: "analytics", label: "📊 Analytics" },
+        { key: "moderation", label: "🛡️ Moderation" },
         { key: "settings", label: "⚙️ Settings" }
       ];
 
@@ -4845,6 +4957,7 @@
         if (t.key === "events") count = clubEvents(club.id).length;
         if (t.key === "ads") count = (db.ads || []).filter(function (a) { return a.clubId === club.id && a.status === "active"; }).length;
         if (t.key === "complaints") count = db.complaints.filter(function (c) { return c.clubId === club.id; }).length;
+        if (t.key === "polls") count = pollsFor(club.id).filter(function (p) { return p.open; }).length;
         return '<button class="tab' + (tab === t.key ? " active" : "") + '" data-action="portal-tab" data-tab="' + t.key + '">' +
           t.label + (count ? '<span class="count">' + count + "</span>" : "") + "</button>";
       }).join("");
@@ -4857,6 +4970,9 @@
       else if (tab === "events") content = portalEvents(club);
       else if (tab === "ads") content = portalAds(club);
       else if (tab === "complaints") content = portalComplaints(club);
+      else if (tab === "polls") content = portalPolls(club);
+      else if (tab === "analytics") content = portalAnalytics(club);
+      else if (tab === "moderation") content = portalModeration(club);
       else content = portalSettings(club);
 
       return (
@@ -5468,7 +5584,26 @@
           '<span style="display:inline-block;width:26px;height:26px;border-radius:8px;background:' + col + ';vertical-align:middle;margin-left:4px"></span></label>';
       }).join("");
 
+      // Admin-only: the site-wide identity (hero, stats band, announcement strip).
+      var sitePanel = "";
+      if (isPortalAdmin()) {
+        var scfg = siteConfig();
+        sitePanel = '<div class="panel">' +
+          '<div class="portal-toolbar mb-2"><h2>🌐 Site settings</h2></div>' +
+          '<p class="muted small mb-2">The homepage hero, stats band and announcement strip — saved instantly, synced to the cloud config doc and audit-logged.</p>' +
+          '<form id="site-config-form" class="portal-form">' +
+          '<div class="field"><label>Institute name</label><input type="text" id="scfg-institute" value="' + esc(scfg.institute) + '"></div>' +
+          '<div class="two-col"><div class="field"><label>Established year</label><input type="text" id="scfg-established" value="' + esc(scfg.established) + '"></div>' +
+          '<div class="field"><label>Hero title</label><input type="text" id="scfg-hero-title" value="' + esc(scfg.heroTitle) + '"></div></div>' +
+          '<div class="field"><label>Hero accent (gold word)</label><input type="text" id="scfg-hero-accent" value="' + esc(scfg.heroAccent) + '"></div>' +
+          '<div class="field"><label>Hero subtitle</label><textarea id="scfg-hero-sub" rows="2">' + esc(scfg.heroSub) + '</textarea></div>' +
+          '<div class="field"><label>Announcement strip (leave empty to hide)</label><textarea id="scfg-announcement" rows="2">' + esc(scfg.announcement) + '</textarea></div>' +
+          '<button class="btn btn-primary" type="submit">Save site settings</button>' +
+          '</form></div>';
+      }
+
       return (
+        sitePanel +
         '<div class="panel">' +
         '<div class="portal-toolbar mb-2"><h2>Add a new club</h2></div>' +
         '<p class="muted small mb-2">Did we miss a society? Add it and it appears on the homepage instantly.</p>' +
@@ -7048,7 +7183,48 @@
       "palette-backdrop": function (el, e) { if (e && e.target === el) closePalette(); },
       "palette-go": function (el) { paletteGo(el.getAttribute("data-href")); },
       "nav-notif": function () { navigate("notifications"); },
-      "ev-tab": function (el) { state.eventsTab = el.getAttribute("data-tab"); render(); }
+      "ev-tab": function (el) { state.eventsTab = el.getAttribute("data-tab"); render(); },
+      "follow-club": function (el) {
+        var cid = el.getAttribute("data-id");
+        if (!cid) return;
+        var on = toggleFollow(cid);
+        render();
+        var cname = clubById(cid) ? clubById(cid).name : "this club";
+        toast(on ? "Following " + cname + " — see it in your feed." : "Unfollowed — removed from your feed.", "ok");
+      },
+      "poll-vote": function (el) {
+        var p = pollById(el.getAttribute("data-id"));
+        if (p) { castPollVote(p, Number(el.getAttribute("data-idx") || 0)); render(); }
+      },
+      "poll-new": function () { state.pollEditing = true; render(); },
+      "poll-cancel": function () { state.pollEditing = false; render(); },
+      "poll-toggle": function (el) {
+        var p = pollById(el.getAttribute("data-id"));
+        if (!p) return;
+        setPollOpen(p, !p.open);
+        render();
+        toast(p.open ? "Poll reopened." : "Poll closed — results locked.", "ok");
+      },
+      "poll-del": function (el) {
+        var p = pollById(el.getAttribute("data-id"));
+        if (!p) return;
+        if (!confirm("Delete this poll and all its votes?")) return;
+        deletePoll(p);
+        render();
+        toast("Poll deleted.", "ok");
+      },
+      "ev-tag": function (el) {
+        state.eventsTag = el.getAttribute("data-tag") || "";
+        render();
+      },
+      "club-verify": function (el) {
+        if (!isPortalAdmin()) { toast("Only admins can change the verified badge.", "err"); return; }
+        var c = clubById(state.session.clubId);
+        if (!c) return;
+        toggleClubVerified(c);
+        render();
+        toast(c.verified ? "This club is now verified — the badge shows site-wide." : "Verified badge removed.", "ok");
+      }
     };
 
     /* ================= New: student Q&A board =================
@@ -7521,7 +7697,8 @@
       }).join("");
       return '<section class="section alt"><div class="container">' +
         '<div class="section-head"><div><h2>🗓 This week at NITER</h2>' +
-        '<p class="sub">Events, form deadlines and new notices — everything happening in the next 7 days.</p></div></div>' +
+        '<p class="sub">Events, form deadlines and new notices — everything happening in the next 7 days.</p></div>' +
+        '<div>' + digestMailtoHTML() + "</div></div>" +
         '<div class="digest-grid">' +
         col("📅 Events", evs.length, evCol, "No events this week — check the calendar.") +
         col("⏳ Deadlines", dls.length, dlCol, "No form deadlines this week.") +
@@ -8414,6 +8591,37 @@
       if (/dashboard|my|profile|rsvp/i.test(s)) add("Go", "👤", "My dashboard", "#/dashboard");
       if (/privacy|data|audit|secure/i.test(s)) add("Go", "🔒", "Privacy & transparency", "#/privacy");
       if (/help|support|complaint|helpdesk|it desk|bug|issue/i.test(s)) add("Go", "🖥", "IT helpdesk / report an issue", "#/it-support");
+      // Natural language: "next robotics meetup", "which clubs are recruiting"…
+      var nm = s.match(/^(?:next |when.?s the next |upcoming )?([a-z][a-z0-9 ]+?)(?: (?:meetup|event|workshop|seminar|talk|session|meeting|hackathon))?$/);
+      if (nm) {
+        var target = nm[1].trim();
+        var cHit = (db.clubs || []).filter(function (c) { return (c.name + " " + (c.short || "")).toLowerCase().indexOf(target) !== -1; })[0];
+        if (cHit) {
+          var nxt = upcomingEvents().filter(function (e) { return e.clubId === cHit.id; })[0];
+          if (nxt) add("Events", "📅", nxt.title + " — " + cHit.name, "#/events/" + nxt.id, fmtDateTime(nxt.startsAt));
+          else add("Events", "📅", "No upcoming events from " + cHit.name + " yet", "#/club/" + cHit.id, "");
+        }
+      }
+      if (/recruit|open membership|accepting|apply now|joining now/i.test(s)) {
+        var rec = (db.forms || []).filter(function (f) { return /membership|join|recruit/i.test(f.title) && statusOf(f).key !== "closed"; }).slice(0, 4);
+        rec.forEach(function (f) {
+          var rc = clubById(f.clubId);
+          add("Recruiting now", "🤝", f.title, "#/form/" + f.id, (rc ? rc.name + " · " : "") + (statusOf(f).key === "soon" ? "opens soon" : "open now"));
+        });
+        if (!rec.length) add("Recruiting now", "🤝", "No open membership drives right now", "#/clubs", "");
+      }
+      if (/clubs? like|similar to|similar/i.test(s)) {
+        var t2 = s.replace(/.*(?:clubs? like|similar to|similar)\s*/i, "").trim().toLowerCase();
+        var hit2 = (db.clubs || []).filter(function (c) { return (c.name + " " + (c.short || "")).toLowerCase().indexOf(t2) !== -1; })[0];
+        if (hit2) similarClubs(hit2.id, 4).forEach(function (sc) { add("Similar clubs", sc.icon, sc.name, "#/club/" + sc.id, sc.tagline || ""); });
+      }
+      if (/poll|vote|election/i.test(s)) {
+        var openP = (db.polls || []).filter(function (p) { return p.open; }).slice(0, 4);
+        openP.forEach(function (p) { var pc = clubById(p.clubId); add("Polls", "🗳️", p.question, "#/club/" + p.clubId, (pc ? pc.name + " · " : "") + "open"); });
+        if (!openP.length) add("Polls", "🗳️", "No open polls right now", "#/clubs", "");
+      }
+      if (/follow|feed|following|my clubs/i.test(s)) add("Go", "👥", "Your following feed", "#/following");
+      if (/analytics|growth|attendance|statistics|stats/i.test(s)) add("Go", "📊", "Portal analytics", "#/portal");
       (db.clubs || []).forEach(function (c) {
         if ((c.name || "").toLowerCase().indexOf(s) !== -1 || (c.short || "").toLowerCase().indexOf(s) !== -1) {
           add("Clubs", c.icon || "🎓", c.name, "#/club/" + c.id, c.tagline || "");
@@ -8509,12 +8717,18 @@
           var t2 = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
           if (isNaN(t2) || t2 <= now + 7 * 86400000) return false;
         }
+        if (state.eventsTag && (e.tags || []).indexOf(state.eventsTag) === -1) return false;
         return true;
       });
       var tabs = ["all", "week", "later"].map(function (t) {
         return '<button class="chip' + (state.eventsTab === t ? " active" : "") + '" data-action="ev-tab" data-tab="' + t + '">' +
           (t === "all" ? "All upcoming" : t === "week" ? "This week" : "Later") + "</button>";
       }).join("");
+      var tagChips = ['<button class="chip' + (state.eventsTag === "" ? " active" : "") + '" data-action="ev-tag" data-tag="">All tags</button>'].concat(
+        EVENT_TAGS.map(function (t) {
+          return '<button class="chip' + (state.eventsTag === t.key ? " active" : "") + '" data-action="ev-tag" data-tag="' + esc(t.key) + '">' + esc(t.label) + "</button>";
+        })
+      ).join("");
       var rows = list.map(function (e) {
         var club = clubById(e.clubId);
         var clash = clashChipsHTML(e.id);
@@ -8540,6 +8754,7 @@
         "</div></div></div></section>" +
         '<div class="container" style="padding:24px 0">' +
         '<div class="filter-chips" style="margin-bottom:10px">' + tabs + "</div>" +
+        '<div class="filter-chips" style="margin-bottom:10px">' + tagChips + "</div>" +
         '<input class="palette-input ev-search" id="events-filter" placeholder="🔍 Filter events or clubs…" value="' + esc(state.eventsFilter) + '">' +
         '<div class="section-head" style="margin-top:18px"><div><h2>' + list.length + " upcoming event" + (list.length === 1 ? "" : "s") + "</h2></div></div>" +
         (rows || '<div class="panel empty-state"><div class="icon">📅</div><p>No events match this view.</p></div>') +
@@ -8623,6 +8838,456 @@
         heatmapHTML(me) +
         '<p class="muted" style="font-size:12px;margin-top:10px">Counts form submissions, event check-ins and Q&amp;A answers in the last 26 weeks.</p></div>';
     }
+
+    /* ---- Live site config: hero copy, stats band and announcement strip ---- */
+    function siteConfig() {
+      var c = db.config || {};
+      return {
+        institute: c.institute || "National Institute of Textile Engineering and Research (NITER)",
+        established: c.established || "2009",
+        heroTitle: c.heroTitle || "Every club at NITER,",
+        heroAccent: c.heroAccent || "one portal.",
+        heroSub: c.heroSub || "Discover notices, register for events, join clubs, and fill forms — all in one place. Club executives can post notices and publish membership forms in seconds.",
+        announcement: c.announcement || ""
+      };
+    }
+    function pushSiteConfig() {
+      var dbRef = cloudDb();
+      if (!dbRef || !db.config) return;
+      dbRef.collection("config").doc("site").set({
+        institute: db.config.institute || "",
+        established: db.config.established || "",
+        heroTitle: db.config.heroTitle || "",
+        heroAccent: db.config.heroAccent || "",
+        heroSub: db.config.heroSub || "",
+        announcement: db.config.announcement || ""
+      }).catch(function () { /* best-effort sync — offline demo keeps local copy */ });
+    }
+    function updateAnnouncementBar() {
+      var el = document.getElementById("announcement-bar");
+      if (!el) return;
+      var txt = siteConfig().announcement;
+      el.style.display = txt ? "" : "none";
+      el.innerHTML = txt ? '<div class="container">' + esc(txt) + "</div>" : "";
+    }
+
+    /* ================= Community & intelligence layer =================
+       Follow clubs for a unified activity feed, "clubs like this"
+       suggestions, live polls, a portal analytics dashboard and smarter
+       command-palette intents. Everything is derived from the same data;
+       the only per-browser state is the follow list (localStorage). */
+
+    /* ---- Follow clubs (per-browser) ---- */
+    var FOLLOWS_KEY = "niter-follows";
+    function follows() { try { return JSON.parse(localStorage.getItem(FOLLOWS_KEY) || "[]"); } catch (e) { return []; } }
+    function saveFollows(list) { try { localStorage.setItem(FOLLOWS_KEY, JSON.stringify(list)); } catch (e) { /* ignore */ } }
+    function isFollowing(cid) { return follows().indexOf(cid) !== -1; }
+    function toggleFollow(cid) {
+      var f = follows();
+      var i = f.indexOf(cid);
+      if (i === -1) f.push(cid); else f.splice(i, 1);
+      saveFollows(f);
+      return isFollowing(cid);
+    }
+    function followButtonHTML(cid) {
+      var on = isFollowing(cid);
+      return '<button class="btn ' + (on ? "btn-ghost" : "btn-outline") + ' btn-sm follow-btn" data-action="follow-club" data-id="' + esc(cid) + '">' + (on ? "✓ Following" : "＋ Follow") + "</button>";
+    }
+
+    /* ---- "Clubs like this" — tag overlap on the club personality map ---- */
+    function similarClubs(cid, n) {
+      var mine = CLUB_TAG_PROFILE[cid] || [];
+      if (!mine.length) return [];
+      return (db.clubs || []).filter(function (c) { return c.id !== cid; })
+        .map(function (c) {
+          var overlap = 0;
+          (CLUB_TAG_PROFILE[c.id] || []).forEach(function (t) { if (mine.indexOf(t) !== -1) overlap++; });
+          return { c: c, score: overlap };
+        })
+        .filter(function (x) { return x.score > 0; })
+        .sort(function (a, b) { return b.score - a.score; })
+        .slice(0, n || 3)
+        .map(function (x) { return x.c; });
+    }
+    function similarClubsHTML(cid) {
+      var list = similarClubs(cid, 3);
+      if (!list.length) return "";
+      return '<div class="panel"><h3>🔀 Clubs like this</h3><div class="similar-grid">' +
+        list.map(function (s) {
+          return '<a class="similar-card" href="#/club/' + esc(s.id) + '">' +
+            '<span class="fy-icon" style="background:' + esc(s.color) + '">' + esc(s.icon) + "</span>" +
+            "<span><b>" + esc(s.name) + "</b><small>" + esc(s.tagline || "") + "</small></span></a>";
+        }).join("") + "</div></div>";
+    }
+
+    /* ---- Unified activity feed for followed clubs ---- */
+    function followingFeed() {
+      var f = follows();
+      var items = [];
+      function push(type, icon, clubId, title, href, when) {
+        items.push({ type: type, icon: icon, club: clubById(clubId), title: title, href: href, when: when || "" });
+      }
+      f.forEach(function (cid) {
+        (db.notices || []).forEach(function (n) { if (n.clubId === cid) push("notice", "📢", cid, n.title, "#/notices", n.createdAt || n.date); });
+        (db.events || []).forEach(function (ev) { if (ev.clubId === cid) push("event", "📅", cid, ev.title, "#/events/" + ev.id, ev.startsAt || ""); });
+        (db.forms || []).forEach(function (frm) { if (frm.clubId === cid && statusOf(frm).key !== "closed") push("form", "📝", cid, frm.title, "#/form/" + frm.id, frm.deadline || frm.openAt || ""); });
+        (db.polls || []).forEach(function (p) { if (p.clubId === cid && p.open) push("poll", "🗳️", cid, p.question, "#/club/" + cid, p.createdAt || ""); });
+      });
+      return items.sort(function (a, b) { return (b.when || "").localeCompare(a.when || ""); }).slice(0, 40);
+    }
+    function viewFollowing() {
+      var f = follows();
+      var items = followingFeed();
+      var body = "";
+      if (!f.length) {
+        body = '<div class="panel empty-state"><div class="icon">👥</div><p>You are not following any clubs yet. Visit a club page and hit <b>＋ Follow</b> to build your feed.</p>' +
+          '<a class="btn btn-primary btn-sm" href="#/clubs">Browse clubs →</a></div>';
+      } else if (!items.length) {
+        body = '<div class="panel empty-state"><div class="icon">📭</div><p>Nothing new from your clubs yet — notices, events, forms and polls will appear here.</p></div>';
+      } else {
+        body = '<div class="feed-list">' + items.map(function (it) {
+          var club = it.club;
+          var badge = it.type === "notice" ? "📢 Notice" : (it.type === "event" ? "📅 Event" : (it.type === "form" ? "📝 Form" : "🗳️ Poll"));
+          return '<a class="feed-item" href="' + esc(it.href) + '">' +
+            '<span class="fy-icon" style="background:' + esc(club ? club.color : "#3b82f6") + '">' + esc(club ? club.icon : "🎓") + "</span>" +
+            '<span class="feed-body"><b>' + esc(it.title) + "</b>" +
+            "<small>" + badge + " · " + esc(club ? club.name : "") + (it.when ? " · " + esc(relativeAgo(it.when)) : "") + "</small></span></a>";
+        }).join("") + "</div>";
+      }
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>👥 Following</h1>" +
+        '<p class="lead">One unified feed of notices, events, forms and polls from every club you follow — no more checking each club page.</p>' +
+        '</div></div></section>' +
+        '<div class="container" style="padding:24px 0;max-width:760px">' +
+        '<div class="section-head"><div><h2>Your feed</h2><p class="sub">' + f.length + " club" + (f.length === 1 ? "" : "s") + " followed</p></div>" +
+        '<a class="link" href="#/clubs">Manage →</a></div>' +
+        body +
+        "</div>"
+      );
+    }
+
+    /* ---- Live polls: one vote per identity, live results, audit-logged ---- */
+    function pollsFor(clubId) { return (db.polls || []).filter(function (p) { return !clubId || p.clubId === clubId; }); }
+    function pollById(id) { return (db.polls || []).find(function (p) { return p.id === id; }); }
+    function pollTotals(p) {
+      var v = p.voters || {};
+      var totals = [];
+      (p.options || []).forEach(function (o, i) {
+        var n = 0;
+        Object.keys(v).forEach(function (k) { if (v[k] === i) n++; });
+        totals.push(n);
+      });
+      return totals;
+    }
+    function pollTotalVotes(p) {
+      var n = 0;
+      pollTotals(p).forEach(function (x) { n += x; });
+      return n;
+    }
+    function myPollVote(p) {
+      var k = meKey();
+      if (!k) return -1;
+      var v = p.voters || {};
+      return v[k] != null ? v[k] : -1;
+    }
+    function castPollVote(p, idx) {
+      var me = qaIdentity();
+      if (!me) { toast("Tell us who you are first — or sign in.", "err"); return; }
+      if (!p.open) { toast("This poll is closed.", "err"); return; }
+      if (idx < 0 || idx >= (p.options || []).length) return;
+      var v = p.voters = p.voters || {};
+      if (v[me.key] != null) { toast("You already voted in this poll.", "err"); return; }
+      v[me.key] = idx;
+      auditLog("poll_vote", p.id + " -> option " + (idx + 1), p.clubId || "");
+      save();
+    }
+    function createPoll(clubId, question, options, createdBy) {
+      db.polls = db.polls || [];
+      var p = { id: DB.uid("pl"), clubId: clubId, question: question, options: options, voters: {}, open: true, createdAt: new Date().toISOString(), createdBy: createdBy || "" };
+      db.polls.push(p);
+      auditLog("poll_create", p.id + " " + question, clubId);
+      save();
+      return p;
+    }
+    function setPollOpen(p, open) {
+      p.open = !!open;
+      auditLog(open ? "poll_reopen" : "poll_close", p.id, p.clubId || "");
+      save();
+    }
+    function deletePoll(p) {
+      db.polls = (db.polls || []).filter(function (x) { return x.id !== p.id; });
+      auditLog("poll_delete", p.id, p.clubId || "");
+      save();
+    }
+    function pollResultsHTML(p) {
+      var totals = pollTotals(p);
+      var total = pollTotalVotes(p);
+      var myVote = myPollVote(p);
+      var rows = (p.options || []).map(function (o, i) {
+        var n = totals[i] || 0;
+        var pct = total ? Math.round((n / total) * 100) : 0;
+        return '<div class="poll-row">' +
+          '<div class="row" style="justify-content:space-between;font-size:13px"><span>' + esc(o) + (myVote === i ? ' <span class="poll-mine">(your vote)</span>' : "") + "</span><b>" + pct + "%</b></div>" +
+          '<div class="poll-bar"><div class="poll-bar-fill" style="width:' + pct + '%"></div></div>' +
+          '<div class="muted" style="font-size:11px">' + n + " vote" + (n === 1 ? "" : "s") + "</div></div>";
+      }).join("");
+      return '<div class="poll-results">' + rows + '<div class="muted" style="font-size:12px;margin-top:6px">' + total + " total vote" + (total === 1 ? "" : "s") + "</div></div>";
+    }
+    function pollVoteHTML(p) {
+      var myVote = myPollVote(p);
+      if (myVote !== -1 || !p.open) return pollResultsHTML(p);
+      var opts = (p.options || []).map(function (o, i) {
+        return '<button class="poll-opt" data-action="poll-vote" data-id="' + esc(p.id) + '" data-idx="' + i + '">' + esc(o) + "</button>";
+      }).join("");
+      return '<div class="poll-vote">' + opts + "</div>";
+    }
+    function pollCardHTML(p, staff) {
+      return '<div class="poll-card">' +
+        '<div class="row" style="justify-content:space-between"><b>' + esc(p.question) + "</b>" +
+        (p.open ? '<span class="qa-status open">Open</span>' : '<span class="qa-status closed">🔒 Closed</span>') + "</div>" +
+        '<div class="muted" style="font-size:12px;margin:4px 0 8px">🗳️ ' + esc(pollTotalVotes(p)) + " vote" + (pollTotalVotes(p) === 1 ? "" : "s") + " · by " + esc(p.createdBy || "a club") + "</div>" +
+        pollVoteHTML(p) +
+        (staff ? '<div class="row" style="gap:6px;margin-top:8px">' +
+          '<button class="mod-btn" data-action="poll-toggle" data-id="' + esc(p.id) + '">' + (p.open ? "🔒 Close" : "🔓 Reopen") + "</button>" +
+          '<button class="mod-btn" data-action="poll-del" data-id="' + esc(p.id) + '">🗑</button></div>' : "") +
+        "</div>";
+    }
+    function clubPollsPanelHTML(c) {
+      var staff = isStaff();
+      var list = pollsFor(c.id);
+      var inner = list.length
+        ? list.map(function (p) { return pollCardHTML(p, staff); }).join("")
+        : '<div class="empty-state"><div class="icon">🗳️</div><p>No polls yet — the executives can open one anytime.</p></div>';
+      return '<div class="panel"><h2>🗳️ Live polls</h2>' + inner + "</div>";
+    }
+    function pollComposerHTML(club) {
+      return '<form id="poll-form" class="card" style="margin-bottom:12px">' +
+        '<div class="field mb-2"><label>Question</label><input type="text" id="pl-question" maxlength="160" placeholder="e.g. Which theme should the next fest have?"></div>' +
+        '<div class="field mb-2"><label>Options (2–6, one per line)</label><textarea id="pl-options" rows="4" placeholder="Option one&#10;Option two&#10;Option three"></textarea></div>' +
+        '<div class="row"><button class="btn btn-primary btn-sm" type="submit">Create poll</button>' +
+        '<button class="btn btn-ghost btn-sm" type="button" data-action="poll-cancel">Cancel</button></div>' +
+        "</form>";
+    }
+    function portalPolls(club) {
+      var list = pollsFor(club.id);
+      var cards = list.map(function (p) { return pollCardHTML(p, true); }).join("") ||
+        '<div class="empty-state"><div class="icon">🗳️</div><p>No polls yet. Create one for elections, event themes or on-the-spot decisions.</p></div>';
+      return (
+        '<div class="panel">' +
+        '<div class="portal-toolbar mb-2"><h2>🗳️ Live polls</h2>' +
+        '<button class="btn btn-outline btn-sm" data-action="poll-new">+ New poll</button></div>' +
+        '<p class="muted small mb-2">One vote per student, live results, audit-logged. Close a poll to lock the results.</p>' +
+        (state.pollEditing ? pollComposerHTML(club) : "") +
+        cards +
+        "</div>"
+      );
+    }
+
+    /* ---- Portal analytics — membership growth, attendance, engagement ---- */
+    function anBarHTML(label, value, max, color) {
+      var pct = max ? Math.round((value / max) * 100) : 0;
+      return '<div class="an-row"><span class="an-label">' + esc(label) + "</span>" +
+        '<div class="an-track"><div class="an-fill" style="width:' + pct + '%;background:' + (color || "#3b82f6") + '"></div></div>' +
+        "<span class='an-val'>" + value + "</span></div>";
+    }
+    function monthKey(d) {
+      var m = d.getMonth() + 1;
+      return d.getFullYear() + "-" + (m < 10 ? "0" : "") + m;
+    }
+    function lastMonths(n) {
+      var out = [];
+      var now = new Date();
+      for (var i = n - 1; i >= 0; i--) {
+        out.push(monthKey(new Date(now.getFullYear(), now.getMonth() - i, 1)));
+      }
+      return out;
+    }
+    function portalAnalytics(club) {
+      var months = lastMonths(6);
+      var growth = months.map(function () { return 0; });
+      (db.submissions || []).forEach(function (s) {
+        var f = formById(s.formId);
+        if (!f || f.clubId !== club.id || !s.submittedAt) return;
+        var mi = months.indexOf(monthKey(new Date(s.submittedAt)));
+        if (mi !== -1) growth[mi]++;
+      });
+      var growthMax = Math.max.apply(null, growth.concat([1]));
+      var growthHTML = months.map(function (m, i) {
+        return anBarHTML(new Date(m + "-01T12:00:00").toLocaleString("en", { month: "short" }), growth[i], growthMax, "#059669");
+      }).join("");
+      var evs = clubEvents(club.id);
+      var attMax = 1;
+      evs.forEach(function (e) { attMax = Math.max(attMax, (e.checkIns || []).length); });
+      var attHTML = evs.slice(0, 6).map(function (e) {
+        return anBarHTML(e.title, (e.checkIns || []).length, attMax, "#3b82f6");
+      }).join("") || '<p class="muted small mb-0">No check-ins recorded yet.</p>';
+      var allClubs = (db.clubs || []).map(function (c) {
+        var subs = 0, att = 0;
+        (db.submissions || []).forEach(function (s) { var f = formById(s.formId); if (f && f.clubId === c.id) subs++; });
+        clubEvents(c.id).forEach(function (e) { att += (e.checkIns || []).length; });
+        return { c: c, score: subs + att * 2 + clubNotices(c.id).length };
+      }).sort(function (a, b) { return b.score - a.score; });
+      var engMax = 1;
+      allClubs.forEach(function (x) { engMax = Math.max(engMax, x.score); });
+      var engHTML = allClubs.slice(0, 8).map(function (x) {
+        return anBarHTML(x.c.icon + " " + x.c.name, x.score, engMax, x.c.color);
+      }).join("");
+      return (
+        '<div class="panel"><h2>📈 Membership growth</h2>' +
+        '<p class="muted small mb-2">Form submissions to ' + esc(club.name) + " per month (last 6 months).</p>" +
+        '<div class="an-bars">' + growthHTML + "</div></div>" +
+        '<div class="panel"><h2>🎟 Attendance trends</h2>' +
+        '<p class="muted small mb-2">Check-ins per event (top 6).</p>' +
+        '<div class="an-bars">' + attHTML + "</div></div>" +
+        '<div class="panel"><h2>⚡ Engagement by club</h2>' +
+        '<p class="muted small mb-2">Submissions + 2× check-ins + notices — the portal-wide picture.</p>' +
+        '<div class="an-bars">' + engHTML + "</div></div>"
+      );
+    }
+
+    /* ================= Content & trust layer =================
+       Event tags ("free food", "certificate") with filters, a trending
+       section ranked by RSVPs, verified official-club badges, a weekly
+       digest you can email, and a portal moderation queue. */
+
+    /* ---- Event tags: the filters students actually use ---- */
+    var EVENT_TAGS = [
+      { key: "free-food", label: "🍕 Free food" },
+      { key: "certificate", label: "📜 Certificate" },
+      { key: "hands-on", label: "🛠 Hands-on" },
+      { key: "beginner", label: "🌱 Beginner-friendly" },
+      { key: "workshop", label: "🧪 Workshop" },
+      { key: "contest", label: "🏆 Contest" }
+    ];
+    function eventTagLabel(key) {
+      var t = EVENT_TAGS.filter(function (x) { return x.key === key; })[0];
+      return t ? t.label : key;
+    }
+    function eventTagsHTML(e) {
+      var tags = e.tags || [];
+      if (!tags.length) return "";
+      return '<div class="ev-tags">' + tags.map(function (t) { return '<span class="ev-tag">' + esc(eventTagLabel(t)) + "</span>"; }).join("") + "</div>";
+    }
+
+    /* ---- Trending this week: ranked by RSVPs + waitlist pressure ---- */
+    function trendScore(e) {
+      return ((e.rsvps || []).length) * 2 + ((e.waitlist || []).length) * 3 +
+        Math.max(0, 4 - Math.round((new Date(e.startsAt).getTime() - Date.now()) / 86400000)) * 0.5;
+    }
+    function trendingEvents(n) {
+      return (db.events || []).filter(function (e) {
+        var t = e.startsAt ? new Date(e.startsAt).getTime() : NaN;
+        return !isNaN(t) && t >= Date.now();
+      }).sort(function (a, b) { return trendScore(b) - trendScore(a); }).slice(0, n || 3);
+    }
+    function trendingSectionHTML() {
+      var list = trendingEvents(3);
+      if (!list.length) return "";
+      return '<section class="section alt"><div class="container">' +
+        '<div class="section-head"><div><h2>🔥 Trending this week</h2>' +
+        '<p class="sub">Ranked live by RSVPs and waitlist pressure across all clubs.</p></div>' +
+        '<a class="link" href="#/events">All events →</a></div>' +
+        '<div class="event-grid">' + list.map(function (e) { return eventCardHTML(e, true); }).join("") + "</div></div></section>";
+    }
+
+    /* ---- Verified official-club badges ---- */
+    function verifiedChipHTML(c) {
+      return c.verified ? '<span class="verified-chip" title="Verified official club account">✓ Verified</span>' : "";
+    }
+    function toggleClubVerified(c) {
+      c.verified = !c.verified;
+      auditLog("club_verified_toggle", c.id + " -> " + (c.verified ? "verified" : "unverified"), c.id);
+      save();
+    }
+
+    /* ---- Email this week's digest (mailto, no server needed) ---- */
+    function digestMailtoHTML() {
+      var lines = [];
+      lines.push("This week at NITER — " + fmtDate(new Date().toISOString()));
+      lines.push("");
+      var evs = weekEvents();
+      if (evs.length) {
+        lines.push("📅 EVENTS");
+        evs.forEach(function (e) { lines.push("• " + e.title + " — " + fmtDateTime(e.startsAt) + (e.venue ? " (" + e.venue + ")" : "")); });
+        lines.push("");
+      }
+      var dls = weekDeadlines();
+      if (dls.length) {
+        lines.push("⏳ DEADLINES");
+        dls.forEach(function (f) {
+          var st = statusOf(f);
+          lines.push("• " + f.title + " — " + (st.key === "soon" ? "opens " + fmtDateTime(f.openAt) : "closes " + fmtDateTime(f.deadline)));
+        });
+        lines.push("");
+      }
+      var nts = weekNotices();
+      if (nts.length) {
+        lines.push("📢 NOTICES");
+        nts.forEach(function (n) { lines.push("• " + n.title); });
+      }
+      var subject = "This week at NITER — " + fmtDate(new Date().toISOString());
+      return '<a class="btn btn-outline btn-sm" href="mailto:?subject=' + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(lines.join("\n")) + '">📧 Email this week</a>';
+    }
+
+    /* ---- Portal moderation queue: warnings, hidden answers, complaints, polls ---- */
+    function portalModeration(club) {
+      var warnings = (db.warnings || []).slice().sort(function (a, b) { return (b.at || "").localeCompare(a.at || ""); });
+      var hidden = [];
+      (db.questions || []).forEach(function (q) {
+        (q.answers || []).forEach(function (a) { if (a.hidden) hidden.push({ q: q, a: a }); });
+      });
+      var openComplaints = (db.complaints || []).filter(function (c) { return c.clubId === club.id && c.status === "open"; });
+      var closedPolls = pollsFor(club.id).filter(function (p) { return !p.open; });
+
+      var wHTML = warnings.length ? warnings.slice(0, 12).map(function (w) {
+        var warns = authorWarnCount(w.authorKey);
+        var link = w.targetType === "question" ? ' <a href="#/questions/' + esc(w.targetId) + '">view →</a>' : "";
+        return '<div class="mod-row"><div class="fy-icon fy-icon-sm">⚠️</div>' +
+          '<div class="mod-body"><b>' + esc(w.reason || "Other") + "</b> on " + esc(w.targetType === "question" ? "a question" : "an answer") + link +
+          "<small>" + warns + " warning" + (warns === 1 ? "" : "s") + " for this author" + (warns >= 2 ? " 🚩 repeat offender" : "") + " · by " + esc(w.by || "") + " · " + esc(relativeAgo(w.at)) + "</small>" +
+          (w.note ? "<small>note: " + esc(w.note) + "</small>" : "") + "</div></div>";
+      }).join("") : '<div class="empty-state"><div class="icon">🛡️</div><p>No warnings on file — clean board.</p></div>';
+
+      var hHTML = hidden.length ? hidden.map(function (h) {
+        return '<div class="mod-row"><div class="fy-icon fy-icon-sm">🙈</div>' +
+          '<div class="mod-body"><b>' + esc(String(h.a.body || "").slice(0, 80)) + "</b>" +
+          '<small>on "' + esc(String(h.q.title || "").slice(0, 60)) + '" · hidden by ' + esc(h.a.hiddenBy || "") + "</small></div>" +
+          '<button class="mod-btn" data-action="qa-restore" data-q="' + esc(h.q.id) + '" data-a="' + esc(h.a.id) + '">👁 Restore</button></div>';
+      }).join("") : '<div class="empty-state"><div class="icon">👁️</div><p>No hidden answers.</p></div>';
+
+      var cHTML = openComplaints.length ? openComplaints.slice(0, 8).map(function (cp) {
+        return '<div class="mod-row"><div class="fy-icon fy-icon-sm">📮</div>' +
+          '<div class="mod-body"><b>Complaint from ' + esc(cp.name || "a student") + "</b>" +
+          '<small>' + esc(String(cp.body || cp.message || "").slice(0, 100)) + "</small></div>" +
+          '<a class="btn btn-outline btn-sm" href="#/complaint/' + esc(club.id) + '">Open →</a></div>';
+      }).join("") : '<div class="empty-state"><div class="icon">📮</div><p>No open complaints.</p></div>';
+
+      var pHTML = closedPolls.length ? closedPolls.map(function (p) {
+        return '<div class="mod-row"><div class="fy-icon fy-icon-sm">🗳️</div>' +
+          '<div class="mod-body"><b>' + esc(p.question) + "</b><small>closed · " + esc(pollTotalVotes(p)) + " vote" + (pollTotalVotes(p) === 1 ? "" : "s") + "</small></div>" +
+          '<button class="mod-btn" data-action="poll-toggle" data-id="' + esc(p.id) + '">🔓 Reopen</button></div>';
+      }).join("") : '<div class="empty-state"><div class="icon">🗳️</div><p>No closed polls to reopen.</p></div>';
+
+      var verifyRow = "";
+      if (isPortalAdmin()) {
+        var c = clubById(club.id);
+        verifyRow = '<div class="mod-row"><div class="fy-icon fy-icon-sm">' + (c && c.verified ? "✅" : "🔓") + "</div>" +
+          '<div class="mod-body"><b>Verified official-club badge</b>' +
+          '<small>Shown next to the club name — proves this is the official account, not a spoof, during elections and fundraising pushes.</small></div>' +
+          '<button class="mod-btn" data-action="club-verify">' + (c && c.verified ? "✓ Verified — click to unverify" : "Not verified — click to verify") + "</button></div>";
+      }
+      function panel(title, sub, body) {
+        return '<div class="panel"><div class="portal-toolbar mb-2"><h2>' + title + "</h2></div>" +
+          '<p class="muted small mb-2">' + sub + "</p>" + body + "</div>";
+      }
+      return (verifyRow ? '<div class="panel"><div class="portal-toolbar mb-2"><h2>✅ Verified badge</h2></div>' + verifyRow + "</div>" : "") +
+        panel("🛡️ Moderation queue", "Warnings are append-only and staff-visible. Restore a hidden answer to undo a mistake.", wHTML + hHTML) +
+        panel("📮 Open complaints", "Complaints filed against this club.", cHTML) +
+        panel("🗳️ Closed polls", "Reopen a poll to accept more votes.", pHTML);
+    }
+
 
     /* ================= Student accounts =================
        Students who filled a club form can sign in on the dashboard.
@@ -9185,6 +9850,33 @@
         saveQaIdentity(idName, idEmail);
         render();
         toast("Thanks, " + idName + "!", "ok");
+      } else if (form.id === "site-config-form") {
+        e.preventDefault();
+        if (!isPortalAdmin()) { toast("Admins only.", "err"); return; }
+        db.config = db.config || {};
+        db.config.institute = (document.getElementById("scfg-institute").value || "").trim();
+        db.config.established = (document.getElementById("scfg-established").value || "").trim();
+        db.config.heroTitle = (document.getElementById("scfg-hero-title").value || "").trim();
+        db.config.heroAccent = (document.getElementById("scfg-hero-accent").value || "").trim();
+        db.config.heroSub = (document.getElementById("scfg-hero-sub").value || "").trim();
+        db.config.announcement = (document.getElementById("scfg-announcement").value || "").trim();
+        auditLog("site_config_update", "Site settings updated by " + actorName(), "");
+        save();
+        pushSiteConfig();
+        render();
+        updateAnnouncementBar();
+        toast("Site settings saved and synced.", "ok");
+      } else if (form.id === "poll-form") {
+        e.preventDefault();
+        var pQ = (document.getElementById("pl-question").value || "").trim();
+        var pOpts = (document.getElementById("pl-options").value || "").split("\n").map(function (x) { return x.trim(); }).filter(function (x) { return x; });
+        if (!pQ) { toast("Give the poll a question.", "err"); return; }
+        if (pOpts.length < 2) { toast("Add at least 2 options (one per line).", "err"); return; }
+        if (pOpts.length > 6) { toast("Maximum 6 options.", "err"); return; }
+        createPoll(state.session.clubId, pQ, pOpts.slice(0, 6), actorName());
+        state.pollEditing = false;
+        render();
+        toast("Poll created — students can vote now.", "ok");
       }
     });
 
