@@ -1311,6 +1311,44 @@
     .tag-picker label { cursor: pointer; }
     .tag-picker input { width: auto; height: auto; }
 
+    /* ---- Opportunity board ---- */
+    .opp-card { display: flex; gap: 14px; background: var(--surface); border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .opp-logo { flex: none; width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, #002147, #1e3a8a); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; }
+    .opp-body { flex: 1; min-width: 0; }
+    .opp-top { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+    .opp-type { font-size: 11px; font-weight: 700; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 2px 8px; border-radius: 999px; }
+    .opp-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12.5px; color: var(--muted); margin: 4px 0 8px; }
+    .opp-desc { font-size: 13.5px; color: var(--body); line-height: 1.55; }
+    .opp-req { font-size: 13px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
+    .opp-req ul { margin: 4px 0 0 18px; padding: 0; }
+    .opp-req li { margin: 2px 0; }
+    .opp-foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .opp-deadline { font-size: 12px; font-weight: 700; color: #92400e; background: #fffbeb; border: 1px solid #fcd34d; padding: 2px 8px; border-radius: 999px; }
+    .opp-deadline.hot { color: #b91c1c; background: #fef2f2; border-color: #fca5a5; }
+    .opp-deadline.past { color: #6b7280; background: #f3f4f6; border-color: #d1d5db; }
+
+    /* ---- NITER AI ---- */
+    .nai-shell { background: var(--surface); border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.06); }
+    .nai-thread { max-height: 460px; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 12px; background: linear-gradient(180deg, #f8fafc, #fff); }
+    .nai-msg { display: flex; gap: 8px; align-items: flex-end; max-width: 88%; }
+    .nai-msg.me { align-self: flex-end; flex-direction: row-reverse; }
+    .nai-avatar { flex: none; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #002147, #1e3a8a); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .nai-msg.me .nai-avatar { background: linear-gradient(135deg, #b45309, #d97706); }
+    .nai-bubble { padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.55; background: #fff; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,.04); white-space: pre-line; }
+    .nai-msg.me .nai-bubble { background: linear-gradient(135deg, #002147, #102a45); color: #fff; border: none; }
+    .nai-typing { display: flex; gap: 4px; align-items: center; padding: 12px 14px; }
+    .nai-typing span { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; animation: naiBlink 1s infinite; }
+    .nai-typing span:nth-child(2) { animation-delay: .2s; }
+    .nai-typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes naiBlink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+    .nai-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px 0; }
+    .nai-chip { font-size: 12px; padding: 5px 10px; }
+    .nai-input-row { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid #e5e7eb; }
+    .nai-input { flex: 1; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px 14px; font-size: 14px; }
+    .nai-input:focus { outline: none; border-color: var(--crimson); box-shadow: 0 0 0 3px rgba(220, 38, 38, .12); }
+    .nai-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 14px; border-top: 1px solid #f1f5f9; font-size: 11.5px; color: var(--muted); }
+    .nai-foot .link { color: var(--muted); text-decoration: underline; }
+
 </style>
   <script>try{if(localStorage.getItem("niter-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark");}}catch(e){}</script>
 </head>
@@ -1334,6 +1372,8 @@
           <a href="#/leaderboard" data-nav="leaderboard">🏆 Ranks</a>
           <a href="#/foryou" data-nav="foryou">✨ For You</a>
           <a href="#/following" data-nav="following">👥 Following</a>
+          <a href="#/opportunities" data-nav="opportunities">💼 Jobs</a>
+          <a href="#/niter-ai" data-nav="niter-ai">🧠 NITER AI</a>
           <a href="#/dashboard" data-nav="dashboard" id="nav-dashboard" style="display:none">My Dashboard</a>
           <a href="#/portal" data-nav="portal" id="nav-cta" class="nav-cta" title="Member Portal" aria-label="Member Portal">
             <span class="nav-avatar" id="nav-avatar" aria-hidden="true">👤</span>
@@ -1372,6 +1412,8 @@
             <li><a href="#/following">👥 Following</a></li>
             <li><a href="#/notifications">🔔 Notifications</a></li>
             <li><a href="#/events">📅 Events calendar</a></li>
+            <li><a href="#/opportunities">💼 Opportunity board</a></li>
+            <li><a href="#/niter-ai">🧠 NITER AI — ask anything</a></li>
             <li><a href="#/privacy">🔒 Privacy &amp; data</a></li>
           </ul>
         </div>
@@ -2033,6 +2075,115 @@
       }
     ];
 
+    /* Opportunity board seed — alumni & companies posting through clubs. */
+    var opportunities = [
+      {
+        id: "opp-1", clubId: "career-club",
+        title: "Summer Internship — Software Engineering",
+        company: "Brain Station 23",
+        type: "internship",
+        location: "Dhaka (Hybrid)",
+        stipend: "BDT 25,000/mo",
+        deadline: daysAheadAt(12, 23, 59),
+        description: "A 10-week paid internship on real product teams — web apps, backend services and QA. Interns get a mentor, a project to own, and a full-time offer path for strong performers.",
+        requirements: ["Familiarity with any programming language", "Basics of web development (HTML/CSS/JS)", "Good English communication"],
+        applyLink: "https://www.brainstation-23.com/careers",
+        postedBy: "Alumni — Rahim Uddin (CSE ’21)",
+        postedAt: daysAgoAt(3, 10, 0),
+        status: "open"
+      },
+      {
+        id: "opp-2", clubId: "career-club",
+        title: "Graduate Trainee — Textile Engineering & Merchandising",
+        company: "DBL Group",
+        type: "job",
+        location: "Narayanganj (On-site)",
+        stipend: "BDT 30,000/mo",
+        deadline: daysAheadAt(9, 23, 59),
+        description: "Full-time trainee position for fresh graduates in the RMG sector. Rotate through yarn, fabric, wet-processing and garment units, then specialise in merchandising with export buyers.",
+        requirements: ["B.Sc. in Textile Engineering (any discipline)", "CGPA 3.0+", "Willing to relocate to Narayanganj"],
+        applyLink: "https://www.dbl-group.com/careers",
+        postedBy: "Company — DBL Group HR",
+        postedAt: daysAgoAt(2, 14, 30),
+        status: "open"
+      },
+      {
+        id: "opp-3", clubId: "computer-club",
+        title: "Teaching Assistant — Competitive Programming",
+        company: "NITER Computer Club",
+        type: "job",
+        location: "Campus (Part-time)",
+        stipend: "BDT 5,000/mo",
+        deadline: "",
+        description: "Help run the club's competitive programming bootcamps: prepare problem sets, review editorials, and mentor junior members during practice sessions. Two hours a week plus contest days.",
+        requirements: ["Div-2 level or better on Codeforces", "Can explain DP and graphs clearly"],
+        applyForm: "f-member",
+        postedBy: "Alumni — Sajid Hasan (CSE ’22)",
+        postedAt: daysAgoAt(5, 9, 0),
+        status: "open"
+      },
+      {
+        id: "opp-4", clubId: "science-society",
+        title: "Undergraduate Research Assistant — Materials Lab",
+        company: "NITER Dept. of Textile Engineering",
+        type: "internship",
+        location: "Research Lab, Science Building",
+        stipend: "BDT 8,000/mo",
+        deadline: daysAheadAt(16, 23, 59),
+        description: "Assist faculty with an ongoing project on functional textile coatings. Hands-on lab work: sample preparation, testing (tensile, abrasion, colour fastness) and data analysis.",
+        requirements: ["Currently 6th semester or above", "Interest in materials science", "Comfortable with basic statistics"],
+        applyLink: "mailto:research@niter.edu.bd?subject=RA%20Application%20—%20Materials%20Lab",
+        postedBy: "Faculty — Dr. Nusrat Jahan",
+        postedAt: daysAgoAt(1, 11, 45),
+        status: "open"
+      },
+      {
+        id: "opp-5", clubId: "journalism-society",
+        title: "Campus Correspondent — NITER Beat",
+        company: "Daily Campus Desk",
+        type: "volunteer",
+        location: "Campus / Remote",
+        stipend: "",
+        deadline: daysAheadAt(6, 23, 59),
+        description: "Cover campus events, club activities and student life for a daily newspaper's university beat. Stories get a byline; top correspondents are offered a paid internship.",
+        requirements: ["Strong Bangla writing", "Own phone with a decent camera"],
+        applyLink: "https://forms.gle/campus-correspondent",
+        postedBy: "Alumni — Tanvir Ahmed (Journalism ’21)",
+        postedAt: daysAgoAt(4, 16, 20),
+        status: "open"
+      },
+      {
+        id: "opp-6", clubId: "career-club",
+        title: "Fully-Funded Masters Scholarship — Germany",
+        company: "DAAD",
+        type: "scholarship",
+        location: "Germany",
+        stipend: "€992/mo + tuition waiver",
+        deadline: daysAheadAt(20, 23, 59),
+        description: "DAAD development-related postgraduate scholarship for engineering graduates. Covers tuition, a monthly stipend, health insurance and travel. One NITER nomination per cycle.",
+        requirements: ["CGPA 3.5+", "Two years of relevant work or research experience preferred"],
+        applyLink: "https://www.daad.de/en/studying-in-germany/scholarships/",
+        postedBy: "Alumni — Farzana Akter (Textile ’19)",
+        postedAt: daysAgoAt(6, 10, 0),
+        status: "open"
+      },
+      {
+        id: "opp-7", clubId: "social-welfare-club",
+        title: "Community Blood Drive Coordinator",
+        company: "NITER Social Welfare Club",
+        type: "volunteer",
+        location: "Campus",
+        stipend: "",
+        deadline: "",
+        description: "Coordinate the semester blood donation camp: liaise with the blood bank, manage donor slots, and run the on-campus drive. Counts as service hours for your CV.",
+        requirements: ["Organised and approachable", "Commitment for one semester"],
+        applyLink: "mailto:socialwelfare@niter.edu.bd?subject=Blood%20Drive%20Coordinator",
+        postedBy: "Club panel 2025–26",
+        postedAt: daysAgoAt(7, 12, 0),
+        status: "open"
+      }
+    ];
+
     var semesters = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"];
 
     /* Student roster — B.Sc. in CSE, Session 2025-2026 (merit list import).
@@ -2438,6 +2589,7 @@
         }
       ],
       students: studentRoster,
+      opportunities: opportunities,
       config: {
         institute: "National Institute of Textile Engineering and Research (NITER)",
         semesters: semesters
@@ -2483,12 +2635,20 @@
         if (!Array.isArray(ev.checkIns)) ev.checkIns = [];
       });
       // New collections — student Q&A, moderation warnings, audit trail,
-      // certificates, live polls. Backfilled so older databases never break.
+      // certificates, live polls, opportunity board. Backfilled so older
+      // databases never break.
       if (!Array.isArray(d.questions)) d.questions = [];
       if (!Array.isArray(d.warnings)) d.warnings = [];
       if (!Array.isArray(d.auditLog)) d.auditLog = [];
       if (!Array.isArray(d.certificates)) d.certificates = [];
       if (!Array.isArray(d.polls)) d.polls = [];
+      if (!Array.isArray(d.opportunities)) d.opportunities = [];
+      (d.opportunities || []).forEach(function (o) {
+        if (!o.type) o.type = "job";
+        if (!o.status) o.status = "open";
+        if (!o.postedAt) o.postedAt = new Date().toISOString();
+        if (!Array.isArray(o.requirements)) o.requirements = [];
+      });
       (d.questions || []).forEach(function (q) {
         if (!Array.isArray(q.answers)) q.answers = [];
         if (!q.status) q.status = "open";
@@ -2564,7 +2724,7 @@
     }
 
     /* ---------------- Persistence + Firebase sync ---------------- */
-    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events", "ads", "questions", "warnings", "auditLog", "certificates", "polls"];
+    var CLOUD_COLLECTIONS = ["clubs", "notices", "forms", "submissions", "complaints", "memberships", "events", "ads", "questions", "warnings", "auditLog", "certificates", "polls", "opportunities"];
     var RESTRICTED_COLLECTIONS = ["submissions", "complaints", "memberships", "warnings", "auditLog"]; // only readable by club staff (or the student themselves for memberships)
     var currentDb = null;   // the db object the app is currently using
     var lastSynced = null;  // snapshot of the last known cloud state
@@ -3444,6 +3604,10 @@
         app.innerHTML = viewPrivacy();
       } else if (parts[0] === "events") {
         app.innerHTML = parts[1] ? viewEventDetail(parts[1]) : viewEventsList();
+      } else if (parts[0] === "opportunities") {
+        app.innerHTML = viewOpportunities();
+      } else if (parts[0] === "niter-ai") {
+        app.innerHTML = viewNiterAI();
       } else if (parts[0] === "verify") {
         app.innerHTML = viewVerify(parts[1] || "");
       } else {
@@ -3454,7 +3618,9 @@
         notices: "Notices — NITER Clubs Portal",
         clubs: "All clubs — NITER Clubs Portal",
         dashboard: "My Dashboard — NITER Clubs Portal",
-        portal: "Member Portal — NITER Clubs Portal"
+        portal: "Member Portal — NITER Clubs Portal",
+        opportunities: "Opportunity board — NITER Clubs Portal",
+        "niter-ai": "NITER AI — NITER Clubs Portal"
       };
       if (parts[0] === "club" && parts[1]) {
         var tc = clubById(decodeURIComponent(parts[1]));
@@ -4155,6 +4321,8 @@
         "</div>" +
 
         clubPollsPanelHTML(c) +
+
+        clubOpportunitiesPanelHTML(c) +
 
         "</div>" +
         '<div class="detail-side">' +
@@ -4945,6 +5113,7 @@
         { key: "polls", label: "🗳️ Polls" },
         { key: "analytics", label: "📊 Analytics" },
         { key: "moderation", label: "🛡️ Moderation" },
+        { key: "opportunities", label: "💼 Opportunities" },
         { key: "settings", label: "⚙️ Settings" }
       ];
 
@@ -4958,6 +5127,7 @@
         if (t.key === "ads") count = (db.ads || []).filter(function (a) { return a.clubId === club.id && a.status === "active"; }).length;
         if (t.key === "complaints") count = db.complaints.filter(function (c) { return c.clubId === club.id; }).length;
         if (t.key === "polls") count = pollsFor(club.id).filter(function (p) { return p.open; }).length;
+        if (t.key === "opportunities") count = oppsFor(club.id).filter(function (o) { return o.status !== "closed"; }).length;
         return '<button class="tab' + (tab === t.key ? " active" : "") + '" data-action="portal-tab" data-tab="' + t.key + '">' +
           t.label + (count ? '<span class="count">' + count + "</span>" : "") + "</button>";
       }).join("");
@@ -4973,6 +5143,7 @@
       else if (tab === "polls") content = portalPolls(club);
       else if (tab === "analytics") content = portalAnalytics(club);
       else if (tab === "moderation") content = portalModeration(club);
+      else if (tab === "opportunities") content = portalOpportunities(club);
       else content = portalSettings(club);
 
       return (
@@ -7217,6 +7388,34 @@
         state.eventsTag = el.getAttribute("data-tag") || "";
         render();
       },
+      "opp-tab": function (el) { state.oppType = el.getAttribute("data-tab") || "all"; render(); },
+      "opp-new": function () { state.oppEditing = "new"; render(); },
+      "opp-cancel": function () { state.oppEditing = null; render(); },
+      "opp-edit": function (el) { state.oppEditing = el.getAttribute("data-id"); render(); },
+      "opp-toggle": function (el) {
+        var o = oppById(el.getAttribute("data-id"));
+        if (!o) return;
+        setOppStatus(o, o.status === "closed" ? "open" : "closed");
+        render();
+        toast(o.status === "closed" ? "Opportunity closed — hidden from the public board." : "Opportunity reopened — live again.", "ok");
+      },
+      "opp-del": function (el) {
+        var o = oppById(el.getAttribute("data-id"));
+        if (!o) return;
+        if (!confirm("Delete this opportunity permanently?")) return;
+        deleteOpportunity(o);
+        render();
+        toast("Opportunity deleted.", "ok");
+      },
+      "ai-chip": function (el) {
+        var q = el.getAttribute("data-q") || "";
+        naiAskAndRender(q);
+      },
+      "ai-clear": function () {
+        naiSaveChat([]);
+        render();
+        toast("Conversation cleared.", "ok");
+      },
       "club-verify": function (el) {
         if (!isPortalAdmin()) { toast("Only admins can change the verified badge.", "err"); return; }
         var c = clubById(state.session.clubId);
@@ -8338,9 +8537,19 @@
           '<a class="link" href="' + seeAll + '">See all →</a></div>' +
           (cards || '<div class="panel empty-state"><div class="icon">🔮</div><p>' + empty + "</p></div>");
       }
+      function oppCard(o) {
+        var oc = clubById(o.clubId);
+        return '<div class="fy-card">' +
+          '<div class="fy-icon fy-icon-sm">' + (o.type === "job" ? "💼" : o.type === "internship" ? "🧑‍💻" : o.type === "scholarship" ? "🎓" : "🤝") + "</div>" +
+          '<div class="fy-body"><b><a href="#/opportunities">' + esc(o.title) + "</a></b>" +
+          '<div class="fy-meta">' + esc(o.company || "") + (oc ? " · " + esc(oc.name) : "") + "</div>" +
+          '<div class="fy-reason">💼 ' + esc(oppTypeLabel(o.type)) + " " + oppDeadlineHTML(o) + "</div>" +
+          "</div></div>";
+      }
       var evCards = r.events.map(evCard).join("");
       var formCards = r.forms.map(formCard).join("");
       var qCards = r.questions.map(qCard).join("");
+      var oppCards = openOpps().slice(0, 3).map(oppCard).join("");
       return (
         '<section class="hero"><div class="container hero-grid"><div>' +
         "<h1>✨ For You</h1>" +
@@ -8357,6 +8566,7 @@
         '<div class="fy-col">' + section("📅 Events for you", "#/events", "No upcoming events right now.", evCards) + "</div>" +
         '<div class="fy-col">' + section("⏳ Deadlines for you", "#/clubs", "Nothing closing soon.", formCards) + "</div>" +
         '<div class="fy-col">' + section("💬 Questions you could answer", "#/questions", "All questions are answered right now.", qCards) + "</div>" +
+        '<div class="fy-col">' + section("💼 Opportunities for you", "#/opportunities", "No openings right now — check back soon.", oppCards) + "</div>" +
         "</div></div>"
       );
     }
@@ -8622,6 +8832,20 @@
       }
       if (/follow|feed|following|my clubs/i.test(s)) add("Go", "👥", "Your following feed", "#/following");
       if (/analytics|growth|attendance|statistics|stats/i.test(s)) add("Go", "📊", "Portal analytics", "#/portal");
+      if (/intern|job|opportunit|career|hiring|opening|scholarship|recruit/i.test(s)) {
+        openOpps().slice(0, 4).forEach(function (o) {
+          var oc = clubById(o.clubId);
+          add("Opportunities", "💼", o.title + " — " + (o.company || ""), "#/opportunities", (oc ? oc.name + " · " : "") + oppTypeLabel(o.type));
+        });
+        add("Go", "💼", "Open the opportunity board", "#/opportunities");
+      }
+      if (/niter ai|ask niter|ai assistant|chatbot|ask anything|what is niter/i.test(s)) {
+        add("Go", "🧠", "Ask NITER AI anything", "#/niter-ai", "NITER, its programs, clubs and campus");
+        var kbHits = NAI_KB.filter(function (k) {
+          return k.topics.some(function (tp) { return s.indexOf(tp) !== -1; });
+        }).slice(0, 3);
+        kbHits.forEach(function (k) { add("NITER AI", "🧠", k.a.slice(0, 70) + "…", "#/niter-ai", ""); });
+      }
       (db.clubs || []).forEach(function (c) {
         if ((c.name || "").toLowerCase().indexOf(s) !== -1 || (c.short || "").toLowerCase().indexOf(s) !== -1) {
           add("Clubs", c.icon || "🎓", c.name, "#/club/" + c.id, c.tagline || "");
@@ -9289,6 +9513,479 @@
     }
 
 
+    /* ================= Opportunity board =================
+       Alumni and companies post internships, jobs, scholarships and
+       volunteer openings — each tied to the specific club it belongs to
+       (a textile company posting through the career club, for example).
+       Public board, club-page panel, and a portal tab for staff. */
+
+    var OPP_TYPES = [
+      { key: "internship", label: "🧑‍💻 Internship" },
+      { key: "job", label: "💼 Job" },
+      { key: "scholarship", label: "🎓 Scholarship" },
+      { key: "volunteer", label: "🤝 Volunteer" }
+    ];
+    function oppTypeLabel(k) {
+      var t = OPP_TYPES.filter(function (x) { return x.key === k; })[0];
+      return t ? t.label : "💼 Opportunity";
+    }
+    function oppById(id) { return (db.opportunities || []).filter(function (o) { return o.id === id; })[0]; }
+    function oppsFor(clubId) { return (db.opportunities || []).filter(function (o) { return o.clubId === clubId; }); }
+    function openOpps() {
+      return (db.opportunities || []).filter(function (o) { return o.status !== "closed"; })
+        .sort(function (a, b) { return (b.postedAt || "").localeCompare(a.postedAt || ""); });
+    }
+    function oppDeadlineHTML(o) {
+      if (!o.deadline) return "";
+      var t = new Date(o.deadline).getTime();
+      if (isNaN(t)) return "";
+      var d = Math.round((t - Date.now()) / 86400000);
+      if (d < 0) return '<span class="opp-deadline past">⏰ Deadline passed</span>';
+      if (d === 0) return '<span class="opp-deadline hot">⏰ Closes today</span>';
+      if (d === 1) return '<span class="opp-deadline hot">⏰ Closes tomorrow</span>';
+      return '<span class="opp-deadline">⏰ ' + d + " days left</span>";
+    }
+    function oppApplyHref(o) {
+      if (o.applyForm) return "#/form/" + esc(o.applyForm);
+      return o.applyLink || "";
+    }
+    function oppApplyTarget(o) { return (o.applyLink && !o.applyForm) ? '_blank rel="noopener"' : ""; }
+    function opportunityCardHTML(o) {
+      var club = clubById(o.clubId);
+      var company = o.company || o.postedBy || "Company";
+      var initials = company.split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0); }).join("").toUpperCase();
+      var canApply = o.status !== "closed" && (o.applyLink || o.applyForm);
+      return '<div class="opp-card">' +
+        '<div class="opp-logo">' + esc(initials) + "</div>" +
+        '<div class="opp-body">' +
+        '<div class="opp-top"><span class="opp-type">' + oppTypeLabel(o.type) + "</span>" +
+        (o.status === "closed" ? '<span class="qa-status closed">Closed</span>' : '<span class="qa-status open">Open</span>') +
+        "</div>" +
+        "<h3>" + esc(o.title) + "</h3>" +
+        '<div class="opp-meta">' +
+        "<span>🏢 " + esc(company) + "</span>" +
+        (o.location ? "<span>📍 " + esc(o.location) + "</span>" : "") +
+        (o.stipend ? "<span>💰 " + esc(o.stipend) + "</span>" : "") +
+        (club ? '<span class="pill club">' + esc(club.icon) + " " + esc(club.name) + "</span>" : "") +
+        "</div>" +
+        (o.description ? '<p class="opp-desc">' + esc(o.description) + "</p>" : "") +
+        (o.requirements && o.requirements.length ? '<div class="opp-req"><b>What they want:</b><ul>' +
+          o.requirements.map(function (r) { return "<li>" + esc(r) + "</li>"; }).join("") + "</ul></div>" : "") +
+        '<div class="opp-foot">' +
+        oppDeadlineHTML(o) +
+        '<span class="muted" style="font-size:12px">by ' + esc(o.postedBy || "a company") + " · " + esc(relativeAgo(o.postedAt)) + "</span>" +
+        (canApply ? '<a class="btn btn-primary btn-sm opp-apply" href="' + oppApplyHref(o) + '" ' + oppApplyTarget(o) + ">Apply now →</a>" : "") +
+        "</div></div></div>";
+    }
+    function viewOpportunities() {
+      state.oppType = state.oppType || "all";
+      var list = openOpps().filter(function (o) {
+        return state.oppType === "all" || o.type === state.oppType;
+      });
+      var tabs = ["all"].concat(OPP_TYPES.map(function (t) { return t.key; })).map(function (t) {
+        return '<button class="chip' + (state.oppType === t ? " active" : "") + '" data-action="opp-tab" data-tab="' + t + '">' +
+          (t === "all" ? "All openings" : oppTypeLabel(t)) + "</button>";
+      }).join("");
+      var all = openOpps();
+      var clubCount = {};
+      all.forEach(function (o) { clubCount[o.clubId] = true; });
+      var recent = all.filter(function (o) {
+        return o.postedAt && (new Date(o.postedAt).getTime() >= Date.now() - 14 * 86400000);
+      }).length;
+      var rows = list.map(opportunityCardHTML).join("");
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>💼 Opportunity board</h1>" +
+        '<p class="lead">Internships, jobs, scholarships and volunteer openings posted by alumni and companies — each tied to the club it fits, so the right people actually see it.</p>' +
+        '</div><div class="hero-side"><div class="hero-card"><h3>Career bridge</h3>' +
+        '<p class="muted" style="font-size:13px">' + all.length + " open opening" + (all.length === 1 ? "" : "s") + " · " + Object.keys(clubCount).length + " club" + (Object.keys(clubCount).length === 1 ? "" : "s") + " · " + recent + " new in 14 days.</p>" +
+        '<ul class="hero-mini-list"><li>Alumni and companies post to the club they trust.</li><li>Apply through a link or a club form — no third parties.</li></ul>' +
+        "</div></div></div></section>" +
+        '<div class="container" style="padding:24px 0">' +
+        '<div class="filter-chips" style="margin-bottom:14px">' + tabs + "</div>" +
+        (rows || '<div class="panel empty-state"><div class="icon">💼</div><p>No openings match this filter right now — check back soon, or ask a club to post one.</p></div>') +
+        "</div>"
+      );
+    }
+    function clubOpportunitiesPanelHTML(c) {
+      var all = oppsFor(c.id);
+      var list = all.filter(function (o) { return o.status !== "closed"; }).slice(0, 3);
+      var inner = list.length
+        ? list.map(opportunityCardHTML).join("") +
+          (all.length > 3 ? '<a class="link" href="#/opportunities">See all →</a>' : "")
+        : '<div class="empty-state"><div class="icon">💼</div><p>No openings right now — alumni and companies can post through this club anytime.</p></div>';
+      return '<div class="panel"><h2>💼 Opportunities (' + all.length + ")</h2>" + inner + "</div>";
+    }
+    function createOpportunity(clubId, data, by) {
+      var o = {
+        id: "opp-" + Math.random().toString(36).slice(2, 8),
+        clubId: clubId,
+        title: data.title,
+        company: data.company || "",
+        type: data.type || "job",
+        location: data.location || "",
+        stipend: data.stipend || "",
+        deadline: data.deadline ? new Date(data.deadline + "T23:59").toISOString() : "",
+        description: data.description || "",
+        requirements: data.requirements || [],
+        applyLink: data.applyLink || "",
+        applyForm: data.applyForm || "",
+        postedBy: by || "",
+        postedAt: new Date().toISOString(),
+        status: "open"
+      };
+      db.opportunities.push(o);
+      auditLog("opp_create", o.title, clubId);
+      save();
+      return o;
+    }
+    function updateOpportunity(o, data) {
+      o.title = data.title;
+      o.company = data.company || "";
+      o.type = data.type || "job";
+      o.location = data.location || "";
+      o.stipend = data.stipend || "";
+      o.deadline = data.deadline ? new Date(data.deadline + "T23:59").toISOString() : "";
+      o.description = data.description || "";
+      o.requirements = data.requirements || [];
+      o.applyLink = data.applyLink || "";
+      o.applyForm = data.applyForm || "";
+      if (data.postedBy) o.postedBy = data.postedBy;
+      auditLog("opp_update", o.title, o.clubId);
+      save();
+    }
+    function setOppStatus(o, status) {
+      o.status = status;
+      auditLog("opp_" + (status === "closed" ? "close" : "reopen"), o.title, o.clubId);
+      save();
+    }
+    function deleteOpportunity(o) {
+      db.opportunities = db.opportunities.filter(function (x) { return x.id !== o.id; });
+      auditLog("opp_delete", o.title, o.clubId);
+      save();
+    }
+    function portalOpportunities(club) {
+      if (state.oppEditing) {
+        var ed = state.oppEditing === "new" ? null : oppById(state.oppEditing);
+        return '<div class="panel">' +
+          '<div class="portal-toolbar mb-2"><h2>' + (ed ? "Edit opportunity" : "Post an opportunity") + "</h2>" +
+          '<button class="btn btn-ghost btn-sm" data-action="opp-cancel">← Cancel</button></div>' +
+          '<form id="opp-form">' +
+          '<div class="field mb-2"><label>Title <span class="req">*</span></label>' +
+          '<input type="text" id="op-title" value="' + esc(ed ? ed.title : "") + '" placeholder="e.g. Summer Internship — Software Engineering"></div>' +
+          '<div class="field mb-2"><label>Company / poster <span class="req">*</span></label>' +
+          '<input type="text" id="op-company" value="' + esc(ed ? (ed.company || "") : "") + '" placeholder="e.g. Brain Station 23"></div>' +
+          '<div class="row" style="gap:10px;flex-wrap:wrap"><div class="field mb-2" style="flex:1"><label>Type</label><select id="op-type">' +
+          OPP_TYPES.map(function (t) { return '<option value="' + t.key + '"' + (ed && ed.type === t.key ? " selected" : "") + ">" + t.label + "</option>"; }).join("") +
+          "</select></div>" +
+          '<div class="field mb-2" style="flex:1"><label>Location</label><input type="text" id="op-location" value="' + esc(ed ? (ed.location || "") : "") + '" placeholder="Dhaka (Hybrid)"></div></div>' +
+          '<div class="row" style="gap:10px;flex-wrap:wrap"><div class="field mb-2" style="flex:1"><label>Stipend / pay</label><input type="text" id="op-stipend" value="' + esc(ed ? (ed.stipend || "") : "") + '" placeholder="BDT 25,000/mo"></div>' +
+          '<div class="field mb-2" style="flex:1"><label>Deadline</label><input type="date" id="op-deadline" value="' + esc(ed && ed.deadline ? ed.deadline.slice(0, 10) : "") + '"></div></div>' +
+          '<div class="field mb-2"><label>Description</label><textarea id="op-desc" rows="3" placeholder="What the role involves…">' + esc(ed ? (ed.description || "") : "") + "</textarea></div>" +
+          '<div class="field mb-2"><label>Requirements (one per line)</label><textarea id="op-req" rows="3" placeholder="Familiarity with React&#10;Bangla and English fluency">' + esc(ed ? ((ed.requirements || []).join("\n")) : "") + "</textarea></div>" +
+          '<div class="field mb-2"><label>Application link (URL) or club form</label>' +
+          '<input type="url" id="op-link" value="' + esc(ed ? (ed.applyLink || "") : "") + '" placeholder="https://…">' +
+          '<select id="op-form" style="margin-top:8px"><option value="">— Link a club form instead —</option>' +
+          clubForms(club.id).map(function (f) { return '<option value="' + esc(f.id) + '"' + (ed && ed.applyForm === f.id ? " selected" : "") + ">" + esc(f.title) + "</option>"; }).join("") +
+          "</select></div>" +
+          '<div class="field mb-2"><label>Poster name (shown publicly)</label><input type="text" id="op-by" value="' + esc(ed ? (ed.postedBy || "") : "") + '" placeholder="Alumni — Rahim Uddin (CSE ’21)"></div>' +
+          '<button class="btn btn-primary" type="submit">' + (ed ? "Save changes" : "Post opportunity") + "</button>" +
+          "</form></div>";
+      }
+      var list = oppsFor(club.id).slice().sort(function (a, b) { return (b.postedAt || "").localeCompare(a.postedAt || ""); });
+      var cards = list.map(function (o) {
+        return '<div class="mod-row">' +
+          '<div class="fy-icon fy-icon-sm">' + (o.type === "job" ? "💼" : o.type === "internship" ? "🧑‍💻" : o.type === "scholarship" ? "🎓" : "🤝") + "</div>" +
+          '<div class="mod-body"><b>' + esc(o.title) + "</b>" +
+          "<small>" + esc(o.company || "") + (o.status === "closed" ? " · closed" : "") + " · " + esc(relativeAgo(o.postedAt)) + "</small></div>" +
+          '<button class="mod-btn" data-action="opp-edit" data-id="' + esc(o.id) + '" title="Edit">✏️</button>' +
+          '<button class="mod-btn" data-action="opp-toggle" data-id="' + esc(o.id) + '">' + (o.status === "closed" ? "🔓 Reopen" : "🔒 Close") + "</button>" +
+          '<button class="mod-btn" data-action="opp-del" data-id="' + esc(o.id) + '" title="Delete">🗑</button></div>';
+      }).join("") || '<div class="empty-state"><div class="icon">💼</div><p>No opportunities yet. Post the first one for this club.</p></div>';
+      return '<div class="panel">' +
+        '<div class="portal-toolbar mb-2"><h2>💼 Opportunities</h2>' +
+        '<button class="btn btn-outline btn-sm" data-action="opp-new">+ Post</button></div>' +
+        '<p class="muted small mb-2">Alumni and companies reach students through this club. Applications go to an external link or a linked club form. Everything is audit-logged.</p>' +
+        cards + "</div>";
+    }
+
+
+    /* ================= NITER AI =================
+       A knowledge-engine assistant about NITER, its programs, campus and
+       clubs. Static facts come from a curated knowledge base (compiled from
+       NITER's official site, Wikipedia and public sources), and questions
+       about the portal itself (events, forms, clubs, certificates, …) are
+       answered live from the app's own data. Fully offline — no API key,
+       no network call. */
+
+    var NAI_KB = [
+      { id: "overview", topics: ["what is niter", "about niter", "niter meaning", "niter full form", "national institute of textile", "introduce niter", "tell me about niter", "what kind of institute"],
+        a: "NITER — the National Institute of Textile Engineering and Research (ন্যাশনাল ইনস্টিটিউট অফ টেক্সটাইল ইঞ্জিনিয়ারিং এন্ড রিসার্চ) — is one of the largest undergraduate textile engineering campuses in Bangladesh. It is a public–private partnership (PPP) between the Bangladesh Textile Mills Association (BTMA) and the Ministry of Textiles and Jute of the Government of Bangladesh, and a constituent institute of the University of Dhaka. It sits on about 13 acres at Nayarhat, Kohinoor Gate, Savar, Dhaka-1350, with 2,000+ students and five B.Sc. programs.", link: { href: "https://www.niter.edu.bd", label: "niter.edu.bd →" } },
+      { id: "history", topics: ["history of niter", "niter history", "when was niter established", "founded", "how old is niter", "tidc", "nittrad", "evolution"],
+        a: "NITER's roots go back to 1979, when the Bangladesh Textile Mills Corporation set up the Textile Industry Development Centre (TIDC) in Savar to train mill personnel and provide testing and consulting — supported in its first years by UNDP/UNIDO. In 1994 it became NITTRAD (National Institute of Textile Training Research and Design), and from 1 January 2013 the Ministry of Textiles and Jute renamed it the National Institute of Textile Engineering and Research (NITER). It started its B.Sc. in Textile Engineering in the 2010–11 session under the University of Dhaka, initiated by then-BTMA president Abdul Hai Sarkar." },
+      { id: "location", topics: ["where is niter", "niter location", "address", "how to reach", "how do i get", "savar", "nayarhat", "kohinoor gate", "campus address", "map"],
+        a: "NITER is at Nayarhat, Kohinoor Gate, Savar, Dhaka-1350 — about 20–25 km north-west of Dhaka city. The campus is on the Dhaka–Aricha highway side of Savar; buses towards Nayarhat (e.g. from Gabtoli or Mirpur routes passing Savar) drop near Kohinoor Gate, and CNG/rickshaw from Savar bazaar reaches the gate in a few minutes. Campus coordinates are roughly 23.916°N, 90.236°E.", link: { href: "https://maps.google.com/?q=NITER+Nayarhat+Savar", label: "Open in Google Maps →" } },
+      { id: "affiliation", topics: ["university of dhaka", "du affiliation", "constituent", "degree awarding", "who awards", "du degree", "affiliated"],
+        a: "NITER is a constituent institute of the University of Dhaka — the B.Sc. and postgraduate degrees are awarded by Dhaka University, not by NITER itself. That means NITER students graduate with a University of Dhaka certificate, which carries real weight for higher studies and jobs. The current Vice-Chancellor of Dhaka University serves as NITER's pro-chancellor level link; day-to-day operations are run by the institute's Director (Ashequl Alam Rana as of the latest public listings)." },
+      { id: "admission", topics: ["admission", "how to apply", "apply niter", "admission test", "admission requirements", "eligibility", "how do i get in", "unit test", "eis", "circular", "apply for"],
+        a: "Admission to NITER's B.Sc. programs is through the University of Dhaka unit-based admission test — there is no separate NITER test. You apply online through DU's admission portal (collegeadmission.eis.du.ac.bd) when the circular opens, choose NITER along with other DU-affiliated institutes, and seats are allotted by merit in the Technology unit. Keep an eye on the DU admission circular for the current session for exact eligibility, dates and fees. This portal's clubs post their own recruitment forms separately — those are just for club membership, not academic admission." },
+      { id: "programs", topics: ["programs", "programmes", "departments", "subjects offered", "what can i study", "courses offered", "b.sc", "undergraduate", "majors"],
+        a: "NITER offers five B.Sc. (Engineering) programs: Textile Engineering (TE), Industrial and Production Engineering (IPE), Fashion Design and Apparel Engineering (FDAE), Computer Science and Engineering (CSE), and Electrical and Electronic Engineering (EEE). Postgraduate offerings include an M.Sc. in Textile Engineering and an MBA in Textile & Apparel Value Chain. All undergraduate degrees are awarded under the University of Dhaka." },
+      { id: "te", topics: ["textile engineering", "textile department", "what is textile", "te program", "yarn", "fabric manufacturing", "wet processing", "apparel manufacturing", "spinning", "weaving"],
+        a: "Textile Engineering is NITER's flagship program and the largest in the country. The B.Sc. covers the whole fibre-to-fashion chain with major subjects in Yarn Manufacturing (spinning), Fabric Manufacturing (weaving & knitting), Wet Processing (dyeing, printing, finishing) and Apparel Manufacturing (garments). Students get hands-on time in the institute's yarn manufacturing lab and dyeing & printing facilities, and the degree opens careers across Bangladesh's RMG and textile industry — the country's biggest export sector.", link: { href: "https://www.niter.edu.bd/department/departments/textile-engineering-te/", label: "TE department →" } },
+      { id: "ipe", topics: ["ipe", "industrial and production", "production engineering", "industrial engineering"],
+        a: "The Industrial and Production Engineering (IPE) program blends manufacturing science with management: production planning, operations research, quality control, supply chain and lean manufacturing. IPE graduates are hired widely by factories, RMG groups and consulting firms — NITER's IPE department hosts an annual IPE Fest for student projects and innovation." },
+      { id: "fdae", topics: ["fashion", "fdae", "apparel engineering", "design", "fashion design"],
+        a: "Fashion Design and Apparel Engineering (FDAE) is where creativity meets engineering: fashion illustration, pattern making, garment construction, textile science and apparel production technology. Graduates go into fashion houses, buying houses, merchandising and apparel manufacturing — and NITER's own Fashion Club, Photography club and Cultural club are popular homes for design-minded students." },
+      { id: "cse", topics: ["computer science", "cse", "computer", "software", "programming"],
+        a: "The Computer Science and Engineering (CSE) program covers programming, data structures & algorithms, databases, networking, AI/ML and web development. CSE students at NITER are active in the Computer Club, which runs bootcamps, the CodeStorm inter-university contest and tech talks — this very portal is a NITER-style student project.", link: { href: "#/club/computer-club", label: "NITER Computer Club →" } },
+      { id: "eee", topics: ["eee", "electrical", "electronics", "electronic engineering"],
+        a: "The Electrical and Electronic Engineering (EEE) program covers circuits, electronics, power systems, control and embedded systems. It pairs naturally with the Robotics Club, where EEE and CSE students build and program line-follower and other robots for national contests." },
+      { id: "msc", topics: ["m.sc", "masters", "postgraduate", "msc textile", "graduate studies"],
+        a: "NITER offers an M.Sc. in Textile Engineering for graduates who want to specialise and do research in the field. There are also plans and periodic intakes for other postgraduate offerings; for the current session's availability and eligibility, check the institute's website." },
+      { id: "mba", topics: ["mba", "value chain", "apparel value", "business", "management degree"],
+        a: "The MBA in Textile & Apparel Value Chain is NITER's management program, built for the RMG sector: it covers merchandising, sourcing, supply-chain and export business across the textile value chain — from fibre to finished garment to the buyer's shelf." },
+      { id: "facilities", topics: ["facilities", "campus facilities", "what is on campus", "amenities", "facilities at niter"],
+        a: "NITER's ~13-acre campus is equipped for both study and daily life: a web-based library, fully equipped computer labs with internet, modern textile labs (including a large yarn manufacturing lab and dyeing & printing facilities), separate hostels for male and female students, a medical centre, canteen, mosque and campus transport." },
+      { id: "hostels", topics: ["hostel", "accommodation", "dormitory", "where do students live", "living"],
+        a: "NITER has separate hostels for male and female students inside the campus. Hostel seats are usually allotted alongside admission on a merit basis; check the admission/registrar notice for the current session's hostel fee and availability. Many students also commute from Dhaka and Savar." },
+      { id: "labs", topics: ["labs", "laboratories", "laboratory", "equipment", "machines", "practical"],
+        a: "NITER's labs are the heart of its hands-on approach: a large yarn manufacturing lab with modern spinning machinery, weaving/knitting setups, wet-processing (dyeing & printing) facilities, textile testing & quality control equipment, and fully equipped computer labs with internet for CSE/EEE work. Undergraduate textile students also get practical/industrial training exposure through the institute's ties to the industry." },
+      { id: "library", topics: ["library", "books", "e-library", "reading"],
+        a: "NITER has a web-based library — physical collections plus online resources accessible from campus. Students use it for reference texts, journals and project research across all five departments." },
+      { id: "transport", topics: ["transport", "bus", "shuttle", "commute", "coming to campus", "travel"],
+        a: "NITER provides campus transport for students and staff commuting from Dhaka and the Savar area, and the campus is reachable by public bus along the Dhaka–Aricha road (get off near Nayarhat/Kohinoor Gate). The film club's photography walks and the games & sports club's tournaments are great ways to get to know the area." },
+      { id: "collab", topics: ["collaboration", "international", "foreign", "university partners", "exchange", "china", "bolton", "germany"],
+        a: "NITER collaborates internationally with Wuhan Textile University (China), the University of Bolton (UK) and Hochschule Niederrhein University of Applied Sciences (Germany), and works with UNIDO and GIZ on industry-linked training and research. These ties open research and exchange pathways for students and faculty." },
+      { id: "career", topics: ["why textile", "career", "job prospects", "rmg", "salary", "demand", "future", "good career", "placement"],
+        a: "Textile and RMG is Bangladesh's largest export industry, and textile engineers are in steady demand — in spinning, weaving, wet processing, garments, merchandising and quality control, plus the booming technical textile segment. NITER's position as a BTMA-backed institute means strong industry linkage; the Career Club here runs CV clinics and mock interviews, and the opportunity board posts real internships and trainee roles from companies like DBL Group.", link: { href: "#/opportunities", label: "Open opportunity board →" } },
+      { id: "terms", topics: ["semester", "term", "academic year", "session", "how long", "duration", "credits"],
+        a: "NITER engineering programs follow the University of Dhaka's level–term system: an undergraduate program runs four years, divided into levels and terms with term-end exams. Specific term dates follow the DU academic calendar; the forms on this portal (e.g. the Computer Club's membership form) ask for your current semester in that same system." },
+      { id: "stats", topics: ["how many students", "students count", "size", "how big", "teachers", "faculty count", "numbers"],
+        a: "NITER has 2,000+ students — roughly 1,900 undergraduates and 100+ postgraduates — and over 100 academic staff. It is widely described as the largest textile engineering campus in Bangladesh." },
+      { id: "campuslife", topics: ["campus life", "colors", "motto", "culture", "what is it like", "atmosphere", "community"],
+        a: "Campus life at NITER is built around eleven active clubs — coding, robotics, science, career, fashion, culture, film & photography, journalism, language, games & sports, Islamic society and social welfare — plus the annual cultural program, sports tournaments and fests like IPE Fest. The institute's colours are purple and white, and English is the medium of instruction.", link: { href: "#/clubs", label: "Browse all clubs →" } },
+      { id: "contact", topics: ["website", "official site", "contact niter", "email niter", "how to contact", "niter.edu.bd"],
+        a: "The official website is niter.edu.bd — that is the authoritative source for admission circulars, academic calendars and notices. Each club in this portal also lists its own email and Facebook page on its club page, so you can reach a specific club directly.", link: { href: "https://www.niter.edu.bd", label: "niter.edu.bd →" } },
+      { id: "aihelp", topics: ["who are you", "what can you do", "help", "how does this work", "what is niter ai", "capabilities"],
+        a: "I'm NITER AI — a campus assistant built into this portal. Ask me about NITER's history, programs, admission, campus facilities, clubs, careers, or what's happening right now: upcoming events, open forms, opportunities and more. I answer from a curated knowledge base plus this portal's live data, and I work fully offline. Try: \"which clubs are there?\", \"upcoming events\", \"how do I join a club?\", or \"what is Textile Engineering?\"" },
+      { id: "portal", topics: ["this website", "this portal", "what can i do here", "features of", "niter clubs portal"],
+        a: "This portal is one place for every NITER club: browse notices and events, RSVP with door check-in and verifiable certificates, join the Q&A board, earn XP and badges on the leaderboard, collect club-passport stamps, take the \"which club fits you?\" quiz, follow clubs for a unified feed, and apply to internships and jobs on the opportunity board. Everything is stored in your browser and synced when online.", link: { href: "#/", label: "Back to home →" } }
+    ];
+
+    /* ---- answer engine ---- */
+    function naiNorm(q) { return String(q || "").toLowerCase().replace(/\s+/g, " ").trim(); }
+    function naiFindClub(q) {
+      var n = naiNorm(q);
+      var c = (db.clubs || []).filter(function (cl) {
+        var name = naiNorm(cl.name), short = naiNorm(cl.short || "");
+        return (name && n.indexOf(name) !== -1) || (short && n.indexOf(short) !== -1) ||
+          n.indexOf(naiNorm((cl.short || "") + " club")) !== -1;
+      })[0];
+      if (!c) {
+        // Word-overlap fallback: "robotics club" or "tell me about robotics"
+        // should resolve to the Robotics Club without typing the full name.
+        var qw = n.split(" ").filter(function (w) { return w.length > 3; });
+        var scored = (db.clubs || []).map(function (cl) {
+          var hay = naiNorm(cl.name + " " + (cl.short || ""));
+          var s = 0;
+          qw.forEach(function (w) { if (hay.indexOf(w) !== -1) s++; });
+          return { cl: cl, s: s };
+        }).sort(function (a, b) { return b.s - a.s; });
+        if (scored[0] && scored[0].s >= 1 && qw.length) c = scored[0].cl;
+      }
+      return c || null;
+    }
+    function naiAsk(q) {
+      var query = naiNorm(q);
+      if (!query) return null;
+      var chips = ["Which clubs are there?", "Upcoming events", "How do I join a club?", "What is NITER?", "Admission", "About the Computer Club", "Opportunities"];
+
+      /* ---- live: specific club ---- */
+      var club = naiFindClub(query);
+      if (club && /club|society|about|tell|what|who|committee|executive|contact|room|email|join/i.test(query)) {
+        var forms = clubForms(club.id), evs = clubEvents(club.id);
+        var lines = [
+          club.name + " (" + (club.short || "") + ") — " + (club.tagline || "") + ".",
+          (club.about || ""),
+          "Room " + (club.room || "—") + " · " + (club.email || "email not listed") + (club.weekly ? " · Weekly: " + club.weekly : "") + ".",
+          "Currently " + forms.length + " form" + (forms.length === 1 ? "" : "s") + " and " + evs.length + " event" + (evs.length === 1 ? "" : "s") + " on the portal."
+        ].join(" ");
+        return { text: lines, chips: ["How do I join a club?", "Which clubs are there?", "Upcoming events"], link: { href: "#/club/" + club.id, label: "Visit " + club.name + " →" } };
+      }
+
+      /* ---- live: events ---- */
+      if (/event|upcoming|calendar|meetup|workshop|what.?s on|schedule|session|happening/i.test(query) && !/club/i.test(query)) {
+        var ups = upcomingEvents().slice(0, 3);
+        if (ups.length) {
+          var t = ups.map(function (e) {
+            var c2 = clubById(e.clubId);
+            return "• " + e.title + " — " + fmtDateTime(e.startsAt) + (c2 ? " (" + c2.name + ")" : "");
+          }).join("\n");
+          return { text: "Here's what's coming up:\n" + t + "\n\nTap an event to RSVP, add yourself to the waitlist, or check in at the door with the door code.", chips: ["Events this week", "Which clubs are there?", "Opportunities"], link: { href: "#/events", label: "Open events calendar →" } };
+        }
+        return { text: "No upcoming events right now — check the calendar page and the club pages; new events are posted by the clubs themselves.", chips: ["Which clubs are there?", "How do I join a club?"], link: { href: "#/events", label: "Open events calendar →" } };
+      }
+      if (/this week|this month|next 7 days/i.test(query)) {
+        return { text: "Here's the week ahead at NITER — events, deadlines and notices from every club:", chips: ["Upcoming events", "Which clubs are there?"], link: { href: "#/", label: "See the weekly digest on home →" } };
+      }
+
+      /* ---- live: forms / joining ---- */
+      if (/form|apply|join|membership|recruit|register|deadline/i.test(query)) {
+        var open = db.forms.filter(isOpen).slice(0, 4);
+        if (open.length) {
+          var ft = open.map(function (f) {
+            var fc = clubById(f.clubId);
+            var st = statusOf(f);
+            return "• " + f.title + (fc ? " (" + fc.name + ")" : "") + (f.deadline ? " — closes " + fmtDate(f.deadline) : "");
+          }).join("\n");
+          return { text: "Open forms right now:\n" + ft + "\n\nFill one to apply — club membership, event registration, workshops and more.", chips: ["Upcoming events", "Which clubs are there?", "Admission"], link: { href: "#/clubs", label: "Browse by club →" } };
+        }
+        return { text: "No forms are open at this moment. Clubs open membership drives seasonally — follow a club to get notified, and keep an eye on the notices page.", chips: ["Which clubs are there?", "Upcoming events"], link: { href: "#/notices", label: "View notices →" } };
+      }
+
+      /* ---- live: clubs list ---- */
+      if (/which clubs|list of clubs|all clubs|clubs are there|societies|organizations|how many clubs/i.test(query)) {
+        var cs = (db.clubs || []).map(function (c) { return c.icon + " " + c.name + " (" + (c.short || "") + ")"; }).join("\n");
+        return { text: "There are " + (db.clubs || []).length + " clubs and societies at NITER:\n" + cs + "\n\nEach has its own page with notices, forms, events and the executive committee.", chips: ["Which club fits me?", "How do I join a club?", "About the Computer Club"], link: { href: "#/clubs", label: "Browse all clubs →" } };
+      }
+
+      /* ---- live: opportunities ---- */
+      if (/job|intern|opportunit|scholarship|hiring|opening|career (?:option|opportunity)|trainee/i.test(query)) {
+        var opps = openOpps().slice(0, 3);
+        if (opps.length) {
+          var ot = opps.map(function (o) { return "• " + o.title + " — " + (o.company || "") + " (" + oppTypeLabel(o.type) + ")"; }).join("\n");
+          return { text: "Open opportunities on the board:\n" + ot + "\n\nAlumni and companies post these through clubs — tap one to see requirements and apply.", chips: ["Upcoming events", "How do I join a club?"], link: { href: "#/opportunities", label: "Open opportunity board →" } };
+        }
+        return { text: "No opportunities are open right now — check the board later; alumni and companies post through clubs throughout the year.", chips: ["Upcoming events", "Which clubs are there?"], link: { href: "#/opportunities", label: "Open opportunity board →" } };
+      }
+
+      /* ---- live: certificates / passport / leaderboard / quiz / check-in ---- */
+      if (/certificate|verify|attendance proof/i.test(query)) {
+        return { text: "When you check in at an event, you get a verifiable certificate with a unique code (e.g. /verify/CERT-12345). Anyone — recruiters, faculty — can open that link to confirm it's genuine. Your certificates also appear on your club passport and in the notification bell.", chips: ["What is the passport?", "Upcoming events"], link: { href: "#/passport", label: "Open your passport →" } };
+      }
+      if (/passport|stamp|hopper|stamp collection/i.test(query)) {
+        return { text: "The Club Passport is a digital stamp book: check in at any event and the door code stamps your passport. Collect stamps across different clubs to unlock the Club Hopper badge — it's tracked on the leaderboard and visible on your profile.", chips: ["How do I earn XP?", "Upcoming events"], link: { href: "#/passport", label: "Open your passport →" } };
+      }
+      if (/leaderboard|rank|xp|badge|points|score/i.test(query)) {
+        return { text: "You earn XP for real activity: submitting forms, checking in at events, and getting upvotes on the Q&A board (capped to stay fair). Badges include Code Ninja, Event Maestro, Top Contributor and Club Hopper. The leaderboard shows monthly and annual rankings across the whole portal.", chips: ["What is the passport?", "Which club fits me?"], link: { href: "#/leaderboard", label: "Open the leaderboard →" } };
+      }
+      if (/check.?in|qr|door code|attendance/i.test(query)) {
+        return { text: "Each event has a door code (shown on its page to the club's staff). At the venue, the staff enter your email to check you in — your attendance is recorded instantly and a certificate is issued. Check-ins also feed your passport stamps and XP.", chips: ["Upcoming events", "What is the passport?"], link: { href: "#/events", label: "Open events →" } };
+      }
+      if (/which club (?:fits|should i)|quiz|recommend|match me/i.test(query)) {
+        return { text: "Take the 2-minute interest quiz — it asks about your department, hobbies and skills, then matches you with 2–3 clubs that actually fit. It's the fastest way to find your community at NITER.", chips: ["Which clubs are there?", "How do I join a club?"], link: { href: "#/quiz", label: "Take the quiz →" } };
+      }
+
+      /* ---- knowledge base ---- */
+      var tokens = query.split(" ").filter(function (t) { return t.length > 1; });
+      var best = null, bestScore = 0;
+      NAI_KB.forEach(function (k) {
+        var score = 0;
+        k.topics.forEach(function (tp) {
+          if (query.indexOf(tp) !== -1) score += tp.length + 2;
+          else {
+            var tpWords = tp.split(" ");
+            if (tpWords.length > 1 && tokens.some(function (t) { return tp.indexOf(t) !== -1; })) score += 1;
+          }
+        });
+        tokens.forEach(function (t) {
+          k.topics.forEach(function (tp) { if (tp.indexOf(t) !== -1) score += 1; });
+        });
+        if (score > bestScore) { bestScore = score; best = k; }
+      });
+      if (best && bestScore >= 6) {
+        return { text: best.a, chips: chips.slice(0, 4), link: best.link };
+      }
+
+      /* ---- fallback ---- */
+      return {
+        text: "I couldn't find a confident answer to that in my knowledge base. I know about NITER's history, programs, admission, campus facilities and clubs — and I can answer live about events, forms, opportunities, certificates, the passport and the leaderboard. Try one of these:",
+        chips: chips,
+        link: null
+      };
+    }
+
+    /* ---- chat UI ---- */
+    var NAI_CHAT_KEY = "niter-ai-chat";
+    function naiLoadChat() { try { return JSON.parse(localStorage.getItem(NAI_CHAT_KEY) || "[]"); } catch (e) { return []; } }
+    function naiSaveChat(c) { try { localStorage.setItem(NAI_CHAT_KEY, JSON.stringify(c)); } catch (e) { /* ignore */ } }
+    function naiWelcome() {
+      var who = "";
+      var idn = qaIdentity();
+      if (idn && idn.name) who = " Welcome, " + idn.name.split(" ")[0] + "!";
+      return {
+        role: "ai",
+        text: "Hi! I'm NITER AI — your campus assistant for everything NITER: the institute, its programs, admission, campus facilities and all " + (db.clubs || []).length + " clubs." + who + " Ask me anything, or tap a suggestion below."
+      };
+    }
+    function naiBubbleHTML(m) {
+      var me = m.role === "user";
+      var text = String(m.text || "").replace(/\n/g, "<br>");
+      return '<div class="nai-msg ' + (me ? "me" : "ai") + '">' +
+        (me ? "" : '<div class="nai-avatar">🤖</div>') +
+        '<div class="nai-bubble">' + text + "</div>" +
+        (me ? '<div class="nai-avatar">👤</div>' : "") +
+        "</div>";
+    }
+    function viewNiterAI() {
+      var chat = naiLoadChat();
+      if (!chat.length) {
+        chat = [naiWelcome()];
+        naiSaveChat(chat);
+      }
+      state.aiTyping = false;
+      var msgs = chat.map(naiBubbleHTML).join("");
+      if (state.aiTyping) {
+        msgs += '<div class="nai-msg ai"><div class="nai-avatar">🤖</div><div class="nai-bubble nai-typing"><span></span><span></span><span></span></div></div>';
+      }
+      var chips = ["Which clubs are there?", "Upcoming events", "How do I join a club?", "What is NITER?", "Admission", "About the Computer Club", "Opportunities", "Club Passport"];
+      var chipHTML = chips.map(function (c) {
+        return '<button class="chip nai-chip" data-action="ai-chip" data-q="' + esc(c) + '">' + esc(c) + "</button>";
+      }).join("");
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>🧠 NITER AI</h1>" +
+        '<p class="lead">Ask anything about NITER — the institute, programs, admission, campus life, clubs, or what\'s happening right now. Answers come from a curated knowledge base plus this portal\'s live data.</p>' +
+        '</div><div class="hero-side"><div class="hero-card"><h3>What I know</h3><ul class="hero-mini-list">' +
+        "<li>NITER history, departments &amp; admission (DU unit test)</li>" +
+        "<li>Campus facilities, hostels, labs &amp; transport</li>" +
+        "<li>Live events, forms, opportunities &amp; every club</li>" +
+        "</ul></div></div></div></section>" +
+        '<div class="container" style="padding:24px 0;max-width:860px">' +
+        '<div class="nai-shell">' +
+        '<div class="nai-thread" id="nai-thread">' + msgs + "</div>" +
+        '<div class="nai-chips">' + chipHTML + "</div>" +
+        '<form id="niter-ai-form" class="nai-input-row">' +
+        '<input type="text" id="nai-input" class="nai-input" placeholder="Ask NITER AI anything…" autocomplete="off" maxlength="300">' +
+        '<button class="btn btn-primary" type="submit">➤</button>' +
+        "</form>" +
+        '<div class="nai-foot"><span>Answers compiled from NITER\'s official site &amp; public sources. For circulars, always check <a href="https://www.niter.edu.bd" target="_blank" rel="noopener">niter.edu.bd</a>.</span>' +
+        '<button class="link" style="background:none;border:none;cursor:pointer;font-size:12px" data-action="ai-clear">Clear chat</button></div>' +
+        "</div></div>"
+      );
+    }
+    function naiAskAndRender(q) {
+      q = String(q || "").trim();
+      if (!q) return;
+      var chat = naiLoadChat();
+      chat.push({ role: "user", text: q, at: new Date().toISOString() });
+      naiSaveChat(chat);
+      state.aiTyping = true;
+      render();
+      setTimeout(function () {
+        var ans = naiAsk(q);
+        var chat2 = naiLoadChat();
+        chat2.push({ role: "ai", text: ans.text, at: new Date().toISOString(), link: ans.link || null });
+        naiSaveChat(chat2);
+        state.aiTyping = false;
+        render();
+        var th = document.getElementById("nai-thread");
+        if (th) th.scrollTop = th.scrollHeight;
+      }, 420);
+    }
+
+
     /* ================= Student accounts =================
        Students who filled a club form can sign in on the dashboard.
        Cloud mode: Firebase accounts (bootstrapUser with studentMode so a
@@ -9877,6 +10574,40 @@
         state.pollEditing = false;
         render();
         toast("Poll created — students can vote now.", "ok");
+      } else if (form.id === "niter-ai-form") {
+        e.preventDefault();
+        var naiQ = (document.getElementById("nai-input").value || "").trim();
+        if (!naiQ) return;
+        naiAskAndRender(naiQ);
+      } else if (form.id === "opp-form") {
+        e.preventDefault();
+        var opTitle = (document.getElementById("op-title").value || "").trim();
+        var opCompany = (document.getElementById("op-company").value || "").trim();
+        if (!opTitle) { toast("Give the opportunity a title.", "err"); return; }
+        if (!opCompany) { toast("Who is posting this? Add the company or poster name.", "err"); return; }
+        var opData = {
+          title: opTitle,
+          company: opCompany,
+          type: document.getElementById("op-type").value || "job",
+          location: (document.getElementById("op-location").value || "").trim(),
+          stipend: (document.getElementById("op-stipend").value || "").trim(),
+          deadline: document.getElementById("op-deadline").value || "",
+          description: (document.getElementById("op-desc").value || "").trim(),
+          requirements: (document.getElementById("op-req").value || "").split("\n").map(function (x) { return x.trim(); }).filter(function (x) { return x; }),
+          applyLink: (document.getElementById("op-link").value || "").trim(),
+          applyForm: document.getElementById("op-form").value || "",
+          postedBy: (document.getElementById("op-by").value || "").trim()
+        };
+        var editingOpp = state.oppEditing && state.oppEditing !== "new" ? oppById(state.oppEditing) : null;
+        if (editingOpp) {
+          updateOpportunity(editingOpp, opData);
+          toast("Opportunity updated.", "ok");
+        } else {
+          createOpportunity(state.session.clubId, opData, opData.postedBy || actorName());
+          toast("Opportunity posted — it is live on the board now.", "ok");
+        }
+        state.oppEditing = null;
+        render();
       }
     });
 
