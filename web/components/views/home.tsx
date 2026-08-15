@@ -3,16 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useDb } from "@/lib/store";
-import { clubById, fmtDateTime, formById, isOpen, nextDeadline, sortNotices, statusOf } from "@/lib/utils";
+import { clubById, fmtDate, fmtDateTime, formById, isOpen, nextDeadline, personKey, relativeAgo, sortNotices, statusOf } from "@/lib/utils";
 import { rsvpCount } from "@/lib/events";
 import { ClubGrid, FormGrid, NoticeCard } from "@/components/cards";
 import AdsCarousel from "@/components/ads";
 import { LiveBadge, SectionHead, Skeleton } from "@/components/ui";
 import { Countdown, LiveClock, RelativeTime } from "@/components/countdown";
 import { Reveal } from "@/components/reveal";
+import { useIdentity } from "@/components/identity";
 
 export default function HomeView() {
   const db = useDb();
+  const { person } = useIdentity();
 
   if (!db) return <HomeSkeleton />;
 
@@ -26,6 +28,49 @@ export default function HomeView() {
     .slice()
     .sort((a, b) => b.submittedAt.localeCompare(a.submittedAt))
     .slice(0, 6);
+
+  // Personalization — a signed-in student's own upcoming RSVPs, straight from live data.
+  const myUpcoming = person
+    ? (db.events || [])
+        .filter((ev) => (ev.rsvps || []).some((r) => personKey(r) === personKey(person)))
+        .filter((ev) => new Date(ev.startsAt).getTime() >= Date.now())
+        .sort((a, b) => a.startsAt.localeCompare(b.startsAt))
+        .slice(0, 3)
+    : [];
+
+  // This-week digest — events, deadlines and fresh notices in the next 7 days.
+  const weekMs = Date.now();
+  const weekEndMs = weekMs + 7 * 86400000;
+  const weekEvents = (db.events || [])
+    .filter((ev) => {
+      const t = new Date(ev.startsAt).getTime();
+      return !isNaN(t) && t >= weekMs && t <= weekEndMs;
+    })
+    .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  const weekDeadlines = db.forms
+    .map((f) => ({ f, st: statusOf(f) }))
+    .filter(({ st }) => {
+      if (st.key === "closed") return false;
+      const at = st.key === "soon" ? st.start : st.end;
+      return !!at && at.getTime() >= weekMs && at.getTime() <= weekEndMs;
+    })
+    .map(({ f, st }) => ({
+      f,
+      key: st.key as "soon" | "open",
+      at: (st.key === "soon" ? st.start : st.end) as Date,
+    }))
+    .sort((a, b) => a.at.getTime() - b.at.getTime());
+  const weekNotices = sortNotices(db.notices)
+    .filter((n) => new Date(n.createdAt || n.date).getTime() >= weekMs - 7 * 86400000)
+    .slice(0, 3);
+
+  // Site identity comes from the live config — admins can edit it in the portal.
+  const cfg = db.config;
+  const heroTitle = cfg?.heroTitle || "Every club at NITER,";
+  const heroAccent = cfg?.heroAccent || "one portal.";
+  const heroSub =
+    cfg?.heroSub ||
+    "Discover notices, register for events, join clubs, and fill forms — all in one place. Club executives can post notices and publish membership forms in seconds.";
 
   return (
     <>
@@ -51,12 +96,9 @@ export default function HomeView() {
               NITER · One portal for every club
             </p>
             <h1 className="display-xl m-0 mt-5 text-white">
-              Every club at NITER, <span className="text-gold">one portal</span>.
+              {heroTitle} <span className="text-gold">{heroAccent}</span>
             </h1>
-            <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-white/85">
-              Discover notices, register for events, join clubs, and fill forms — all in one place. Club
-              executives can post notices and publish membership forms in seconds.
-            </p>
+            <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-white/85">{heroSub}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/clubs"
@@ -152,19 +194,136 @@ export default function HomeView() {
       {/* ---------------- Sponsored club ads (moderator-published image/video) ---------------- */}
       <AdsCarousel />
 
-      {/* ---------------- NITER institutional stats band ---------------- */}
+      {/* ---------------- NITER stats band — every number derived live ---------------- */}
       <div className="border-b border-hairline bg-surface-2">
         <div className="container-x">
           <Reveal>
             <div className="grid gap-8 py-12 text-center sm:grid-cols-2 lg:grid-cols-4">
-              <NiterFact value="2009" label="Established" />
-              <NiterFact value="2000+" label="Students" />
-              <NiterFact value="5" label="Departments" />
-              <NiterFact value="DU" label="Constituent institute" />
+              <NiterFact value={cfg?.established || "2009"} label="Established" />
+              <NiterFact value={String(db.clubs.length)} label="Clubs" />
+              <NiterFact value={String(db.students.length)} label="Students" />
+              <NiterFact value={String(db.events.length)} label="Events hosted" />
             </div>
           </Reveal>
         </div>
       </div>
+
+      {/* ---------------- This week at NITER — live digest ---------------- */}
+      <section className="container-x py-12 md:py-16">
+        <SectionHead
+          title="🗓 This week at NITER"
+          sub="Everything happening in the next 7 days — events, form deadlines and fresh notices, all live."
+          action={
+            <Link href="/events" className="text-sm font-semibold text-crimson no-underline hover:underline">
+              Full calendar →
+            </Link>
+          }
+        />
+        <div className="mt-3 grid gap-4 lg:grid-cols-3">
+          <DigestCard
+            icon="📅"
+            title="Events"
+            count={weekEvents.length}
+            empty="No events in the next 7 days — check the full calendar."
+            items={weekEvents.slice(0, 4).map((ev) => {
+              const club = clubById(db, ev.clubId);
+              return {
+                key: ev.id,
+                href: `/events/${ev.id}`,
+                icon: club?.icon,
+                title: ev.title,
+                sub: club?.name,
+                meta: fmtDateTime(ev.startsAt) + (ev.venue ? ` · ${ev.venue}` : ""),
+              };
+            })}
+            seeAll={{ href: "/events", label: "All events →" }}
+          />
+          <DigestCard
+            icon="⏳"
+            title="Deadlines"
+            count={weekDeadlines.length}
+            empty="Nothing closing or opening this week."
+            items={weekDeadlines.slice(0, 4).map(({ f, key, at }) => {
+              const club = clubById(db, f.clubId);
+              return {
+                key: f.id,
+                href: `/form/${f.id}`,
+                icon: club?.icon,
+                title: f.title,
+                sub: club?.name,
+                meta: `${key === "soon" ? "🚀 Opens" : "⏳ Closes"} ${fmtDate(at.toISOString())}`,
+              };
+            })}
+            seeAll={{ href: "/clubs", label: "Browse forms →" }}
+          />
+          <DigestCard
+            icon="📢"
+            title="New notices"
+            count={weekNotices.length}
+            empty="No new notices this week — check the notice board."
+            items={weekNotices.map((n) => {
+              const club = clubById(db, n.clubId);
+              return {
+                key: n.id,
+                href: "/notices",
+                icon: club?.icon,
+                title: (n.pinned ? "📌 " : "") + n.title,
+                sub: club?.name,
+                meta: relativeAgo(n.createdAt || n.date),
+              };
+            })}
+            seeAll={{ href: "/notices", label: "All notices →" }}
+          />
+        </div>
+      </section>
+
+      {/* ---------------- Your RSVPs — personal, live, signed-in only ---------------- */}
+      {myUpcoming.length > 0 && (
+        <section className="container-x py-12 md:py-14">
+          <SectionHead
+            title="🎟 Your RSVPs"
+            sub="Events you're attending — they update here the moment anything changes."
+            action={
+              <Link href="/events" className="text-sm font-semibold text-crimson no-underline hover:underline">
+                All events →
+              </Link>
+            }
+          />
+          <div className="mt-3 grid gap-4 md:grid-cols-3">
+            {myUpcoming.map((ev) => {
+              const club = clubById(db, ev.clubId);
+              return (
+                <Link
+                  key={ev.id}
+                  href={`/events/${ev.id}`}
+                  className="card p-5 no-underline transition hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-[20px]"
+                      style={{ background: club?.color || "#eef2f7" }}
+                      aria-hidden="true"
+                    >
+                      {club?.icon ?? "🎪"}
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="m-0 truncate text-[15px] font-bold text-ink">{ev.title}</h3>
+                      <p className="m-0 text-[12px] text-muted">{club?.name}</p>
+                    </div>
+                  </div>
+                  <p className="m-0 mt-3 text-[12.5px] text-muted">
+                    🕒 {fmtDateTime(ev.startsAt)}
+                    {ev.venue ? ` · 📍 ${ev.venue}` : ""}
+                  </p>
+                  <p className="m-0 mt-1.5 text-[12px] font-semibold text-emerald-600 dark:text-emerald-400">
+                    ✓ You're RSVP'd
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* ---------------- Clubs ---------------- */}
       <section className="container-x py-16 md:py-20">
@@ -325,6 +484,46 @@ export default function HomeView() {
         </Reveal>
       </section>
 
+      {/* ---------------- Get involved — passport & club quiz ---------------- */}
+      <section className="container-x pb-16 md:pb-20">
+        <Reveal>
+          <SectionHead
+            title="🛂 More ways in"
+            sub="Your attendance is already tracked — make it count, and find the club that actually fits you."
+          />
+          <div className="mt-3 grid gap-4 md:grid-cols-2">
+            <Link
+              href="/passport"
+              className="card p-6 no-underline transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="text-3xl" aria-hidden="true">
+                🛂
+              </div>
+              <h3 className="m-0 mt-3 text-[17px] font-bold text-ink">Club Passport</h3>
+              <p className="m-0 mt-1 text-[13.5px] leading-relaxed text-muted">
+                Every event you check in to stamps your passport with that club&apos;s mark. Collect stamps across
+                clubs and unlock the <b className="text-ink">Club Hopper</b> badge.
+              </p>
+              <p className="m-0 mt-3 text-[13px] font-semibold text-crimson">Open your passport →</p>
+            </Link>
+            <Link
+              href="/quiz"
+              className="card p-6 no-underline transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="text-3xl" aria-hidden="true">
+                🧭
+              </div>
+              <h3 className="m-0 mt-3 text-[17px] font-bold text-ink">Which club fits you?</h3>
+              <p className="m-0 mt-1 text-[13.5px] leading-relaxed text-muted">
+                Eight quick questions, one honest match — get pointed at the clubs that fit your interests instead
+                of scrolling the whole directory.
+              </p>
+              <p className="m-0 mt-3 text-[13px] font-semibold text-crimson">Take the 2-minute quiz →</p>
+            </Link>
+          </div>
+        </Reveal>
+      </section>
+
       {/* ---------------- Student tools — navy callout band ---------------- */}
       <section className="container-x pb-16 md:pb-20">
         <Reveal>
@@ -453,6 +652,65 @@ function NiterFact({ value, label }: { value: string; label: string }) {
     <div>
       <div className="display-md m-0 text-navy dark:text-gold">{value}</div>
       <div className="mt-1 text-[13px] font-medium uppercase tracking-[1.4px] text-muted">{label}</div>
+    </div>
+  );
+}
+
+/* One column of the "This week at NITER" digest — events, deadlines or notices. */
+function DigestCard({
+  icon,
+  title,
+  count,
+  empty,
+  items,
+  seeAll,
+}: {
+  icon: string;
+  title: string;
+  count: number;
+  empty: string;
+  items: { key: string; href: string; icon?: string; title: string; sub?: string; meta: string }[];
+  seeAll: { href: string; label: string };
+}) {
+  return (
+    <div className="card flex flex-col p-5">
+      <div className="flex items-center gap-2">
+        <span className="text-lg" aria-hidden="true">
+          {icon}
+        </span>
+        <h3 className="m-0 text-[15.5px] font-bold text-ink">{title}</h3>
+        <span className="ml-auto rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-bold text-muted">{count}</span>
+      </div>
+      <div className="mt-3 flex-1 space-y-2.5">
+        {items.length ? (
+          items.map((it) => (
+            <Link
+              key={it.key}
+              href={it.href}
+              className="block rounded-lg border border-hairline p-3 no-underline transition hover:border-navy/30 hover:bg-surface-2/40"
+            >
+              <div className="flex items-start gap-2.5">
+                <span className="mt-0.5 text-lg" aria-hidden="true">
+                  {it.icon ?? "•"}
+                </span>
+                <div className="min-w-0">
+                  <div className="truncate text-[13.5px] font-bold text-ink">{it.title}</div>
+                  {it.sub && <div className="truncate text-[11.5px] text-muted">{it.sub}</div>}
+                  <div className="mt-0.5 text-[11.5px] font-medium text-muted">{it.meta}</div>
+                </div>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <p className="m-0 text-[12.5px] leading-relaxed text-muted">{empty}</p>
+        )}
+      </div>
+      <Link
+        href={seeAll.href}
+        className="mt-3 inline-block text-[12.5px] font-semibold text-crimson no-underline hover:underline"
+      >
+        {seeAll.label}
+      </Link>
     </div>
   );
 }

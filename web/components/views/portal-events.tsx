@@ -12,8 +12,10 @@ import {
   eventClashes,
   eventPhase,
   exportCheckInsCsv,
+  promoteFromWaitlist,
   rsvpCount,
   undoCheckIn,
+  waitlistCount,
 } from "@/lib/events";
 import { logAudit } from "@/lib/audit";
 import { useToast } from "@/components/providers";
@@ -144,6 +146,7 @@ function EventRow({
   const phase = eventPhase(ev);
   const rsvps = rsvpCount(ev);
   const ins = checkInCount(ev);
+  const waitCount = waitlistCount(ev);
   const clashes = eventClashes(db, ev);
   const phasePill =
     phase === "live" ? (
@@ -182,6 +185,7 @@ function EventRow({
         </button>
         <span className="rounded-full bg-surface-2 px-2.5 py-1 text-[11.5px] font-bold text-muted">
           {rsvps} RSVPs · {ins} checked in
+          {waitCount > 0 ? ` · ⏳ ${waitCount} on waitlist` : ""}
         </span>
         <button className="btn btn-outline btn-sm" onClick={onEdit}>
           Edit
@@ -441,6 +445,7 @@ function CheckInConsole({
   const club = clubById(db, ev.clubId);
   const rsvps = Array.isArray(ev.rsvps) ? ev.rsvps : [];
   const ins = Array.isArray(ev.checkIns) ? ev.checkIns : [];
+  const waitlist = Array.isArray(ev.waitlist) ? ev.waitlist : [];
   const insKeys = new Set(ins.map((c) => (c.userId || c.email || "").toLowerCase()));
   const phase = eventPhase(ev);
   const filtered = q.trim()
@@ -500,11 +505,18 @@ function CheckInConsole({
             </button>
           )}
         </div>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <ConsoleStat value={rsvps.length} label="RSVPs" />
           <ConsoleStat value={ins.length} label="Checked in" tone="text-ok" />
+          <ConsoleStat value={waitlist.length} label="on waitlist" />
           <ConsoleStat
-            value={ev.capacity > 0 ? `${Math.max(0, ev.capacity - rsvps.length)}` : "∞"}
+            value={
+              ev.capacity > 0 && rsvps.length >= ev.capacity && waitlist.length > 0
+                ? "Full"
+                : ev.capacity > 0
+                  ? `${Math.max(0, ev.capacity - rsvps.length)}`
+                  : "∞"
+            }
             label="spots left"
           />
         </div>
@@ -583,6 +595,50 @@ function CheckInConsole({
             })
           ) : (
             <EmptyState icon="🎟">No RSVPs yet — share the event link so students can sign up.</EmptyState>
+          )}
+        </div>
+      </div>
+
+      {/* waitlist */}
+      <div className="mt-5">
+        <h3 className="m-0 text-[15px] font-bold text-ink">⏳ Waitlist ({waitlist.length})</h3>
+        <p className="m-0 mt-1 text-[12px] text-muted">
+          Students join automatically when the event fills. Promote one manually, or they move into a freed spot
+          automatically when someone cancels.
+        </p>
+        <div className="mt-3 space-y-2">
+          {waitlist.length ? (
+            waitlist.map((w, i) => {
+              const key = (w.userId || w.email || "").toLowerCase();
+              return (
+                <div key={key} className="flex flex-wrap items-center gap-3 rounded-lg border border-dashed border-line p-2.5">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface-2 text-[12px] font-extrabold text-muted">
+                    #{i + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[13.5px] font-bold text-ink">{w.name}</div>
+                    <div className="text-[11.5px] text-muted">
+                      {w.email}
+                      {w.studentId ? ` · ${w.studentId}` : ""}
+                    </div>
+                  </div>
+                  <button
+                    className="btn btn-outline btn-sm"
+                    onClick={() => {
+                      const p = promoteFromWaitlist(db, ev);
+                      if (p) {
+                        logAudit("waitlist_promote", `Promoted ${p.name} from the waitlist for ${ev.title}`, "info", p.email, auth.user?.email || "");
+                        toast.toast(`${p.name} moved to the RSVP list.`, "ok");
+                      }
+                    }}
+                  >
+                    ↑ Promote
+                  </button>
+                </div>
+              );
+            })
+          ) : (
+            <p className="m-0 text-[12.5px] text-muted">No one on the waitlist right now.</p>
           )}
         </div>
       </div>

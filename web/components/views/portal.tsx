@@ -1790,6 +1790,8 @@ function SettingsTab({ clubId, isAdmin }: { clubId: string; isAdmin: boolean }) 
         </div>
       </div>
 
+      {isAdmin && <SiteSettingsPanel />}
+
       {isAdmin && <AuditLogPanel />}
 
       {isAdmin && (
@@ -1898,6 +1900,107 @@ function PortalSkeleton() {
         <Skeleton className="mt-3 h-10" />
         <Skeleton className="mt-3 h-10" />
       </div>
+    </div>
+  );
+}
+
+/* ---------------- site-wide settings (admin) ---------------- */
+
+function SiteSettingsPanel() {
+  const db = useDb()!;
+  const toast = useToast();
+  const auth = useAuth();
+  const [form, setForm] = useState(() => ({
+    institute: db.config?.institute || "",
+    established: db.config?.established || "",
+    heroTitle: db.config?.heroTitle || "",
+    heroAccent: db.config?.heroAccent || "",
+    heroSub: db.config?.heroSub || "",
+    announcement: db.config?.announcement || "",
+  }));
+
+  const save = () => {
+    const next = {
+      ...db.config,
+      institute: form.institute.trim() || db.config.institute,
+      established: form.established.trim(),
+      heroTitle: form.heroTitle.trim(),
+      heroAccent: form.heroAccent.trim(),
+      heroSub: form.heroSub.trim(),
+      announcement: form.announcement.trim(),
+    };
+    mutate((d) => {
+      d.config = next;
+    });
+    // Push the site config doc to the cloud so every device sees the change
+    // (config is a single doc, not part of the collection diff-push).
+    void (async () => {
+      const { getCloudDb } = await import("@/lib/firebase");
+      const { doc, setDoc } = await import("firebase/firestore");
+      const fdb = getCloudDb();
+      if (fdb) {
+        await setDoc(doc(fdb, "config", "site"), next, { merge: true }).catch(() => undefined);
+      }
+    })();
+    logAudit("config", "Updated site-wide settings (hero, facts, announcement)", "info", "", auth.user?.email || "");
+    toast.toast("Site settings saved — live across the portal.", "ok");
+  };
+
+  return (
+    <div className="panel lg:col-span-2">
+      <h2 className="m-0 text-[18px] font-bold text-ink">🌐 Site settings</h2>
+      <p className="m-0 mt-1 text-[13px] text-muted">
+        Site-wide content shown to every visitor — the home hero, the stats band and the announcement strip.
+        Saved instantly and synced to the cloud.
+      </p>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="label" htmlFor="cfg-institute">
+            Institute name
+          </label>
+          <input id="cfg-institute" className="input" value={form.institute} onChange={(e) => setForm({ ...form, institute: e.target.value })} />
+        </div>
+        <div>
+          <label className="label" htmlFor="cfg-established">
+            Established (year)
+          </label>
+          <input id="cfg-established" className="input" placeholder="2009" value={form.established} onChange={(e) => setForm({ ...form, established: e.target.value })} />
+        </div>
+        <div>
+          <label className="label" htmlFor="cfg-hero-title">
+            Hero title
+          </label>
+          <input id="cfg-hero-title" className="input" value={form.heroTitle} onChange={(e) => setForm({ ...form, heroTitle: e.target.value })} />
+        </div>
+        <div>
+          <label className="label" htmlFor="cfg-hero-accent">
+            Hero accent (gold text)
+          </label>
+          <input id="cfg-hero-accent" className="input" value={form.heroAccent} onChange={(e) => setForm({ ...form, heroAccent: e.target.value })} />
+        </div>
+        <div className="sm:col-span-2">
+          <label className="label" htmlFor="cfg-hero-sub">
+            Hero subtitle
+          </label>
+          <textarea id="cfg-hero-sub" className="textarea w-full" rows={2} value={form.heroSub} onChange={(e) => setForm({ ...form, heroSub: e.target.value })} />
+        </div>
+        <div className="sm:col-span-2">
+          <label className="label" htmlFor="cfg-announcement">
+            Announcement strip (shown above the header — leave empty to hide)
+          </label>
+          <textarea
+            id="cfg-announcement"
+            className="textarea w-full"
+            rows={2}
+            placeholder="e.g. 🎉 Club fest registrations close Friday!"
+            value={form.announcement}
+            onChange={(e) => setForm({ ...form, announcement: e.target.value })}
+          />
+        </div>
+      </div>
+      <button className="btn btn-primary mt-4" onClick={save}>
+        Save site settings
+      </button>
     </div>
   );
 }

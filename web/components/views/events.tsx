@@ -14,6 +14,9 @@ import {
   rsvpCount,
   rsvpOf,
   toggleRsvp,
+  waitlistCount,
+  waitlistOfPerson,
+  waitlistPosition,
 } from "@/lib/events";
 import { logAudit } from "@/lib/audit";
 import { useToast } from "@/components/providers";
@@ -127,6 +130,10 @@ function EventCard({ ev }: { ev: ClubEvent }) {
   const left = capacityLeft(ev);
   const clashes = eventClashes(db, ev);
   const rsvpState = person ? rsvpOf(ev, person) : undefined;
+  const waitState = person ? waitlistOfPerson(ev, person) : undefined;
+  const waitPos = person ? waitlistPosition(ev, person) : null;
+  const waitCount = waitlistCount(ev);
+  const isFull = ev.capacity > 0 && rsvps >= ev.capacity;
   const inState = person ? checkInOf(ev, person) : undefined;
 
   const phasePill =
@@ -143,9 +150,18 @@ function EventCard({ ev }: { ev: ClubEvent }) {
       setAskIdentity(true);
       return;
     }
-    const on = toggleRsvp(db, ev, person);
-    toast.toast(on ? "✓ You're in! RSVP saved." : "RSVP removed.", on ? "ok" : "");
-    logAudit(on ? "rsvp" : "rsvp_cancel", `${on ? "RSVP'd to" : "Cancelled RSVP for"} ${ev.title}`, "info", person.email, person.email);
+    const hadWaitlist = waitlistCount(ev) > 0;
+    const res = toggleRsvp(db, ev, person);
+    if (res === "confirmed") {
+      toast.toast("✓ You're in! RSVP saved.", "ok");
+      logAudit("rsvp", `RSVP'd to ${ev.title}`, "info", person.email, person.email);
+    } else if (res === "waitlisted") {
+      toast.toast(`Full — you're #${waitlistCount(ev)} on the waitlist.`, "ok");
+      logAudit("rsvp_waitlist", `Joined the waitlist for ${ev.title}`, "info", person.email, person.email);
+    } else {
+      toast.toast(hadWaitlist ? "RSVP removed — the next waitlisted student moved in." : "RSVP removed.", "");
+      logAudit("rsvp_cancel", `Cancelled RSVP for ${ev.title}`, "info", person.email, person.email);
+    }
   };
 
   return (
@@ -184,7 +200,12 @@ function EventCard({ ev }: { ev: ClubEvent }) {
       <div className="mt-3">
         <div className="flex items-center justify-between text-[12px] font-semibold text-muted">
           <span>
-            {rsvps} going{ev.capacity > 0 ? ` · ${left} spot${left === 1 ? "" : "s"} left` : ""}
+            {rsvps} going
+            {ev.capacity > 0
+              ? isFull
+                ? ` · full${waitCount > 0 ? ` · ${waitCount} on waitlist` : ""}`
+                : ` · ${left} spot${left === 1 ? "" : "s"} left`
+              : ""}
           </span>
           <span>
             {ins} checked in
@@ -194,7 +215,7 @@ function EventCard({ ev }: { ev: ClubEvent }) {
         {ev.capacity > 0 && (
           <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-surface-2">
             <div
-              className={`h-full rounded-full ${rsvps >= ev.capacity ? "bg-crimson" : "bg-gold"}`}
+              className={`h-full rounded-full ${isFull ? "bg-crimson" : "bg-gold"}`}
               style={{ width: `${Math.min(100, Math.round((rsvps / ev.capacity) * 100))}%` }}
             />
           </div>
@@ -207,9 +228,13 @@ function EventCard({ ev }: { ev: ClubEvent }) {
             <button className="btn btn-outline btn-sm" onClick={onRsvp}>
               ✓ RSVP'd — tap to cancel
             </button>
+          ) : waitState ? (
+            <button className="btn btn-outline btn-sm" onClick={onRsvp}>
+              ⏳ Waitlist #{waitPos}
+            </button>
           ) : (
             <button className="btn btn-primary btn-sm" onClick={onRsvp}>
-              RSVP now
+              {isFull ? "Join waitlist" : "RSVP now"}
             </button>
           )
         ) : inState ? (

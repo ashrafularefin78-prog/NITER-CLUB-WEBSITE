@@ -83,34 +83,96 @@ export function eventClashes(db: Database, ev: ClubEvent): ClubEvent[] {
   return (db.events || []).filter((o) => o.id !== ev.id && overlap(ev.startsAt, ev.endsAt, o.startsAt, o.endsAt));
 }
 
-/* ---------------- RSVP ---------------- */
+/* ---------------- RSVP + waitlist ---------------- */
 
-/** Toggle an RSVP for `person` on `ev`. Returns true when now RSVP'd. */
-export function toggleRsvp(db: Database, ev: ClubEvent, person: Person): boolean {
+export function waitlistOf(ev: ClubEvent): EventPerson[] {
+  return Array.isArray(ev.waitlist) ? ev.waitlist : [];
+}
+
+export function waitlistCount(ev: ClubEvent): number {
+  return waitlistOf(ev).length;
+}
+
+export function waitlistOfPerson(ev: ClubEvent, person: Person): EventPerson | undefined {
+  const key = personKey(person);
+  return waitlistOf(ev).find((w) => personKey(w) === key);
+}
+
+/** 1-based waitlist position, or null when not waitlisted. */
+export function waitlistPosition(ev: ClubEvent, person: Person): number | null {
+  const key = personKey(person);
+  const idx = waitlistOf(ev).findIndex((w) => personKey(w) === key);
+  return idx >= 0 ? idx + 1 : null;
+}
+
+export type RsvpResult = "confirmed" | "waitlisted" | "cancelled";
+
+/**
+ * Toggle RSVP state on `ev` for `person`:
+ *  - already confirmed → cancel, and the first waitlisted student is
+ *    auto-promoted into the freed spot (no one loses their place silently);
+ *  - on the waitlist → leave it;
+ *  - event full → join the waitlist;
+ *  - otherwise → confirm.
+ * Returns the resulting state.
+ */
+export function toggleRsvp(db: Database, ev: ClubEvent, person: Person): RsvpResult {
   const key = personKey(person);
   const email = person.email.trim().toLowerCase();
-  let on = false;
+  let out: RsvpResult = "confirmed";
   mutate((d) => {
     const t = d.events.find((e) => e.id === ev.id);
     if (!t) return;
     if (!Array.isArray(t.rsvps)) t.rsvps = [];
-    const existing = t.rsvps.findIndex((r) => personKey(r) === key);
-    if (existing >= 0) {
-      t.rsvps.splice(existing, 1);
-      on = false;
+    if (!Array.isArray(t.waitlist)) t.waitlist = [];
+    const rIdx = t.rsvps.findIndex((r) => personKey(r) === key);
+    if (rIdx >= 0) {
+      t.rsvps.splice(rIdx, 1);
+      if (t.waitlist.length > 0) {
+        const promoted = t.waitlist.shift()!;
+        t.rsvps.push(promoted);
+      }
+      out = "cancelled";
       return;
     }
-    if (t.capacity && t.capacity > 0 && t.rsvps.length >= t.capacity) return;
-    t.rsvps.push({
+    const wIdx = t.waitlist.findIndex((w) => personKey(w) === key);
+    if (wIdx >= 0) {
+      t.waitlist.splice(wIdx, 1);
+      out = "cancelled";
+      return;
+    }
+    const entry: EventPerson = {
       userId: key,
       name: person.name.trim(),
       email,
       studentId: person.studentId?.trim() || "",
       at: new Date().toISOString(),
-    });
-    on = true;
+    };
+    if (t.capacity && t.capacity > 0 && t.rsvps.length >= t.capacity) {
+      t.waitlist.push(entry);
+      out = "waitlisted";
+      return;
+    }
+    t.rsvps.push(entry);
+    out = "confirmed";
   });
-  return on;
+  return out;
+}
+
+/** Move the first waitlisted student into the RSVP list (organizer action). */
+export function promoteFromWaitlist(db: Database, ev: ClubEvent): EventPerson | null {
+  let out: EventPerson | null = null;
+  mutate((d) => {
+    const t = d.events.find((e) => e.id === ev.id);
+    if (!t) return;
+    if (!Array.isArray(t.rsvps)) t.rsvps = [];
+    if (!Array.isArray(t.waitlist)) t.waitlist = [];
+    if (!t.waitlist.length) return;
+    const promoted = t.waitlist.shift()!;
+    t.rsvps.push(promoted);
+    out = promoted;
+  });
+  return out;
 }
 
 /* ---------------- certificates ---------------- */

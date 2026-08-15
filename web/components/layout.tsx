@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useTheme } from "@/components/providers";
 import { useAuth } from "@/lib/auth";
+import { useDb } from "@/lib/store";
 import { AdminOnlyDirectoryLink } from "@/components/admin-links";
 
 const NAV = [
@@ -67,11 +68,19 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
+  const db = useDb();
+  const announcement = db?.config?.announcement?.trim();
 
   const isActive = (match: string) => (match === "/" ? pathname === "/" : pathname.startsWith(match));
 
   return (
-    <header className="sticky top-0 z-50 shadow-[0_4px_12px_rgba(0,33,71,0.18)]">
+    <>
+      {announcement && (
+        <div className="bg-gold px-4 py-2 text-center text-[13px] font-semibold text-navy">
+          <div className="container-x">{announcement}</div>
+        </div>
+      )}
+      <header className="sticky top-0 z-50 shadow-[0_4px_12px_rgba(0,33,71,0.18)]">
       {/* institutional navy bar — mirrors the niter.edu.bd header */}
       <div className="bg-navy text-white">
         <div className="container-x flex h-[68px] items-center gap-4">
@@ -160,6 +169,7 @@ export function SiteHeader() {
         </nav>
       )}
     </header>
+    </>
   );
 }
 
@@ -180,6 +190,7 @@ const FOOTER_LINKS: { title: string; links: { label: string; href: string }[] }[
       { label: "Member Portal", href: "/portal" },
       { label: "Browse forms", href: "/clubs" },
       { label: "Q&A board", href: "/questions" },
+      { label: "Which club fits you? 🧭", href: "/quiz" },
       { label: "Report an issue", href: "/it-support" },
     ],
   },
@@ -188,24 +199,24 @@ const FOOTER_LINKS: { title: string; links: { label: string; href: string }[] }[
     links: [
       { label: "Events & RSVP", href: "/events" },
       { label: "Leaderboard", href: "/leaderboard" },
+      { label: "Club Passport", href: "/passport" },
       { label: "Privacy & data", href: "/privacy" },
     ],
   },
 ];
 
 export function SiteFooter() {
+  const db = useDb();
+  const institute = db?.config?.institute || "National Institute of Textile Engineering and Research (NITER)";
   return (
     <footer className="site-footer bg-navy text-white/80">
       <div className="container-x grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
           <Logo dark />
           <p className="mt-4 max-w-md text-[14px] leading-relaxed">
-            The student club portal of the{" "}
-            <b className="font-semibold text-white">
-              National Institute of Textile Engineering and Research (NITER)
-            </b>{" "}
-            — a constituent institute of the University of Dhaka. Notices, forms and memberships for every club,
-            in one place.
+            The student club portal of the <b className="font-semibold text-white">{institute}</b> — a
+            constituent institute of the University of Dhaka. Notices, forms and memberships for every club, in
+            one place.
           </p>
           <div className="mt-4 inline-flex items-center gap-2 rounded-md border border-white/20 px-3 py-1.5 text-[12px] font-semibold uppercase tracking-[1.2px] text-gold">
             Constituent Institute · Univ. of Dhaka

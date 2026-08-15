@@ -17,6 +17,9 @@ import {
   rsvpCount,
   rsvpOf,
   toggleRsvp,
+  waitlistCount,
+  waitlistOfPerson,
+  waitlistPosition,
 } from "@/lib/events";
 import { logAudit } from "@/lib/audit";
 import { useToast } from "@/components/providers";
@@ -49,17 +52,33 @@ export default function EventDetailView({ eventId }: { eventId: string }) {
   const clashes = eventClashes(db, ev);
   const cert = person ? certFor(db, ev, person) : undefined;
   const rsvpState = person ? rsvpOf(ev, person) : undefined;
+  const waitState = person ? waitlistOfPerson(ev, person) : undefined;
+  const waitPos = person ? waitlistPosition(ev, person) : null;
+  const waitCount = waitlistCount(ev);
   const inState = person ? checkInOf(ev, person) : undefined;
   const canIn = canCheckIn(ev);
+  const isFull = ev.capacity > 0 && rsvps >= ev.capacity;
 
   const onRsvp = () => {
     if (!person) {
       setAskIdentity(true);
       return;
     }
-    const on = toggleRsvp(db, ev, person);
-    toast.toast(on ? "✓ You're in — see you there!" : "RSVP removed.", on ? "ok" : "");
-    logAudit(on ? "rsvp" : "rsvp_cancel", `${on ? "RSVP'd to" : "Cancelled RSVP for"} ${ev.title}`, "info", person.email, person.email);
+    const hadWaitlist = waitlistCount(ev) > 0;
+    const res = toggleRsvp(db, ev, person);
+    if (res === "confirmed") {
+      toast.toast("✓ You're in — see you there!", "ok");
+      logAudit("rsvp", `RSVP'd to ${ev.title}`, "info", person.email, person.email);
+    } else if (res === "waitlisted") {
+      toast.toast(`The event is full — you're #${waitlistCount(ev)} on the waitlist.`, "ok");
+      logAudit("rsvp_waitlist", `Joined the waitlist for ${ev.title}`, "info", person.email, person.email);
+    } else {
+      toast.toast(
+        hadWaitlist ? "RSVP removed — the next waitlisted student was moved in." : "RSVP removed.",
+        ""
+      );
+      logAudit("rsvp_cancel", `Cancelled RSVP for ${ev.title}`, "info", person.email, person.email);
+    }
   };
 
   const submitCheckIn = () => {
@@ -241,29 +260,45 @@ export default function EventDetailView({ eventId }: { eventId: string }) {
               <div className="mt-3 grid grid-cols-3 gap-2 text-center">
                 <CountStat value={rsvps} label="going" />
                 <CountStat value={ins} label="checked in" />
-                <CountStat value={left === Infinity ? "∞" : left} label="spots left" />
+                <CountStat
+                  value={ev.capacity > 0 && left === 0 ? "Full" : left === Infinity ? "∞" : left}
+                  label={ev.capacity > 0 && left === 0 ? "full" : "spots left"}
+                />
               </div>
               {ev.capacity > 0 && (
                 <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-surface-2">
                   <div
-                    className={`h-full rounded-full ${rsvps >= ev.capacity ? "bg-crimson" : "bg-gold"}`}
+                    className={`h-full rounded-full ${isFull ? "bg-crimson" : "bg-gold"}`}
                     style={{ width: `${Math.min(100, Math.round((rsvps / ev.capacity) * 100))}%` }}
                   />
                 </div>
+              )}
+              {isFull && waitCount > 0 && (
+                <p className="m-0 mt-2 text-[11.5px] font-semibold text-crimson">
+                  ⏳ Full — {waitCount} on the waitlist, promoted automatically as spots open.
+                </p>
               )}
             </div>
 
             {phase === "upcoming" && (
               <div className="card p-5 text-center">
                 <h3 className="m-0 text-[15px] font-bold text-ink">Coming up?</h3>
-                <p className="m-0 mt-1 text-[13px] text-muted">Reserve your spot so the organizers know you're coming.</p>
+                <p className="m-0 mt-1 text-[13px] text-muted">
+                  {isFull && !rsvpState && !waitState
+                    ? "This event is full — join the waitlist and you'll move in automatically if a spot opens."
+                    : "Reserve your spot so the organizers know you're coming."}
+                </p>
                 {rsvpState ? (
                   <button className="btn btn-outline mt-3 w-full" onClick={onRsvp}>
                     ✓ RSVP'd — tap to cancel
                   </button>
+                ) : waitState ? (
+                  <button className="btn btn-outline mt-3 w-full" onClick={onRsvp}>
+                    ⏳ On waitlist (#{waitPos}) — tap to leave
+                  </button>
                 ) : (
                   <button className="btn btn-primary mt-3 w-full" onClick={onRsvp}>
-                    RSVP now
+                    {isFull ? "Join the waitlist" : "RSVP now"}
                   </button>
                 )}
                 {askIdentity && person === null && (

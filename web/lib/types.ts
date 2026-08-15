@@ -27,6 +27,8 @@ export interface Club {
   icon: string;
   color: string;
   tagline: string;
+  /** Personality tags used by the "Which club fits me?" quiz matcher. */
+  tags?: string[];
   about: string;
   email: string;
   room: string;
@@ -120,6 +122,8 @@ export interface ClubEvent {
   rsvps?: EventPerson[];
   /** Students actually checked in at the door (attendance). */
   checkIns?: EventPerson[];
+  /** Students on the waitlist — auto-promoted when a spot opens up. */
+  waitlist?: EventPerson[];
 }
 
 /** A verifiable participation certificate issued after a check-in. */
@@ -257,6 +261,14 @@ export interface Student {
 export interface Config {
   institute: string;
   semesters: string[];
+  /** Founding year shown in the home stats band. */
+  established?: string;
+  /** Home hero copy — admin-editable so the site identity stays live. */
+  heroTitle?: string;
+  heroAccent?: string;
+  heroSub?: string;
+  /** Optional site-wide announcement strip shown under the header. */
+  announcement?: string;
 }
 
 export interface Database {

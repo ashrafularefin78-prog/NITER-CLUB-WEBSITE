@@ -135,7 +135,7 @@ export default function ClubDetailView({ clubId }: { clubId: string }) {
 
         {/* sidebar */}
         <aside className="space-y-4">
-          <div className="card p-5 text-center">
+          <div className="card p-5 text-center" id="join">
             <div className="text-5xl" aria-hidden="true">
               {club.icon}
             </div>

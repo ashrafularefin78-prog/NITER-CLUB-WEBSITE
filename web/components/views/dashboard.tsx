@@ -11,6 +11,7 @@ import { studentIdError, studentVerifiedText, verifyStudentId, type StudentCheck
 import { logAudit } from "@/lib/audit";
 import { profileFor } from "@/lib/gamification";
 import { certificateUrl } from "@/lib/events";
+import { hopperProgress, passportFor } from "@/lib/passport";
 import { useToast } from "@/components/providers";
 import { EmptyState, GoogleButton, OrDivider, PageHero, Skeleton } from "@/components/ui";
 import { mirrorUser } from "@/lib/appwrite-write";
@@ -330,6 +331,11 @@ function DashboardHome({
     () => profileFor(db, { email: dbUser.email, userId: dbUser.uid }),
     [db, dbUser.email, dbUser.uid]
   );
+  const myPass = useMemo(
+    () => passportFor(db, { email: dbUser.email, userId: dbUser.uid }),
+    [db, dbUser.email, dbUser.uid]
+  );
+  const hopper = hopperProgress(myPass);
   const upcoming = useMemo(
     () =>
       (db.events || [])
@@ -620,6 +626,41 @@ function DashboardHome({
             </div>
 
             <div className="card p-5">
+              <h2 className="m-0 text-[16px] font-bold text-ink">🛂 Club passport</h2>
+              {myPass.stamps.length ? (
+                <>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {myPass.stamps.map((s) => (
+                      <span
+                        key={s.clubId}
+                        title={s.club?.name}
+                        className="grid h-9 w-9 place-items-center rounded-lg text-[16px]"
+                        style={{ background: (s.club?.color || "#eef2f7") + "22" }}
+                        aria-hidden="true"
+                      >
+                        {s.club?.icon ?? "🎪"}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="m-0 mt-2 text-[12.5px] text-muted">
+                    {myPass.totalEvents} event{myPass.totalEvents === 1 ? "" : "s"} attended across{" "}
+                    {myPass.clubsVisited} club{myPass.clubsVisited === 1 ? "" : "s"}.
+                    {hopper.done
+                      ? " Club Hopper unlocked! 🎉"
+                      : ` ${hopper.need} more club${hopper.need === 1 ? "" : "s"} to unlock Club Hopper.`}
+                  </p>
+                </>
+              ) : (
+                <p className="m-0 mt-1 text-[12.5px] text-muted">
+                  No stamps yet — check in at an event to collect your first.
+                </p>
+              )}
+              <Link href="/passport" className="mt-3 inline-block text-[12.5px] font-semibold no-underline hover:underline">
+                Open my passport →
+              </Link>
+            </div>
+
+            <div className="card p-5">
               <h2 className="m-0 text-[16px] font-bold text-ink">🔎 Explore</h2>
               <div className="mt-3 grid gap-2 text-[13.5px]">
                 <Link href="/students" className="no-underline hover:underline">🎓 Student directory</Link>
@@ -627,6 +668,8 @@ function DashboardHome({
                 <Link href="/events" className="no-underline hover:underline">🗓 Events & RSVP</Link>
                 <Link href="/questions" className="no-underline hover:underline">💬 Q&A board</Link>
                 <Link href="/leaderboard" className="no-underline hover:underline">🏆 Leaderboard</Link>
+                <Link href="/passport" className="no-underline hover:underline">🛂 Club passport</Link>
+                <Link href="/quiz" className="no-underline hover:underline">🧭 Which club fits you?</Link>
                 <Link href="/it-support" className="no-underline hover:underline">🖥 Report a website issue</Link>
               </div>
             </div>

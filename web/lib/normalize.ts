@@ -437,6 +437,7 @@ export function normalizeDb(d: Database): Database {
     if (!ev.capacity || ev.capacity < 0) ev.capacity = 0;
     if (!Array.isArray(ev.rsvps)) ev.rsvps = [];
     if (!Array.isArray(ev.checkIns)) ev.checkIns = [];
+    if (!Array.isArray(ev.waitlist)) ev.waitlist = [];
     if (!ev.code) ev.code = doorCode(ev.id);
   });
   // Student Q&A board — backfill defaults for questions written by older code.
@@ -470,6 +471,7 @@ export function normalizeDb(d: Database): Database {
     if (!w.issuedBy) w.issuedBy = "";
   });
   d.clubs.forEach((c) => {
+    if (!Array.isArray(c.tags)) c.tags = [];
     if (!Array.isArray(c.executives)) {
       c.executives = [
         { role: "President", name: "" },
@@ -501,5 +503,21 @@ export function normalizeDb(d: Database): Database {
     if (f.deadline && f.deadline.length === 10) f.deadline += "T23:59";
     ensureStandardFields(f);
   });
+  // Site config — backfill so every page can rely on it (hero copy, facts,
+  // announcement) even for old stored databases that predate the fields.
+  const DEFAULT_INSTITUTE = "National Institute of Textile Engineering and Research (NITER)";
+  if (!d.config || typeof d.config !== "object") {
+    d.config = { institute: DEFAULT_INSTITUTE, semesters: [] };
+  }
+  if (!d.config.institute) d.config.institute = DEFAULT_INSTITUTE;
+  if (!Array.isArray(d.config.semesters)) d.config.semesters = [];
+  if (!d.config.established) d.config.established = "2009";
+  if (!d.config.heroTitle) d.config.heroTitle = "Every club at NITER,";
+  if (!d.config.heroAccent) d.config.heroAccent = "one portal.";
+  if (!d.config.heroSub) {
+    d.config.heroSub =
+      "Discover notices, register for events, join clubs, and fill forms — all in one place. Club executives can post notices and publish membership forms in seconds.";
+  }
+  if (!d.config.announcement) d.config.announcement = "";
   return d;
 }

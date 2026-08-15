@@ -110,7 +110,7 @@ service cloud.firestore {
       allow create: if isAdmin() || execOf(request.resource.data.clubId);
       allow update: if isAdmin() || execOf(resource.data.clubId) ||
         (signedIn() &&
-         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rsvps', 'checkIns']));
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rsvps', 'checkIns', 'waitlist']));
       allow delete: if isAdmin() || execOf(resource.data.clubId);
     }
 
