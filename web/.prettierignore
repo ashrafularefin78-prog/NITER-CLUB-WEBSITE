@@ -1,0 +1,7 @@
+# machine-generated / deliberately hand-formatted
+lib/seed.json
+app/globals.css
+README.md
+.next/
+node_modules/
+package-lock.json

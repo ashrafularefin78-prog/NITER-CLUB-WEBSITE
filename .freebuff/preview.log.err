@@ -1,0 +1,8 @@
+Exception calling "Start" with "0" argument(s): "Failed to listen on prefix 'http://127.0.0.1:5173/' because it 
+conflicts with an existing registration on the machine."
+At C:\Users\user\Downloads\Clubs\.freebuff\serve.ps1:7 char:1
++ $listener.Start()
++ ~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : HttpListenerException
+ 
