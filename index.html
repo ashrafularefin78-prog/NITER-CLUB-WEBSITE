@@ -1211,15 +1211,27 @@
     /* ---- Futuristic layer ---- */
     .nav-icon-btn { position: relative; background: none; border: 0; font-size: 17px; cursor: pointer; padding: 6px 8px; border-radius: 8px; color: var(--ink); }
     .nav-icon-btn:hover { background: rgba(127, 127, 127, .14); }
-    .nav-links a.nav-ai {
+    /* Floating NITER AI assistant button — bottom-right, like a chatbot launcher */
+    .ai-fab {
+      position: fixed; right: 22px; bottom: 22px; z-index: 90;
+      display: inline-flex; align-items: center; gap: 9px;
       background: linear-gradient(135deg, #d946ef, #8b5cf6);
-      color: #fff;
-      font-weight: 700;
-      white-space: nowrap;
-      box-shadow: 0 2px 10px rgba(139, 92, 246, .35);
+      color: #fff; font-weight: 700; font-size: 14px;
+      padding: 13px 20px; border-radius: 999px; text-decoration: none;
+      box-shadow: 0 6px 24px rgba(139, 92, 246, .45);
+      animation: aiFabIn .5s cubic-bezier(.21,1.02,.73,1) both;
+      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
     }
-    .nav-links a.nav-ai:hover { background: linear-gradient(135deg, #d946ef, #8b5cf6); filter: brightness(1.12); color: #fff; }
-    .nav-links a.nav-ai.active { background: linear-gradient(135deg, #d946ef, #8b5cf6); outline: 2px solid rgba(255, 255, 255, .55); outline-offset: -2px; color: #fff; }
+    .ai-fab:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 10px 30px rgba(139,92,246,.55); }
+    .ai-fab:active { transform: translateY(-1px) scale(.97); }
+    .ai-fab-icon { font-size: 19px; animation: naiFloat 3s ease-in-out infinite; }
+    .ai-fab::before {
+      content: ""; position: absolute; inset: 0; border-radius: 999px;
+      animation: aiFabPulse 2.4s ease-out infinite; pointer-events: none;
+    }
+    @keyframes aiFabPulse { 0% { box-shadow: 0 0 0 0 rgba(217,70,239,.45); } 70% { box-shadow: 0 0 0 16px rgba(217,70,239,0); } 100% { box-shadow: 0 0 0 0 rgba(217,70,239,0); } }
+    @keyframes aiFabIn { 0% { opacity: 0; transform: translateY(24px) scale(.9); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @media (max-width: 640px) { .ai-fab { right: 14px; bottom: 14px; padding: 12px 16px; } }
     .notif-badge { position: absolute; top: -3px; right: -5px; min-width: 16px; height: 16px; padding: 0 4px; background: #dc2626; color: #fff; font-size: 10px; font-weight: 800; border-radius: 999px; display: none; align-items: center; justify-content: center; line-height: 1; }
     .fy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
     .fy-col { min-width: 0; }
@@ -1622,7 +1634,6 @@
           <a href="#/events" data-nav="events">📅 Events</a>
           <a href="#/notices" data-nav="notices">Notices</a>
           <a href="#/opportunities" data-nav="opportunities">💼 Jobs</a>
-          <a class="nav-ai" href="#/niter-ai" data-nav="niter-ai" title="NITER AI assistant — ask anything about NITER" aria-label="NITER AI assistant">🧠 NITER AI</a>
           <div class="more-menu" id="more-menu">
             <button type="button" class="more-toggle" data-action="more-toggle" aria-haspopup="true" aria-expanded="false">More ▾</button>
             <div class="more-panel">
@@ -1650,6 +1661,7 @@
   <div id="announcement-bar" class="announcement-bar" style="display:none"></div>
 
   <main id="app"><!-- views render here --></main>
+  <a class="ai-fab" href="#/niter-ai" id="ai-fab" title="Ask NITER AI — anything about NITER" aria-label="Open NITER AI assistant"><span class="ai-fab-icon">🧠</span><span class="ai-fab-label">NITER AI</span></a>
 
   <footer class="site-footer">
     <div class="container">
@@ -3801,6 +3813,24 @@
     setInterval(syncFromStorage, 4000);
     setInterval(tick, 1000);
 
+    /* Close the "More" dropdown on outside click or Escape. */
+    document.addEventListener("click", function (e) {
+      var menu = document.getElementById("more-menu");
+      if (!menu || !menu.classList.contains("open")) return;
+      if (menu.contains(e.target)) return;
+      menu.classList.remove("open");
+      var btn = menu.querySelector(".more-toggle");
+      if (btn) btn.setAttribute("aria-expanded", "false");
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      var menu = document.getElementById("more-menu");
+      if (!menu || !menu.classList.contains("open")) return;
+      menu.classList.remove("open");
+      var btn = menu.querySelector(".more-toggle");
+      if (btn) btn.setAttribute("aria-expanded", "false");
+    });
+
     function download(filename, text, mime) {
       try {
         var blob = (text instanceof Uint8Array)
@@ -3833,6 +3863,9 @@
       for (var i = 0; i < links.length; i++) {
         links[i].classList.toggle("active", links[i].getAttribute("data-nav") === active);
       }
+      // The floating assistant button is redundant on the assistant page itself.
+      var aiFab = document.getElementById("ai-fab");
+      if (aiFab) aiFab.style.display = active === "niter-ai" ? "none" : "";
     }
 
     function render() {
@@ -10802,9 +10835,13 @@
       ];
       return { intent: c.intent, label: c.label, confidence: c.conf, steps: steps, sources: c.src };
     }
+    var naiPendingSeq = 0;
     function naiAskAndRender(q) {
       q = String(q || "").trim();
       if (!q) return;
+      // A sequence token so rapid successive questions never let an older
+      // answer land after a newer one (answers always match the latest ask).
+      var seq = ++naiPendingSeq;
       var chat = naiLoadChat();
       chat.push({ role: "user", text: q, at: new Date().toISOString() });
       naiSaveChat(chat);
@@ -10822,6 +10859,7 @@
       ];
       render();
       var thinkInt = setInterval(function () {
+        if (seq !== naiPendingSeq) { clearInterval(thinkInt); return; }
         if (state.aiThink >= (state.aiThinkSteps || []).length - 1) { clearInterval(thinkInt); return; }
         state.aiThink++;
         var lab = document.getElementById("nai-think-label");
@@ -10829,6 +10867,7 @@
       }, 230);
       setTimeout(function () {
         clearInterval(thinkInt);
+        if (seq !== naiPendingSeq) return;
         var chat2 = naiLoadChat();
         chat2.push({ role: "ai", text: ans.text, at: new Date().toISOString(), link: ans.link || null, reason: reason });
         naiSaveChat(chat2);
