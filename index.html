@@ -1279,8 +1279,6 @@
     .ai-win-full:hover, .ai-win-close:hover { background: rgba(255,255,255,.14); opacity: 1; }
     .ai-win-body { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
     .ai-win-thread { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; background: linear-gradient(180deg, #f8fafc, #fff); }
-    .ai-win-chips { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; padding: 10px 12px; background: var(--surface); flex: none; max-height: 148px; overflow-y: auto; }
-    .ai-win-chips .nai-chip { font-size: 11px; padding: 4px 9px; }
     .ai-win-foot { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-top: 1px solid #e5e7eb; background: var(--surface); font-size: 11px; color: var(--muted); }
     .ai-win-foot .link { margin-left: auto; }
     [data-theme="dark"] .ai-win { background: #0f1831; border-color: #233156; }
@@ -1457,8 +1455,6 @@
     .nai-typing span:nth-child(2) { animation-delay: .2s; }
     .nai-typing span:nth-child(3) { animation-delay: .4s; }
     @keyframes naiBlink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
-    .nai-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px 0; }
-    .nai-chip { font-size: 12px; padding: 5px 10px; }
     .nai-input-row { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid #e5e7eb; }
     .nai-input { flex: 1; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px 14px; font-size: 14px; }
     .nai-input:focus { outline: none; border-color: var(--crimson); box-shadow: 0 0 0 3px rgba(220, 38, 38, .12); }
@@ -1689,13 +1685,6 @@
     .nai-typing span:nth-child(2) { animation-delay: .15s; }
     .nai-typing span:nth-child(3) { animation-delay: .3s; }
     @keyframes naiTypingBounce { 0%,60%,100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-5px); opacity: 1; } }
-    .nai-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 14px 0; background: var(--surface); }
-    .nai-chips-label { font-size: 11.5px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; color: #8b5cf6; margin-right: 4px; }
-    .nai-chip { font-size: 12px; padding: 5px 10px; animation: naiChipIn .4s ease both; transition: transform .12s ease, box-shadow .12s ease; }
-    .nai-chip:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 4px 12px rgba(139,92,246,.18); }
-    @keyframes naiChipIn { 0% { opacity: 0; transform: translateY(6px) scale(.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-    .nai-refresh { flex: none; transition: transform .3s ease; }
-    .nai-refresh:hover { animation: naiSpin .6s ease; }
     @keyframes naiSpin { to { transform: rotate(360deg); } }
     .nai-input-row { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid #e5e7eb; background: var(--surface); }
     .nai-input { flex: 1; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px 14px; font-size: 14px; transition: border-color .15s ease, box-shadow .15s ease; }
@@ -1703,9 +1692,22 @@
     .nai-send { position: relative; overflow: hidden; }
     .nai-send::after { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent); transform: skewX(-20deg); animation: naiShimmer 3.2s ease-in-out infinite; }
     @keyframes naiShimmer { 0% { left: -60%; } 60%,100% { left: 130%; } }
-    .nai-chips-pop .nai-chip { animation: naiChipIn .35s ease both; }
     .nai-think { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #64748b; }
     .nai-think-spinner { width: 14px; height: 14px; border: 2px solid rgba(139,92,246,.25); border-top-color: #8b5cf6; border-radius: 50%; animation: naiSpin .8s linear infinite; flex: none; }
+    /* attach button + uploaded-file card */
+    .nai-attach { flex: none; width: 38px; height: 38px; border-radius: 10px; border: 1px solid #d1d5db; background: #fff; font-size: 16px; cursor: pointer; transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease; display: inline-flex; align-items: center; justify-content: center; }
+    .nai-attach:hover { transform: translateY(-1px); border-color: #8b5cf6; background: #faf5ff; box-shadow: 0 3px 12px rgba(139,92,246,.18); }
+    .nai-attach:active { transform: scale(.92); }
+    .nai-file-card { margin: 10px 0 4px; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; background: #fafbfc; animation: naiMsgIn .28s ease both; }
+    .nai-file-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+    .nai-file-icon { font-size: 21px; flex: none; }
+    .nai-file-meta { display: flex; flex-direction: column; min-width: 0; }
+    .nai-file-meta b { font-size: 13.5px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nai-file-meta span { font-size: 11.5px; color: #64748b; }
+    .nai-file-img { width: 100%; max-height: 300px; object-fit: contain; background: #0f172a; display: block; }
+    .nai-file-details summary { cursor: pointer; font-size: 12px; font-weight: 600; color: #8b5cf6; padding: 8px 12px; border-top: 1px solid #eef2f7; }
+    .nai-file-details summary:hover { background: #f5f3ff; }
+    .nai-file-text { margin: 0; padding: 0 12px 12px; max-height: 220px; overflow: auto; font-size: 12px; line-height: 1.55; color: #334155; white-space: pre-wrap; word-break: break-word; }
     .nai-typing-dots { display: inline-flex; gap: 3px; margin-left: 2px; }
     .nai-typing-dots span { width: 5px; height: 5px; border-radius: 50%; background: #94a3b8; animation: naiTypingBounce 1.1s ease-in-out infinite; }
     .nai-typing-dots span:nth-child(2) { animation-delay: .15s; }
@@ -1772,6 +1774,16 @@
     .nai-explain-num { font-size: 10px; font-weight: 800; color: #a5a3d9; text-align: right; user-select: none; }
     .nai-explain-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; color: #4c1d95; white-space: pre-wrap; word-break: break-word; }
     .nai-explain-note { grid-column: 2; font-size: 12px; color: #5b5bd6; line-height: 1.45; }
+    .nai-math { margin-top: 10px; border: 1px solid rgba(251,191,36,.35); background: rgba(251,191,36,.07); border-radius: 12px; padding: 10px 12px; animation: naiMsgIn .35s ease both; }
+    .nai-math-head { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: #b45309; }
+    .nai-math-expr { margin-top: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px; font-weight: 700; color: var(--text, #111827); padding: 6px 10px; background: rgba(0,0,0,.06); border-radius: 8px; word-break: break-word; }
+    .nai-math-steps { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; font-size: 12px; color: var(--muted, #6b7280); }
+    .nai-math-steps li b { display: block; color: var(--text, #111827); font-size: 12px; }
+    .nai-math-result { margin-top: 8px; font-size: 16px; font-weight: 800; color: #b45309; word-break: break-word; }
+    .nai-math-extra { margin-top: 6px; font-size: 12px; color: var(--muted, #6b7280); line-height: 1.45; }
+    [data-theme="dark"] .nai-math { border-color: rgba(251,191,36,.28); background: rgba(251,191,36,.06); }
+    [data-theme="dark"] .nai-math-head, [data-theme="dark"] .nai-math-result { color: #fbbf24; }
+    [data-theme="dark"] .nai-math-expr { background: rgba(255,255,255,.06); }
     .nai-clash { margin-top: 10px; border: 1px solid #e4e1fb; background: #f8f7ff; border-radius: 12px; padding: 10px 12px; animation: naiMsgIn .35s ease both; }
     .nai-clash-head { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #4c1d95; }
     .nai-clash-badge { margin-left: auto; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 99px; background: rgba(239,68,68,.12); color: #dc2626; white-space: nowrap; }
@@ -1886,7 +1898,7 @@
     .nai-brain { margin-top: 10px; border: 1px solid #e4e1fb; background: linear-gradient(135deg, #f8f7ff, #f1eefe); border-radius: 12px; padding: 10px 12px; animation: naiMsgIn .35s ease both; }
     .nai-brain-head { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #4c1d95; }
     .nai-brain-badge { margin-left: auto; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 99px; background: rgba(139,92,246,.14); color: #7c3aed; white-space: nowrap; }
-    .nai-brain-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+    .nai-brain-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(64px, 1fr)); gap: 6px; margin-top: 8px; }
     .nai-brain-stat { background: rgba(255,255,255,.8); border: 1px solid #e7e3fb; border-radius: 10px; padding: 6px 4px; text-align: center; }
     .nai-brain-stat b { display: block; font-size: 15px; color: #6d28d9; }
     .nai-brain-stat span { font-size: 9.5px; color: #8b86b8; }
@@ -1925,6 +1937,8 @@
     .nai-agent-steps li::before { content: "✓"; font-weight: 900; color: #10b981; }
     .nai-agent-undo { margin-top: 10px; background: none; border: 1px dashed #c4b5fd; color: #7c3aed; font-size: 12px; font-weight: 700; border-radius: 8px; padding: 5px 12px; cursor: pointer; }
     .nai-agent-undo:hover { background: rgba(139,92,246,.12); }
+    .nai-agent-ok { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .nai-agent-ok .btn { font-size: 12px; }
     [data-theme="dark"] .nai-agent { background: #151b38; border-color: #2b3560; }
     [data-theme="dark"] .nai-agent-head { color: #c4b5fd; }
     [data-theme="dark"] .nai-agent-steps li { color: #9aa3c9; }
@@ -1954,10 +1968,16 @@
     [data-theme="dark"] .nai-thread { background: linear-gradient(180deg, #0b1226, #0f1831); }
     [data-theme="dark"] .nai-bubble { background: #18203c; border-color: #233156; color: #e6e9f2; }
     [data-theme="dark"] .nai-now { background: rgba(139,92,246,.12); border-color: #233156; color: #e6e9f2; }
-    [data-theme="dark"] .nai-chips { background: #0f1831; }
     [data-theme="dark"] .nai-input-row { border-color: #233156; background: #0f1831; }
     [data-theme="dark"] .nai-foot { border-color: #1a2349; background: #0f1831; }
     [data-theme="dark"] .nai-input { background: #0b1226; border-color: #233156; color: #e6e9f2; }
+    [data-theme="dark"] .nai-attach { background: #0b1226; border-color: #233156; color: #e6e9f2; }
+    [data-theme="dark"] .nai-attach:hover { border-color: #8b5cf6; background: #151f3d; }
+    [data-theme="dark"] .nai-file-card { background: #131c36; border-color: #233156; }
+    [data-theme="dark"] .nai-file-meta b { color: #e6e9f2; }
+    [data-theme="dark"] .nai-file-text { color: #aab4cc; }
+    [data-theme="dark"] .nai-file-details summary { border-color: #1a2349; }
+    [data-theme="dark"] .nai-file-details summary:hover { background: #18234a; }
 
     /* ---- Home hero — dynamic stats & animations ---- */
     .hero-orb { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .5; pointer-events: none; z-index: 0; }
@@ -2166,15 +2186,16 @@
   <div class="ai-win" id="ai-win" role="dialog" aria-modal="true" aria-label="NITER AI assistant">
     <div class="ai-win-head">
       <div class="ai-win-logo">🧠</div>
-      <div class="ai-win-title"><b>NITER AI</b><span><span class="ai-win-dot"></span> Online · private &amp; offline</span></div>
+      <div class="ai-win-title"><b>NITER AI</b><span><span class="ai-win-dot"></span> Online · private &amp; secure</span></div>
       <button class="ai-win-full" data-action="ai-win-full" title="Open full page" aria-label="Open full page">⤢</button>
       <button class="ai-win-close" data-action="ai-win-close" title="Close" aria-label="Close">✕</button>
     </div>
     <div class="ai-win-body">
       <div class="nai-rail nai-rail-win" id="nai-win-rail"></div>
       <div class="ai-win-thread" id="nai-win-thread"></div>
-      <div class="ai-win-chips" id="nai-win-chips"></div>
       <form id="niter-ai-win-form" class="nai-input-row">
+        <button type="button" class="nai-attach" id="nai-win-attach" title="Attach an image, PDF, .docx or text file" aria-label="Attach image or document">📎</button>
+        <input type="file" id="nai-win-file" accept="image/*,.pdf,.docx,.txt,.md,.csv,.json" hidden>
         <input type="text" id="nai-win-input" class="nai-input" placeholder="Ask NITER AI anything…" autocomplete="off" maxlength="300">
         <button class="btn btn-primary nai-send" type="submit" aria-label="Send">➤</button>
       </form>
@@ -8894,18 +8915,11 @@
         el.setAttribute("aria-expanded", panel.hidden ? "false" : "true");
         el.classList.toggle("open", !panel.hidden);
       },
-      "ai-refresh": function () {
-        var box = document.getElementById(naiWindowOpen() ? "nai-win-chips" : "nai-chips");
-        if (!box) return;
-        box.classList.remove("nai-chips-pop");
-        box.innerHTML = naiChipsHTML();
-        void box.offsetWidth;
-        box.classList.add("nai-chips-pop");
-        toast("Suggestions refreshed from live portal data.", "ok");
-      },
       "ai-clear": function () {
         naiSaveChat([]);
         naiTypedOnce = false;
+        naiDocCtx = null;
+        try { localStorage.removeItem("niter-ai-doc"); } catch (e) { /* ignore */ }
         if (naiWindowOpen()) { naiWinEnsureChat(); naiWinPaint(naiLoadChat(), true); }
         else render();
         toast("Conversation cleared.", "ok");
@@ -11686,12 +11700,18 @@
         a: "The MBA in Textile & Apparel Value Chain is NITER's management program, built for the RMG sector: it covers merchandising, sourcing, supply-chain and export business across the textile value chain — from fibre to finished garment to the buyer's shelf." },
       { id: "facilities", topics: ["facilities", "campus facilities", "what is on campus", "amenities", "facilities at niter"],
         a: "NITER's ~13-acre campus is equipped for both study and daily life: a web-based library, fully equipped computer labs with internet, modern textile labs (including a large yarn manufacturing lab and dyeing & printing facilities), separate hostels for male and female students, a medical centre, canteen, mosque and campus transport." },
-      { id: "hostels", topics: ["hostel", "accommodation", "dormitory", "where do students live", "living"],
-        a: "NITER has separate hostels for male and female students inside the campus. Hostel seats are usually allotted alongside admission on a merit basis, and accommodation runs roughly ৳15,000 per term. Check the admission/registrar notice for the current session's exact fee and availability. Many students also commute from Dhaka and Savar." },
+      { id: "hostels", topics: ["hostel", "hostels", "accommodation", "dormitory", "where do students live", "living", "boys hostel", "girls hostel", "boys' hostel", "girls' hostel", "hostel fee", "hostel fees", "hostel seat", "hostel seats", "hostel rules", "security money", "hostel security", "hostel allotment"],
+        a: "NITER has separate on-campus hostels for male and female students. 👦 Boys hostel: a well-furnished 3-storied main building plus an extension building, with canteen, TV and common-room facilities; every room has an attached bath, washroom and furniture, and around 400 students can be accommodated. 👧 Girls hostel: around 300 students, in a 3-storied building with well-furnished rooms, a common room, dining room, TV room, and separated kitchen and washrooms on each floor — security is strong, with guards on 24-hour shifted duty. 💰 Fees (official resources page): after allotment you pay ৳2,500 security money, refunded after course completion, plus a hostel fee of ৳550 per month (changeable) — allotment is renewed every year. Seats are usually allotted alongside admission on a merit basis, and many students also commute daily from Dhaka and Savar instead of staying in the hostel. Check the admission/registrar notice for the current session's exact fee, seat availability and renewal dates.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official hostels page →" } },
+      { id: "medical", topics: ["medical", "medical centre", "medical center", "health centre", "health center", "doctor", "first aid", "first-aid", "emergency", "clinic", "treatment", "sick", "ill", "health checkup", "checkup", "rmo", "medicine", "medicines", "hospital", "ambulance", "medical certificate", "campus doctor", "niter medical"],
+        a: "NITER's medical centre is on the 1st floor of Academic Building-2 (Room AC-216) and serves students, teachers and office staff. A Residential Medical Officer (RMO) is on campus for emergency and first-aid treatment — the RMO provides primary treatment and refers patients to a specialized hospital when required. 🏥 Corporate agreements: NITER has tie-ups with Enam Medical College Hospital and The IBN SINA TRUST, so students get discounts on health check-up packages — bring your student ID card (staff show their employee ID). Practical notes: the centre handles day-to-day illness and first aid, so for minor issues go there first; serious cases are referred onward, and the hospital agreements make check-ups cheaper than walk-in rates. For exact consultation hours ask at the centre or the registrar office.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official medical centre page →" } },
+      { id: "canteen", topics: ["canteen", "cafeteria", "cafe", "café", "food", "snacks", "lunch", "breakfast", "dining", "dining hall", "restaurant", "tea", "coffee", "where to eat", "food on campus", "mess", "eating", "campus food"],
+        a: "NITER has a campus café/canteen listed among the official campus facilities — the everyday spot for tea, snacks and meals between classes. The hostel buildings have their own eating spots too: the boys' hostel building includes a canteen, and the girls' hostel has a dining room plus a separated kitchen on each floor. The official resources page doesn't publish a menu or prices, so check the canteen notice board for today's menu — and keep an eye on the club notices: club events often carry a '🍕 Free food' tag (CV clinics, cultural auditions and bootcamps all list it), and the Games & Sports Club and Cultural Club programs usually wrap up with snacks for participants.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official campus facilities →" } },
       { id: "labs", topics: ["labs", "laboratories", "laboratory", "equipment", "machines", "practical"],
         a: "NITER's labs are the heart of its hands-on approach: a large yarn manufacturing lab with modern spinning machinery, weaving/knitting setups, wet-processing (dyeing & printing) facilities, textile testing & quality control equipment, and fully equipped computer labs with internet for CSE/EEE work. Undergraduate textile students also get practical/industrial training exposure through the institute's ties to the industry." },
-      { id: "library", topics: ["library", "books", "e-library", "reading"],
-        a: "NITER has a web-based library — physical collections plus online resources accessible from campus. Students use it for reference texts, journals and project research across all five departments." },
+      { id: "library", topics: ["library", "niter library", "books", "e-library", "e library", "digital library", "reading", "reading room", "journals", "magazines", "textile journals", "borrow", "borrowing", "issue", "reference", "photocopy", "group work", "study space", "library facilities", "library services", "library hours", "library rules", "where to study"],
+        a: "NITER's central library is an enriched, updated, modern automated (web-based) library serving all five departments. Collection: more than 17,000 books, journals and magazines — the official resources page says the total now exceeds 19,000 — with the latest editions available and books across many disciplines, plus a strong textile section: textile-related journals, magazines, annual reports and periodicals so students and faculty can follow modern textile technology. Environment: the library is fully air-conditioned and doubles as a comfortable study space. Services (official list): book borrowing, reading room, group work, reference, and photocopy services. How to use it: bring your NITER student ID — borrowing/issue happens at the circulation desk, reference texts usually stay in the library, the reading room is for quiet study, and there is a dedicated group-work area for team projects; the photocopy service covers sections you can't take out. E-library: the web-based library gives students and staff online access to resources from campus, useful for project research and reports across CSE, EEE, TE, IPE and FDAE. Hours & rules: exact opening hours and borrowing limits are set by the library office each term (check the notice board) — the general institute office schedule runs Sunday to Thursday, 8:00 AM–4:00 PM. The library is listed under official campus resources at niter.edu.bd/resources.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official resources page →" } },
+      { id: "library-etiquette", topics: ["library rules", "library etiquette", "library fines", "fines", "fine", "penalty", "late return", "overdue", "quiet", "silence", "silent", "reading room rules", "what is not allowed in the library", "not allowed in library", "can i eat in the library", "food in the library", "eating in the library", "drink in library", "phone in library", "mobile in library", "call in library", "borrowing rules", "library behavior", "behaviour", "return books", "damage a book", "lost book", "mark books", "reshelve", "library loan", "borrow limit", "how long can i keep a book", "keep books"],
+        a: "General library etiquette at NITER — the official resources page lists a 'General Rules of using library facility' section, and the library office displays the full notice inside; exact fines and loan limits are set each term, so confirm them at the circulation desk. 📖 Reading room: study in silence, use headphones for any audio/video, put your phone on silent, and step outside for calls — the group-work area is where discussion is welcome. 💳 Borrowing: books are issued at the circulation desk against your NITER student ID, respect the loan period and return on time — late returns usually attract a per-day fine, and lost or damaged books typically mean paying the replacement cost or a fine. 🚫 Not allowed: eating or drinking in the reading room, marking/highlighting or tearing pages, removing reference texts (they stay in the library — use the photocopy service), reshelving books in the wrong place (unsure? leave them on the table), reserving seats with bags, and loud phone calls or group chatter in the quiet zone. 💡 Tips: keep your bag in the designated area, don't reshelve reference books, and check the notice board for the current term's fine amounts and how many books you can borrow.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official resources page →" } },
       { id: "bus", topics: ["bus", "niter bus", "student bus", "shuttle", "bus schedule", "bus route", "bus service", "campus bus", "niter transport", "pickup point", "pick up point", "bus stop", "how to get to campus by bus", "bus from dhaka", "bus to savar", "khamarbari", "bus service to campus"],
         a: "NITER runs its own student and staff bus service connecting the campus (Nayarhat, Kohinoor Gate, Savar) with Dhaka city and nearby areas — the official resource page lists \u201CBus services connecting the campus with Dhaka city and nearby areas\u201D as a campus facility. A known pickup point in the city is Khamarbari: NITER student buses have departed from Dhaka Khamarbari early in the morning (around 6:45 AM on event days) to bring students to the campus, with return runs in the evening after classes. Routes and pickup/drop points follow the Dhaka–Aricha highway corridor (Mohakhali–Khamarbari–Gabtoli–Amin Bazar–Savar–Nayarhat side), so students on those corridors can usually find a stop nearby. Exact route maps and the current timetable are issued by the Transport Section each semester (check the notice board and the registrar office for the latest schedule; niter.edu.bd/resource page lists transport under campus facilities, contact registrar office — +880 1755 060 275, registraroffice@niter.edu.bd). Tips: (1) arrive at your pickup point ~10 minutes early — buses leave on time; (2) on event days (fests, admission tests, workshops) the service runs special trips — the Career Club and club pages post those departure times; (3) if the institute bus doesn't cover your area, public buses along the Dhaka–Aricha road run frequently — get off near Nayarhat/Kohinoor Gate and take a CNG/rickshaw the last 5 minutes; (4) hostel students don't need the bus; the service mainly helps daily commuters from Dhaka and the Savar side." },
       { id: "transport", topics: ["transport", "commute", "coming to campus", "travel", "how to reach", "getting to niter"],
@@ -12799,10 +12819,14 @@
           b.stats = b.stats || { learned: 0, self: 0, gaps: 0, confirmed: 0, firstAt: new Date().toISOString(), lastAt: new Date().toISOString() };
           if (!b.stats.typos) b.stats.typos = 0;
           if (!b.stats.typoUses) b.stats.typoUses = 0;
+          if (!b.stats.corrections) b.stats.corrections = 0;
+          if (!b.stats.gapResolved) b.stats.gapResolved = 0;
+          if (!b.stats.paraphrases) b.stats.paraphrases = 0;
+          if (!b.stats.answers) b.stats.answers = 0;
           return b;
         }
       } catch (e) {}
-      return { facts: [], gaps: [], phrasings: {}, typos: {}, log: [], stats: { learned: 0, self: 0, gaps: 0, confirmed: 0, typos: 0, typoUses: 0, firstAt: new Date().toISOString(), lastAt: new Date().toISOString() } };
+      return { facts: [], gaps: [], phrasings: {}, typos: {}, log: [], stats: { learned: 0, self: 0, gaps: 0, confirmed: 0, typos: 0, typoUses: 0, corrections: 0, gapResolved: 0, paraphrases: 0, answers: 0, firstAt: new Date().toISOString(), lastAt: new Date().toISOString() } };
     }
     function naiBrainSave(b) { try { localStorage.setItem(NAI_BRAIN_KEY, JSON.stringify(b)); } catch (e) {} }
     function naiBrainTouch(b) {
@@ -12828,6 +12852,32 @@
       naiBrainTouch(b); naiBrainSave(b);
       return norm;
     }
+    /* how many times a (normalized) question has been recorded as a gap —
+       used to nudge repeat askers to teach the answer */
+    function naiBrainGapRepeat(q) {
+      var norm = naiBrainGapNorm(q);
+      if (!norm) return 0;
+      var b = naiBrainLoad();
+      var g = null;
+      b.gaps.forEach(function (x) { if (x.n === norm) g = x; });
+      return g ? g.c : 0;
+    }
+    /* when the AI finally answers a question it previously couldn't, the gap
+       is cleared — the brain's blind-spot list only holds real unknowns */
+    function naiBrainResolveGap(q) {
+      var norm = naiBrainGapNorm(q);
+      if (!norm) return false;
+      var b = naiBrainLoad();
+      var before = b.gaps.length;
+      b.gaps = b.gaps.filter(function (g) { return g.n !== norm; });
+      if (b.gaps.length < before) {
+        b.stats.gapResolved = (b.stats.gapResolved || 0) + 1;
+        naiBrainLog(b, "gap", "resolved a knowledge gap: " + q.slice(0, 60));
+        naiBrainTouch(b); naiBrainSave(b);
+        return true;
+      }
+      return false;
+    }
     function naiBrainAddFact(q, a, src) {
       src = src || "user";
       var b = naiBrainLoad();
@@ -12844,6 +12894,14 @@
       }
       if (b.facts.length > 80) b.facts = b.facts.slice(b.facts.length - 80);
       naiBrainLog(b, src === "self" ? "self" : "teach", (src === "self" ? "self-learned from feedback" : "taught by user") + ": " + q.slice(0, 70));
+      /* learning the answer resolves the matching gap — the brain stops
+         counting it as a blind spot the moment it can answer it */
+      var gapBefore = b.gaps.length;
+      b.gaps = b.gaps.filter(function (x) { return x.n !== norm; });
+      if (b.gaps.length < gapBefore) {
+        b.stats.gapResolved = (b.stats.gapResolved || 0) + 1;
+        naiBrainLog(b, "gap", "resolved a knowledge gap by learning: " + q.slice(0, 60));
+      }
       naiBrainTouch(b); naiBrainSave(b);
       return f;
     }
@@ -12890,8 +12948,29 @@
         var fToks = f.n.split(" ").filter(function (t) { return t.length > 2 && !stop.test(t); });
         fToks.forEach(function (t) { if (qn.indexOf(t) !== -1) score += 10 + t.length; });
         qToks.forEach(function (t) { if (f.n.indexOf(t) !== -1) score += 5; });
+        /* paraphrases the brain has learned from past askers: each stored
+           variant's words earn partial credit, so the same fact answers
+           many different wordings */
+        (f.variants || []).forEach(function (v) {
+          v.forEach(function (t) { if (qn.indexOf(t) !== -1) score += 3; });
+        });
         if (score > bestScore) { bestScore = score; best = f; }
       });
+      /* learn from the current wording: a meaningful but non-exact match
+         records this phrasing as a variant so the fact grows more
+         discoverable with every user who asks it differently */
+      if (best && bestScore >= 14 && bestScore < 60 && qn !== best.n && qToks.length >= 2) {
+        var sig = qToks.join(" ");
+        var dup = false;
+        (best.variants || []).forEach(function (v) { if (v.join(" ") === sig) dup = true; });
+        if (!dup) {
+          best.variants = best.variants || [];
+          best.variants.push(qToks.slice(0, 5));
+          if (best.variants.length > 8) best.variants = best.variants.slice(best.variants.length - 8);
+          b.stats.paraphrases = (b.stats.paraphrases || 0) + 1;
+          naiBrainTouch(b); naiBrainSave(b);
+        }
+      }
       return best;
     }
     /* ---- phrasing training: distinctive words per intent ---- */
@@ -12989,6 +13068,7 @@
           '<div class="nai-brain-stat"><b>' + s.factCount + "</b><span>facts learned</span></div>" +
           '<div class="nai-brain-stat"><b>' + (stats.self || 0) + "</b><span>self-learned</span></div>" +
           '<div class="nai-brain-stat"><b>' + s.gapCount + "</b><span>questions noted</span></div>" +
+          '<div class="nai-brain-stat"><b>' + (stats.gapResolved || 0) + "</b><span>gaps resolved</span></div>" +
           '<div class="nai-brain-stat"><b>' + (stats.confirmed || 0) + "</b><span>answers confirmed</span></div>" +
         "</div>" +
         '<div class="nai-brain-sub">🧠 Learned memory</div>' +
@@ -13009,7 +13089,8 @@
         var nF = snap.factCount, nG = snap.gapCount;
         var nT = snap.typoCount || 0;
         var txt = "Here's what I've learned so far — my brain grows with every conversation. 🧠 " +
-          nF + " fact" + (nF === 1 ? "" : "s") + " in memory, " + nG + " question" + (nG === 1 ? "" : "s") + " noted that I couldn't answer yet, and " + nT + " spelling" + (nT === 1 ? "" : "s") + " I now auto-correct from your past mistypes.";
+          nF + " fact" + (nF === 1 ? "" : "s") + " in memory, " + nG + " question" + (nG === 1 ? "" : "s") + " noted that I couldn't answer yet, " +
+          (snap.stats.gapResolved || 0) + " gap" + ((snap.stats.gapResolved || 0) === 1 ? "" : "s") + " resolved, and " + nT + " spelling" + (nT === 1 ? "" : "s") + " I now auto-correct from your past mistypes.";
         return { text: txt, brain: snap, chips: ["remember that the library opens at 9am", "Which clubs are there?"], link: null };
       }
       /* teach: "remember that X is Y" / "learn that X means Y" /
@@ -13017,7 +13098,7 @@
          "remember me to X" (reminder-ish) never become taught facts. */
       var teach = null;
       if (!/remember\s+(?:me|us|them)?\s*to\b|learn\s+(?:how\s+to|to\s+)/i.test(query)) {
-        teach = query.match(/^(?:remember|note|keep in mind|from now on|store|learn)\s+(?:that\s+|this:?\s*)?(.+?)(?:\s+(?:is|means|are|equals|=)\s+(.+))?$/i);
+        teach = query.match(/^(?:remember|note|keep in mind|from now on|store|learn)\s+(?:that\s+|this:?\s*)?(.+?)(?:\s+(?:is|means|are|equals|opens? at|closes? at|starts? at|ends? at|costs?|runs? (?:from|until|at)|=)\s+(.+))?$/i);
       }
       if (teach && teach[1]) {
         var q = teach[1].trim().replace(/[.,!?]+$/, "");
@@ -13039,11 +13120,27 @@
                  query.match(/^that'?s\s+(?:wrong|incorrect|not\s+right|false|a\s+mistake)[,.!]?\s*(?:it'?s|its|it\s+actually|actually|should be|is|opens? at|closes? at|starts? at|ends? at|is at)\s+(.+)$/i) ||
                  query.match(/^correct\s+(?:that|me)[,.!]?\s*(?:it'?s|its|is)\s+(.+)$/i);
       if (corr && corr[1]) {
-        var b = naiBrainLoad();
-        var last = b.facts[b.facts.length - 1];
         var fix = corr[1].trim().replace(/[.,!?]+$/, "");
-        if (!dry && last) { last.a = fix; last.src = "correction"; naiBrainLog(b, "teach", "corrected a learned fact: " + last.q.slice(0, 60)); naiBrainTouch(b); naiBrainSave(b); }
-        return { text: "✅ Thanks for the correction — I've updated my memory" + (last ? " (“" + last.q.slice(0, 60) + "”)" : "") + " to: “" + fix + "”. I'll get it right from now on.", chips: ["What have you learned?", "Which clubs are there?"], link: null };
+        /* bind the correction to the LAST question the user actually asked —
+           whether the answer came from the KB, live data or a learned fact —
+           so corrections always teach, never silently no-op */
+        var target = null;
+        var chatC = naiLoadChat();
+        var lastAiC = null;
+        for (var ci = chatC.length - 1; ci >= 0; ci--) { if (chatC[ci].role === "ai") { lastAiC = chatC[ci]; break; } }
+        if (lastAiC) {
+          for (var cj = chatC.indexOf(lastAiC) - 1; cj >= 0; cj--) { if (chatC[cj].role === "user") { target = chatC[cj].text; break; } }
+        }
+        if (!dry && target && String(target).trim().length > 2) {
+          naiBrainAddFact(String(target), fix, "correction");
+          /* reload AFTER the fact is written — a snapshot taken before the
+             add would otherwise erase the new fact on save */
+          var bc = naiBrainLoad();
+          bc.stats.corrections = (bc.stats.corrections || 0) + 1;
+          naiBrainLog(bc, "teach", "corrected an answer: " + String(target).slice(0, 60) + " → " + fix.slice(0, 40));
+          naiBrainTouch(bc); naiBrainSave(bc);
+        }
+        return { text: "✅ Thanks for the correction — I've updated my memory" + (target ? " (“" + String(target).slice(0, 60) + "”)" : "") + " to: “" + fix + "”. I'll get it right from now on.", chips: ["What have you learned?", "Which clubs are there?"], link: null };
       }
       /* 🧠 positive feedback after an answer → self-learn the Q→A pair */
       if (/^(?:good|great|nice|correct|right|perfect|awesome|excellent|helpful|thanks|thank you|that helped|makes sense|got it|understood|noted|well done|good answer|great answer|nice answer|perfect answer|helpful answer)\b[.,!]*\s*(?:answer|that helped|helped|thanks|thank you)?[.!]*$/i.test(query)) {
@@ -14300,6 +14397,1412 @@
       }
       return false;
     }
+    /* ======================= NITER AI · MATH ENGINE =======================
+       A complete offline math solver: expression evaluation (order of
+       operations, functions, constants, implicit multiplication), linear &
+       quadratic equations with step-by-step working, factoring, derivatives,
+       integrals (Simpson numeric + polynomial antiderivatives), statistics,
+       percentages, number theory (gcd/lcm/primes/factors/factorial), trig,
+       shape formulas (area/perimeter/volume/Pythagoras) and unit conversions.
+       Every path returns { text, math: { kind, title, expr, steps, result } }.
+       ---------------------------------------------------------------- */
+    function naiMathFmt(v) {
+      if (typeof v !== "number" || !isFinite(v)) return String(v);
+      if (Math.abs(v) < 1e-12) v = 0;
+      var r = Math.round(v * 1e10) / 1e10;
+      if (Math.abs(r) >= 1e15 || (Math.abs(r) < 1e-9 && r !== 0)) return r.toExponential(4).replace(/e\+?(-?\d+)$/, "e$1");
+      return String(r);
+    }
+    function naiMathPowTxt(p) {
+      if (p === 2) return "²";
+      if (p === 3) return "³";
+      if (p === 1) return "";
+      return "^" + naiMathFmt(p);
+    }
+    function naiMathTok(src) {
+      var toks = [], i = 0;
+      var s = String(src || "").replace(/×/g, "*").replace(/÷/g, "/").replace(/[−–]/g, "-").replace(/√/g, "sqrt(");
+      while (i < s.length) {
+        var c = s[i];
+        if (/\s/.test(c)) { i++; continue; }
+        var mn = s.slice(i).match(/^(\d+(?:\.\d+)?|\.\d+)/);
+        if (mn) { toks.push({ t: "num", v: parseFloat(mn[1]) }); i += mn[1].length; continue; }
+        var mi = s.slice(i).match(/^[a-zA-Z_][a-zA-Z0-9_]*/);
+        if (mi) { toks.push({ t: "id", v: mi[0] }); i += mi[0].length; continue; }
+        if ("+-*/^%()!,".indexOf(c) !== -1) { toks.push({ t: c }); i++; continue; }
+        throw new Error("Unexpected character '" + c + "'");
+      }
+      return toks;
+    }
+    function naiMathParse(src) {
+      var toks = naiMathTok(src), pos = 0;
+      function peek() { return toks[pos]; }
+      function next() { return toks[pos++]; }
+      function expect(t) { var x = next(); if (!x || x.t !== t) throw new Error("Expected '" + t + "'"); return x; }
+      function parseExpr() { return parseAdd(); }
+      function parseAdd() {
+        var n = parseMul();
+        while (peek() && (peek().t === "+" || peek().t === "-")) {
+          var op = next().t, r = parseMul();
+          n = op === "+" ? { t: "add", a: n, b: r } : { t: "sub", a: n, b: r };
+        }
+        return n;
+      }
+      function parseMul() {
+        var n = parseUnary();
+        for (;;) {
+          var p = peek();
+          if (!p) break;
+          if (p.t === "*" || p.t === "/" || p.t === "%") {
+            var op = next().t, r = parseUnary();
+            n = op === "*" ? { t: "mul", a: n, b: r } : op === "/" ? { t: "div", a: n, b: r } : { t: "mod", a: n, b: r };
+            continue;
+          }
+          if (p.t === "num" || p.t === "id" || p.t === "(") { n = { t: "mul", a: n, b: parseUnary() }; continue; }
+          break;
+        }
+        return n;
+      }
+      function parseUnary() {
+        var p = peek();
+        if (p && (p.t === "+" || p.t === "-")) {
+          var op = next().t, u = parseUnary();
+          return op === "-" ? { t: "neg", a: u } : u;
+        }
+        return parsePow();
+      }
+      function parsePow() {
+        var base = parsePostfix();
+        if (peek() && peek().t === "^") { next(); return { t: "pow", a: base, b: parseUnary() }; }
+        return base;
+      }
+      function parsePostfix() {
+        var n = parsePrimary();
+        while (peek() && peek().t === "!") { next(); n = { t: "fac", a: n }; }
+        return n;
+      }
+      function parsePrimary() {
+        var p = next();
+        if (!p) throw new Error("Unexpected end of expression");
+        if (p.t === "num") return { t: "num", v: p.v };
+        if (p.t === "(") { var e = parseExpr(); expect(")"); return e; }
+        if (p.t === "id") {
+          var name = p.v.toLowerCase();
+          var consts = { pi: Math.PI, e: Math.E, tau: Math.PI * 2, phi: (1 + Math.sqrt(5)) / 2 };
+          if (consts[name] !== undefined) return { t: "num", v: consts[name] };
+          if (name === "x" || name === "y" || name === "z" || name === "t" || name === "a" || name === "b" || name === "c") return { t: "var", v: "x" };
+          if (peek() && peek().t === "(") {
+            next();
+            var args = [parseExpr()];
+            while (peek() && peek().t === ",") { next(); args.push(parseExpr()); }
+            expect(")");
+            return { t: "call", f: name, args: args };
+          }
+          throw new Error("Unknown symbol '" + p.v + "'");
+        }
+        throw new Error("Unexpected token");
+      }
+      var ast = parseExpr();
+      if (pos < toks.length) throw new Error("Unexpected token after expression");
+      return ast;
+    }
+    function naiMathEval(n, vars) {
+      vars = vars || {};
+      function num(v) { if (typeof v !== "number" || !isFinite(v)) throw new Error("Non-numeric result"); return v; }
+      switch (n.t) {
+        case "num": return n.v;
+        case "var": return num(vars.x);
+        case "add": return num(naiMathEval(n.a, vars)) + num(naiMathEval(n.b, vars));
+        case "sub": return num(naiMathEval(n.a, vars)) - num(naiMathEval(n.b, vars));
+        case "mul": return num(naiMathEval(n.a, vars)) * num(naiMathEval(n.b, vars));
+        case "div": { var d = num(naiMathEval(n.b, vars)); if (Math.abs(d) < 1e-14) throw new Error("Division by zero"); return num(naiMathEval(n.a, vars)) / d; }
+        case "mod": { var m2 = num(naiMathEval(n.b, vars)); if (Math.abs(m2) < 1e-14) throw new Error("Modulo by zero"); return num(naiMathEval(n.a, vars)) % m2; }
+        case "pow": return num(Math.pow(num(naiMathEval(n.a, vars)), num(naiMathEval(n.b, vars))));
+        case "neg": return -num(naiMathEval(n.a, vars));
+        case "fac": {
+          var f = num(naiMathEval(n.a, vars));
+          if (f < 0 || Math.floor(f) !== f || f > 170) throw new Error("Factorial needs an integer 0–170");
+          var r = 1; for (var k = 2; k <= f; k++) r *= k; return r;
+        }
+        case "call": {
+          var fname = n.f, args = n.args.map(function (a) { return num(naiMathEval(a, vars)); });
+          var one = args[0], two = args[1];
+          switch (fname) {
+            case "sqrt": return Math.sqrt(one);
+            case "cbrt": return Math.cbrt ? Math.cbrt(one) : Math.pow(one, 1 / 3);
+            case "abs": return Math.abs(one);
+            case "sin": return Math.sin(one);
+            case "cos": return Math.cos(one);
+            case "tan": return Math.tan(one);
+            case "asin": return Math.asin(one);
+            case "acos": return Math.acos(one);
+            case "atan": return Math.atan(one);
+            case "sinh": return Math.sinh ? Math.sinh(one) : (Math.exp(one) - Math.exp(-one)) / 2;
+            case "cosh": return Math.cosh ? Math.cosh(one) : (Math.exp(one) + Math.exp(-one)) / 2;
+            case "tanh": return Math.tanh ? Math.tanh(one) : (Math.exp(2 * one) - 1) / (Math.exp(2 * one) + 1);
+            case "exp": return Math.exp(one);
+            case "ln": return Math.log(one);
+            case "log": return Math.log10 ? Math.log10(one) : Math.log(one) / Math.LN10;
+            case "log2": return Math.log2 ? Math.log2(one) : Math.log(one) / Math.LN2;
+            case "floor": return Math.floor(one);
+            case "ceil": return Math.ceil(one);
+            case "round": return Math.round(one);
+            case "min": return Math.min.apply(null, args);
+            case "max": return Math.max.apply(null, args);
+            case "mod": return one % two;
+            default: throw new Error("Unknown function '" + fname + "'");
+          }
+        }
+      }
+      throw new Error("Unknown expression");
+    }
+    function naiMathStr(n, prec) {
+      prec = prec || 0;
+      function wrap(s, p) { return p > prec ? "(" + s + ")" : s; }
+      switch (n.t) {
+        case "num": return naiMathFmt(n.v);
+        case "var": return n.v;
+        case "neg": return "-" + naiMathStr(n.a, 3);
+        case "fac": return naiMathStr(n.a, 6) + "!";
+        case "pow": {
+          var p2 = naiMathStr(n.b, 0);
+          if (n.a.t === "var" && n.b.t === "num") return "x" + naiMathPowTxt(n.b.v);
+          return wrap(naiMathStr(n.a, 4) + "^" + p2, 4);
+        }
+        case "mul": {
+          if (n.a.t === "num" && n.b.t !== "num" && n.b.t !== "div") return wrap(naiMathFmt(n.a.v) + naiMathStr(n.b, 4), 2);
+          if (n.b.t === "num" && n.a.t !== "num") return wrap(naiMathStr(n.a, 4) + naiMathFmt(n.b.v), 2);
+          return wrap(naiMathStr(n.a, 2) + " × " + naiMathStr(n.b, 2), 2);
+        }
+        case "div": return wrap(naiMathStr(n.a, 2) + " / " + naiMathStr(n.b, 3), 2);
+        case "mod": return wrap(naiMathStr(n.a, 1) + " mod " + naiMathStr(n.b, 1), 1);
+        case "add": {
+          if (n.b.t === "neg") return wrap(naiMathStr(n.a, 1) + " − " + naiMathStr(n.b.a, 1), 1);
+          return wrap(naiMathStr(n.a, 1) + " + " + naiMathStr(n.b, 1), 1);
+        }
+        case "sub": return wrap(naiMathStr(n.a, 1) + " − " + naiMathStr(n.b, 1), 1);
+        case "call": return n.f + "(" + n.args.map(function (a) { return naiMathStr(a, 0); }).join(", ") + ")";
+      }
+      return "?";
+    }
+    function naiMathPolyArr(n, maxDeg) {
+      function pad(arr) { var out = []; for (var i = 0; i <= maxDeg; i++) out[i] = arr[i] || 0; return out; }
+      function addArr(a, b, sign) { var out = []; for (var i = 0; i <= maxDeg; i++) out[i] = (a[i] || 0) + sign * (b[i] || 0); return out; }
+      function isConst(arr) { for (var i = 1; i <= maxDeg; i++) if (arr[i]) return false; return true; }
+      switch (n.t) {
+        case "num": return pad([n.v]);
+        case "var": { var o = []; o[1] = 1; return pad(o); }
+        case "neg": { var p = naiMathPolyArr(n.a, maxDeg); return p ? pad(p.map(function (v) { return -v; })) : null; }
+        case "add": case "sub": { var A = naiMathPolyArr(n.a, maxDeg), B = naiMathPolyArr(n.b, maxDeg); return A && B ? addArr(A, B, n.t === "add" ? 1 : -1) : null; }
+        case "mul": {
+          var A3 = naiMathPolyArr(n.a, maxDeg), B3 = naiMathPolyArr(n.b, maxDeg);
+          if (!A3 || !B3) return null;
+          var out = [];
+          for (var i = 0; i <= maxDeg; i++) for (var j = 0; i + j <= maxDeg; j++) out[i + j] = (out[i + j] || 0) + (A3[i] || 0) * (B3[j] || 0);
+          return pad(out);
+        }
+        case "pow": {
+          var base = naiMathPolyArr(n.a, maxDeg), ex = naiMathPolyArr(n.b, maxDeg);
+          if (!base || !ex || !isConst(ex)) return null;
+          var e = ex[0];
+          if (e < 0 || Math.floor(e) !== e || e > maxDeg) return null;
+          var res = [1];
+          for (var k = 0; k < e; k++) {
+            var nxt = [];
+            for (var i = 0; i < res.length; i++) for (var j = 0; i + j <= maxDeg; j++) nxt[i + j] = (nxt[i + j] || 0) + res[i] * (base[j] || 0);
+            res = nxt;
+          }
+          return pad(res);
+        }
+        case "div": {
+          var A4 = naiMathPolyArr(n.a, maxDeg), B4 = naiMathPolyArr(n.b, maxDeg);
+          if (!A4 || !B4 || !isConst(B4) || B4[0] === 0) return null;
+          return pad(A4.map(function (v) { return v / B4[0]; }));
+        }
+      }
+      return null;
+    }
+    function naiMathPoly(n) { return naiMathPolyArr(n, 2); }
+    function naiMathSolveEqStr(eqStr) {
+      var sides = String(eqStr).split("=");
+      if (sides.length !== 2) return null;
+      var L, R;
+      try { L = naiMathParse(sides[0]); R = naiMathParse(sides[1]); } catch (e) { return null; }
+      var l = naiMathPoly(L), r = naiMathPoly(R);
+      if (!l || !r) return null;
+      var A = l[2] - r[2], B = l[1] - r[1], C = l[0] - r[0];
+      var f = naiMathFmt, nz = function (v) { return Math.abs(v) > 1e-12; };
+      var steps = [];
+      if (nz(A)) {
+        var D = B * B - 4 * A * C, denom = 2 * A;
+        steps.push({ t: "Identify coefficients", d: "Compare with ax² + bx + c = 0 → a = " + f(A) + ", b = " + f(B) + ", c = " + f(C) });
+        steps.push({ t: "Discriminant", d: "Δ = b² − 4ac = (" + f(B) + ")² − 4·(" + f(A) + ")·(" + f(C) + ") = " + f(D) });
+        if (D < 0) {
+          var re = -B / denom, im = Math.sqrt(-D) / denom;
+          steps.push({ t: "No real roots", d: "Δ < 0 → the curve never crosses the x-axis. Complex roots: x = " + f(re) + " ± " + f(im) + "i" });
+          return { kind: "quadratic", steps: steps, roots: [], complex: { re: re, im: im } };
+        }
+        var sq = Math.sqrt(D), x1 = (-B + sq) / denom, x2 = (-B - sq) / denom;
+        steps.push({ t: "Quadratic formula", d: "x = (−b ± √Δ) / 2a = (−(" + f(B) + ") ± √(" + f(D) + ")) / (2·" + f(A) + ")" });
+        if (Math.abs(D) < 1e-12) { steps.push({ t: "Repeated root", d: "Δ = 0 → one double root: x = " + f(x1) }); return { kind: "quadratic", steps: steps, roots: [x1] }; }
+        steps.push({ t: "Two roots", d: "x₁ = " + f(x1) + ", x₂ = " + f(x2) });
+        return { kind: "quadratic", steps: steps, roots: [x1, x2] };
+      }
+      if (nz(B)) {
+        var x = -C / B;
+        steps.push({ t: "Bring to one side", d: f(B) + "x " + (C < 0 ? "− " + f(-C) : "+ " + f(C)) + " = 0" });
+        steps.push({ t: "Isolate x", d: "x = −c ÷ b = " + f(-C) + " ÷ " + f(B) + " = " + f(x) });
+        return { kind: "linear", steps: steps, roots: [x] };
+      }
+      if (nz(C)) {
+        steps.push({ t: "No solution", d: f(C) + " = 0 is false — no value of x satisfies it" });
+        return { kind: "none", steps: steps, roots: [] };
+      }
+      steps.push({ t: "Identity", d: "0 = 0 — every value of x satisfies the equation" });
+      return { kind: "identity", steps: steps, roots: [] };
+    }
+    function naiMathD(n) {
+      switch (n.t) {
+        case "num": return { t: "num", v: 0 };
+        case "var": return { t: "num", v: 1 };
+        case "neg": return { t: "neg", a: naiMathD(n.a) };
+        case "add": return { t: "add", a: naiMathD(n.a), b: naiMathD(n.b) };
+        case "sub": return { t: "sub", a: naiMathD(n.a), b: naiMathD(n.b) };
+        case "mul": return { t: "add", a: { t: "mul", a: naiMathD(n.a), b: n.b }, b: { t: "mul", a: n.a, b: naiMathD(n.b) } };
+        case "div": return { t: "div", a: { t: "sub", a: { t: "mul", a: naiMathD(n.a), b: n.b }, b: { t: "mul", a: n.a, b: naiMathD(n.b) } }, b: { t: "pow", a: n.b, b: { t: "num", v: 2 } } };
+        case "pow": {
+          var u = n.a, v = n.b;
+          if (u.t === "var" && v.t === "num") return { t: "mul", a: v, b: { t: "pow", a: u, b: { t: "sub", a: v, b: { t: "num", v: 1 } } } };
+          if (u.t === "num") return { t: "mul", a: n, b: { t: "call", f: "ln", args: [u] } };
+          return { t: "mul", a: n, b: { t: "add", a: { t: "mul", a: naiMathD(v), b: { t: "call", f: "ln", args: [u] } }, b: { t: "mul", a: v, b: { t: "div", a: naiMathD(u), b: u } } } };
+        }
+        case "call": {
+          var u2 = n.args[0], du = naiMathD(u2);
+          switch (n.f) {
+            case "sin": return { t: "mul", a: { t: "call", f: "cos", args: [u2] }, b: du };
+            case "cos": return { t: "mul", a: { t: "neg", a: { t: "call", f: "sin", args: [u2] } }, b: du };
+            case "tan": return { t: "mul", a: { t: "div", a: { t: "num", v: 1 }, b: { t: "pow", a: { t: "call", f: "cos", args: [u2] }, b: { t: "num", v: 2 } } }, b: du };
+            case "exp": return { t: "mul", a: { t: "call", f: "exp", args: [u2] }, b: du };
+            case "ln": return { t: "mul", a: { t: "div", a: { t: "num", v: 1 }, b: u2 }, b: du };
+            case "log": return { t: "mul", a: { t: "div", a: { t: "num", v: 1 }, b: { t: "mul", a: u2, b: { t: "call", f: "ln", args: [{ t: "num", v: 10 }] } } }, b: du };
+            case "sqrt": return { t: "mul", a: { t: "div", a: { t: "num", v: 1 }, b: { t: "mul", a: { t: "num", v: 2 }, b: { t: "call", f: "sqrt", args: [u2] } } }, b: du };
+            case "asin": return { t: "mul", a: { t: "div", a: { t: "num", v: 1 }, b: { t: "call", f: "sqrt", args: [{ t: "sub", a: { t: "num", v: 1 }, b: { t: "pow", a: u2, b: { t: "num", v: 2 } } }] } }, b: du };
+            case "acos": return { t: "neg", a: { t: "mul", a: { t: "div", a: { t: "num", v: 1 }, b: { t: "call", f: "sqrt", args: [{ t: "sub", a: { t: "num", v: 1 }, b: { t: "pow", a: u2, b: { t: "num", v: 2 } } }] } }, b: du } };
+            case "atan": return { t: "mul", a: { t: "div", a: { t: "num", v: 1 }, b: { t: "add", a: { t: "num", v: 1 }, b: { t: "pow", a: u2, b: { t: "num", v: 2 } } } }, b: du };
+          }
+          return null;
+        }
+        case "fac": return null;
+      }
+      return null;
+    }
+    function naiMathMonoOf(node) {
+      if (node.t === "var") return { c: 1, p: 1 };
+      if (node.t === "pow" && node.a.t === "var" && node.b.t === "num") return { c: 1, p: node.b.v };
+      if (node.t === "num") return { c: node.v, p: 0 };
+      if (node.t === "mul") {
+        var A = naiMathMonoOf(node.a), B = naiMathMonoOf(node.b);
+        if (A && B && (A.p === 0 || B.p === 0)) return { c: A.c * B.c, p: A.p + B.p };
+        return null;
+      }
+      if (node.t === "neg") { var m = naiMathMonoOf(node.a); return m ? { c: -m.c, p: m.p } : null; }
+      return null;
+    }
+    function naiMathSimp(n) {
+      if (!n) return n;
+      switch (n.t) {
+        case "num": case "var": return n;
+        case "neg": { var a = naiMathSimp(n.a); if (a.t === "num") return { t: "num", v: -a.v }; return { t: "neg", a: a }; }
+        case "fac": return { t: "fac", a: naiMathSimp(n.a) };
+        case "pow": {
+          var a = naiMathSimp(n.a), b = naiMathSimp(n.b);
+          if (a.t === "num" && b.t === "num") return { t: "num", v: Math.pow(a.v, b.v) };
+          if (b.t === "num" && b.v === 0) return { t: "num", v: 1 };
+          if (b.t === "num" && b.v === 1) return a;
+          return { t: "pow", a: a, b: b };
+        }
+        case "mul": {
+          var l = naiMathSimp(n.a), r = naiMathSimp(n.b);
+          if (l.t === "num" && r.t === "num") return { t: "num", v: l.v * r.v };
+          if ((l.t === "num" && l.v === 0) || (r.t === "num" && r.v === 0)) return { t: "num", v: 0 };
+          if (l.t === "num" && l.v === 1) return r;
+          if (r.t === "num" && r.v === 1) return l;
+          return { t: "mul", a: l, b: r };
+        }
+        case "div": {
+          var a2 = naiMathSimp(n.a), b2 = naiMathSimp(n.b);
+          if (a2.t === "num" && b2.t === "num") return b2.v === 0 ? { t: "num", v: NaN } : { t: "num", v: a2.v / b2.v };
+          if (a2.t === "num" && a2.v === 0) return { t: "num", v: 0 };
+          if (b2.t === "num" && b2.v === 1) return a2;
+          return { t: "div", a: a2, b: b2 };
+        }
+        case "add": case "sub": {
+          var l2 = naiMathSimp(n.a), r2 = naiMathSimp(n.b);
+          var consts = 0, mono = {}, parts = [];
+          function collect(node, sign) {
+            if (!node) return;
+            if (node.t === "add" || node.t === "sub") { collect(node.a, sign); collect(node.b, node.t === "add" ? sign : -sign); return; }
+            if (node.t === "neg") { collect(node.a, -sign); return; }
+            var m = naiMathMonoOf(node);
+            if (m && m.p >= 0 && m.p <= 10 && Math.abs(m.p - Math.round(m.p)) < 1e-9) mono[Math.round(m.p)] = (mono[Math.round(m.p)] || 0) + sign * m.c;
+            else parts.push({ n: node, s: sign });
+          }
+          collect(l2, 1); collect(r2, n.t === "add" ? 1 : -1);
+          var terms = [];
+          if (Math.abs(consts) > 1e-12) terms.push({ t: "num", v: consts });
+          Object.keys(mono).sort(function (a, b) { return parseFloat(b) - parseFloat(a); }).forEach(function (p) {
+            var c = mono[p];
+            if (Math.abs(c) < 1e-12) return;
+            var pn = parseFloat(p);
+            if (pn === 0) { terms.push(c < 0 ? { t: "neg", a: { t: "num", v: -c } } : { t: "num", v: c }); return; }
+            var xp = pn === 1 ? { t: "var", v: "x" } : { t: "pow", a: { t: "var", v: "x" }, b: { t: "num", v: pn } };
+            if (c === 1) terms.push(xp);
+            else if (c === -1) terms.push({ t: "neg", a: xp });
+            else if (c < 0) terms.push({ t: "neg", a: { t: "mul", a: { t: "num", v: -c }, b: xp } });
+            else terms.push({ t: "mul", a: { t: "num", v: c }, b: xp });
+          });
+          parts.forEach(function (q) { terms.push(q.s === -1 ? { t: "neg", a: q.n } : q.n); });
+          if (!terms.length) return { t: "num", v: 0 };
+          var out = terms[0];
+          for (var i = 1; i < terms.length; i++) out = { t: "add", a: out, b: terms[i] };
+          return out;
+        }
+        case "call": return { t: "call", f: n.f, args: n.args.map(naiMathSimp) };
+      }
+      return n;
+    }
+    function naiMathIntegrateStr(exprStr, from, to) {
+      var ast;
+      try { ast = naiMathParse(exprStr); } catch (e) { return null; }
+      if (from != null && to != null) {
+        try {
+          var F = function (x) { return naiMathEval(ast, { x: x }); };
+          var n = 1000, h = (to - from) / n, sum = F(from) + F(to);
+          for (var i = 1; i < n; i++) sum += (i % 2 ? 4 : 2) * F(from + i * h);
+          var val = (h / 3) * sum;
+          var steps = [
+            { t: "Numeric integration (Simpson's rule)", d: "1000 sub-intervals from " + naiMathFmt(from) + " to " + naiMathFmt(to) },
+            { t: "Result", d: "∫ f(x) dx ≈ " + naiMathFmt(val) }
+          ];
+          return { steps: steps, value: val, antideriv: null };
+        } catch (e) { return null; }
+      }
+      var p = naiMathPolyArr(ast, 8);
+      if (p) {
+        var terms = [];
+        for (var d = p.length - 1; d >= 0; d--) {
+          var c = p[d];
+          if (!c || Math.abs(c) < 1e-12) continue;
+          var nd = d + 1, co = c / nd;
+          var term = d === 0 ? naiMathFmt(c) + "x" : (Math.abs(co - 1) < 1e-12 ? "x" + naiMathPowTxt(nd) : Math.abs(co + 1) < 1e-12 ? "−x" + naiMathPowTxt(nd) : naiMathFmt(co) + "x" + naiMathPowTxt(nd));
+          terms.push(term);
+        }
+        if (!terms.length) terms.push("0");
+        var ant = terms.join(" + ").replace(/\+ -/g, "− ").replace(/\+ −/g, "− ");
+        return { steps: [{ t: "Power rule", d: "∫ xⁿ dx = xⁿ⁺¹/(n+1) — applied to each term" }, { t: "Antiderivative", d: "F(x) = " + ant + " + C" }], value: null, antideriv: ant };
+      }
+      if (ast.t === "call" && ast.args.length === 1 && ast.args[0].t === "var") {
+        var f = ast.f;
+        if (f === "sin") return { steps: [{ t: "Standard form", d: "∫ sin(x) dx = −cos(x) + C" }], value: null, antideriv: "−cos(x)" };
+        if (f === "cos") return { steps: [{ t: "Standard form", d: "∫ cos(x) dx = sin(x) + C" }], value: null, antideriv: "sin(x)" };
+        if (f === "exp") return { steps: [{ t: "Standard form", d: "∫ eˣ dx = eˣ + C" }], value: null, antideriv: "eˣ" };
+        if (f === "ln") return { steps: [{ t: "Standard form", d: "∫ ln(x) dx = x ln(x) − x + C" }], value: null, antideriv: "x ln(x) − x" };
+      }
+      if (ast.t === "div" && ast.a.t === "num" && ast.b.t === "var") {
+        return { steps: [{ t: "Standard form", d: "∫ " + naiMathFmt(ast.a.v) + "/x dx = " + naiMathFmt(ast.a.v) + " ln|x| + C" }], value: null, antideriv: naiMathFmt(ast.a.v) + " ln|x|" };
+      }
+      return null;
+    }
+    function naiMathStats(query) {
+      var nums = (String(query).match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
+      if (nums.length < 2) return null;
+      var sorted = nums.slice().sort(function (a, b) { return a - b; });
+      var n = sorted.length, sum = 0; sorted.forEach(function (v) { sum += v; });
+      var mean = sum / n;
+      var median = n % 2 ? sorted[(n - 1) / 2] : (sorted[n / 2 - 1] + sorted[n / 2]) / 2;
+      var freq = {}, modes = [], maxF = 0;
+      sorted.forEach(function (v) { freq[v] = (freq[v] || 0) + 1; if (freq[v] > maxF) maxF = freq[v]; });
+      Object.keys(freq).forEach(function (k) { if (freq[k] === maxF) modes.push(parseFloat(k)); });
+      var range = sorted[n - 1] - sorted[0];
+      var vpop = 0; sorted.forEach(function (v) { vpop += (v - mean) * (v - mean); }); vpop /= n;
+      var vsamp = n > 1 ? vpop * n / (n - 1) : NaN;
+      return {
+        nums: sorted, n: n, sum: sum, mean: mean, median: median,
+        modes: modes, maxF: maxF, range: range, variance: vpop, sd: Math.sqrt(vpop),
+        sampleVariance: vsamp, sampleSd: Math.sqrt(vsamp)
+      };
+    }
+    function naiMathGcd(a, b) {
+      var steps = [], x = Math.abs(a), y = Math.abs(b);
+      while (y) { var q = Math.floor(x / y), r = x % y; steps.push({ t: "Euclid's algorithm", d: x + " = " + y + " × " + q + " + " + r }); x = y; y = r; }
+      return { g: x, steps: steps };
+    }
+    function naiMathPrime(n) {
+      if (n < 2) return { prime: false, factor: null };
+      if (n < 4) return { prime: true, factor: null };
+      var lim = Math.floor(Math.sqrt(n));
+      for (var i = 2; i <= lim; i++) if (n % i === 0) return { prime: false, factor: i };
+      return { prime: true, factor: null };
+    }
+    function naiMathPercent(query) {
+      var m;
+      m = query.match(/(\d+(?:\.\d+)?)\s*(?:%|percent|per cent)\s+of\s+(\d+(?:\.\d+)?)/i);
+      if (m) {
+        var p = parseFloat(m[1]), v = parseFloat(m[2]), r = p / 100 * v;
+        return { kind: "of", steps: [{ t: "Percent formula", d: p + "% of " + v + " = (" + p + "/100) × " + v }], value: r, label: p + "% of " + naiMathFmt(v) };
+      }
+      m = query.match(/(?:increase|increased|raise|add|boost)\s+(\d+(?:\.\d+)?)\s+by\s+(\d+(?:\.\d+)?)\s*(?:%|percent)/i) || query.match(/(\d+(?:\.\d+)?)\s+(?:increased|raised|boosted)\s+by\s+(\d+(?:\.\d+)?)\s*(?:%|percent)/i);
+      if (m) {
+        var bv = parseFloat(m[1]), bp = parseFloat(m[2]), br = bv * (1 + bp / 100);
+        return { kind: "increase", steps: [{ t: "Percentage increase", d: bv + " × (1 + " + bp + "/100) = " + bv + " + " + naiMathFmt(bv * bp / 100) }], value: br, label: bv + " increased by " + bp + "%" };
+      }
+      m = query.match(/(?:decrease|decreased|reduce|lower|drop)\s+(\d+(?:\.\d+)?)\s+by\s+(\d+(?:\.\d+)?)\s*(?:%|percent)/i) || query.match(/(\d+(?:\.\d+)?)\s+(?:decreased|reduced|lowered)\s+by\s+(\d+(?:\.\d+)?)\s*(?:%|percent)/i);
+      if (m) {
+        var dv = parseFloat(m[1]), dp = parseFloat(m[2]), dr = dv * (1 - dp / 100);
+        return { kind: "decrease", steps: [{ t: "Percentage decrease", d: dv + " × (1 − " + dp + "/100) = " + dv + " − " + naiMathFmt(dv * dp / 100) }], value: dr, label: dv + " decreased by " + dp + "%" };
+      }
+      m = query.match(/(?:what|how much)\s+(?:percent|%|percentage)\s+of\s+(\d+(?:\.\d+)?)\s+is\s+(\d+(?:\.\d+)?)/i);
+      if (m) {
+        var wv = parseFloat(m[1]), ww = parseFloat(m[2]), wp = ww / wv * 100;
+        return { kind: "whatpercent", steps: [{ t: "Percentage", d: ww + " ÷ " + wv + " × 100" }], value: wp, label: ww + " as a percent of " + wv };
+      }
+      m = query.match(/(\d+(?:\.\d+)?)\s+is\s+(?:what|how much)\s+(?:percent|%|percentage)\s+of\s+(\d+(?:\.\d+)?)/i);
+      if (m) {
+        var wv2 = parseFloat(m[2]), ww2 = parseFloat(m[1]), wp2 = ww2 / wv2 * 100;
+        return { kind: "whatpercent", steps: [{ t: "Percentage", d: ww2 + " ÷ " + wv2 + " × 100" }], value: wp2, label: ww2 + " as a percent of " + wv2 };
+      }
+      m = query.match(/(\d+(?:\.\d+)?)\s+is\s+(\d+(?:\.\d+)?)\s*(?:%|percent)\s+of\s+(?:what|which\s+number)/i);
+      if (m) {
+        var nv = parseFloat(m[1]), np = parseFloat(m[2]), nr = nv / (np / 100);
+        return { kind: "ofwhat", steps: [{ t: "Reverse percentage", d: nv + " ÷ (" + np + "/100)" }], value: nr, label: nv + " is " + np + "% of" };
+      }
+      return null;
+    }
+    function naiMathUnit(query) {
+      var m = query.match(/convert\s+(\d+(?:\.\d+)?)\s+([a-z]+)\s+(?:to|into)\s+([a-z]+)/i) ||
+               query.match(/(\d+(?:\.\d+)?)\s+([a-z]+)\s+(?:in|to|as)\s+([a-z]+)(?:\b|$)/i);
+      if (!m) return null;
+      var val = parseFloat(m[1]), from = m[2].toLowerCase(), to = m[3].toLowerCase();
+      if (from === to) return { value: val, label: from + " → " + to, steps: [{ t: "Same unit", d: val + " " + from + " = " + val + " " + to }] };
+      var temp = { c: "c", celsius: "c", centigrade: "c", f: "f", fahrenheit: "f", k: "k", kelvin: "k" };
+      if (temp[from] && temp[to]) {
+        var tc = temp[from] === "c" ? val : temp[from] === "f" ? (val - 32) * 5 / 9 : val - 273.15;
+        var out = temp[to] === "c" ? tc : temp[to] === "f" ? tc * 9 / 5 + 32 : tc + 273.15;
+        return { value: out, label: from + " → " + to, steps: [{ t: "Convert to Celsius first", d: (temp[from] === "f" ? "(" + val + " − 32) × 5/9 = " + naiMathFmt(tc) : temp[from] === "k" ? val + " − 273.15 = " + naiMathFmt(tc) : val + " °C") }, { t: "Then to " + to, d: naiMathFmt(tc) + (temp[to] === "f" ? " × 9/5 + 32 = " : temp[to] === "k" ? " + 273.15 = " : " = ") + naiMathFmt(out) }] };
+      }
+      var cats = { length: { km: 1000, kilometer: 1000, kilometers: 1000, m: 1, meter: 1, meters: 1, cm: 0.01, centimeter: 0.01, centimeters: 0.01, mm: 0.001, millimeter: 0.001, millimeters: 0.001, mi: 1609.344, mile: 1609.344, miles: 1609.344, yd: 0.9144, yard: 0.9144, yards: 0.9144, ft: 0.3048, foot: 0.3048, feet: 0.3048, in: 0.0254, inch: 0.0254, inches: 0.0254 },
+        mass: { kg: 1, kilogram: 1, kilograms: 1, g: 0.001, gram: 0.001, grams: 0.001, mg: 0.000001, milligram: 0.000001, milligrams: 0.000001, lb: 0.45359237, lbs: 0.45359237, pound: 0.45359237, pounds: 0.45359237, oz: 0.028349523125, ounce: 0.028349523125, ounces: 0.028349523125 },
+        volume: { l: 1, litre: 1, liter: 1, litres: 1, liters: 1, ml: 0.001, gal: 3.785411784, gallon: 3.785411784, gallons: 3.785411784 },
+        time: { s: 1, sec: 1, secs: 1, second: 1, seconds: 1, min: 60, mins: 60, minute: 60, minutes: 60, hr: 3600, hrs: 3600, hour: 3600, hours: 3600, day: 86400, days: 86400, week: 604800, weeks: 604800 },
+        data: { b: 1, byte: 1, bytes: 1, kb: 1024, mb: 1048576, gb: 1073741824, tb: 1099511627776 } };
+      for (var cat in cats) {
+        var u = cats[cat];
+        if (u[from] !== undefined && u[to] !== undefined) {
+          var outV = val * u[from] / u[to];
+          return { value: outV, label: from + " → " + to, steps: [{ t: "Conversion factor", d: "1 " + from + " = " + naiMathFmt(u[from] / u[to]) + " " + to }, { t: "Multiply", d: val + " × " + naiMathFmt(u[from] / u[to]) + " = " + naiMathFmt(outV) }] };
+        }
+      }
+      return null;
+    }
+    function naiMathShape(query) {
+      var nums = (String(query).match(/\d+(?:\.\d+)?/g) || []).map(Number);
+      var f = naiMathFmt, pi = Math.PI;
+      var r2 = function (v) { return Math.round(v * 1e6) / 1e6; };
+      if (/(?:pythagoras|hypotenuse|(?:^|\s)c\s*[=]\s*√|(?:find|solve for|calculate)\s+(?:the\s+)?(?:c|hypotenuse)\b)/.test(query)) {
+        if (nums.length >= 2) {
+          var a = nums[0], b = nums[1], c = Math.sqrt(a * a + b * b);
+          return { kind: "shape", title: "Pythagoras", expr: query, steps: [{ t: "Pythagorean theorem", d: "c² = a² + b² = " + a + "² + " + b + "² = " + (a * a + b * b) }, { t: "Hypotenuse", d: "c = √(" + (a * a + b * b) + ") = " + f(r2(c)) }], result: "c = " + f(r2(c)), answer: r2(c) };
+        }
+      }
+      if (/sphere/.test(query) && nums.length) {
+        var sr = nums[0];
+        if (/volume/.test(query)) {
+          var sv = 4 / 3 * pi * Math.pow(sr, 3);
+          return { kind: "shape", title: "Sphere volume", expr: query, steps: [{ t: "Volume", d: "V = ⁴⁄₃πr³ = ⁴⁄₃ × π × " + sr + "³" }], result: "V = " + f(r2(sv)) + " cubic units", answer: r2(sv) };
+        }
+        if (/surface area/.test(query)) {
+          var sa = 4 * pi * sr * sr;
+          return { kind: "shape", title: "Sphere surface area", expr: query, steps: [{ t: "Surface area", d: "A = 4πr² = 4 × π × " + sr + "²" }], result: "A = " + f(r2(sa)) + " square units", answer: r2(sa) };
+        }
+      }
+      if (/cylinder/.test(query) && nums.length) {
+        var cr = nums[0], ch = nums.length > 1 ? nums[1] : nums[0];
+        if (/volume/.test(query)) {
+          var cv = pi * cr * cr * ch;
+          return { kind: "shape", title: "Cylinder volume", expr: query, steps: [{ t: "Volume", d: "V = πr²h = π × " + cr + "² × " + ch }], result: "V = " + f(r2(cv)) + " cubic units", answer: r2(cv) };
+        }
+      }
+      if (/cone/.test(query) && nums.length >= 2) {
+        var cor = nums[0], coh = nums[1];
+        if (/volume/.test(query)) {
+          var cov = pi * cor * cor * coh / 3;
+          return { kind: "shape", title: "Cone volume", expr: query, steps: [{ t: "Volume", d: "V = ⅓πr²h = ⅓ × π × " + cor + "² × " + coh }], result: "V = " + f(r2(cov)) + " cubic units", answer: r2(cov) };
+        }
+      }
+      if (/cube/.test(query) && nums.length) {
+        var cs = nums[0];
+        if (/volume/.test(query)) {
+          var cuv = Math.pow(cs, 3);
+          return { kind: "shape", title: "Cube volume", expr: query, steps: [{ t: "Volume", d: "V = s³ = " + cs + "³" }], result: "V = " + f(r2(cuv)) + " cubic units", answer: r2(cuv) };
+        }
+        if (/surface area/.test(query)) {
+          var csa = 6 * cs * cs;
+          return { kind: "shape", title: "Cube surface area", expr: query, steps: [{ t: "Surface area", d: "A = 6s² = 6 × " + cs + "²" }], result: "A = " + f(r2(csa)) + " square units", answer: r2(csa) };
+        }
+      }
+      if (/cuboid|rectangular prism/.test(query) && nums.length >= 3) {
+        var lv = nums[0], wv = nums[1], hv = nums[2];
+        if (/volume/.test(query)) {
+          var bov = lv * wv * hv;
+          return { kind: "shape", title: "Cuboid volume", expr: query, steps: [{ t: "Volume", d: "V = lwh = " + lv + " × " + wv + " × " + hv }], result: "V = " + f(r2(bov)) + " cubic units", answer: r2(bov) };
+        }
+      }
+      if (/circle|disc/.test(query) && nums.length) {
+        var rr = nums[0];
+        if (/area/.test(query)) {
+          var ca = pi * rr * rr;
+          return { kind: "shape", title: "Circle area", expr: query, steps: [{ t: "Area", d: "A = πr² = π × " + rr + "²" }], result: "A = " + f(r2(ca)) + " square units", answer: r2(ca) };
+        }
+        if (/circumference|perimeter/.test(query)) {
+          var cc = 2 * pi * rr;
+          return { kind: "shape", title: "Circle circumference", expr: query, steps: [{ t: "Circumference", d: "C = 2πr = 2 × π × " + rr }], result: "C = " + f(r2(cc)) + " units", answer: r2(cc) };
+        }
+      }
+      if (/rectangle|rectangular/.test(query) && nums.length >= 2) {
+        var rl = nums[0], rw = nums[1];
+        if (/area/.test(query)) {
+          var ra = rl * rw;
+          return { kind: "shape", title: "Rectangle area", expr: query, steps: [{ t: "Area", d: "A = l × w = " + rl + " × " + rw }], result: "A = " + f(r2(ra)) + " square units", answer: r2(ra) };
+        }
+        if (/perimeter/.test(query)) {
+          var rp = 2 * (rl + rw);
+          return { kind: "shape", title: "Rectangle perimeter", expr: query, steps: [{ t: "Perimeter", d: "P = 2(l + w) = 2 × (" + rl + " + " + rw + ")" }], result: "P = " + f(r2(rp)) + " units", answer: r2(rp) };
+        }
+      }
+      if (/square/.test(query) && nums.length) {
+        var sq = nums[0];
+        if (/area/.test(query)) {
+          var qa = sq * sq;
+          return { kind: "shape", title: "Square area", expr: query, steps: [{ t: "Area", d: "A = s² = " + sq + "²" }], result: "A = " + f(r2(qa)) + " square units", answer: r2(qa) };
+        }
+        if (/perimeter/.test(query)) {
+          var qp = 4 * sq;
+          return { kind: "shape", title: "Square perimeter", expr: query, steps: [{ t: "Perimeter", d: "P = 4s = 4 × " + sq }], result: "P = " + f(r2(qp)) + " units", answer: r2(qp) };
+        }
+      }
+      if (/triangle/.test(query) && nums.length) {
+        if (/perimeter/.test(query) && nums.length >= 3) {
+          var tp = nums[0] + nums[1] + nums[2];
+          return { kind: "shape", title: "Triangle perimeter", expr: query, steps: [{ t: "Perimeter", d: "P = a + b + c = " + nums[0] + " + " + nums[1] + " + " + nums[2] }], result: "P = " + f(r2(tp)) + " units", answer: r2(tp) };
+        }
+        if (nums.length >= 3) {
+          var s1 = nums[0], s2 = nums[1], s3 = nums[2], sp = (s1 + s2 + s3) / 2;
+          var her = Math.sqrt(sp * (sp - s1) * (sp - s2) * (sp - s3));
+          return { kind: "shape", title: "Triangle area (Heron's formula)", expr: query, steps: [{ t: "Semi-perimeter", d: "s = (" + s1 + " + " + s2 + " + " + s3 + ")/2 = " + f(r2(sp)) }, { t: "Heron's formula", d: "A = √(s(s−a)(s−b)(s−c))" }], result: "A = " + (isNaN(her) ? "not a valid triangle" : f(r2(her)) + " square units"), answer: isNaN(her) ? NaN : r2(her) };
+        }
+        if (nums.length >= 2 && /area/.test(query)) {
+          var tb = nums[0], th = nums[1], ta = 0.5 * tb * th;
+          return { kind: "shape", title: "Triangle area", expr: query, steps: [{ t: "Area", d: "A = ½ × base × height = ½ × " + tb + " × " + th }], result: "A = " + f(r2(ta)) + " square units", answer: r2(ta) };
+        }
+      }
+      return null;
+    }
+    var NAI_MATH_CONCEPTS = {
+      derivative: { t: "Derivative", a: "The derivative measures how fast a function changes — the slope of its tangent line at a point. Power rule: d/dx (xⁿ) = n·xⁿ⁻¹, so d/dx (x²) = 2x. Try: \u201Cdifferentiate x³ + 2x\u201D or \u201Cwhat is the derivative of sin(x)?\u201D" },
+      integral: { t: "Integral", a: "Integration is the reverse of differentiation — it finds the area under a curve. Power rule: ∫ xⁿ dx = xⁿ⁺¹/(n+1) + C, so ∫ x² dx = x³/3 + C. Try: \u201Cintegrate x² from 0 to 3\u201D." },
+      mean: { t: "Mean / average", a: "The mean is the sum of the values divided by how many there are — the everyday \u201Caverage\u201D. Example: mean of 5, 6, 7 = (5+6+7)/3 = 6. Ask: \u201Cmean of 5, 6, 7, 8\u201D." },
+      median: { t: "Median", a: "The median is the middle value when numbers are sorted. For an even count it's the average of the two middle ones. Ask: \u201Cmedian of 3, 7, 1, 9\u201D." },
+      mode: { t: "Mode", a: "The mode is the value that appears most often. A list can have one mode, several, or none. Ask: \u201Cmode of 2, 3, 3, 5\u201D." },
+      variance: { t: "Variance & standard deviation", a: "Variance measures how spread out values are — the average squared distance from the mean. Standard deviation is its square root. Ask: \u201Cstandard deviation of 4, 8, 6, 5, 3\u201D." },
+      percentage: { t: "Percentage", a: "A percentage is a fraction out of 100: x% of y = (x/100) × y. So 15% of 200 = 30. Try: \u201Cwhat is 15% of 200?\u201D or \u201Cincrease 200 by 15%\u201D." },
+      quadratic: { t: "Quadratic formula", a: "For ax² + bx + c = 0, the roots are x = (−b ± √(b² − 4ac)) / 2a. The discriminant Δ = b² − 4ac tells you how many real roots there are (Δ > 0 → two, Δ = 0 → one, Δ < 0 → none). Try: \u201Csolve x² − 5x + 6 = 0\u201D." },
+      pythagoras: { t: "Pythagoras' theorem", a: "In a right-angled triangle, a² + b² = c², where c is the hypotenuse (the longest side). Try: \u201Chypotenuse of 3 and 4\u201D." },
+      factorial: { t: "Factorial", a: "n! (n factorial) multiplies every integer from 1 to n: 5! = 5×4×3×2×1 = 120. It counts arrangements and shows up in permutations and probability. Try: \u201Cwhat is 7!\u201D." },
+      prime: { t: "Prime numbers", a: "A prime is a whole number bigger than 1 with exactly two divisors: itself and 1. 2, 3, 5, 7, 11… are prime; 1 and composites like 6 are not. Try: \u201Cis 97 prime?\u201D." },
+      gcd: { t: "GCD / HCF", a: "The greatest common divisor (GCD, or HCF) is the largest number that divides two or more numbers exactly. gcd(12, 18) = 6. Try: \u201Cgcd of 24 and 36\u201D." },
+      lcm: { t: "LCM", a: "The least common multiple (LCM) is the smallest number that is a multiple of each given number. lcm(4, 6) = 12. Try: \u201Clcm of 4 and 6\u201D." },
+      logarithm: { t: "Logarithms", a: "log_b(a) answers \u201Cb to what power gives a?\u201D — log₂(8) = 3 because 2³ = 8. ln is the natural log (base e), log without a base usually means base 10. Try: \u201Clog(1000)\" or \u201Ccalculate ln(e)\"." },
+      pi: { t: "Pi (π)", a: "π ≈ 3.14159 is the ratio of a circle's circumference to its diameter — the same for every circle. Try: \u201Carea of a circle with radius 5\u201D." }
+    };
+    function naiMathIntent(q) {
+      var query = String(q || "").toLowerCase().replace(/\s+/g, " ").trim();
+      /* hard anti-signals: asking for CODE (goes to the Code Vault) */
+      if (/(?:write|print|code|program|snippet|compile|script)\b/.test(query) && /\b(c|c\+\+|java|python|py|javascript|js|go|golang|rust|php|c#|ruby|swift|kotlin)\b/.test(query)) return null;
+      /* conceptual questions WITHOUT an expression after the word stay
+         conceptual ("what is a derivative" → concept card; "what is the
+         derivative of x²" → real math) */
+      var mathChips = ["solve", "factor", "factorise", "differentiate", "integrate", "integration", "integral", "simplify", "calculate", "compute", "evaluate", "mean", "median", "mode", "average", "variance", "deviation", "derivative", "percent", "factorial", "gcd", "gcf", "hcf", "lcm", "prime", "convert", "area", "perimeter", "circumference", "volume", "hypotenuse", "pythagoras", "statistics", "equation", "quadratic", "trig", "range", "sum"];
+      var hasMathWord = false;
+      for (var mi = 0; mi < mathChips.length; mi++) if (query.indexOf(mathChips[mi]) !== -1) { hasMathWord = true; break; }
+      /* conceptual questions ("what is integration") must also pass the gate
+         so the concept card can answer them */
+      var conceptLike = /(?:what\s+is|what's|what\s+are|define|explain|tell\s+me\s+about|meaning\s+of)\s+(?:a|an|the)?\s*(derivative|integration|integral|mean|average|median|mode|variance|standard\s+deviation|percentage|percent|prime|factorial|gcd|hcf|lcm|quadratic\s+formula|pythagoras|hypotenuse|logarithm|equation|polynomial|\bpi\b)\b/i.test(query);
+      if (!hasMathWord && !conceptLike) {
+        /* bare expressions still count: "2+2", "5!", "sqrt(144)", "log(1000)", "5 km in miles" */
+        var bare = /[0-9]/.test(query) && (/[+\-*^/×÷%−√!]|\bplus\b|\bminus\b|\btimes\b|\bdivided\b|\bsqrt\b|\bsin\s*\(?\s*\d|\bcos\s*\(?\s*\d|\btan\s*\(?\s*\d|\d+\s*!/).test(query);
+        var fnCall = /\b(?:sqrt|cbrt|log|ln|abs|exp|sin|cos|tan|asin|acos|atan|floor|ceil|round|min|max)\s*\(/.test(query);
+        var unitLike = /\d+(?:\.\d+)?\s+[a-z]+\s+(?:to|in|as)\s+[a-z]+/.test(query);
+        if (!bare && !fnCall && !unitLike) return null;
+      }
+      var clean = query
+        .replace(/\bplus\b/g, "+").replace(/\bminus\b/g, "-").replace(/\btimes\b|\bmultiplied by\b/g, "*")
+        .replace(/\bdivided by\b|\bover\b/g, "/").replace(/\bto the power of\b/g, "^").replace(/\bsquare root of\b/g, "sqrt");
+      var mathChipsArr = ["🧮 Solve 2x + 3 = 7", "📊 Mean of 5, 6, 7, 8", "What is the derivative of x²?"];
+      var mk = function (kind, title, expr, steps, result, extra, answer) {
+        return { kind: kind, title: title, expr: expr, steps: steps || [], result: result, extra: extra || null, answer: answer };
+      };
+      /* ---- 1. equations: has "=" (but not "at x = 3" — that's an evaluation
+         point, not an equation) or "solve ... for x" ---- */
+      if ((query.indexOf("=") !== -1 && !/\bat\s+[xyz]\s*=/i.test(query)) || /(?:solve|find)\s+.*\bfor\s+[xyz]\b|^solve\b/.test(query)) {
+        var eqStr = query;
+        eqStr = eqStr.replace(/^(?:solve|find)\b/i, "").replace(/\bfor\s+[xyz]\b/i, "").replace(/\bwhere\b.*$/i, "").trim();
+        eqStr = eqStr.replace(/^[^0-9a-z(√π]*/i, "");
+        var eq = naiMathSolveEqStr(eqStr);
+        if (!eq && query.indexOf("=") === -1) {
+          /* "solve 2x + 3" → solve = 0 */
+          var tryEq = naiMathSolveEqStr(eqStr + " = 0");
+          if (tryEq) eq = tryEq;
+        }
+        if (eq) {
+          var eqTxt = eq.complex ? "x = " + naiMathFmt(eq.complex.re) + " ± " + naiMathFmt(eq.complex.im) + "i"
+            : eq.kind === "linear" ? "x = " + naiMathFmt(eq.roots[0])
+            : eq.kind === "quadratic" && eq.roots.length === 2 ? "x = " + naiMathFmt(eq.roots[0]) + " or x = " + naiMathFmt(eq.roots[1])
+            : eq.kind === "quadratic" && eq.roots.length === 1 ? "x = " + naiMathFmt(eq.roots[0]) + " (repeated)"
+            : eq.kind === "identity" ? "every value of x"
+            : "no solution";
+          return { text: "🧮 " + eqStr.replace(/^\s+/, "") + " → " + eqTxt, math: mk("equation", eq.kind === "quadratic" ? "Quadratic equation" : "Linear equation", eqStr.replace(/^\s+/, ""), eq.steps, eqTxt, null, eq.roots[0]), chips: mathChipsArr, link: null };
+        }
+        if (/^solve\b/.test(query)) {
+          return { text: "I couldn't parse that as a linear or quadratic equation. Try formats like: \u201Csolve 2x + 3 = 7\u201D, \u201Csolve x² − 5x + 6 = 0\u201D, or \u201Cwhat is 2x + 3 when x = 4?\u201D.", math: mk("equation", "Equation solver", query.replace(/^(?:solve|find)\b/i, "").trim(), [], "couldn't parse — see example formats above"), chips: ["🧮 Solve 2x + 3 = 7", "Solve x² − 5x + 6 = 0"], link: null };
+        }
+        /* not a solve-style query (e.g. "differentiate 3x^2 at x = 4") — fall
+           through to the derivative / shape / expression branches */
+      }
+      /* ---- 2. factoring ---- */
+      if (/^(?:factor|factorise|factorize)\b/.test(query) && /[a-z]/.test(query) && !/statistics|mean|median/.test(query)) {
+        var fe = query.replace(/^(?:factor|factorise|factorize)\b/i, "").trim();
+        var fp = naiMathPolyArr(naiMathParseSafe(fe), 2);
+        if (fp && (fp[2] !== 0 || fp[1] !== 0)) {
+          var A5 = fp[2], B5 = fp[1], C5 = fp[0];
+          if (Math.abs(A5) < 1e-12) {
+            return { text: "🧮 " + fe + " = " + naiMathFmt(B5) + "(x " + (C5 / B5 < 0 ? "+ " : "− ") + naiMathFmt(Math.abs(C5 / B5)) + ")", math: mk("factor", "Factor", fe, [{ t: "Linear factor", d: naiMathFmt(B5) + "x " + (C5 >= 0 ? "+ " + naiMathFmt(C5) : "− " + naiMathFmt(-C5)) + " = " + naiMathFmt(B5) + "(x " + (C5 / B5 < 0 ? "+ " : "− ") + naiMathFmt(Math.abs(C5 / B5)) + ")" }], naiMathFmt(B5) + "(x " + (C5 / B5 < 0 ? "+ " : "− ") + naiMathFmt(Math.abs(C5 / B5)) + ")"), chips: mathChipsArr, link: null };
+          }
+          var r1 = null, r2 = null;
+          for (var cand = -200; cand <= 200; cand++) {
+            if (cand !== 0 && Math.abs(A5 * cand * cand + B5 * cand + C5) < 1e-9) { r1 = cand; break; }
+          }
+          if (r1 != null) {
+            r2 = C5 / (A5 * r1);
+            if (Math.abs(A5 * r2 * r2 + B5 * r2 + C5) < 1e-6) {
+              var f1 = r1 < 0 ? "(x + " + naiMathFmt(-r1) + ")" : r1 > 0 ? "(x − " + naiMathFmt(r1) + ")" : "x";
+              var f2x = r2 < 0 ? "(x + " + naiMathFmt(-r2) + ")" : r2 > 0 ? "(x − " + naiMathFmt(r2) + ")" : "x";
+              var lead = Math.abs(A5 - 1) < 1e-12 ? "" : Math.abs(A5 + 1) < 1e-12 ? "−" : naiMathFmt(A5);
+              return { text: "🧮 " + fe + " = " + lead + f1 + f2x, math: mk("factor", "Factor", fe, [{ t: "Find the roots", d: "x = " + naiMathFmt(r1) + " and x = " + naiMathFmt(r2) + " satisfy the polynomial" }, { t: "Write as factors", d: "a(x − r₁)(x − r₂)" }], lead + f1 + f2x, null, r1), chips: mathChipsArr, link: null };
+            }
+          }
+        }
+        return { text: "🧮 " + fe + " doesn't factor over the integers — the roots aren't whole numbers. I can still solve it: \u201Csolve " + fe + " = 0\u201D.", math: mk("factor", "Factor", fe, [], "no integer factors"), chips: ["Solve " + fe + " = 0"], link: null };
+      }
+      /* ---- 3. derivatives ---- (pure conceptual questions fall through
+         to the concept card: "what is a derivative" → definition; "what is
+         the derivative of x²" → real math) */
+      if (/derivative|differentiate|differential|dy\s*\/\s*dx|d\s*\/\s*dx|\bd\/dx\b|find\s+the\s+slope/.test(query) && !/differential\s+equations?|diff\s*equations?/i.test(query) && !/(?:what\s+is|what's|what\s+are|define|explain|meaning\s+of)\s+(?:a|an|the)?\s*(?:derivative|first\s+derivative|differential)\b(?!\s+of\b)/i.test(query)) {
+        var de = query.replace(/^(?:what\s+is|what's|find|compute|calculate|evaluate)\s+(?:the\s+)?(?:derivative|first\s+derivative)\s+of\s+/i, "")
+          .replace(/^(?:differentiate|find\s+the\s+slope\s+of)\s+/i, "")
+          .replace(/\bwith\s+respect\s+to\s+x\b/i, "").replace(/\bdy\s*\/\s*dx\b|\bd\s*\/\s*dx\b/i, "").trim();
+        var atM = de.match(/\bat\s+x\s*=\s*(-?\d+(?:\.\d+)?)/i);
+        var atV = atM ? parseFloat(atM[1]) : null;
+        if (atV != null) de = de.replace(atM[0], "").trim();
+        var deAst = naiMathParseSafe(de);
+        var dAst = deAst ? naiMathD(deAst) : null;
+        var sAst = dAst ? naiMathSimp(dAst) : null;
+        if (sAst) {
+          var dStr = naiMathStr(sAst);
+          var dSteps = [{ t: "Differentiate term by term", d: "apply the power rule d/dx (xⁿ) = n·xⁿ⁻¹ and the chain rule where needed" }, { t: "Simplify", d: "d/dx (" + de + ") = " + dStr }];
+          var extra = null, ans = null;
+          if (atV != null) {
+            try { ans = naiMathEval(sAst, { x: atV }); dSteps.push({ t: "Evaluate at x = " + atV, d: "f'(" + atV + ") = " + naiMathFmt(ans) }); extra = "The slope of the tangent at x = " + atV + " is " + naiMathFmt(ans) + "."; } catch (e) {}
+          }
+          return { text: "🧮 d/dx (" + de + ") = " + dStr, math: mk("derivative", "Derivative", "d/dx (" + de + ")", dSteps, dStr, extra, ans), chips: mathChipsArr, link: null };
+        }
+        if (/derivative|differentiate/.test(query)) {
+          return { text: "I can differentiate sums, products, quotients, powers and common functions (sin, cos, tan, eˣ, ln, √) with respect to x. Try: \u201Cdifferentiate x³ + 2x\u201D or \u201Cwhat is the derivative of sin(x)?\u201D.", math: mk("derivative", "Derivative", de || query, [], "couldn't parse that expression"), chips: ["Differentiate x³ + 2x", "What is the derivative of sin(x)?"], link: null };
+        }
+        return null;
+      }
+      /* ---- 4. integrals ---- ("what is an integral" → concept card) */
+      if (/integrat|integral|∫/.test(query) && !/(?:what\s+is|what's|what\s+are|define|explain|meaning\s+of)\s+(?:a|an|the)?\s*(?:integral|integration)\b(?!\s+of\b)/i.test(query)) {
+        var bounds = query.match(/from\s*(-?\d+(?:\.\d+)?)\s+to\s*(-?\d+(?:\.\d+)?)/i);
+        var ie = query.replace(/^(?:what\s+is|what's|find|compute|calculate|evaluate)\s+(?:the\s+)?(?:indefinite\s+)?(?:integral|integration)\s+of\s+/i, "")
+          .replace(/^(?:integrate)\s+/i, "").replace(/∫\s*/i, "")
+          .replace(/\bwith\s+respect\s+to\s+x\b/i, "").replace(/\bdx\b/i, "")
+          .replace(/\bfrom\s*-?\d+(?:\.\d+)?\s+to\s*-?\d+(?:\.\d+)?/i, "").trim();
+        var iRes = naiMathIntegrateStr(ie, bounds ? parseFloat(bounds[1]) : null, bounds ? parseFloat(bounds[2]) : null);
+        if (iRes) {
+          var iTxt = iRes.antideriv ? "∫ " + ie + " dx = " + iRes.antideriv + " + C" : "∫ " + ie + " dx from " + naiMathFmt(bounds[1]) + " to " + naiMathFmt(bounds[2]) + " ≈ " + naiMathFmt(iRes.value);
+          return { text: "🧮 " + iTxt, math: mk("integral", bounds ? "Definite integral" : "Indefinite integral", bounds ? "∫ " + ie + " dx, " + bounds[1] + " → " + bounds[2] : "∫ " + ie + " dx", iRes.steps, iTxt, null, iRes.value), chips: mathChipsArr, link: null };
+        }
+        if (/integrat|∫/.test(query)) {
+          return { text: "I can integrate polynomials and simple functions (sin, cos, eˣ, ln, 1/x), definite or indefinite. Try: \u201Cintegrate x² from 0 to 3\u201D or \u201Cintegrate x³ + 2x\u201D.", math: mk("integral", "Integral", ie || query, [], "couldn't parse that expression"), chips: ["Integrate x² from 0 to 3", "Integrate x³ + 2x"], link: null };
+        }
+        return null;
+      }
+      /* ---- 5. shapes ---- */
+      if (/area|perimeter|circumference|volume|hypotenuse|pythagoras|right.?angle/.test(query) && /[0-9]/.test(query)) {
+        var sh = naiMathShape(query);
+        if (sh) {
+          return { text: "🧮 " + sh.result, math: mk("shape", sh.title, query, sh.steps, sh.result, null, sh.answer), chips: ["Area of a circle radius 5", "Hypotenuse of 3 and 4", "🧮 Solve 2x + 3 = 7"], link: null };
+        }
+      }
+      /* ---- 6. statistics ---- */
+      if (/mean|average|median|mode|variance|standard deviation|std\s*dev|\brange\b/.test(query)) {
+        var nums = (String(query).match(/-?\d+(?:\.\d+)?/g) || []).map(Number);
+        if (nums.length >= 2) {
+          var st = naiMathStats(query);
+          var want = /median/.test(query) ? "median" : /mode/.test(query) ? "mode" : /variance|standard deviation|std\s*dev/.test(query) ? "sd" : /\brange\b/.test(query) ? "range" : "mean";
+          var sSteps = [
+            { t: "Data", d: st.n + " values: " + st.nums.join(", ") },
+            { t: "Sorted", d: st.nums.join(" ≤ ") }
+          ];
+          var sVal = "", sTxt = "";
+          if (want === "median") { sVal = naiMathFmt(st.median); sTxt = "median"; sSteps.push({ t: "Median", d: st.n % 2 ? "middle value" : "average of the two middle values", extra: true }); }
+          else if (want === "mode") { sVal = st.modes.length ? st.modes.map(naiMathFmt).join(", ") : "none"; sTxt = "mode" + (st.modes.length > 1 ? "s" : ""); sSteps.push({ t: "Mode", d: st.maxF === 1 ? "no value repeats — no mode" : "most frequent: " + sVal + " (" + st.maxF + "×)" }); }
+          else if (want === "sd") { sVal = naiMathFmt(st.sd); sTxt = "standard deviation"; sSteps.push({ t: "Variance", d: "σ² = " + naiMathFmt(st.variance) + " (population)" }, { t: "Std dev", d: "σ = √" + naiMathFmt(st.variance) + " = " + sVal }); }
+          else if (want === "range") { sVal = naiMathFmt(st.range); sTxt = "range"; sSteps.push({ t: "Range", d: st.nums[st.n - 1] + " − " + st.nums[0] + " = " + sVal }); }
+          else { sVal = naiMathFmt(st.mean); sTxt = "mean"; sSteps.push({ t: "Mean", d: "(" + st.nums.join(" + ") + ") ÷ " + st.n + " = " + sVal }); }
+          return { text: "🧮 " + sTxt + " of " + st.nums.join(", ") + " = " + sVal, math: mk("stats", "Statistics · " + sTxt, st.nums.join(", "), sSteps, sTxt + " = " + sVal, "sum = " + naiMathFmt(st.sum) + " · n = " + st.n, st.mean), chips: mathChipsArr, link: null };
+        }
+      }
+      /* ---- 7. arithmetic series: "sum of 1 to 100" ---- */
+      var sumM = query.match(/sum\s+of\s+(\d+(?:\.\d+)?)\s+(?:to|up\s+to|through)\s+(\d+(?:\.\d+)?)/i);
+      if (sumM) {
+        var sa = parseInt(sumM[1], 10), sb = parseInt(sumM[2], 10);
+        if (sa >= 0 && sb >= sa) {
+          var nTerm = sb - sa + 1, sSum = nTerm * (sa + sb) / 2;
+          return { text: "🧮 sum of " + sa + " to " + sb + " = " + naiMathFmt(sSum), math: mk("series", "Arithmetic series", "Σ " + sa + "…" + sb, [{ t: "Count the terms", d: "n = " + sb + " − " + sa + " + 1 = " + nTerm }, { t: "Sum formula", d: "S = n(first + last)/2 = " + nTerm + " × (" + sa + " + " + sb + ")/2" }], "S = " + naiMathFmt(sSum), null, sSum), chips: mathChipsArr, link: null };
+        }
+      }
+      /* ---- 8. percentages ---- */
+      var pct = naiMathPercent(query);
+      if (pct) {
+        return { text: "🧮 " + pct.label + " = " + naiMathFmt(pct.value), math: mk("percent", "Percentage", pct.label, pct.steps, naiMathFmt(pct.value), null, pct.value), chips: ["What is 15% of 200?", "Increase 200 by 15%", "What percent of 200 is 50?"], link: null };
+      }
+      /* ---- 9. number theory ---- */
+      var nt = null;
+      function numsAfter(s) { return (String(s).match(/\d+/g) || []).map(function (x) { return parseInt(x, 10); }); }
+      var gcdM = query.match(/\b(?:gcd|gcf|hcf|greatest\s+common|highest\s+common)\b/i);
+      if (gcdM) {
+        var gNums = numsAfter(query.slice(gcdM.index + gcdM[0].length)).filter(function (x) { return x > 0; });
+        if (gNums.length >= 2) {
+          var gSteps = [], gAcc = gNums[0];
+          for (var gi = 1; gi < gNums.length; gi++) {
+            var gR = naiMathGcd(gAcc, gNums[gi]);
+            gR.steps.forEach(function (s) { gSteps.push({ t: "gcd(" + gAcc + ", " + gNums[gi] + ") — " + s.t, d: s.d }); });
+            gSteps.push({ t: "Step " + gi, d: "gcd so far = " + gAcc + " → " + gR.g });
+            gAcc = gR.g;
+          }
+          nt = { kind: "gcd", title: "GCD", label: "gcd(" + gNums.join(", ") + ")", steps: gSteps, value: gAcc };
+        }
+      }
+      var lcmM = query.match(/\b(?:lcm|least\s+common\s+multiple)\b/i);
+      if (lcmM) {
+        var lNums = numsAfter(query.slice(lcmM.index + lcmM[0].length)).filter(function (x) { return x > 0; });
+        if (lNums.length >= 2) {
+          var lSteps = [], lAcc = lNums[0];
+          for (var li = 1; li < lNums.length; li++) {
+            var gR2 = naiMathGcd(lAcc, lNums[li]);
+            var lv = lAcc / gR2.g * lNums[li];
+            lSteps.push({ t: "lcm(" + lAcc + ", " + lNums[li] + ")", d: "a × b ÷ gcd = " + lAcc + " × " + lNums[li] + " ÷ " + gR2.g + " = " + naiMathFmt(lv) });
+            lAcc = lv;
+          }
+          nt = { kind: "lcm", title: "LCM", label: "lcm(" + lNums.join(", ") + ")", steps: lSteps, value: lAcc };
+        }
+      }
+      var prM = query.match(/is\s+(\d+)\s+prime/);
+      if (!prM) prM = query.match(/^(\d+)\s+prime\??$/);
+      if (prM && !gcdM && !lcmM) {
+        var pv = parseInt(prM[1], 10), pR = naiMathPrime(pv);
+        var pSteps = [{ t: "Check divisors", d: "trial division only up to √" + pv + " = " + naiMathFmt(Math.floor(Math.sqrt(pv))) }];
+        if (pR.prime) pSteps.push({ t: "Verdict", d: "no divisor found — " + pv + " is prime" });
+        else pSteps.push({ t: "Verdict", d: "divisible by " + pR.factor + " — " + pv + " is composite" });
+        nt = { kind: "prime", title: "Prime check", label: pv + " prime?", steps: pSteps, value: pR.prime };
+      }
+      var facM = query.match(/(?:prime\s+)?factors?\s+of\s+(\d+)/);
+      if (facM && !gcdM && !lcmM) {
+        var fv = parseInt(facM[1], 10), isPrimeFac = /prime\s+factors/.test(query);
+        var divs = [];
+        for (var di = 1; di * di <= fv; di++) if (fv % di === 0) { divs.push(di); if (di * di !== fv) divs.push(fv / di); }
+        divs.sort(function (a, b) { return a - b; });
+        var rem = fv, pf = [];
+        for (var pi2 = 2; pi2 * pi2 <= rem; pi2++) while (rem % pi2 === 0) { pf.push(pi2); rem /= pi2; }
+        if (rem > 1) pf.push(rem);
+        var fSteps = isPrimeFac
+          ? [{ t: "Divide by primes", d: fv + " = " + pf.join(" × ") }]
+          : [{ t: "All divisors", d: divs.join(", ") }, { t: "Prime factors", d: pf.join(" × ") }];
+        nt = { kind: "factors", title: isPrimeFac ? "Prime factors" : "Factors", label: (isPrimeFac ? "prime factors of " : "factors of ") + fv, steps: fSteps, value: null, extra: isPrimeFac ? fv + " = " + pf.join(" × ") : "count: " + divs.length + " · divisors: " + divs.slice(0, 14).join(", ") + (divs.length > 14 ? "…" : "") };
+      }
+      var factM = query.match(/(\d+)\s*(?:factorial|!)/) || query.match(/factorial\s+of\s+(\d+)/);
+      if (factM && !gcdM && !lcmM && !prM && !facM) {
+        var fn = parseInt(factM[1], 10);
+        if (fn >= 0 && fn <= 170) {
+          var fv2 = 1, chain = [];
+          for (var fi = 2; fi <= fn; fi++) { fv2 *= fi; if (fn <= 12) chain.push(fi); }
+          nt = { kind: "factorial", title: "Factorial", label: fn + "!", steps: fn <= 12 ? [{ t: "Multiply", d: chain.join(" × ") + " = " + naiMathFmt(fv2) }] : [{ t: "Definition", d: fn + "! = 1 × 2 × … × " + fn }], value: fv2 };
+        } else nt = { kind: "factorial", title: "Factorial", label: fn + "!", steps: [], value: null, extra: "I can only compute factorials up to 170! (beyond that the number overflows)." };
+      }
+      var sqrtM = query.match(/square\s+root\s+of\s+(\d+(?:\.\d+)?)/);
+      if (sqrtM && !gcdM && !lcmM && !prM && !facM && !factM) {
+        var sv = parseFloat(sqrtM[1]);
+        nt = { kind: "sqrt", title: "Square root", label: "√" + naiMathFmt(sv), steps: [{ t: "Evaluate", d: "√" + naiMathFmt(sv) + " = " + naiMathFmt(Math.sqrt(sv)) }], value: Math.sqrt(sv) };
+      }
+      if (nt) {
+        var ntRes = nt.kind === "prime" ? (nt.value ? "prime ✓" : "not prime") : nt.kind === "factors" ? (nt.extra || "") : nt.kind === "gcd" || nt.kind === "lcm" ? naiMathFmt(nt.value) : nt.kind === "factorial" ? (nt.value == null ? "too big" : naiMathFmt(nt.value)) : naiMathFmt(nt.value);
+        return { text: "🧮 " + nt.label + " = " + ntRes, math: mk(nt.kind, nt.title, nt.label, nt.steps, ntRes, nt.extra || null, nt.value), chips: mathChipsArr, link: null };
+      }
+      /* ---- 10. trig ---- */
+      var tgM = query.match(/\b(sin|cos|tan)\s*\(?\s*(\d+(?:\.\d+)?)\s*\)?\s*(degrees?|deg|°|radians?|rad)?/i);
+      if (tgM && query.indexOf("+") === -1 && query.indexOf("*") === -1 && query.indexOf("/") === -1 && query.indexOf("^") === -1) {
+        var tgFn = tgM[1].toLowerCase(), tgV = parseFloat(tgM[2]), tgUnit = (tgM[3] || "").toLowerCase();
+        var tgRad = /rad/.test(tgUnit);
+        var tgAng = tgRad ? tgV : tgV * Math.PI / 180;
+        var tgOut = tgFn === "sin" ? Math.sin(tgAng) : tgFn === "cos" ? Math.cos(tgAng) : Math.tan(tgAng);
+        return { text: "🧮 " + tgFn + "(" + naiMathFmt(tgV) + (tgRad ? " rad" : "°") + ") = " + naiMathFmt(tgOut), math: mk("trig", "Trigonometry", tgFn + "(" + naiMathFmt(tgV) + (tgRad ? " rad" : "°") + ")", [{ t: tgRad ? "Radians" : "Degrees → radians", d: tgRad ? "using " + naiMathFmt(tgV) + " radians directly" : naiMathFmt(tgV) + "° × π/180 = " + naiMathFmt(tgAng) + " rad" }, { t: "Evaluate", d: tgFn + "(" + naiMathFmt(tgAng) + " rad) = " + naiMathFmt(tgOut) }], naiMathFmt(tgOut), null, tgOut), chips: mathChipsArr, link: null };
+      }
+      /* ---- 11. unit conversion ---- */
+      if (/convert|\d+\s+[a-z]+\s+(?:to|in|as)\s+[a-z]+/.test(query)) {
+        var un = naiMathUnit(query);
+        if (un) {
+          return { text: "🧮 " + un.label + " → " + naiMathFmt(un.value), math: mk("unit", "Unit conversion", un.label, un.steps, naiMathFmt(un.value), null, un.value), chips: ["Convert 5 km to miles", "Convert 100 °C to °F", "🧮 Solve 2x + 3 = 7"], link: null };
+        }
+      }
+      /* ---- 12. simplify ---- */
+      if (/^simplify\b/.test(query)) {
+        var sime = query.replace(/^simplify\s+/i, "");
+        var simAst = naiMathParseSafe(sime);
+        if (simAst) {
+          var pp = naiMathPolyArr(simAst, 8);
+          var simV = naiMathEvalSafe(simAst);
+          var simS = "";
+          var simSteps = [{ t: "Combine like terms", d: "collect constants and xⁿ terms" }];
+          if (pp) {
+            var pterms = [];
+            for (var pd = pp.length - 1; pd >= 0; pd--) {
+              var c = pp[pd];
+              if (!c || Math.abs(c) < 1e-12) continue;
+              pterms.push(pd === 0 ? naiMathFmt(c) : (Math.abs(c - 1) < 1e-12 ? "x" + naiMathPowTxt(pd) : Math.abs(c + 1) < 1e-12 ? "−x" + naiMathPowTxt(pd) : naiMathFmt(c) + "x" + naiMathPowTxt(pd)));
+            }
+            simS = (pterms.length ? pterms.join(" + ") : "0").replace(/\+ -/g, "− ").replace(/\+ −/g, "− ");
+            if (pterms.length > 1) simSteps.push({ t: "Expand", d: "multiplied out and collected like terms" });
+          } else {
+            simS = naiMathStr(naiMathSimp(simAst));
+          }
+          return { text: "🧮 " + sime + " = " + (simV != null ? naiMathFmt(simV) : simS), math: mk("simplify", "Simplify", sime, simSteps, simV != null ? naiMathFmt(simV) : simS, null, simV), chips: mathChipsArr, link: null };
+        }
+        return { text: "I can simplify expressions like \u201Csimplify 2x + 3x\u201D or \u201Csimplify (x+1)(x−1)\".", math: mk("simplify", "Simplify", sime, [], "couldn't parse that expression"), chips: ["Simplify 2x + 3x", "Simplify (x+1)(x−1)"], link: null };
+      }
+      /* ---- 13. evaluate: expression or "what is …" with a value ---- */
+      var isExpr2 = /[0-9]/.test(query) && /[+\-*^/×÷%−√!]|\bplus\b|\bminus\b|\btimes\b|\bdivided\b|\bsqrt\b|\b\d+\s*!\b|\bsin\s*\(?\s*\d|\bcos\s*\(?\s*\d|\btan\s*\(?\s*\d/.test(query);
+      var verb = /^(?:what is|what's|calculate|compute|evaluate|work out|find the value of|what does|how much is)\b/i.test(query);
+      var fnLike = /\b(?:sqrt|cbrt|log|ln|abs|exp|sin|cos|tan|asin|acos|atan|floor|ceil|round|min|max)\s*\(/.test(query);
+      if (isExpr2 || fnLike || (verb && /[0-9]/.test(query))) {
+        var ev = clean.replace(/^(?:what is|what's|calculate|compute|evaluate|work out|find the value of|what does|how much is)\b/i, "").replace(/[?=]+\s*$/, "").trim();
+        var ev2 = ev.replace(/\?+$/, "").trim();
+        /* "2x + 3 when x = 4" / "at x = 4" → substitute and evaluate */
+        var evAt = ev2.match(/^(.*?)\s+(?:at|when|where)\s+x\s*=\s*(-?\d+(?:\.\d+)?)\s*$/i);
+        var evAst = null, evX = null;
+        if (evAt) { evAst = naiMathParseSafe(evAt[1]); evX = parseFloat(evAt[2]); }
+        else evAst = naiMathParseSafe(ev2);
+        if (evAst) {
+          var evV = evX != null ? naiMathEvalSafe2(evAst, evX) : naiMathEvalSafe(evAst);
+          if (evV != null) {
+            var evSteps = [{ t: "Parse", d: naiMathStr(evAst) }, { t: "Evaluate", d: evX != null ? "substitute x = " + naiMathFmt(evX) + " and follow order of operations" : "following order of operations (× ÷ before + −, powers first)" }];
+            return { text: "🧮 " + (evAt ? evAt[1] : ev2) + (evX != null ? " at x = " + naiMathFmt(evX) : "") + " = " + naiMathFmt(evV), math: mk("expr", "Evaluate", evAt ? evAt[1] + ", x = " + naiMathFmt(evX) : ev2, evSteps, naiMathFmt(evV), null, evV), chips: ["What is 2 + 2 × 2?", "What is √144?", "2^10"], link: null };
+          }
+        }
+        if (/^(?:what is|what's|calculate|compute|evaluate)\b/i.test(query) && /[0-9]/.test(query)) {
+          return null;
+        }
+      }
+      /* ---- 14. concepts: "what is a derivative" etc. ---- */
+      var cm = query.match(/(?:what\s+is|what's|what\s+are|define|explain|tell\s+me\s+about|meaning\s+of)\s+(?:a|an|the)?\s*(derivative|integration|integral|mean|average|median|mode|variance|standard\s+deviation|percentage|percent|prime\s*number|factorial|gcd|hcf|lcm|quadratic\s+formula|pythagoras|pythagorean\s+theorem|hypotenuse|logarithm|equation|polynomial|\bpi\b)/i);
+      if (cm) {
+        var key = cm[1].toLowerCase().replace(/\s+/g, " ");
+        if (key === "average") key = "mean";
+        if (key === "standard deviation") key = "variance";
+        if (key === "percent" || key === "percentage") key = "percentage";
+        if (key === "hcf") key = "gcd";
+        if (key === "pythagorean theorem" || key === "hypotenuse") key = "pythagoras";
+        if (key === "prime number") key = "prime";
+        if (key === "quadratic formula") key = "quadratic";
+        if (key === "integral" || key === "integration") key = "integral";
+        var cDef = NAI_MATH_CONCEPTS[key];
+        if (cDef) {
+          return { text: "🧮 " + cDef.t + " — " + cDef.a, math: mk("concept", cDef.t, null, [], cDef.a, null, null), chips: mathChipsArr, link: null };
+        }
+      }
+      return null;
+    }
+    function naiMathParseSafe(s) {
+      if (!s || !/[-+*^/0-9()√πa-z.%]/.test(s)) return null;
+      try { return naiMathParse(s); } catch (e) { return null; }
+    }
+    function naiMathEvalSafe(ast) {
+      try { return naiMathEval(ast, {}); } catch (e) { return null; }
+    }
+    function naiMathEvalSafe2(ast, x) {
+      try { return naiMathEval(ast, { x: x }); } catch (e) { return null; }
+    }
+
+    /* ================= NITER AI — attach & read images/documents =================
+       Uploads are handled entirely in the browser:
+       · images → OCR via Tesseract.js (lazy-loaded from CDN, graceful offline)
+       · PDF    → text layer extraction via pdf.js (lazy-loaded, graceful offline)
+       · .docx  → native ZIP + DecompressionStream parser — works fully offline
+       · .txt/.md/.csv/.json → read directly
+       The extracted text becomes the AI's session document: it can summarize,
+       mine for names/dates/emails/phones/URLs, translate a rough opening,
+       report stats, or answer questions about the contents. */
+    var naiDocMax = 60000;
+    var naiDocCtx = null;
+    function naiDocSave() {
+      try { localStorage.setItem("niter-ai-doc", JSON.stringify(naiDocCtx)); } catch (e) { /* ignore */ }
+    }
+    function naiDocLoad() {
+      if (naiDocCtx) return naiDocCtx;
+      try {
+        var s = localStorage.getItem("niter-ai-doc");
+        if (s) naiDocCtx = JSON.parse(s);
+      } catch (e) { /* ignore */ }
+      return naiDocCtx;
+    }
+
+    /* ---- attach UI: delegated listeners so both the floating window and the
+       full-page view work without re-wiring after every render ---- */
+    function naiDropWin(el) {
+      while (el && el.classList) {
+        if (el.classList.contains("ai-win-body")) return true;
+        if (el.classList.contains("nai-shell") || el.classList.contains("nai-thread")) return false;
+        el = el.parentElement;
+      }
+      return null;
+    }
+    document.addEventListener("click", function (e) {
+      var b = e.target && e.target.closest ? e.target.closest(".nai-attach") : null;
+      if (!b) return;
+      e.preventDefault();
+      var f = document.getElementById(b.id === "nai-win-attach" ? "nai-win-file" : "nai-file");
+      if (f) f.click();
+    });
+    document.addEventListener("change", function (e) {
+      var t = e.target;
+      if (!t || !t.files || !t.files[0]) return;
+      if (t.id !== "nai-file" && t.id !== "nai-win-file") return;
+      var file = t.files[0];
+      t.value = "";
+      naiHandleFile(file, t.id === "nai-win-file");
+    });
+    document.addEventListener("dragover", function (e) {
+      var w = naiDropWin(e.target);
+      if (w === true || w === false) e.preventDefault();
+    });
+    document.addEventListener("drop", function (e) {
+      var w = naiDropWin(e.target);
+      if (w === true || w === false) {
+        e.preventDefault();
+        var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) naiHandleFile(f, w);
+      }
+    });
+
+    function naiChatPush(m, win) {
+      var chat = naiLoadChat();
+      chat.push(m);
+      naiSaveChat(chat);
+      if (win) { naiWinPaint(chat, true); naiWinTypewriter(); }
+      else render();
+    }
+
+    function naiHandleFile(file, win) {
+      if (!file) return;
+      var name = file.name || "file";
+      var ext = (name.split(".").pop() || "").toLowerCase();
+      var kind = null;
+      if (/^image\//.test(file.type) || ["png", "jpg", "jpeg", "gif", "webp", "bmp"].indexOf(ext) !== -1) kind = "image";
+      else if (file.type === "application/pdf" || ext === "pdf") kind = "pdf";
+      else if (ext === "docx") kind = "docx";
+      else if (["txt", "md", "markdown", "csv", "json", "log", "text"].indexOf(ext) !== -1 || /^text\//.test(file.type)) kind = "text";
+      if (!kind) { toast("Unsupported file — try an image, PDF, .docx or .txt", "err"); return; }
+      naiChatPush({ role: "user", text: "📎 " + name, at: new Date().toISOString() }, win);
+      var p = kind === "image" ? naiOcrImage(file)
+            : kind === "pdf" ? naiPdfText(file)
+            : kind === "docx" ? naiDocxText(file)
+            : naiPlainText(file);
+      p.then(function (res) {
+        naiDocLoaded(name, kind, res, win);
+      }).catch(function (err) {
+        naiChatPush({
+          role: "ai", text: "⚠️ I couldn't read " + name + " — " + (err && err.message ? err.message : "unknown error") + ".",
+          at: new Date().toISOString(),
+          chips: ["Which clubs are there?", "Upcoming events"],
+          reason: { intent: "document", kbId: null, label: "Document reader — failed", confidence: 0.6, steps: [{ t: "Tried to open " + name, d: (err && err.message ? err.message : "unknown error") }], sources: ["Uploaded file (processed locally)"] }
+        }, win);
+      });
+    }
+
+    function naiDocLoaded(name, kind, res, win) {
+      var text = String(res.text || "").replace(/\u0000/g, "").trim();
+      if (text.length > naiDocMax) text = text.slice(0, naiDocMax) + "\n…[truncated]";
+      var chars = text.length;
+      naiDocCtx = { name: name, kind: kind, text: text, pages: res.pages || null, chars: chars, at: new Date().toISOString() };
+      naiDocSave();
+      var kindLabel = { image: "image", pdf: "PDF document", docx: "Word document", text: "text file" }[kind] || "document";
+      var stats = [];
+      if (res.pages) stats.push(res.pages + " page" + (res.pages === 1 ? "" : "s"));
+      stats.push(chars.toLocaleString() + " characters");
+      var intro = "📎 Got it — I read " + name + " (" + stats.join(" · ") + "). I can summarize it, pull out names/dates/emails/phones, translate a rough opening, or answer questions about it. Try \"" + (kind === "image" ? "what does this image say" : "summarize the document") + "\".";
+      naiChatPush({
+        role: "ai", text: intro, at: new Date().toISOString(),
+        file: { name: name, kind: kind, preview: res.preview || null, pages: res.pages || null, chars: chars, snippet: text.slice(0, 2600) },
+        chips: ["Summarize the document", "Extract names & dates", "What does it say?"],
+        reason: {
+          intent: "document", kbId: null, label: "Document reader — " + kindLabel + " extracted", confidence: 0.98,
+          ms: res.ms || 0,
+          steps: [
+            { t: "Opened the uploaded " + kindLabel, d: name + " — " + (res.pages ? res.pages + " pages, " : "") + chars.toLocaleString() + " characters" },
+            { t: kind === "image" ? "Ran OCR to recover the text" : "Extracted the embedded text", d: res.method || "browser-side extraction" },
+            { t: "Stored it as my session document", d: "ask me to summarize, mine or translate it" }
+          ],
+          sources: ["Uploaded file (processed locally in your browser)"]
+        }
+      }, win);
+    }
+
+    function naiLoadScript(src) {
+      return new Promise(function (res, rej) {
+        var s = document.createElement("script");
+        s.src = src;
+        s.onload = function () { res(); };
+        s.onerror = function () { rej(new Error("needs an internet connection for the first run — it loads the OCR/PDF engine from a CDN")); };
+        document.head.appendChild(s);
+      });
+    }
+
+    function naiPlainText(file) {
+      return new Promise(function (res, rej) {
+        var r = new FileReader();
+        r.onload = function () { res({ text: String(r.result || ""), method: "read directly — fully offline" }); };
+        r.onerror = function () { rej(new Error("couldn't read the file")); };
+        r.readAsText(file);
+      });
+    }
+
+    /* image OCR — Tesseract.js (industry-standard client OCR), lazy-loaded */
+    function naiOcrImage(file) {
+      var preview = URL.createObjectURL(file);
+      var t0 = Date.now();
+      return naiLoadScript("https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js")
+        .then(function () {
+          var T = window.Tesseract;
+          return T.createWorker("eng", 1, { logger: function () {} });
+        })
+        .then(function (worker) {
+          return worker.recognize(file).then(function (r) {
+            var text = (r && r.data && r.data.text) || "";
+            return worker.terminate().then(function () { return text; });
+          });
+        })
+        .then(function (text) {
+          return { text: text, preview: preview, method: "Tesseract OCR (English)", ms: Date.now() - t0 };
+        })
+        .catch(function (err) {
+          try { URL.revokeObjectURL(preview); } catch (e) { /* ignore */ }
+          throw err;
+        });
+    }
+
+    /* PDF text-layer extraction — pdf.js (Mozilla), lazy-loaded */
+    function naiPdfText(file) {
+      var t0 = Date.now();
+      return naiLoadScript("https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.min.js")
+        .then(function () {
+          var pdfjs = window.pdfjsLib;
+          pdfjs.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/build/pdf.worker.min.js";
+          return file.arrayBuffer().then(function (buf) {
+            return pdfjs.getDocument({ data: buf }).promise;
+          });
+        })
+        .then(function (pdf) {
+          var pages = [];
+          var i = 1;
+          function next() {
+            if (i > pdf.numPages) return Promise.resolve();
+            return pdf.getPage(i).then(function (pg) {
+              return pg.getTextContent().then(function (tc) {
+                var txt = tc.items.map(function (it) { return it.str || ""; }).join(" ");
+                pages.push("— Page " + i + " —\n" + txt);
+                i++;
+                return next();
+              });
+            });
+          }
+          return next().then(function () {
+            return { text: pages.join("\n\n"), pages: pdf.numPages, method: "pdf.js text layer", ms: Date.now() - t0 };
+          });
+        });
+    }
+
+    /* .docx — hand-rolled ZIP reader + native DecompressionStream, fully offline */
+    function naiDocxText(file) {
+      var t0 = Date.now();
+      return file.arrayBuffer().then(function (buf) {
+        return naiZipRead(buf, "word/document.xml").then(function (xml) {
+          var out = xml
+            .replace(/<w:tab\b[^>]*\/>/g, "\t")
+            .replace(/<w:br\b[^>]*\/>/g, "\n")
+            .replace(/<\/w:p>/g, "\n")
+            .replace(/<\/w:tr>/g, "\n")
+            .replace(/<[^>]+>/g, "");
+          out = out.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&#(\d+);/g, function (m, n) { try { return String.fromCharCode(+n); } catch (e) { return ""; } });
+          out = out.split("\n").map(function (l) { return l.replace(/\s+/g, " ").trim(); }).filter(function (l) { return l; }).join("\n");
+          return { text: out, method: "native DOCX (ZIP + XML) parser — fully offline", ms: Date.now() - t0 };
+        });
+      });
+    }
+
+    /* Minimal ZIP reader: scans the end-of-central-directory + central
+       directory records, then inflates one entry with the native
+       DecompressionStream. Supports stored (0) and deflated (8) entries —
+       exactly what .docx files use. */
+    function naiZipRead(buf, wantName) {
+      var u8 = new Uint8Array(buf);
+      var dv = new DataView(buf);
+      var eocd = -1;
+      for (var i = u8.length - 22; i >= 0; i--) {
+        if (u8[i] === 0x50 && u8[i + 1] === 0x4b && u8[i + 2] === 0x05 && u8[i + 3] === 0x06) { eocd = i; break; }
+      }
+      if (eocd === -1) return Promise.reject(new Error("not a valid .docx (ZIP) file"));
+      var cdCount = dv.getUint16(eocd + 10, true);
+      var cdOff = dv.getUint32(eocd + 16, true);
+      var p = cdOff;
+      for (var n = 0; n < cdCount; n++) {
+        if (dv.getUint32(p, true) !== 0x02014b50) break;
+        var method = dv.getUint16(p + 10, true);
+        var csize = dv.getUint32(p + 20, true);
+        var usize = dv.getUint32(p + 24, true);
+        var nameLen = dv.getUint16(p + 28, true);
+        var extraLen = dv.getUint16(p + 30, true);
+        var commentLen = dv.getUint16(p + 32, true);
+        var lho = dv.getUint32(p + 42, true);
+        var name = "";
+        for (var j = 0; j < nameLen; j++) name += String.fromCharCode(u8[p + 46 + j]);
+        if (name === wantName) {
+          var lNameLen = dv.getUint16(lho + 26, true);
+          var lExtraLen = dv.getUint16(lho + 28, true);
+          var dataStart = lho + 30 + lNameLen + lExtraLen;
+          var data = u8.subarray(dataStart, dataStart + csize);
+          if (method === 0) return Promise.resolve(naiDecodeBytes(data));
+          if (method === 8 && typeof DecompressionStream !== "undefined") {
+            return naiInflateRaw(data).then(function (u8) { return naiDecodeBytes(u8); });
+          }
+          return Promise.reject(new Error("unsupported ZIP compression method " + method));
+        }
+        p += 46 + nameLen + extraLen + commentLen;
+      }
+      return Promise.reject(new Error("couldn't find word/document.xml inside the .docx"));
+    }
+    /* inflate a deflate-raw stream chunk-by-chunk — avoids the
+       new Response(stream).arrayBuffer() path, which sandboxed pages
+       (e.g. some preview iframes) reject with "Failed to fetch" */
+    function naiInflateRaw(u8) {
+      var reader = new Blob([u8]).stream().pipeThrough(new DecompressionStream("deflate-raw")).getReader();
+      var chunks = [];
+      function pump() {
+        return reader.read().then(function (r) {
+          if (r.done) {
+            var total = 0;
+            chunks.forEach(function (c) { total += c.length; });
+            var buf = new Uint8Array(total);
+            var o = 0;
+            chunks.forEach(function (c) { buf.set(c, o); o += c.length; });
+            return buf;
+          }
+          chunks.push(r.value);
+          return pump();
+        });
+      }
+      return pump();
+    }
+    function naiDecodeBytes(u8) {
+      try { return new TextDecoder("utf-8").decode(u8); }
+      catch (e) {
+        var s = "";
+        for (var i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]);
+        try { return decodeURIComponent(escape(s)); } catch (e2) { return s; }
+      }
+    }
+
+    /* ---- uploaded-file card rendered inside the chat bubble ---- */
+    function naiFileHTML(m) {
+      if (!m || !m.file) return "";
+      var f = m.file;
+      var icon = { image: "🖼️", pdf: "📕", docx: "📘", text: "📝" }[f.kind] || "📎";
+      var label = { image: "Image", pdf: "PDF document", docx: "Word document", text: "Text file" }[f.kind] || "File";
+      var stats = [];
+      if (f.pages) stats.push(f.pages + " page" + (f.pages === 1 ? "" : "s"));
+      if (f.chars) stats.push(f.chars.toLocaleString() + " chars");
+      var img = (f.kind === "image" && f.preview) ? '<img class="nai-file-img" src="' + esc(f.preview) + '" alt="' + esc(f.name) + '" loading="lazy">' : "";
+      var txt = f.snippet ? '<details class="nai-file-details"><summary>Read extracted text (' + f.snippet.length.toLocaleString() + " chars)</summary><pre class=\"nai-file-text\">" + esc(f.snippet) + "</pre></details>" : "";
+      return '<div class="nai-file-card">' +
+        '<div class="nai-file-head"><span class="nai-file-icon">' + icon + '</span>' +
+        '<div class="nai-file-meta"><b>' + esc(f.name) + "</b><span>" + label + (stats.length ? " · " + stats.join(" · ") : "") + "</span></div></div>" +
+        img + txt + "</div>";
+    }
+
+    /* ---- document understanding: summary / extraction / stats ---- */
+    function naiDocSummary(text, name) {
+      var sentences = text.split(/(?<=[.!?])\s+|\n+/).map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 25 && s.length < 320; });
+      if (!sentences.length) sentences = text.split("\n").map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 20; });
+      if (!sentences.length) {
+        return "📄 " + name + " is " + text.length.toLocaleString() + " characters of text — here's the opening:\n\n" + text.slice(0, 400) + (text.length > 400 ? "…" : "");
+      }
+      var stop = { this: 1, that: 1, with: 1, have: 1, from: 1, they: 1, will: 1, their: 1, there: 1, which: 1, about: 1, would: 1, could: 1, should: 1, were: 1, been: 1, into: 1, what: 1, when: 1, where: 1, then: 1, your: 1, them: 1, also: 1, more: 1, been: 1, than: 1, only: 1, some: 1, other: 1 };
+      var freq = {};
+      text.toLowerCase().split(/\W+/).forEach(function (w) { if (w.length > 3 && !stop[w]) freq[w] = (freq[w] || 0) + 1; });
+      var scored = sentences.map(function (s, i) {
+        var score = 0;
+        s.toLowerCase().split(/\W+/).forEach(function (w) { if (freq[w]) score += freq[w]; });
+        return { s: s, i: i, score: score / Math.sqrt(s.split(/\s+/).length || 1) };
+      });
+      scored.sort(function (a, b) { return b.score - a.score; });
+      var top = scored.slice(0, 4).sort(function (a, b) { return a.i - b.i; });
+      return "📄 Here's a summary of " + name + ":\n\n" + top.map(function (x) { return "• " + x.s; }).join("\n\n") + "\n\nWant the full text, the key numbers, or a rough translation?";
+    }
+
+    function naiDocExtract(query, doc) {
+      var t = doc.text, found = [], wantAll = /extract|list the|find the|mine/i.test(query);
+      function grab(re, nice) {
+        var m, arr = [], seen = {};
+        while ((m = re.exec(t)) && arr.length < 12) { var v = (m[1] || m[0]).trim(); var k = v.toLowerCase(); if (!seen[k]) { seen[k] = 1; arr.push(v); } }
+        if (arr.length) found.push({ nice: nice, items: arr });
+      }
+      var nQ = query.toLowerCase();
+      var wantEmail = wantAll || /email|mail/i.test(nQ);
+      var wantPhone = wantAll || /phone|mobile|number|contact/i.test(nQ);
+      var wantName = wantAll || /name/i.test(nQ);
+      var wantDate = wantAll || /date/i.test(nQ);
+      var wantUrl = wantAll || /url|link|website/i.test(nQ);
+      if (wantEmail) grab(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, "Emails");
+      if (wantPhone) grab(/(?:\+?88)?01[3-9]\d{8}\b/g, "Phone numbers");
+      if (wantName) grab(/\b(?:Mr\.?|Ms\.?|Mrs\.?|Dr\.?|Engr\.?|Prof\.?|Md\.?)[ \t]+[A-Z][a-z]+(?:[ \t]+[A-Z][a-z]+){0,2}\b/g, "Names");
+      if (wantDate) grab(/\b(?:0?[1-9]|1[0-2])[-/](?:0?[1-9]|[12]\d|3[01])[-/]\d{2,4}\b|\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?,?\s+\d{4}|(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}/g, "Dates");
+      if (wantUrl) grab(/https?:\/\/[^\s"'<>]+/g, "URLs");
+      if (!found.length) return { text: "I scanned " + doc.name + " but couldn't pull out anything matching that — the text may be short or the data formatted differently. Ask me to summarize it instead.", chips: ["Summarize it"], link: null };
+      /* bare "FirstName LastName" pairs are the norm in student docs (no
+         Dr./Mr. title) — always scan for them too when names are asked,
+         filtering obvious non-names and deduping against titled hits */
+      if (wantName) {
+        var stop = { data: 1, code: 1, report: 1, lab: 1, page: 1, table: 1, course: 1, session: 1, semester: 1, department: 1, university: 1, institute: 1, college: 1, school: 1, bangladesh: 1, dhaka: 1, savar: 1, niter: 1, subject: 1, faculty: 1, name: 1, id: 1, group: 1, section: 1, email: 1, phone: 1, date: 1, time: 1, title: 1, status: 1, model: 1, version: 1, design: 1, project: 1, analysis: 1, results: 1, conclusion: 1, abstract: 1, introduction: 1, methodology: 1, references: 1, meeting: 1, minutes: 1, agenda: 1, club: 1, clubs: 1, robotics: 1, workshop: 1, component: 1, components: 1, attendance: 1, secretary: 1, budget: 1, approved: 1, line: 1, robot: 1, follower: 1, present: 1, contact: 1, website: 1, student: 1, students: 1, teacher: 1, teachers: 1, member: 1, members: 1, algorithms: 1, computer: 1, science: 1, english: 1, mathematics: 1, physics: 1, chemistry: 1, textile: 1, fashion: 1, electrical: 1, electronic: 1, mechanical: 1, civil: 1 };
+        var bare = [], seenB = {};
+        var reB = /\b[A-Z][a-z]{2,}[ \t]+[A-Z][a-z]{2,}(?:[ \t]+[A-Z][a-z]{2,})?\b/g, mb;
+        while ((mb = reB.exec(t)) && bare.length < 10) {
+          var bv = mb[0].trim();
+          var firstW = bv.split(/\s+/)[0].toLowerCase();
+          if (stop[firstW]) continue;
+          var k = bv.toLowerCase();
+          var dup = found.some(function (f) { return f.items.some(function (x) { return x.toLowerCase() === k; }); });
+          if (dup) continue;
+          if (!seenB[k]) { seenB[k] = 1; bare.push(bv); }
+        }
+        if (bare.length) found.push({ nice: "Names (no title — may include some non-person entries)", items: bare.slice(0, 6) });
+      }
+      var out = "🔎 Here's what I found in " + doc.name + ":\n\n";
+      found.forEach(function (f) { out += "▶ " + f.nice + "\n" + f.items.map(function (x) { return "• " + x; }).join("\n") + "\n\n"; });
+      return { text: out, chips: ["Summarize it", "How many pages?"], link: null };
+    }
+
+    /* tiny English→Bangla word dictionary for a rough literal translation */
+    var NAI_BN_DICT = { "the": "টি", "a": "একটি", "an": "একটি", "and": "এবং", "is": "হয়", "are": "হয়", "of": "এর", "in": "মধ্যে", "to": "প্রতি", "for": "জন্য", "with": "সহ", "on": "উপর", "at": "এ", "by": "দ্বারা", "from": "থেকে", "this": "এই", "that": "সেই", "it": "এটি", "student": "শিক্ষার্থী", "students": "শিক্ষার্থীগণ", "teacher": "শিক্ষক", "teacher(s)": "শিক্ষক", "university": "বিশ্ববিদ্যালয়", "college": "কলেজ", "institute": "প্রতিষ্ঠান", "department": "বিভাগ", "textile": "টেক্সটাইল", "engineering": "প্রকৌশল", "science": "বিজ্ঞান", "research": "গবেষণা", "course": "কোর্স", "subject": "বিষয়", "exam": "পরীক্ষা", "examination": "পরীক্ষা", "semester": "সেমিস্টার", "year": "বছর", "admission": "ভর্তি", "library": "গ্রন্থাগার", "book": "বই", "books": "বই", "lab": "ল্যাব", "laboratory": "পরীক্ষাগার", "campus": "ক্যাম্পাস", "class": "শ্রেণি", "department": "বিভাগ", "hostel": "হোস্টেল", "canteen": "ক্যান্টিন", "bus": "বাস", "time": "সময়", "day": "দিন", "week": "সপ্তাহ", "month": "মাস", "date": "তারিখ", "name": "নাম", "number": "নম্বর", "address": "ঠিকানা", "result": "ফলাফল", "notice": "বিজ্ঞপ্তি", "event": "অনুষ্ঠান", "club": "ক্লাব", "member": "সদস্য", "fee": "ফি", "fees": "ফি", "scholarship": "বৃত্তি", "project": "প্রকল্প", "report": "প্রতিবেদন", "paper": "পত্র", "industry": "শিল্প", "factory": "কারখানা", "garment": "গার্মেন্টস", "work": "কাজ", "study": "পড়াশোনা", "learn": "শেখা", "help": "সাহায্য", "important": "গুরুত্বপূর্ণ", "good": "ভালো", "new": "নতুন", "old": "পুরাতন", "first": "প্রথম", "second": "দ্বিতীয়", "third": "তৃতীয়", "last": "শেষ", "will": "হবে", "can": "পারে", "may": "হতে পারে", "must": "অবশ্যই", "should": "উচিত", "has": "আছে", "have": "আছে", "was": "ছিল", "were": "ছিল", "been": "হয়েছে", "all": "সব", "some": "কিছু", "many": "অনেক", "more": "আরও", "no": "না", "yes": "হ্যাঁ", "please": "দয়া করে", "thank": "ধন্যবাদ", "you": "আপনি", "your": "আপনার", "our": "আমাদের", "i": "আমি", "we": "আমরা", "they": "তারা", "he": "সে", "she": "সে" };
+    function naiEn2Bn(text) {
+      var words = text.split(/(\s+)/);
+      return words.map(function (w) {
+        var k = w.toLowerCase().replace(/[.,;:!?"']+$/, "").replace(/^[.,;:!?"']+/, "");
+        var punct = w.replace(k, "");
+        return NAI_BN_DICT[k] ? NAI_BN_DICT[k] + punct : w;
+      }).join("");
+    }
+
+    function naiDocAnswer(query, doc) {
+      var t = doc.text || "";
+      if (!t) return null;
+      /* the typo corrector sometimes singularizes "words"→"word" and
+         "pages"→"page", so accept both forms here */
+      if (/(?:how many|total|number of)\s*(?:page|pages|word|words|character|characters|letter|letters)/i.test(query)) {
+        var words = t.split(/\s+/).filter(Boolean).length;
+        var pages = doc.pages || Math.max(1, Math.round(words / 450));
+        return { text: "📄 " + doc.name + " — " + pages + " page" + (pages === 1 ? "" : "s") + ", " + words.toLocaleString() + " words, " + t.length.toLocaleString() + " characters.", chips: ["Summarize it", "Extract names & dates"], link: null };
+      }
+      if (/(?:any\s+)?(?:names|dates|emails?|phones?|numbers|urls?|links|amounts?|prices?|taka|bdt)/i.test(query) || /extract|list the|find the|mine/i.test(query)) {
+        return naiDocExtract(query, doc);
+      }
+      if (/(?:translate|bangla|বাংলা)/i.test(query)) {
+        var first = t.split(/\n/).slice(0, 3).join(" ").slice(0, 240);
+        return { text: "🌐 Rough translation of the opening of " + doc.name + " (best-effort offline word-by-word — for the full document an online translator will do better):\n\n" + naiEn2Bn(first), chips: ["Summarize it", "What does it say?"], link: null };
+      }
+      if (/(?:summarize|summary|gist|key points|main points|shorten|tl;?dr|about|what is this|what does it|what does this|what's in|read|understand|analyze|highlight|tell me about)/i.test(query)) {
+        return { text: naiDocSummary(t, doc.name), chips: ["Extract names & dates", "Any emails or phone numbers?", "How many pages?"], link: null };
+      }
+      return null;
+    }
+
+    /* ---- live library status: open right now? ----
+       The institute's official office schedule is Sunday–Thursday,
+       8:00 AM–4:00 PM (exact term hours are set by the library office,
+       so every answer carries that caveat). Day-of-week aware: "is it open
+       on Friday" and "tomorrow" both work. */
+    var NAI_LIB_DAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    function naiLibraryNow(query) {
+      var now = new Date();
+      var today = now.getDay();          // 0=Sun … 6=Sat
+      var mins = now.getHours() * 60 + now.getMinutes();
+      var OPEN = 480, CLOSE = 960;        // 8:00 AM – 4:00 PM
+      var libOpen = function (d) { return d >= 0 && d <= 4; }; // Sun–Thu
+      function fmt(min) {
+        var h = Math.floor(min / 60), m = min % 60;
+        return (h % 12 === 0 ? 12 : h % 12) + ":" + (m < 10 ? "0" : "") + m + " " + (h < 12 ? "AM" : "PM");
+      }
+      function sched() {
+        return "Library hours follow the institute schedule: Sunday–Thursday, " + fmt(OPEN) + "–" + fmt(CLOSE) + " (exact term hours are set by the library office — check the notice board).";
+      }
+      var day = null, dayLabel = null;
+      if (/\btomorrow\b/.test(query || "")) { day = (today + 1) % 7; dayLabel = NAI_LIB_DAY[day]; }
+      else {
+        var dm = (query || "").match(/\b(?:sun|mon|tue|wed|thu|fri|sat)(?:day)?\b/);
+        if (dm) {
+          var map = { sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6 };
+          day = map[dm[0].slice(0, 3)];
+          dayLabel = NAI_LIB_DAY[day];
+        }
+      }
+      var chips = ["What's in the library?", "How do I borrow books?"], libLink = { href: "https://www.niter.edu.bd/resources/", label: "Official resources page →" };
+      if (day !== null) {
+        var nextD = day, k;
+        for (k = 0; k < 7; k++) { nextD = (day + k) % 7; if (libOpen(nextD)) break; }
+        if (libOpen(day)) return { text: "✅ Yes — the library is open on " + dayLabel + " (" + fmt(OPEN) + "–" + fmt(CLOSE) + "). " + sched(), chips: chips, link: libLink };
+        return { text: "🔴 No — the library is closed on " + dayLabel + ". " + sched() + " The next open day is " + NAI_LIB_DAY[nextD] + " (" + fmt(OPEN) + "–" + fmt(CLOSE) + ").", chips: chips, link: libLink };
+      }
+      if (libOpen(today) && mins >= OPEN && mins < CLOSE) {
+        return { text: "🟢 Yes — the library is open right now. It's " + NAI_LIB_DAY[today] + " " + fmt(mins) + " and today's hours are " + fmt(OPEN) + "–" + fmt(CLOSE) + ". " + sched(), chips: chips, link: libLink };
+      }
+      if (libOpen(today) && mins < OPEN) {
+        return { text: "🟠 Not yet — the library opens today at " + fmt(OPEN) + " (it's currently " + fmt(mins) + " on " + NAI_LIB_DAY[today] + "). " + sched(), chips: chips, link: libLink };
+      }
+      if (libOpen(today) && mins >= CLOSE) {
+        var nd = (today + 1) % 7; while (!libOpen(nd)) nd = (nd + 1) % 7;
+        return { text: "🔴 Closed right now — it closed at " + fmt(CLOSE) + " today (" + NAI_LIB_DAY[today] + "). It reopens " + NAI_LIB_DAY[nd] + " at " + fmt(OPEN) + ". " + sched(), chips: chips, link: libLink };
+      }
+      var nnd = (today + 1) % 7; while (!libOpen(nnd)) nnd = (nnd + 1) % 7;
+      return { text: "🔴 Closed right now — it's " + NAI_LIB_DAY[today] + " and the library is closed on weekends. It reopens " + NAI_LIB_DAY[nnd] + " at " + fmt(OPEN) + ". " + sched(), chips: chips, link: libLink };
+    }
     function naiAsk(q) {
       var query = naiNorm(q);
       if (!query) return null;
@@ -14317,6 +15820,64 @@
          intent, but the word "club" would otherwise match every club name ---- */
       if (/which club (?:fits|should i)|quiz|recommend|match me/i.test(query)) {
         return { text: "Take the 2-minute interest quiz — it asks about your department, hobbies and skills, then matches you with 2–3 clubs that actually fit. It's the fastest way to find your community at NITER.", chips: ["Which clubs are there?", "How do I join a club?"], link: { href: "#/quiz", label: "Take the quiz →" } };
+      }
+
+      /* ---- library must beat the live branches: "library opening time"
+         would otherwise hit the opportunities board ("open"), and
+         "where can I study" needs a home before the KB loop ---- */
+      /* time-aware first: "is the library open right now" computes the live
+         status from today's date; plain library questions fall through to
+         the full facilities entry below */
+      if (/(?:librar\w*\b|reading room).{0,40}(?:open|close|closing|closed|hours|hour|timing|time|now|today|tomorrow|right now)/i.test(query) || /(?:is|are) (?:the )?library.*(?:open|closed)/i.test(query)) {
+        var libNow = naiLibraryNow(query);
+        if (libNow) return libNow;
+      }
+      /* library etiquette: rules, fines, quiet behaviour, what's not allowed
+         in the reading room — beats the generic library entry below */
+      if (/(?:librar\w*\b|reading room).{0,40}(?:rule|rules|fines?|penalt|etiquette|behavio|quiet|silence|silent|noise|loud|allowed|prohibited|forbidden|eat|drink|food|snack|phone|mobile|call|return|late|damage|lost|mark|tear|highlight|reshelve|seat|bag|keep|due|loan|renew|overdue)/i.test(query) || /(?:rule|rules|fines?|penalt|etiquette|behavio|quiet|silence|silent|noise|loud|allowed|prohibited|forbidden|eat|drink|food|snack|phone|mobile|call|return|late|damage|lost|mark|tear|highlight|reshelve|seat|bag|keep|due|loan|renew|overdue)\b.{0,40}(?:librar\w*\b|reading room)/i.test(query)) {
+        var libEt = NAI_KB.filter(function (k) { return k.id === "library-etiquette"; })[0];
+        if (libEt) return { text: libEt.a, chips: chips.slice(0, 4), link: libEt.link };
+      }
+      if (/(?:niter\s*)?librar\w*\b|reading room|e-?library|study (?:space|spot|room|corner|place)|where (?:can|do|should|to) i? ?study|quiet place|study on campus/i.test(query)) {
+        var libK = NAI_KB.filter(function (k) { return k.id === "library"; })[0];
+        if (libK) return { text: libK.a, chips: chips.slice(0, 4), link: libK.link };
+      }
+
+      /* ---- medical centre / hostels / canteen — same early treatment as the
+         library so the live branches can't swallow them (e.g. "medical
+         certificate" would otherwise hit the event-certificate branch) ---- */
+      if (/(?:medical centre|medical center|health ?centre|health ?center|first ?aid|emergency|clinic|treatment|rmo|sick\b|ill\b|campus doctor|medical certificate|checkup|health check)/i.test(query)) {
+        var medK = NAI_KB.filter(function (k) { return k.id === "medical"; })[0];
+        if (medK) return { text: medK.a, chips: chips.slice(0, 4), link: medK.link };
+      }
+      if (/hostel|dormitory|accommodation|where do students live|hostel fee|hostel seat|hostel rules|security money|boys hostel|girls hostel/i.test(query)) {
+        var hosK = NAI_KB.filter(function (k) { return k.id === "hostels"; })[0];
+        if (hosK) return { text: hosK.a, chips: chips.slice(0, 4), link: hosK.link };
+      }
+      if (/canteen|cafeteria|cafe\b|café|where to eat|food on campus|dining hall|mess\b/i.test(query)) {
+        var canK = NAI_KB.filter(function (k) { return k.id === "canteen"; })[0];
+        if (canK) return { text: canK.a, chips: chips.slice(0, 4), link: canK.link };
+      }
+
+      /* ---- uploaded document understanding: summarize / extract / translate /
+         stats for the attached image, PDF, DOCX or text file ---- */
+      var docCtx = naiDocLoad();
+      if (docCtx) {
+        var docWords = /\b(?:document|file|attachment|uploaded|pdf|paper|docx|word file|image|picture|photo|screenshot|scan)\b/i;
+        var docIntent = /(?:summarize|summary|gist|key points|main points|shorten|tl;?dr|what does it|what does this|what is this|what's in|extract|list the|find the|mine|any (?:names|dates|emails|phones|numbers|urls|links)|how many (?:pages?|words?|characters?)|details from|read (?:it|this|the|my)|understand|analyze|translate (?:it|this|the|my))/i;
+        var docNo = /(?:how (?:to|do|can|should)|write|write-up|tips|guide|format|structure|cite|reference|export|download|generate|create|make|cover page|lab report|title page|word document|as\s+docx)/i;
+        if (!docNo.test(query) && (docWords.test(query) || docIntent.test(query) || /^(?:it|this|that)\b/.test(query))) {
+          var docR = naiDocAnswer(query, docCtx);
+          if (docR) return docR;
+          /* the query clearly references the uploaded file but no specific
+             doc action matched — keep the answer on the document instead of
+             leaking into unrelated knowledge-base entries */
+          return {
+            text: "📎 I have " + docCtx.name + " (" + (docCtx.pages ? docCtx.pages + " pages, " : "") + docCtx.chars.toLocaleString() + " characters) ready. Tell me what to do with it — \"summarize the document\", \"extract emails and phone numbers\", \"how many words does it have?\", or \"translate it\".",
+            chips: ["Summarize the document", "Extract names & dates", "How many words?"],
+            link: null
+          };
+        }
       }
 
       /* ---- lab report cover page + .docx export ---- */
@@ -14634,6 +16195,15 @@
       if (/check.?in|qr|door code|attendance/i.test(query)) {
         return { text: "Each event has a door code (shown on its page to the club's staff). At the venue, the staff enter your email to check you in — your attendance is recorded instantly and a certificate is issued. Check-ins also feed your passport stamps and XP.", chips: ["Upcoming events", "What is the passport?"], link: { href: "#/events", label: "Open events →" } };
       }
+      /* ---- 🧮 math engine: equations, derivatives, integrals, stats,
+         percentages, number theory, trig, shapes and unit conversions.
+         Runs before the code vault so "what is 5 factorial" or "is 97
+         prime" solve instead of returning a program. The typo corrector
+         sometimes rewrites math verbs ("differentiate"→"differential"), so
+         the RAW query is tried too when the corrected one yields nothing. ---- */
+      var mathAns = naiMathIntent(query) || naiMathIntent(naiNorm(q));
+      if (mathAns) return mathAns;
+
       /* ---- citation formatter: book / article / website → APA 7, MLA 9, Harvard ---- */
       var citeQ = /(?:citation|citations|\bcite\b|citing|referenc(?:e|es)|bibliograph|works\s+cited)/i.test(query) || /^(?:apa|mla|harvard|chicago)\b/i.test(query);
       var citeSrc = /(?:book|novel|article|paper|journal|website|webpage|page|doi|url|http|www|chapter|edition|publisher|textbook|apa|mla|harvard|chicago)/i.test(query) || /(?:19|20)\d{2}\b/.test(query) || /\bby\s+[A-Za-z]/.test(query);
@@ -14744,8 +16314,12 @@
       naiBrainRecordGap(q);
 
       /* ---- fallback ---- */
+      var gapTimes = naiBrainGapRepeat(q);
+      var gapNudge = gapTimes >= 2
+        ? "\n\n💡 This is the " + (gapTimes === 2 ? "second" : gapTimes + "th") + " time you've asked and I still don't know it — teach me once and I'll never forget: say “remember that " + q.slice(0, 60).replace(/[.!?]+$/, "") + " is <the answer>”."
+        : "";
       return {
-        text: "I couldn't find a confident answer to that in my knowledge base. I know about NITER's history, programs, admission, campus facilities and clubs — and I can answer live about events, forms, opportunities, certificates, the passport and the leaderboard. Try one of these:",
+        text: "I couldn't find a confident answer to that in my knowledge base. I know about NITER's history, programs, admission, campus facilities and clubs — and I can answer live about events, forms, opportunities, certificates, the passport and the leaderboard. Try one of these:" + gapNudge,
         chips: chips,
         link: null
       };
@@ -16461,6 +18035,20 @@
       catch (e) { if (e && e.__py_ret__ !== undefined) return { ok: true, out: out.join("") }; if (e && e.__py_break__) return { ok: true, out: out.join("") }; var stk = e && e.stack ? String(e.stack).split("\n").slice(0, 7).map(function (x) { return x.trim().replace(/^at\s+/, ""); }).join(" | ") : ""; return { ok: false, error: (e && e.message ? e.message : String(e)) + (stk ? " [" + stk + "]" : "") }; }
       return { ok: true, out: out.join("") };
     }
+    function naiMathHTML(m) {
+      if (!m || !m.math) return "";
+      var mt = m.math;
+      var steps = (mt.steps || []).map(function (s) {
+        return '<li class="nai-math-step"><b>' + esc(s.t) + '</b><span>' + esc(s.d) + "</span></li>";
+      }).join("");
+      return '<div class="nai-math">' +
+        (mt.title ? '<div class="nai-math-head"><span>🧮</span> ' + esc(mt.title) + "</div>" : "") +
+        (mt.expr ? '<div class="nai-math-expr">' + esc(mt.expr) + "</div>" : "") +
+        (steps ? '<ol class="nai-math-steps">' + steps + "</ol>" : "") +
+        '<div class="nai-math-result">' + esc(mt.result) + "</div>" +
+        (mt.extra ? '<div class="nai-math-extra">' + esc(mt.extra) + "</div>" : "") +
+        "</div>";
+    }
     function naiCodeHTML(m) {
       if (!m || !m.code || !m.code.source) return "";
       var runBtn = m.code.lang === "Python"
@@ -16572,6 +18160,7 @@
       var reason = me ? "" : naiReasonHTML(m, openReason);
       var routineHtml = me ? "" : (naiRoutineHTML(m) + naiImportHTML(m));
       var codeHtml = me ? "" : naiCodeHTML(m);
+      var mathHtml = me ? "" : naiMathHTML(m);
       var citesHtml = me ? "" : naiCitesHTML(m);
       var explainHtml = me ? "" : naiExplainHTML(m);
       var clashHtml = me ? "" : naiClashesHTML(m);
@@ -16586,13 +18175,14 @@
       var dlHtml = "";
       if (!me) {
         if (m.dl) dlHtml = naiDlButtonHTML(m.dl);
-        else if (m.text && !m.agent) dlHtml = naiDlButtonHTML({ kind: "answer", title: "NITER AI answer", text: m.text, label: "📄 .docx", filename: "NITER-AI-Answer.docx" });
+        else if (m.text && !m.agent && !m.file) dlHtml = naiDlButtonHTML({ kind: "answer", title: "NITER AI answer", text: m.text, label: "📄 .docx", filename: "NITER-AI-Answer.docx" });
       }
       var covPrev = me ? "" : naiCoverPreviewHTML(m);
+      var fileHtml = me ? "" : naiFileHTML(m);
       return '<div class="nai-msg ' + (me ? "me" : "ai") + '">' +
         (me ? "" : '<div class="nai-avatar">🤖</div>') +
         '<div class="nai-bubble"' + (typew ? ' data-typewrite="1" data-full="' + esc(text) + '"' : "") + ">" +
-        didmean + body + routineHtml + brainHtml + codeHtml + citesHtml + clashHtml + transferHtml + slotHtml + planHtml + progHtml + explainHtml + agentHtml + modHtml + rulesHtml + covPrev + dlHtml + link + reason + "</div>" +
+        didmean + body + routineHtml + brainHtml + mathHtml + codeHtml + citesHtml + clashHtml + transferHtml + slotHtml + planHtml + progHtml + explainHtml + agentHtml + modHtml + rulesHtml + covPrev + fileHtml + dlHtml + link + reason + "</div>" +
         (me ? '<div class="nai-avatar">👤</div>' : "") +
         "</div>";
     }
@@ -16681,19 +18271,12 @@
         group("📡", "Live now", live),
         group("📄", "Documents", ["📄 Generate a lab report cover page", "📚 Make cover pages for the whole class", "🔄 Convert the C bubble sort to Rust", "📄 Export the last answer as .docx"]),
         group("🎓", "NITER knowledge", ["The RMG industry", "🚌 NITER bus service & routes", "Which clubs are there?", "How do I join a club?"]),
-        group("📚", "Study tools", ["🔀 Check my routine for clashes", "📅 Find a free slot for a new course", "📚 Study plan for Data Structures in 2 weeks", "🔖 Cite a book for me"])
+        group("📚", "Study tools", ["🧮 Solve 2x + 3 = 7", "∫ Integrate x² from 0 to 3", "📊 Mean of 5, 6, 7, 8", "🔀 Check my routine for clashes", "📅 Find a free slot for a new course", "📚 Study plan for Data Structures in 2 weeks", "🔖 Cite a book for me"])
       ];
       if (!compact) out.push(group("🤖", "Agent", ["⏰ Remind me to prepare slides", "📋 Show my to-do list", "🧠 What have you learned?", "😄 Tell me a joke"]));
       if (naiModActive()) out.push(group("🛠", "Moderator studio", ["✍️ Draft a club notice", "📥 Summarize my submissions", "🩺 Analyze my club", "🗣 Feedback digest", "🤖 List my automations", "✨ Add an automation"]));
       if (naiClubAdmin()) out.push(group("👑", "Club admin", ["👑 What can I control?", "📊 Deep club analytics", "👑 Transfer admin", "🏛️ Update my club tagline"]));
       return out.join("");
-    }
-    function naiChipsHTML() {
-      return '<span class="nai-chips-label">💡 Try</span>' +
-        naiLiveChips().map(function (c, i) {
-          return '<button class="chip nai-chip" style="animation-delay:' + (0.05 * i).toFixed(2) + 's" data-action="ai-chip" data-q="' + esc(c) + '">' + esc(c) + "</button>";
-        }).join("") +
-        '<button class="chip nai-chip nai-refresh" data-action="ai-refresh" title="Refresh suggestions from live portal data" aria-label="Refresh suggestions">↻</button>';
     }
     function naiNowStrip() {
       var ups = upcomingEvents();
@@ -16823,8 +18406,6 @@
       }
       th.innerHTML = msgs;
       th.scrollTop = th.scrollHeight;
-      var chips = document.getElementById("nai-win-chips");
-      if (chips) chips.innerHTML = naiChipsHTML();
     }
     function naiWinTypewriter() {
       var bubble = document.querySelector("#nai-win-thread .nai-bubble[data-typewrite]");
@@ -16894,7 +18475,7 @@
         '<section class="hero nai-hero">' +
         '<div class="nai-orb a"></div><div class="nai-orb b"></div><div class="nai-orb c"></div>' +
         '<div class="container hero-grid"><div>' +
-        '<div class="nai-online"><span class="nai-online-dot"></span>Online · instant answers · private &amp; offline</div>' +
+        '<div class="nai-online"><span class="nai-online-dot"></span>Online · instant answers · private &amp; secure</div>' +
         '<h1><span class="nai-brain">🧠</span> <span class="nai-grad">NITER AI</span></h1>' +
         '<p class="lead">Ask anything about NITER — the institute, programs, admission, campus life, clubs, or what\'s happening right now. Answers come from a curated knowledge base plus this portal\'s live data.</p>' +
         '<div class="nai-stats">' +
@@ -16920,8 +18501,9 @@
         '<aside class="nai-rail" aria-label="NITER AI capabilities">' + naiRailHTML(false) + "</aside>" +
         '<div class="nai-shell">' +
         '<div class="nai-thread" id="nai-thread">' + msgs + "</div>" +
-        '<div class="nai-chips" id="nai-chips">' + naiChipsHTML() + "</div>" +
         '<form id="niter-ai-form" class="nai-input-row">' +
+        '<button type="button" class="nai-attach" id="nai-attach" title="Attach an image, PDF, .docx or text file" aria-label="Attach image or document">📎</button>' +
+        '<input type="file" id="nai-file" accept="image/*,.pdf,.docx,.txt,.md,.csv,.json" hidden>' +
         '<input type="text" id="nai-input" class="nai-input" placeholder="Ask NITER AI anything…" autocomplete="off" maxlength="300">' +
         '<button class="btn btn-primary nai-send" type="submit" aria-label="Send">➤</button>' +
         "</form>" +
@@ -16941,11 +18523,41 @@
       /* Mirrors the branch order of naiAsk so the label always matches the
          path the answer actually took. */
       query = naiNorm(query);
+      var qRaw = query;
       var covMcPre = naiCoverList(query);
       var corrC = naiSpellCorrect(query);
       if (corrC.fixed !== query) query = corrC.fixed;
       if (/which club (?:fits|should i)|quiz|recommend|match me/i.test(query)) {
         return { intent: "quiz", label: "Club-finder quiz", match: "quiz intent", src: ["Interest quiz", "Club matching model"], conf: 0.95 };
+      }
+      /* library — mirrors the naiAsk branch so the reason panel matches */
+      if (/(?:librar\w*\b|reading room).{0,40}(?:open|close|closing|closed|hours|hour|timing|time|now|today|tomorrow|right now)/i.test(query) || /(?:is|are) (?:the )?library.*(?:open|closed)/i.test(query)) {
+        return { intent: "kb", label: "Library hours — live status", match: "open/closed computed from today's date (Sun–Thu 8 AM–4 PM)", src: ["Institute schedule", "Current date/time"], conf: 0.97 };
+      }
+      if (/(?:librar\w*\b|reading room).{0,40}(?:rule|rules|fines?|penalt|etiquette|behavio|quiet|silence|silent|noise|loud|allowed|prohibited|forbidden|eat|drink|food|snack|phone|mobile|call|return|late|damage|lost|mark|tear|highlight|reshelve|seat|bag|keep|due|loan|renew|overdue)/i.test(query) || /(?:rule|rules|fines?|penalt|etiquette|behavio|quiet|silence|silent|noise|loud|allowed|prohibited|forbidden|eat|drink|food|snack|phone|mobile|call|return|late|damage|lost|mark|tear|highlight|reshelve|seat|bag|keep|due|loan|renew|overdue)\b.{0,40}(?:librar\w*\b|reading room)/i.test(query)) {
+        return { intent: "kb", label: "Library etiquette & rules", match: "behaviour, fines and reading-room rules entry", src: ["NITER knowledge base", "General rules of using library facility"], conf: 0.97 };
+      }
+      if (/(?:niter\s*)?librar\w*\b|reading room|e-?library|study (?:space|spot|room|corner|place)|where (?:can|do|should|to) i? ?study|quiet place|study on campus/i.test(query)) {
+        return { intent: "kb", label: "Library & study spaces", match: "library facilities entry", src: ["NITER knowledge base", "Official resources page"], conf: 0.97 };
+      }
+      /* medical / hostels / canteen — mirror the naiAsk gates */
+      if (/(?:medical centre|medical center|health ?centre|health ?center|first ?aid|emergency|clinic|treatment|rmo|sick\b|ill\b|campus doctor|medical certificate|checkup|health check)/i.test(query)) {
+        return { intent: "kb", label: "Medical centre", match: "campus health facilities entry", src: ["NITER knowledge base", "Official resources page"], conf: 0.97 };
+      }
+      if (/hostel|dormitory|accommodation|where do students live|hostel fee|hostel seat|hostel rules|security money|boys hostel|girls hostel/i.test(query)) {
+        return { intent: "kb", label: "Hostels & accommodation", match: "boys/girls hostel entry", src: ["NITER knowledge base", "Official resources page"], conf: 0.97 };
+      }
+      if (/canteen|cafeteria|cafe\b|café|where to eat|food on campus|dining hall|mess\b/i.test(query)) {
+        return { intent: "kb", label: "Canteen & campus food", match: "canteen entry", src: ["NITER knowledge base", "Official resources page"], conf: 0.97 };
+      }
+      /* uploaded document — mirrors the naiAsk branch */
+      var docCtxC = naiDocLoad();
+      if (docCtxC && (
+        /\b(?:document|file|attachment|uploaded|pdf|paper|docx|word file|image|picture|photo|screenshot|scan)\b/i.test(query) ||
+        /(?:summarize|summary|gist|key points|main points|shorten|tl;?dr|what does it|what does this|what is this|what's in|extract|list the|find the|mine|any (?:names|dates|emails|phones|numbers|urls|links)|how many (?:pages?|words?|characters?)|details from|read (?:it|this|the|my)|understand|analyze|translate (?:it|this|the|my))/i.test(query) ||
+        /^(?:it|this|that)\b/.test(query)
+      ) && !/(?:how (?:to|do|can|should)|write|write-up|tips|guide|format|structure|cite|reference|export|download|generate|create|make|cover page|lab report|title page|word document|as\s+docx)/i.test(query)) {
+        return { intent: "document", label: "Uploaded document — " + docCtxC.name, match: "analyzed the attached " + docCtxC.kind + " file", src: ["Uploaded file (processed locally)"], conf: 0.95 };
       }
       /* .docx export / cover page — mirrors the naiAsk branch (early: "session" etc. would otherwise match live branches) */
       var naiCoverQc = /how\b/.test(query) && /(?:write|format|structure|prepare|should|improve|cite|reference|make|do)\b/.test(query) && /cover|lab\s*report|title\s*page/.test(query);
@@ -17044,6 +18656,12 @@
         return { intent: "citation", label: "Citation formatter", match: "book/article/website → APA 7 · MLA 9 · Harvard", src: ["Built-in citation formatter (offline)"], conf: 0.95 };
       }
 
+      /* math engine — mirrors the naiAsk branch (runs before code conversion) */
+      var mathC = naiMathIntent(query) || naiMathIntent(naiNorm(qRaw));
+      if (mathC && mathC.math) {
+        return { intent: "math", label: "Math engine — " + mathC.math.kind, match: mathC.math.title ? (mathC.math.title + " · " + (mathC.math.result || "computed")) : "computed the result", src: ["Built-in math engine (offline)"], conf: 0.97 };
+      }
+
       /* code conversion — mirrors the naiAsk branch */
       if (/convert|translate|port |rewrite|turn .* into|switch .* to/i.test(query) && /\b(c|c\+\+|java|python|py|javascript|js|c#|csharp|go|golang|php|rust)\b/i.test(query)) {
         var conv = naiConvertParse(query);
@@ -17107,6 +18725,10 @@
         { t: "Consulted " + (c.src.length > 1 ? "live portal data" : "the knowledge base"), d: items > 0 ? "found " + items + " matching item" + (items === 1 ? "" : "s") + " to include in the answer" : "composed the answer from stored facts" },
         { t: "Drafted the answer", d: "formatted with dates, names and a direct link where available" }
       ];
+      /* math engine: surface the actual computation path */
+      if (c.intent === "math") {
+        steps.splice(1, 0, { t: "Applied the math engine", d: "parsed the expression and solved it step by step — fully offline" });
+      }
       /* typo tolerance: surface what was corrected so the answer is trustworthy */
       if (naiLastCorr.q === naiNorm(q) && naiLastCorr.fixes.length) {
         steps.splice(1, 0, {
@@ -17128,6 +18750,14 @@
       naiSaveChat(chat);
       var t0 = Date.now();
       var ans = naiAsk(q) || { text: "", chips: [], link: null };
+      /* self-learning: a confident answer resolves any gap the brain had
+         recorded for this question, and every real answer counts */
+      if (ans && ans.text && ans.text.indexOf("couldn't find a confident answer") === -1) {
+        naiBrainResolveGap(q);
+        var bA = naiBrainLoad();
+        bA.stats.answers = (bA.stats.answers || 0) + 1;
+        naiBrainTouch(bA); naiBrainSave(bA);
+      }
       /* The corrections the AI actually applied (naiSpellCorrect sets
          naiLastCorr) — shown as a "Did you mean" bubble above the answer. */
       var corr = (naiLastCorr && naiLastCorr.fixes && naiLastCorr.fixes.length) ? naiLastCorr.fixes.slice() : null;
@@ -17159,7 +18789,7 @@
         clearInterval(thinkInt);
         if (seq !== naiPendingSeq) return;
         var chat2 = naiLoadChat();
-        chat2.push({ role: "ai", text: ans.text, at: new Date().toISOString(), link: ans.link || null, corr: corr || null, routine: ans.routine || null, imp: ans.imp || null, code: ans.code || null, cites: ans.cites || null, clashes: ans.clashes || null, transfer: ans.transfer || null, slots: ans.slots || null, plan: ans.plan || null, progress: ans.progress || null, explain: ans.explain || null, conv: ans.conv || null,        dl: ans.dl || null, chips: ans.chips || null, agent: ans.agent || null, brain: ans.brain || null, mod: ans.mod || null, rules: ans.rules || null, reason: reason });
+        chat2.push({ role: "ai", text: ans.text, at: new Date().toISOString(), link: ans.link || null, corr: corr || null, routine: ans.routine || null, imp: ans.imp || null, code: ans.code || null, math: ans.math || null, cites: ans.cites || null, clashes: ans.clashes || null, transfer: ans.transfer || null, slots: ans.slots || null, plan: ans.plan || null, progress: ans.progress || null, explain: ans.explain || null, conv: ans.conv || null,        dl: ans.dl || null, chips: ans.chips || null, agent: ans.agent || null, brain: ans.brain || null, mod: ans.mod || null, rules: ans.rules || null, file: ans.file || null, reason: reason });
         naiSaveChat(chat2);
         state.aiTyping = false;
         state.aiThink = 0;
@@ -18835,10 +20465,20 @@
         : a.status === "cancelled" ? '<span class="nai-agent-badge cx">✖ Cancelled</span>'
         : '<span class="nai-agent-badge">⏳ Awaiting your OK</span>';
       var undo = a.undo && a.status === "done" ? '<button class="nai-agent-undo" data-action="agent-undo">' + esc(a.undo.label) + "</button>" : "";
+      var ok = "";
+      if (a.status === "pending") {
+        var chips = m.chips || [];
+        var yes = chips.filter(function (c) { return /^✅/.test(c); })[0];
+        var no = chips.filter(function (c) { return /^✖/.test(c); })[0];
+        ok = '<div class="nai-agent-ok">' +
+          (yes ? '<button class="btn btn-primary btn-sm" data-action="ai-chip" data-q="' + esc(yes) + '">' + esc(yes) + "</button>" : "") +
+          (no ? '<button class="btn btn-outline btn-sm" data-action="ai-chip" data-q="' + esc(no) + '">' + esc(no) + "</button>" : "") +
+          "</div>";
+      }
       return '<div class="nai-agent">' +
         '<div class="nai-agent-head"><span class="nai-agent-icon">⚙️</span> Agent · ' + esc(a.label) + badge + "</div>" +
         (steps ? '<ul class="nai-agent-steps">' + steps + "</ul>" : "") +
-        undo + "</div>";
+        ok + undo + "</div>";
     }
     function naiFireDueReminders() {
       var r = naiReminders();
