@@ -1503,7 +1503,31 @@
     [data-theme="dark"] .nai-reason-steps li b { color: #c4b5fd; }
     [data-theme="dark"] .nai-reason-steps li span { color: #a5b4fc; }
     [data-theme="dark"] .nai-reason-src { color: #c4b5fd; border-color: #2b3560; }
-    [data-theme="dark"] .nai-reason-toggle { color: #c4b5fd; }
+    [data-theme="dark"]    .nai-reason-toggle { color: #c4b5fd; }
+
+    /* ---- Code blocks (chat + vault) ---- */
+    .nai-code { margin-top: 10px; border-radius: 12px; overflow: hidden; background: #0d1117; border: 1px solid #1f2937; }
+    .nai-code-head { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #161b22; }
+    .nai-code-dots { display: flex; gap: 5px; }
+    .nai-code-dots i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f56; }
+    .nai-code-dots i:nth-child(2) { background: #ffbd2e; }
+    .nai-code-dots i:nth-child(3) { background: #27c93f; }
+    .nai-code-title { font-size: 12px; color: #8b949e; font-weight: 600; }
+    .nai-code-lang { font-size: 10.5px; font-weight: 800; letter-spacing: .5px; color: #8b949e; background: rgba(255,255,255,.08); padding: 2px 8px; border-radius: 999px; }
+    .nai-code-head .nai-code-lang { margin-left: auto; }
+    .nai-code-copy { border: 0; background: rgba(255,255,255,.1); color: #e6edf3; font: inherit; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: background .15s; }
+    .nai-code-copy:hover { background: rgba(255,255,255,.2); }
+    .nai-code-pre { margin: 0; padding: 12px 14px; overflow-x: auto; }
+    .nai-code-pre code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.6; color: #e6edf3; white-space: pre; }
+    .nk-kw { color: #ff7b72; font-weight: 600; }
+    .nk-str { color: #a5d6ff; }
+    .nk-num { color: #79c0ff; }
+    .nk-com { color: #8b949e; font-style: italic; }
+    .nk-pp { color: #d2a8ff; }
+    .vault-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .code-vault-card { animation: naiFadeUp .45s ease both; }
+    [data-theme="dark"] .nai-code { border-color: #30363d; }
+    .nai-msg.me .nai-code { display: none; }
     [data-theme="dark"] .nai-shell { border-color: #233156; }
     [data-theme="dark"] .nai-thread { background: linear-gradient(180deg, #0b1226, #0f1831); }
     [data-theme="dark"] .nai-bubble { background: #18203c; border-color: #233156; color: #e6e9f2; }
@@ -1512,6 +1536,58 @@
     [data-theme="dark"] .nai-input-row { border-color: #233156; background: #0f1831; }
     [data-theme="dark"] .nai-foot { border-color: #1a2349; background: #0f1831; }
     [data-theme="dark"] .nai-input { background: #0b1226; border-color: #233156; color: #e6e9f2; }
+
+    /* ---- Home hero — dynamic stats & animations ---- */
+    .hero-orb { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .5; pointer-events: none; z-index: 0; }
+    .hero-orb.a { width: 340px; height: 340px; top: -90px; right: -60px; background: radial-gradient(circle, rgba(217,70,239,.45), transparent 70%); animation: naiDrift 14s ease-in-out infinite alternate; }
+    .hero-orb.b { width: 300px; height: 300px; bottom: -110px; left: -70px; background: radial-gradient(circle, rgba(139,92,246,.4), transparent 70%); animation: naiDrift 18s ease-in-out infinite alternate-reverse; }
+    .hero-orb.c { width: 220px; height: 220px; top: 30%; left: 55%; background: radial-gradient(circle, rgba(56,189,248,.35), transparent 70%); animation: naiDrift 22s ease-in-out infinite alternate; }
+    .home-hero .container, .home-hero .hero-grid { position: relative; z-index: 1; }
+    .home-hero h1 .accent {
+      background: linear-gradient(90deg, #ffd34d, #fbbf24, #ff8a00, #ffd34d);
+      background-size: 250% auto;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+      animation: homeGold 5s linear infinite;
+    }
+    @keyframes homeGold { 0% { background-position: 0% center; } 100% { background-position: 250% center; } }
+    .hero-badges .stat-chip { animation: naiFadeUp .55s ease both; }
+    .home-live-card { position: relative; overflow: hidden; }
+    .home-live-card h3 { display: flex; align-items: center; gap: 8px; font-size: 15px; margin-bottom: 12px; color: #fff; }
+    .home-live-sub { font-size: 11.5px; text-transform: uppercase; letter-spacing: .4px; color: rgba(255,255,255,.7); margin: 14px 0 8px; }
+    .home-next { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.16); border-radius: 12px; padding: 10px 12px; animation: naiFadeUp .5s .25s ease both; }
+    .home-next-emoji { font-size: 20px; animation: naiFloat 3s ease-in-out infinite; }
+    .home-next-info { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+    .home-next-info b { font-size: 13px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .home-next-info span { font-size: 11.5px; color: rgba(255,255,255,.7); }
+    .home-next-cd { font-size: 12px; font-weight: 700; color: var(--gold); white-space: nowrap; }
+    .home-notices { margin: 0; }
+    .home-notices li { animation: naiFadeUp .5s ease both; }
+    .home-notices li:nth-child(1) { animation-delay: .3s; }
+    .home-notices li:nth-child(2) { animation-delay: .37s; }
+    .home-notices li:nth-child(3) { animation-delay: .44s; }
+    .home-notices li:nth-child(4) { animation-delay: .51s; }
+
+    /* ---- Club page hero — live pill, floating icon, orbs ---- */
+    .page-hero { position: relative; overflow: hidden; }
+    .page-hero .container { position: relative; z-index: 1; }
+    .club-orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .3; pointer-events: none; }
+    .club-orb.a { width: 260px; height: 260px; top: -80px; right: -40px; background: radial-gradient(circle, rgba(255,255,255,.55), transparent 70%); animation: naiDrift 16s ease-in-out infinite alternate; }
+    .club-orb.b { width: 220px; height: 220px; bottom: -90px; left: -50px; background: radial-gradient(circle, rgba(255,182,6,.4), transparent 70%); animation: naiDrift 20s ease-in-out infinite alternate-reverse; }
+    .club-hero-icon { display: inline-block; animation: naiFloat 3.2s ease-in-out infinite; }
+    .club-hero-live { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .club-live-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.22); padding: 5px 12px; border-radius: 999px; color: #fff; backdrop-filter: blur(4px); animation: naiFadeUp .5s ease both; }
+    .club-live-pill:nth-child(2) { animation-delay: .1s; }
+    .club-live-pill .pdot { position: relative; width: 7px; height: 7px; border-radius: 50%; background: #4ade80; }
+    .club-live-pill .pdot::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid rgba(74,222,128,.7); animation: naiPing 1.6s cubic-bezier(0,0,.2,1) infinite; }
+    .club-live-pill b { font-size: 13.5px; color: var(--gold); min-width: 14px; text-align: center; }
+    .club-live-panel { position: relative; overflow: hidden; }
+    .club-live-panel h3 { display: flex; align-items: center; gap: 8px; }
+    .club-live-panel h3::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: naiBlink 1.4s ease-in-out infinite; }
+    .club-live-panel .cl-stat { animation: naiFadeUp .5s ease both; }
+    .club-live-panel .cl-stat:nth-child(2) { animation-delay: .08s; }
+    .club-live-panel .cl-stat:nth-child(3) { animation-delay: .16s; }
+    .club-live-panel .cl-next { animation: naiFadeUp .5s .24s ease both; }
 
     /* ---- NITER AI agentic layer ---- */
     .ai-draft { background: linear-gradient(135deg, #fffbeb, #fff); border: 1px dashed #fcd34d; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
@@ -1638,6 +1714,7 @@
             <button type="button" class="more-toggle" data-action="more-toggle" aria-haspopup="true" aria-expanded="false">More ▾</button>
             <div class="more-panel">
               <a href="#/questions" data-nav="questions">💬 Q&A</a>
+              <a href="#/code" data-nav="code">💻 Code Vault</a>
               <a href="#/foryou" data-nav="foryou">✨ For You</a>
               <a href="#/following" data-nav="following">👥 Following</a>
               <a href="#/leaderboard" data-nav="leaderboard">🏆 Ranks</a>
@@ -3745,6 +3822,7 @@
         reactions: function () { return db.notices.reduce(function (sum, n) { return sum + Object.keys(n.reactions || {}).reduce(function (s2, k) { return s2 + (n.reactions[k] || 0); }, 0); }, 0); }
       };
       var clubLiveStatFns = {
+        "club-members": function (cid) { return (db.memberships || []).filter(function (m) { return m.clubId === cid && m.status === "approved"; }).length; },
         "open-forms": function (cid) { return clubForms(cid).filter(isOpen).length; },
         "soon-forms": function (cid) { return clubForms(cid).filter(function (f) { return statusOf(f).key === "soon"; }).length; },
         "closed-forms": function (cid) { return clubForms(cid).filter(function (f) { return statusOf(f).key === "closed"; }).length; },
@@ -3957,6 +4035,8 @@
         app.innerHTML = parts[1] ? viewEventDetail(parts[1]) : viewEventsList();
       } else if (parts[0] === "opportunities") {
         app.innerHTML = viewOpportunities();
+      } else if (parts[0] === "code") {
+        app.innerHTML = viewCodeVault();
       } else if (parts[0] === "niter-ai") {
         app.innerHTML = viewNiterAI();
       } else if (parts[0] === "verify") {
@@ -3971,7 +4051,8 @@
         dashboard: "My Dashboard — NITER Clubs Portal",
         portal: "Member Portal — NITER Clubs Portal",
         opportunities: "Opportunity board — NITER Clubs Portal",
-        "niter-ai": "NITER AI — NITER Clubs Portal"
+        "niter-ai": "NITER AI — NITER Clubs Portal",
+        "code": "💻 Code Vault — NITER Clubs Portal"
       };
       if (parts[0] === "club" && parts[1]) {
         var tc = clubById(decodeURIComponent(parts[1]));
@@ -4203,6 +4284,24 @@
       if (adTimer) { clearInterval(adTimer); adTimer = null; }
     }
 
+    function homeNowCardHTML(heroNotices) {
+      var ups = upcomingEvents();
+      var next = ups[0];
+      var nextHtml = next
+        ? '<div class="home-next"><span class="home-next-emoji">📅</span>' +
+          '<div class="home-next-info"><b>' + esc(next.title) + "</b>" +
+          '<span>' + esc((clubById(next.clubId) || {}).name || "NITER event") + "</span></div>" +
+          '<div class="home-next-cd">' + (next.startsAt
+            ? '<span data-countdown data-start="' + esc(next.startsAt) + '" data-end="' + esc(next.startsAt) + '"></span>'
+            : "Date TBA") + "</div></div>"
+        : '<div class="home-next"><span class="home-next-emoji">🌤️</span><div class="home-next-info"><b>Nothing scheduled yet</b><span>Clubs post events soon.</span></div></div>';
+      return '<div class="hero-card home-live-card">' +
+        '<div class="nai-scanline"></div>' +
+        '<h3><span class="nai-live-dot"></span> Now at NITER</h3>' +
+        nextHtml +
+        '<h4 class="home-live-sub">📢 Latest notices</h4>' +
+        '<ul class="hero-mini-list home-notices">' + heroNotices + "</ul></div>";
+    }
     function viewHome() {
       var latest = db.notices.slice().sort(function (a, b) {
         if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
@@ -4247,7 +4346,9 @@
       }).join("");
 
       return (
-        '<section class="hero"><div class="container hero-grid">' +
+        '<section class="hero home-hero">' +
+        '<div class="hero-orb a"></div><div class="hero-orb b"></div><div class="hero-orb c"></div>' +
+        '<div class="container hero-grid">' +
         "<div>" +
         "<h1>" + esc(cfg.heroTitle) + " <span class='accent'>" + esc(cfg.heroAccent) + "</span></h1>" +
         '<p class="lead">' + esc(cfg.heroSub) + "</p>" +
@@ -4255,15 +4356,13 @@
         '<a class="btn btn-primary" href="#/clubs">Explore Clubs →</a>' +
         "</div>" +
         '<div class="hero-badges">' +
-        '<span class="stat-chip" data-live-stat="clubs">🎓 <b>' + db.clubs.length + '</b> <span class="live-label">clubs</span></span>' +
-        '<span class="stat-chip" data-live-stat="open-forms" data-live-one="form open now" data-live-many="forms open now">📝 <b>' + db.forms.filter(isOpen).length + '</b> <span class="live-label">forms open now</span></span>' +
-        '<span class="stat-chip" data-live-stat="soon-forms" data-live-one="form opening soon" data-live-many="forms opening soon">⏳ <b>' + db.forms.filter(function (f) { return statusOf(f).key === "soon"; }).length + '</b> <span class="live-label">forms opening soon</span></span>' +
-        '<span class="stat-chip" data-live-stat="week-notices" data-live-one="notice this week" data-live-many="notices this week">📢 <b>' + weekNotices + '</b> <span class="live-label">notices this week</span></span>' +
+        '<span class="stat-chip" style="animation-delay:.05s" data-live-stat="clubs">🎓 <b>' + db.clubs.length + '</b> <span class="live-label">clubs</span></span>' +
+        '<span class="stat-chip" style="animation-delay:.12s" data-live-stat="open-forms" data-live-one="form open now" data-live-many="forms open now">📝 <b>' + db.forms.filter(isOpen).length + '</b> <span class="live-label">forms open now</span></span>' +
+        '<span class="stat-chip" style="animation-delay:.19s" data-live-stat="soon-forms" data-live-one="form opening soon" data-live-many="forms opening soon">⏳ <b>' + db.forms.filter(function (f) { return statusOf(f).key === "soon"; }).length + '</b> <span class="live-label">forms opening soon</span></span>' +
+        '<span class="stat-chip" style="animation-delay:.26s" data-live-stat="week-notices" data-live-one="notice this week" data-live-many="notices this week">📢 <b>' + weekNotices + '</b> <span class="live-label">notices this week</span></span>' +
         "</div></div>" +
         '<div class="hero-side">' +
-        '<div class="hero-card"><h3>📢 Latest notices</h3><ul class="hero-mini-list">' +
-        heroNotices +
-        "</ul></div>" +
+        homeNowCardHTML(heroNotices) +
         "</div>" +
         "</div>" +
         "</section>" +
@@ -4634,10 +4733,16 @@
 
       return (
         '<div class="page-hero" style="background:linear-gradient(120deg,#002147,' + esc(c.color) + ')"><div class="container">' +
+        '<div class="club-orb a"></div><div class="club-orb b"></div>' +
         '<div class="crumbs"><a href="#/">Home</a> / <a href="#/clubs">Clubs</a> / ' + esc(c.name) + "</div>" +
-        '<div class="flex" style="gap:16px;align-items:center"><span style="font-size:44px">' + esc(c.icon) + "</span>" +
+        '<div class="flex" style="gap:16px;align-items:center"><span class="club-hero-icon" style="font-size:44px">' + esc(c.icon) + "</span>" +
         "<div><h1>" + esc(c.name) + verifiedChipHTML(c) + "</h1><p class='tagline'>" + esc(c.tagline) + "</p></div>" +
         followButtonHTML(c.id) +
+        "</div>" +
+        '<div class="club-hero-live">' +
+        '<span class="club-live-pill"><span class="pdot"></span><b data-live-stat="club-members" data-live-club="' + esc(c.id) + '">0</b> active members</span>' +
+        '<span class="club-live-pill"><b data-live-stat="open-forms" data-live-club="' + esc(c.id) + '">0</b> forms open</span>' +
+        '<span class="club-live-pill"><b data-live-stat="soon-forms" data-live-club="' + esc(c.id) + '">0</b> opening soon</span>' +
         "</div>" +
         "</div></div>" +
 
@@ -4679,7 +4784,7 @@
         joinPanelHTML(c, membership) +
 
 
-        '<div class="panel club-live-panel"><h3>📊 Forms status</h3>' +
+        '<div class="panel club-live-panel"><h3>Forms status</h3>' +
         '<div class="club-live-stats">' +
         '<div class="cl-stat s-open" data-live-stat="open-forms" data-live-club="' + esc(c.id) + '" data-live-one="form open now" data-live-many="forms open now"><b>' + clubOpen + '</b><span class="live-label">forms open now</span></div>' +
         '<div class="cl-stat s-soon" data-live-stat="soon-forms" data-live-club="' + esc(c.id) + '" data-live-one="form opening soon" data-live-many="forms opening soon"><b>' + clubSoon + '</b><span class="live-label">forms opening soon</span></div>' +
@@ -7819,6 +7924,21 @@
         var q = el.getAttribute("data-q") || "";
         naiAskAndRender(q);
       },
+      "code-copy": function (el) {
+        var src = el.getAttribute("data-code") || "";
+        if (!src) return;
+        fallbackCopy(src);
+        toast("Code copied to clipboard.", "ok");
+      },
+      "code-lang": function (el) { state.codeLang = el.getAttribute("data-lang") || "All"; render(); },
+      "code-ask": function (el) {
+        var lang = el.getAttribute("data-lang") || "";
+        var title = el.getAttribute("data-title") || "";
+        navigate("niter-ai");
+        setTimeout(function () {
+          naiAskAndRender("write " + title + " in " + lang);
+        }, 200);
+      },
       "ai-toggle-reason": function (el) {
         var panel = el.nextElementSibling;
         if (!panel) return;
@@ -10541,6 +10661,20 @@
       if (/check.?in|qr|door code|attendance/i.test(query)) {
         return { text: "Each event has a door code (shown on its page to the club's staff). At the venue, the staff enter your email to check you in — your attendance is recorded instantly and a certificate is issued. Check-ins also feed your passport stamps and XP.", chips: ["Upcoming events", "What is the passport?"], link: { href: "#/events", label: "Open events →" } };
       }
+      /* ---- code generation: C, C++, Java, Python ---- */
+      var codeGate = /\b(c|c\+\+|java|python|py)\b|code|program|write a|snippet|compile|syntax|algorithm|sort|fibonacci|factorial|prime|palindrome|recursion|hello world|oop|object-oriented/i;
+      if (codeGate.test(query)) {
+        var cHit = naiFindCode(query);
+        if (cHit) {
+          return {
+            text: cHit.explain,
+            code: { lang: cHit.lang, title: cHit.title, source: cHit.code },
+            chips: ["Write bubble sort in C", "Fibonacci in Python", "OOP example in Java"],
+            link: { href: "#/code", label: "Open the Code Vault →" }
+          };
+        }
+      }
+
       /* ---- knowledge base ---- */
       var tokens = query.split(" ").filter(function (t) { return t.length > 1; });
       var best = null, bestScore = 0;
@@ -10568,6 +10702,175 @@
         chips: chips,
         link: null
       };
+    }
+
+    /* ---- code vault — write programs in C, C++, Java & Python ---- */
+    var NAI_CODE = [
+      { lang: "C", title: "Hello World", topics: ["hello world", "first program", "basic program", "hello"],
+        explain: "The classic first program — prints one line and returns. Great for checking your compiler toolchain.",
+        code: ["#include <stdio.h>", "int main() {", "    printf(\"Hello, NITER!\\n\");", "    return 0;", "}"].join("\n") },
+      { lang: "C++", title: "Hello World", topics: ["hello world", "first program", "basic program", "hello"],
+        explain: "The same first program with iostream — std::cout prints and std::endl adds a newline.",
+        code: ["#include <iostream>", "int main() {", "    std::cout << \"Hello, NITER!\" << std::endl;", "    return 0;", "}"].join("\n") },
+      { lang: "Java", title: "Hello World", topics: ["hello world", "first program", "basic program", "hello"],
+        explain: "Java needs a class with a public static main — that is the entry point the JVM calls.",
+        code: ["public class Hello {", "    public static void main(String[] args) {", "        System.out.println(\"Hello, NITER!\");", "    }", "}"].join("\n") },
+      { lang: "Python", title: "Hello World", topics: ["hello world", "first program", "basic program", "hello"],
+        explain: "One line — Python reads almost like English, which makes it the friendliest language to start with.",
+        code: ["print(\"Hello, NITER!\")"].join("\n") },
+
+      { lang: "C", title: "Fibonacci Series", topics: ["fibonacci", "fib series", "fibonacci series"],
+        explain: "Prints the first 10 Fibonacci numbers using a tiny recursive function.",
+        code: ["#include <stdio.h>", "int fib(int n) {", "    if (n <= 1) return n;", "    return fib(n - 1) + fib(n - 2);", "}", "int main() {", "    for (int i = 0; i < 10; i++)", "        printf(\"%d \\n\", fib(i));", "    return 0;", "}"].join("\n") },
+      { lang: "C++", title: "Fibonacci Series", topics: ["fibonacci", "fib series", "fibonacci series"],
+        explain: "Fibonacci with a recursive helper — a staple interview warm-up.",
+        code: ["#include <iostream>", "int fib(int n) {", "    if (n <= 1) return n;", "    return fib(n - 1) + fib(n - 2);", "}", "int main() {", "    for (int i = 0; i < 10; i++)", "        std::cout << fib(i) << \" \";", "    return 0;", "}"].join("\n") },
+      { lang: "Java", title: "Fibonacci Series", topics: ["fibonacci", "fib series", "fibonacci series"],
+        explain: "Fibonacci as a static method, printed from main.",
+        code: ["public class Fibonacci {", "    static int fib(int n) {", "        if (n <= 1) return n;", "        return fib(n - 1) + fib(n - 2);", "    }", "    public static void main(String[] args) {", "        for (int i = 0; i < 10; i++)", "            System.out.print(fib(i) + \" \");", "    }", "}"].join("\n") },
+      { lang: "Python", title: "Fibonacci Series", topics: ["fibonacci", "fib series", "fibonacci series"],
+        explain: "Fibonacci with recursion — Python's syntax keeps it short.",
+        code: ["def fib(n):", "    if n <= 1:", "        return n", "    return fib(n - 1) + fib(n - 2)", "", "for i in range(10):", "    print(fib(i), end=\" \")"].join("\n") },
+
+      { lang: "C", title: "Factorial", topics: ["factorial", "factorial of a number", "factorial of n"],
+        explain: "Iterative factorial — multiply from 1 up to n.",
+        code: ["#include <stdio.h>", "long fact(int n) {", "    long r = 1;", "    for (int i = 2; i <= n; i++) r *= i;", "    return r;", "}", "int main() {", "    printf(\"%ld\\n\", fact(6));", "    return 0;", "}"].join("\n") },
+      { lang: "C++", title: "Factorial", topics: ["factorial", "factorial of a number", "factorial of n"],
+        explain: "Iterative factorial with a long return so it survives larger inputs.",
+        code: ["#include <iostream>", "long fact(int n) {", "    long r = 1;", "    for (int i = 2; i <= n; i++) r *= i;", "    return r;", "}", "int main() {", "    std::cout << fact(6) << std::endl;", "    return 0;", "}"].join("\n") },
+      { lang: "Java", title: "Factorial", topics: ["factorial", "factorial of a number", "factorial of n"],
+        explain: "Factorial as a static method called from main.",
+        code: ["public class Factorial {", "    static long fact(int n) {", "        long r = 1;", "        for (int i = 2; i <= n; i++) r *= i;", "        return r;", "    }", "    public static void main(String[] args) {", "        System.out.println(fact(6));", "    }", "}"].join("\n") },
+      { lang: "Python", title: "Factorial", topics: ["factorial", "factorial of a number", "factorial of n"],
+        explain: "Iterative factorial with a for loop — one function, no fuss.",
+        code: ["def fact(n):", "    r = 1", "    for i in range(2, n + 1):", "        r *= i", "    return r", "", "print(fact(6))"].join("\n") },
+
+      { lang: "C", title: "Prime Number Check", topics: ["prime", "prime number", "check prime", "is prime"],
+        explain: "Checks primality by testing divisors only up to the square root.",
+        code: ["#include <stdio.h>", "#include <math.h>", "int isPrime(int n) {", "    if (n < 2) return 0;", "    for (int i = 2; i <= sqrt(n); i++)", "        if (n % i == 0) return 0;", "    return 1;", "}", "int main() {", "    printf(\"%d\\n\", isPrime(17));", "    return 0;", "}"].join("\n") },
+      { lang: "C++", title: "Prime Number Check", topics: ["prime", "prime number", "check prime", "is prime"],
+        explain: "Primality via trial division up to sqrt(n).",
+        code: ["#include <iostream>", "#include <cmath>", "bool isPrime(int n) {", "    if (n < 2) return false;", "    for (int i = 2; i <= sqrt(n); i++)", "        if (n % i == 0) return false;", "    return true;", "}", "int main() {", "    std::cout << isPrime(17) << std::endl;", "    return 0;", "}"].join("\n") },
+      { lang: "Java", title: "Prime Number Check", topics: ["prime", "prime number", "check prime", "is prime"],
+        explain: "A boolean isPrime with trial division — O(sqrt(n)).",
+        code: ["public class Prime {", "    static boolean isPrime(int n) {", "        if (n < 2) return false;", "        for (int i = 2; i <= Math.sqrt(n); i++)", "            if (n % i == 0) return false;", "        return true;", "    }", "    public static void main(String[] args) {", "        System.out.println(isPrime(17));", "    }", "}"].join("\n") },
+      { lang: "Python", title: "Prime Number Check", topics: ["prime", "prime number", "check prime", "is prime"],
+        explain: "Primality in four lines — int(n ** 0.5) avoids floating drift.",
+        code: ["import math", "", "def is_prime(n):", "    if n < 2:", "        return False", "    for i in range(2, int(math.sqrt(n)) + 1):", "        if n % i == 0:", "            return False", "    return True", "", "print(is_prime(17))"].join("\n") },
+
+      { lang: "C", title: "Bubble Sort", topics: ["bubble sort", "sorting", "sort an array", "sort array"],
+        explain: "Bubble sort bubbles the largest value to the end on each pass.",
+        code: ["#include <stdio.h>", "void sort(int a[], int n) {", "    for (int i = 0; i < n - 1; i++)", "        for (int j = 0; j < n - i - 1; j++)", "            if (a[j] > a[j + 1]) {", "                int t = a[j]; a[j] = a[j + 1]; a[j + 1] = t;", "            }", "}", "int main() {", "    int a[] = {5, 2, 9, 1, 7};", "    int n = 5;", "    sort(a, n);", "    for (int i = 0; i < n; i++) printf(\"%d \", a[i]);", "    return 0;", "}"].join("\n") },
+      { lang: "C++", title: "Bubble Sort", topics: ["bubble sort", "sorting", "sort an array", "sort array"],
+        explain: "Bubble sort on a raw array, printed with cout.",
+        code: ["#include <iostream>", "void sort(int a[], int n) {", "    for (int i = 0; i < n - 1; i++)", "        for (int j = 0; j < n - i - 1; j++)", "            if (a[j] > a[j + 1]) {", "                int t = a[j]; a[j] = a[j + 1]; a[j + 1] = t;", "            }", "}", "int main() {", "    int a[] = {5, 2, 9, 1, 7};", "    sort(a, 5);", "    for (int i = 0; i < 5; i++) std::cout << a[i] << \" \";", "    return 0;", "}"].join("\n") },
+      { lang: "Java", title: "Bubble Sort", topics: ["bubble sort", "sorting", "sort an array", "sort array"],
+        explain: "Bubble sort in a static method, printed from main.",
+        code: ["public class BubbleSort {", "    static void sort(int[] a) {", "        int n = a.length;", "        for (int i = 0; i < n - 1; i++)", "            for (int j = 0; j < n - i - 1; j++)", "                if (a[j] > a[j + 1]) {", "                    int t = a[j]; a[j] = a[j + 1]; a[j + 1] = t;", "                }", "    }", "    public static void main(String[] args) {", "        int[] a = {5, 2, 9, 1, 7};", "        sort(a);", "        for (int v : a) System.out.print(v + \" \");", "    }", "}"].join("\n") },
+      { lang: "Python", title: "Bubble Sort", topics: ["bubble sort", "sorting", "sort an array", "sort array"],
+        explain: "Bubble sort with a swap guard — a clean classroom version.",
+        code: ["def bubble_sort(a):", "    n = len(a)", "    for i in range(n - 1):", "        swapped = False", "        for j in range(n - i - 1):", "            if a[j] > a[j + 1]:", "                a[j], a[j + 1] = a[j + 1], a[j]", "                swapped = True", "        if not swapped:", "            break", "    return a", "", "print(bubble_sort([5, 2, 9, 1, 7]))"].join("\n") },
+
+      { lang: "C", title: "Palindrome Check", topics: ["palindrome", "palindrome check", "reverse string"],
+        explain: "Checks a word by comparing it against its reversed form.",
+        code: ["#include <stdio.h>", "#include <string.h>", "int isPal(char s[]) {", "    int l = 0, r = strlen(s) - 1;", "    while (l < r)", "        if (s[l++] != s[r--]) return 0;", "    return 1;", "}", "int main() {", "    printf(\"%d\\n\", isPal(\"madam\"));", "    return 0;", "}"].join("\n") },
+      { lang: "C++", title: "Palindrome Check", topics: ["palindrome", "palindrome check", "reverse string"],
+        explain: "Two-pointer palindrome check over a std::string.",
+        code: ["#include <iostream>", "#include <string>", "bool isPal(const std::string& s) {", "    int l = 0, r = (int)s.size() - 1;", "    while (l < r)", "        if (s[l++] != s[r--]) return false;", "    return true;", "}", "int main() {", "    std::cout << isPal(\"madam\") << std::endl;", "    return 0;", "}"].join("\n") },
+      { lang: "Java", title: "Palindrome Check", topics: ["palindrome", "palindrome check", "reverse string"],
+        explain: "Palindromes with two pointers walking toward the middle.",
+        code: ["public class Palindrome {", "    static boolean isPal(String s) {", "        int l = 0, r = s.length() - 1;", "        while (l < r)", "            if (s.charAt(l++) != s.charAt(r--)) return false;", "        return true;", "    }", "    public static void main(String[] args) {", "        System.out.println(isPal(\"madam\"));", "    }", "}"].join("\n") },
+      { lang: "Python", title: "Palindrome Check", topics: ["palindrome", "palindrome check", "reverse string"],
+        explain: "One-liner — a string equals its reverse.",
+        code: ["def is_pal(s):", "    return s == s[::-1]", "", "print(is_pal(\"madam\"))"].join("\n") },
+
+      { lang: "C++", title: "Class & Objects (Student)", topics: ["class", "object", "oop", "object oriented", "student class"],
+        explain: "A Student class with private data and accessor methods — encapsulation in action.",
+        code: ["#include <iostream>", "#include <string>", "class Student {", "private:", "    std::string name;", "    int roll;", "public:", "    Student(std::string n, int r) : name(n), roll(r) {}", "    void show() {", "        std::cout << name << \" \" << roll << std::endl;", "    }", "};", "int main() {", "    Student s(\"Rafi\", 12);", "    s.show();", "    return 0;", "}"].join("\n") },
+      { lang: "Java", title: "Class & Objects (Student)", topics: ["class", "object", "oop", "object oriented", "student class"],
+        explain: "A Student class with a constructor, private fields and getters.",
+        code: ["public class Student {", "    private String name;", "    private int roll;", "    public Student(String name, int roll) {", "        this.name = name;", "        this.roll = roll;", "    }", "    public String getName() { return name; }", "    public int getRoll() { return roll; }", "    public static void main(String[] args) {", "        Student s = new Student(\"Rafi\", 12);", "        System.out.println(s.getName() + \" \" + s.getRoll());", "    }", "}"].join("\n") },
+      { lang: "Python", title: "Class & Objects (Student)", topics: ["class", "object", "oop", "object oriented", "student class"],
+        explain: "A Student class with __init__ and a method — Python's OOP essentials.",
+        code: ["class Student:", "    def __init__(self, name, roll):", "        self.name = name", "        self.roll = roll", "", "    def show(self):", "        print(f\"{self.name} {self.roll}\")", "", "s = Student(\"Rafi\", 12)", "s.show()"].join("\n") }
+    ];
+
+    /* per-language keyword sets for the lightweight highlighter */
+    var NAI_KEYWORDS = {
+      "C": ["auto","break","case","char","const","continue","default","do","double","else","enum","extern","float","for","goto","if","int","long","register","return","short","signed","sizeof","static","struct","switch","typedef","union","unsigned","void","volatile","while","include","define","main"],
+      "C++": ["auto","break","case","char","class","const","continue","default","delete","do","double","else","enum","explicit","extern","float","for","friend","goto","if","inline","int","long","namespace","new","operator","private","protected","public","return","short","signed","sizeof","static","struct","switch","template","this","throw","try","typedef","typename","union","unsigned","using","virtual","void","volatile","while","include","define","main","bool","string","endl"],
+      "Java": ["abstract","assert","boolean","break","byte","case","catch","char","class","const","continue","default","do","double","else","enum","extends","final","finally","float","for","goto","if","implements","import","instanceof","int","interface","long","native","new","package","private","protected","public","return","short","static","strictfp","super","switch","synchronized","this","throw","throws","transient","try","void","volatile","while","public","private","static","String","Math","System"],
+      "Python": ["def","return","if","elif","else","for","while","in","not","and","or","import","from","as","class","try","except","finally","with","lambda","pass","break","continue","global","nonlocal","yield","assert","del","raise","is","None","True","False","print","range","len","int","str","float","list","dict","set","tuple","self","input"]
+    };
+
+    function naiEscHtml(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    function naiHighlight(code, lang) {
+      var kws = NAI_KEYWORDS[lang] || [];
+      var out = "", i = 0, n = code.length;
+      while (i < n) {
+        var ch = code[i];
+        if (ch === "#" && lang === "Python") {
+          var j = i; while (j < n && code[j] !== "\n") j++;
+          out += '<span class="nk-com">' + naiEscHtml(code.slice(i, j)) + "</span>";
+          i = j;
+        } else if (ch === "#") {
+          var jp = i; while (jp < n && code[jp] !== "\n") jp++;
+          out += '<span class="nk-pp">' + naiEscHtml(code.slice(i, jp)) + "</span>";
+          i = jp;
+        } else if (ch === "/" && code[i + 1] === "/") {
+          var jc = i; while (jc < n && code[jc] !== "\n") jc++;
+          out += '<span class="nk-com">' + naiEscHtml(code.slice(i, jc)) + "</span>";
+          i = jc;
+        } else if (ch === "/" && code[i + 1] === "*") {
+          var je = code.indexOf("*/", i + 2);
+          je = je === -1 ? n : je + 2;
+          out += '<span class="nk-com">' + naiEscHtml(code.slice(i, je)) + "</span>";
+          i = je;
+        } else if (ch === '"' || ch === "'") {
+          var q = ch, js = i + 1;
+          while (js < n && code[js] !== q) { if (code[js] === "\\") js++; js++; }
+          js = Math.min(js + 1, n);
+          out += '<span class="nk-str">' + naiEscHtml(code.slice(i, js)) + "</span>";
+          i = js;
+        } else if (/[A-Za-z_]/.test(ch)) {
+          var jw = i; while (jw < n && /[A-Za-z0-9_]/.test(code[jw])) jw++;
+          var word = code.slice(i, jw);
+          if (kws.indexOf(word) !== -1) out += '<span class="nk-kw">' + naiEscHtml(word) + "</span>";
+          else out += naiEscHtml(word);
+          i = jw;
+        } else if (/[0-9]/.test(ch)) {
+          var jn = i; while (jn < n && /[0-9._]/.test(code[jn])) jn++;
+          out += '<span class="nk-num">' + naiEscHtml(code.slice(i, jn)) + "</span>";
+          i = jn;
+        } else { out += naiEscHtml(ch); i++; }
+      }
+      return out;
+    }
+    function naiCodeLang(q) {
+      if (/\bc\+\+|cpp/i.test(q)) return "C++";
+      if (/\bpython|\bpy\b/i.test(q)) return "Python";
+      if (/\bjava\b/i.test(q)) return "Java";
+      if (/\bc\b/.test(q) || /\bc program/i.test(q)) return "C";
+      return "";
+    }
+    function naiFindCode(q) {
+      var query = naiNorm(q);
+      var lang = naiCodeLang(query);
+      var tokens = query.split(" ").filter(function (t) { return t.length > 2; });
+      var best = null, bestScore = 0;
+      NAI_CODE.forEach(function (e) {
+        var score = 0;
+        e.topics.forEach(function (tp) {
+          if (query.indexOf(tp) !== -1) score += tp.length + 2;
+          else if (tp.split(" ").length > 1 && tokens.some(function (t) { return tp.indexOf(t) !== -1; })) score += 1;
+        });
+        tokens.forEach(function (t) {
+          if (e.topics.join(" ").indexOf(t) !== -1) score += 1;
+        });
+        if (lang) score += e.lang.toLowerCase() === lang.toLowerCase() ? 8 : -3;
+        if (score > bestScore) { bestScore = score; best = e; }
+      });
+      return bestScore >= 5 ? best : null;
     }
 
     /* ---- chat UI ---- */
@@ -10605,6 +10908,16 @@
         '<div class="nai-reason-src">📚 Sources: ' + esc(r.sources.join(" · ")) + "</div>" +
         "</div>";
     }
+    function naiCodeHTML(m) {
+      if (!m || !m.code || !m.code.source) return "";
+      return '<div class="nai-code">' +
+        '<div class="nai-code-head"><span class="nai-code-dots"><i></i><i></i><i></i></span>' +
+        '<span class="nai-code-title">' + esc(m.code.title) + "</span>" +
+        '<span class="nai-code-lang">' + esc(m.code.lang) + "</span>" +
+        '<button class="nai-code-copy" data-action="code-copy" data-code="' + esc(m.code.source) + '">⧉ Copy</button></div>' +
+        '<pre class="nai-code-pre"><code>' + naiHighlight(m.code.source, m.code.lang) + "</code></pre>" +
+        "</div>";
+    }
     function naiBubbleHTML(m, typew, openReason) {
       var me = m.role === "user";
       var text = String(m.text || "");
@@ -10615,10 +10928,11 @@
         ? '<a class="nai-link" href="' + esc(m.link.href) + '">' + esc(m.link.label || "Open →") + "</a>"
         : "";
       var reason = me ? "" : naiReasonHTML(m, openReason);
+      var codeHtml = me ? "" : naiCodeHTML(m);
       return '<div class="nai-msg ' + (me ? "me" : "ai") + '">' +
         (me ? "" : '<div class="nai-avatar">🤖</div>') +
         '<div class="nai-bubble"' + (typew ? ' data-typewrite="1" data-full="' + esc(text) + '"' : "") + ">" +
-        body + link + reason + "</div>" +
+        body + codeHtml + link + reason + "</div>" +
         (me ? '<div class="nai-avatar">👤</div>' : "") +
         "</div>";
     }
@@ -10697,6 +11011,42 @@
         }
       }
       setTimeout(step, 420);
+    }
+    function viewCodeVault() {
+      state.codeLang = state.codeLang || "All";
+      var langs = ["All", "C", "C++", "Java", "Python"];
+      var chips = langs.map(function (l) {
+        return '<button class="chip' + (state.codeLang === l ? " active" : "") + '" data-action="code-lang" data-lang="' + esc(l) + '">' + esc(l) + "</button>";
+      }).join("");
+      var list = NAI_CODE.filter(function (e) { return state.codeLang === "All" || e.lang === state.codeLang; });
+      var cards = list.map(function (e) {
+        return '<div class="card code-vault-card">' +
+          '<div class="row" style="justify-content:space-between;align-items:center"><h3 style="margin:0">' + esc(e.title) + "</h3>" +
+          '<span class="nai-code-lang">' + esc(e.lang) + "</span></div>" +
+          "<p class='muted' style='font-size:13px;margin:6px 0 10px'>" + esc(e.explain) + "</p>" +
+          '<div class="nai-code">' +
+          '<div class="nai-code-head"><span class="nai-code-dots"><i></i><i></i><i></i></span>' +
+          '<span class="nai-code-title">' + esc(e.title) + "</span>" +
+          '<span class="nai-code-lang">' + esc(e.lang) + "</span>" +
+          '<button class="nai-code-copy" data-action="code-copy" data-code="' + esc(e.code) + '">⧉ Copy</button></div>' +
+          '<pre class="nai-code-pre"><code>' + naiHighlight(e.code, e.lang) + "</code></pre></div>" +
+          '<button class="btn btn-outline btn-sm" style="margin-top:10px" data-action="code-ask" data-lang="' + esc(e.lang) + '" data-title="' + esc(e.title) + '">✨ Ask NITER AI to write this</button>' +
+          "</div>";
+      }).join("");
+      return (
+        '<section class="hero"><div class="container hero-grid"><div>' +
+        "<h1>💻 Code Vault</h1>" +
+        '<p class="lead">Ready-to-run programs in C, C++, Java and Python — browse, copy, and ask NITER AI to write more for you.</p>' +
+        '</div><div class="hero-side"><div class="hero-card"><h3>⚡ How to use</h3><ul class="hero-mini-list">' +
+        "<li>Copy any snippet with one tap</li>" +
+        "<li>Ask NITER AI: \"write bubble sort in C\"</li>" +
+        "<li>Works fully offline</li>" +
+        "</ul></div></div></div></section>" +
+        '<div class="container" style="padding:24px 0">' +
+        '<div class="filter-chips" style="margin-bottom:16px">' + chips + "</div>" +
+        '<div class="vault-grid">' + (cards || '<div class="panel empty-state"><div class="icon">💻</div><p>No snippets in this language yet.</p></div>') + "</div>" +
+        "</div>"
+      );
     }
     function viewNiterAI() {
       var chat = naiLoadChat();
@@ -10802,6 +11152,12 @@
       if (/check.?in|qr|door code|attendance/i.test(query)) {
         return { intent: "checkin", label: "Check-in explainer", match: "check-in intent", src: ["Door-code check-in flow", "Event pages"], conf: 0.9 };
       }
+      /* code generation — mirrors the naiAsk branch */
+      var codeGate = /\b(c|c\+\+|java|python|py)\b|code|program|write a|snippet|compile|syntax|algorithm|sort|fibonacci|factorial|prime|palindrome|recursion|hello world|oop|object-oriented/i;
+      if (codeGate.test(query)) {
+        var cHit = naiFindCode(query);
+        if (cHit) return { intent: "code", label: "Code generation", match: cHit.lang + " — " + cHit.title, src: ["Built-in code vault (" + cHit.lang + ")"], conf: 0.92 };
+      }
       /* knowledge base — same scoring as naiAsk */
       var tokens = query.split(" ").filter(function (t) { return t.length > 1; });
       var best = null, bestScore = 0;
@@ -10869,7 +11225,7 @@
         clearInterval(thinkInt);
         if (seq !== naiPendingSeq) return;
         var chat2 = naiLoadChat();
-        chat2.push({ role: "ai", text: ans.text, at: new Date().toISOString(), link: ans.link || null, reason: reason });
+        chat2.push({ role: "ai", text: ans.text, at: new Date().toISOString(), link: ans.link || null, code: ans.code || null, reason: reason });
         naiSaveChat(chat2);
         state.aiTyping = false;
         state.aiThink = 0;
