@@ -1520,30 +1520,8 @@
     /* thinking bubble: shimmering label */
     .nai-think { background: linear-gradient(90deg, #f6f5ff, #ffffff, #f6f5ff); background-size: 200% 100%; animation: naiThinkShimmer 1.6s linear infinite; }
     @keyframes naiThinkShimmer { 0% { background-position: 0% 0%; } 100% { background-position: -200% 0%; } }
-    /* ===== app shell: capability rail beside the chat (full page) ===== */
-    .nai-app { display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 16px; align-items: start; }
-    .nai-rail { position: sticky; top: 18px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 130px); overflow-y: auto; padding-right: 2px; scrollbar-width: thin; }
-    .nai-rail-group { background: var(--surface); border: 1px solid #e5e7eb; border-radius: 14px; padding: 11px; box-shadow: 0 2px 12px rgba(0,0,0,.05); }
-    .nai-rail-group h4 { font-size: 10.5px; letter-spacing: .7px; text-transform: uppercase; color: #8b5cf6; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
-    .nai-rail-btn {
-      display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: none; border: 0;
-      padding: 7px 9px; border-radius: 9px; font: inherit; font-size: 12.5px; color: var(--text); cursor: pointer;
-      transition: background .12s ease, transform .12s ease, color .12s ease;
-    }
-    .nai-rail-btn:hover { background: rgba(139,92,246,.1); transform: translateX(3px); color: #7c3aed; }
-    [data-theme="dark"] .nai-rail-group { background: #0f1831; border-color: #233156; }
-    [data-theme="dark"] .nai-rail-btn { color: #e2e8f0; }
-    [data-theme="dark"] .nai-rail-btn:hover { background: rgba(139,92,246,.16); color: #c4b5fd; }
-    /* compact horizontal rail inside the floating chat window */
-    .nai-rail-win { position: static; flex-direction: row; overflow-x: auto; max-height: none; gap: 8px; padding: 8px 10px; border-bottom: 1px solid #eee; scrollbar-width: thin; }
-    .nai-rail-win .nai-rail-group { min-width: 168px; flex: none; box-shadow: none; padding: 8px 10px; }
-    .nai-rail-win .nai-rail-btn { font-size: 11.5px; padding: 5px 8px; }
-    [data-theme="dark"] .nai-rail-win { border-bottom-color: #233156; }
-    @media (max-width: 920px) {
-      .nai-app { grid-template-columns: 1fr; }
-      .nai-rail { position: static; flex-direction: row; overflow-x: auto; max-height: none; padding-bottom: 4px; }
-      .nai-rail-group { min-width: 176px; flex: none; }
-    }
+    /* ===== NITER AI app shell (full page) ===== */
+    .nai-app { display: flex; flex-direction: column; gap: 16px; }
     /* ===== live cover-page preview card ===== */
     .nai-cov-preview { margin-top: 10px; border: 1px solid #d8d3f7; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 6px 20px rgba(76,29,149,.12); animation: naiMsgIn .4s cubic-bezier(.22,1,.36,1) both; }
     .nai-cov-bar { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #fff; background: linear-gradient(90deg, #4c1d95, #7c3aed); padding: 7px 12px; }
@@ -11837,6 +11815,8 @@
         a: "FDAE graduates work in fashion houses, buying houses, apparel manufacturing, fashion merchandising, pattern making, garment technology, and design studios. Roles include fashion designer, pattern maker, merchandiser, quality controller, and production coordinator. Bangladesh's RMG industry needs FDAE professionals for both domestic and export-oriented fashion. Starting salaries: ৳15,000-৳30,000/month, higher in buying houses and international brands. The Cultural Club and Film & Photography Club complement FDAE skills in visual storytelling." },
       { id: "ragging", topics: ["ragging", "anti-ragging", "ragging policy", "ragging rules", "ragging punishment", "ragging report", "ragging committee", "ragging prevention", "ragging awareness", "ragging helpline", "ragging complaint", "ragging types", "ragging examples", "ragging victim", "ragging support"],
         a: "NITER Anti-Ragging Policy (Bangladesh Policy 2023):\n\nRagging is strictly prohibited at NITER. It includes physical, verbal, psychological, cyber, and sexual harassment.\n\nTypes of Ragging:\n1. Physical - hitting, forced activities, intimidation\n2. Verbal - insults, abusive language, threatening\n3. Psychological - mental harassment, isolation, fear\n4. Cyber - online harassment, rumors, threats\n5. Sexual - harassment, molestation, gender-based abuse\n\nPunishments:\n- Minor: Warning, counseling, fine up to BDT 5,000\n- Moderate: Suspension 1-3 months, fine up to BDT 10,000\n- Serious: Suspension 6-12 months, hostel expulsion\n- Severe: Permanent expulsion, criminal charges\n\nHow to Report:\n1. Proctor's office (Office of the Proctor)\n2. Department head or class advisor\n3. Student welfare office\n4. Anti-Ragging Hotline: 333\n5. Women's Helpline: 01779-554391\n6. Emergency: 999\n7. Email: proctor@niter.edu.bd\n\nVictim Support:\n- Safe space and emergency accommodation\n- Free counseling sessions\n- Academic adjustments\n- Legal assistance\n- Financial support\n\nNote: High Court declared Anti-Ragging Policy as law in 2025. You are protected from retaliation.", link: { href: "https://niter.edu.bd/offices/office-of-the-proctor/", label: "Report to Proctor" } },
+      { id: "healthcare", topics: ["healthcare", "health care", "medical center", "medical centre", "campus doctor", "health services", "medical services", "doctor", "nurse", "health checkup", "first aid", "emergency treatment", "medical officer", "RMO", "health facility"],
+        a: "NITER Healthcare and Medical Services:\n\n1. Campus Medical Center:\n- Location: 1st Floor, Academic Building-2 (Room AC-216)\n- Staff: Residential Medical Officer (RMO) and support staff\n- Services: First aid, emergency treatment, health checkups\n- Hours: Available during campus hours, emergency services 24/7\n- Email: dtakter@niter.edu.bd\n- Phone: +880 1755 060 275\n\n2. Corporate Health Agreements:\n- Enam Medical College Hospital (Savar)\n- IBN SINA TRUST (Dhaka)\n- Students and employees receive discounts on health checkups\n- Show valid NITER ID card for discounts\n- Covers: Consultations, diagnostics, and treatments\n\n3. Health Services Available:\n- Primary care and first aid\n- Emergency treatment and referrals\n- Health checkups and screenings\n- Vaccination programs\n- Health awareness campaigns\n- Medical certificates\n\n4. Emergency Procedures:\n- On-campus: Contact Medical Center immediately\n- Off-campus: Call 999 (national emergency) or 112 (ambulance)- Hospital referrals for serious cases\n- Insurance coverage information available\n\n5. Health Tips for Students:\n- Keep NITER ID card for hospital discounts\n- Know Medical Center location and hours\n- Save emergency numbers in phone\n- Maintain healthy lifestyle on campus\n- Report health concerns early\n\nFor health-related queries, contact the Medical Center or visit niter.edu.bd/resources/ for more information.", link: { href: "https://niter.edu.bd/offices/medical-center/", label: "Visit Medical Center" } },
     ];
 
     /* ---- answer engine ---- */
@@ -18863,26 +18843,7 @@
       add("🧠 remember that the library opens at 9am");
       return out.slice(0, 39);
     }
-    /* ---- capability rail: a curated app-style sidebar of what NITER AI
-       can do, one tap away. Buttons reuse the ai-chip action so they
-       behave exactly like suggestion chips. ---- */
-    function naiRailHTML(compact) {
-      function railBtn(t) {
-        return '<button type="button" class="nai-rail-btn" data-action="ai-chip" data-q="' + esc(t) + '">' + esc(t) + "</button>";
-      }
-      function group(icon, title, items) {
-        return '<div class="nai-rail-group"><h4>' + icon + " " + esc(title) + "</h4>" + items.map(railBtn).join("") + "</div>";
-      }
-      var out = [
-        group("🎓", "NITER knowledge", ["What is NITER?", "Which clubs are there?", "How do I join a club?", "The RMG industry", "💰 Fees and scholarships", "🏠 Hostel information"]),
-        group("📚", "Study tools", ["🧮 Solve 2x + 3 = 7", "∫ Integrate x² from 0 to 3", "📊 Mean of 5, 6, 7, 8", "🔀 Check my routine for clashes", "📅 Find a free slot for a new course", "📚 Study plan for Data Structures in 2 weeks", "🔖 Cite a book for me"]),
-        group("💼", "Career & campus", ["💼 CSE career paths", "🏭 Textile Engineering jobs", "📝 How to write a CV", "🎯 IELTS preparation tips", "🚌 NITER bus service & routes", "🏋️ Sports facilities"])
-      ];
-      if (!compact) out.push(group("🤖", "Agent", ["⏰ Remind me to prepare slides", "📋 Show my to-do list", "🧠 What have you learned?", "😄 Tell me a joke"]));
-      if (naiModActive()) out.push(group("🛠", "Moderator studio", ["✍️ Draft a club notice", "📥 Summarize my submissions", "🩺 Analyze my club", "🗣 Feedback digest", "🤖 List my automations", "✨ Add an automation"]));
-      if (naiClubAdmin()) out.push(group("👑", "Club admin", ["👑 What can I control?", "📊 Deep club analytics", "👑 Transfer admin", "🏛️ Update my club tagline"]));
-      return out.join("");
-    }
+    /* naiRailHTML removed — suggestion groups are no longer shown in the NITER AI sidebar */
     function naiNowStrip() {
       var ups = upcomingEvents();
       var parts = [];
