@@ -584,6 +584,8 @@ function DashboardHome({
                   <EmptyState icon="🗓">No upcoming events yet.</EmptyState>
                 )}
               </div>
+            </section>
+
             {/* my certificates */}
             <section className="card p-5">
               <h2 className="m-0 text-[18px] font-bold text-ink">📜 My certificates ({myCerts.length})</h2>

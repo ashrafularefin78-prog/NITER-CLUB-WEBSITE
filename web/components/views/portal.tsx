@@ -2191,7 +2191,7 @@ function ModeratorRequestsTab({ clubId }: { clubId: string }) {
 
       toast.toast(
         approve ? `Moderator request approved — ${request.userName} is now a club executive.` : `Moderator request rejected.`,
-        approve ? "ok" : "warn"
+        approve ? "ok" : "err"
       );
     } catch (err) {
       toast.toast("Could not process request: " + (err as Error).message, "err");
