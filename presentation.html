@@ -96,10 +96,99 @@
       100% { background-position: 200% center; }
     }
 
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+    }
+
+    @keyframes morph {
+      0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+      50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+      100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    }
+
+    @keyframes particleFloat {
+      0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
+      25% { transform: translateY(-30px) translateX(10px) scale(1.1); opacity: 0.8; }
+      50% { transform: translateY(-15px) translateX(-10px) scale(0.9); opacity: 0.4; }
+      75% { transform: translateY(-40px) translateX(5px) scale(1.05); opacity: 0.7; }
+    }
+
+    @keyframes slideReveal {
+      from { clip-path: inset(0 100% 0 0); }
+      to { clip-path: inset(0 0 0 0); }
+    }
+
+    @keyframes elasticScale {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.15); opacity: 1; }
+      75% { transform: scale(0.95); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); opacity: 1; }
+      70% { transform: scale(0.9); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes flipIn {
+      0% { transform: perspective(400px) rotateY(90deg); opacity: 0; }
+      40% { transform: perspective(400px) rotateY(-10deg); opacity: 1; }
+      70% { transform: perspective(400px) rotateY(10deg); opacity: 1; }
+      100% { transform: perspective(400px) rotateY(0deg); opacity: 1; }
+    }
+
+    @keyframes drawLine {
+      from { stroke-dashoffset: 1000; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(245, 158, 11, 0.6); }
+    }
+
     .animate-in { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
     .animate-in-left { animation: fadeInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
     .animate-in-right { animation: fadeInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
     .animate-scale { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+    .animate-bounce { animation: bounceIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-flip { animation: flipIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-elastic { animation: elasticScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    .animate-morph { animation: morph 8s ease-in-out infinite; }
+    .animate-glow { animation: glow 2s ease-in-out infinite; }
+    .animate-gradient { background-size: 200% 200%; animation: gradientShift 3s ease infinite; }
 
     .delay-1 { animation-delay: 0.1s; }
     .delay-2 { animation-delay: 0.2s; }
@@ -109,6 +198,152 @@
     .delay-6 { animation-delay: 0.6s; }
     .delay-7 { animation-delay: 0.7s; }
     .delay-8 { animation-delay: 0.8s; }
+    .delay-9 { animation-delay: 0.9s; }
+    .delay-10 { animation-delay: 1.0s; }
+
+    /* Particle container */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: particleFloat 4s ease-in-out infinite;
+    }
+
+    /* Gradient background */
+    .gradient-bg {
+      background: linear-gradient(-45deg, #0F172A, #1E293B, #334155, #0F172A);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+
+    /* 3D card effect */
+    .card-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+    }
+
+    .card-3d:hover {
+      transform: rotateY(5deg) rotateX(5deg);
+    }
+
+    /* Magnetic hover */
+    .magnetic {
+      transition: transform 0.2s ease;
+    }
+
+    /* Text reveal */
+    .text-reveal {
+      overflow: hidden;
+    }
+
+    .text-reveal span {
+      display: inline-block;
+      animation: slideReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Glitch effect */
+    .glitch {
+      position: relative;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch::before {
+      animation: glitch 0.3s infinite;
+      color: var(--gold);
+      z-index: -1;
+    }
+
+    .glitch::after {
+      animation: glitch 0.3s infinite reverse;
+      color: var(--blue);
+      z-index: -2;
+    }
+
+    /* Magnetic button */
+    .magnetic-btn {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .magnetic-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s;
+    }
+
+    .magnetic-btn:hover::before {
+      width: 200%;
+      height: 200%;
+    }
+
+    /* Staggered grid */
+    .stagger-grid > * {
+      opacity: 0;
+      animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .stagger-grid > *:nth-child(1) { animation-delay: 0.1s; }
+    .stagger-grid > *:nth-child(2) { animation-delay: 0.2s; }
+    .stagger-grid > *:nth-child(3) { animation-delay: 0.3s; }
+    .stagger-grid > *:nth-child(4) { animation-delay: 0.4s; }
+    .stagger-grid > *:nth-child(5) { animation-delay: 0.5s; }
+    .stagger-grid > *:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Progress bar animation */
+    .progress-animated .progress-fill {
+      animation: progressGrow 1s ease-out forwards;
+      transform-origin: left;
+    }
+
+    @keyframes progressGrow {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    /* Counter animation */
+    .counter-animate {
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    /* Hover lift with shadow */
+    .hover-lift {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hover-lift:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
 
     /* Slide variants */
     .slide-cover {
@@ -489,21 +724,41 @@
 <body>
 
 <!-- ==================== SLIDE 1: COVER ==================== -->
-<div class="slide slide-cover active" id="slide-1">
+<div class="slide slide-cover gradient-bg active" id="slide-1">
   <div class="slide-number white">01 / 12</div>
-  <div style="max-width: 800px;">
+  
+  <!-- Particles -->
+  <div class="particles">
+    <div class="particle" style="left: 10%; top: 20%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; top: 80%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 80%; top: 30%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 90%; top: 70%; animation-delay: 0.5s;"></div>
+    <div class="particle" style="left: 50%; top: 10%; animation-delay: 1.5s;"></div>
+    <div class="particle" style="left: 30%; top: 60%; animation-delay: 2.5s;"></div>
+    <div class="particle" style="left: 70%; top: 90%; animation-delay: 0.8s;"></div>
+    <div class="particle" style="left: 15%; top: 50%; animation-delay: 1.8s;"></div>
+    <div class="particle" style="left: 85%; top: 15%; animation-delay: 2.2s;"></div>
+    <div class="particle" style="left: 60%; top: 40%; animation-delay: 0.3s;"></div>
+  </div>
+
+  <!-- Floating shapes -->
+  <div class="animate-float" style="position: absolute; top: 10%; left: 5%; width: 100px; height: 100px; border: 2px solid rgba(245,158,11,0.2); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation-delay: 0s;"></div>
+  <div class="animate-float" style="position: absolute; bottom: 15%; right: 10%; width: 80px; height: 80px; border: 2px solid rgba(245,158,11,0.15); border-radius: 50%; animation-delay: 1s;"></div>
+  <div class="animate-morph" style="position: absolute; top: 60%; left: 8%; width: 60px; height: 60px; background: rgba(245,158,11,0.1); animation-delay: 0.5s;"></div>
+
+  <div style="max-width: 800px; position: relative; z-index: 1;">
     <div class="overline animate-in delay-1" style="color: var(--gold);">Executive Summary</div>
-    <h1 class="animate-in delay-2" style="color: white; margin-bottom: 24px;">NITER Clubs Portal</h1>
+    <h1 class="animate-in delay-2 glitch" data-text="NITER Clubs Portal" style="color: white; margin-bottom: 24px;">NITER Clubs Portal</h1>
     <div class="accent-line animate-in delay-3" style="margin: 0 auto 24px;"></div>
     <p class="animate-in delay-4" style="color: rgba(255,255,255,0.6); font-size: 1.3em; line-height: 1.6;">
       A unified digital platform transforming how 11+ student clubs operate, communicate, and engage with 2,000+ students at the National Institute of Textile Engineering and Research.
     </p>
-    <div class="mt-48 animate-in delay-5" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-      <span class="tag tag-navy">Next.js 15</span>
-      <span class="tag tag-navy">React 19</span>
-      <span class="tag tag-navy">TypeScript</span>
-      <span class="tag tag-navy">Firebase</span>
-      <span class="tag tag-navy">Tailwind CSS</span>
+    <div class="mt-48 animate-in delay-5 stagger-grid" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <span class="tag tag-navy magnetic-btn">Next.js 15</span>
+      <span class="tag tag-navy magnetic-btn">React 19</span>
+      <span class="tag tag-navy magnetic-btn">TypeScript</span>
+      <span class="tag tag-navy magnetic-btn">Firebase</span>
+      <span class="tag tag-navy magnetic-btn">Tailwind CSS</span>
     </div>
     <p class="animate-in delay-6" style="color: rgba(255,255,255,0.3); margin-top: 48px; font-size: 0.85em;">August 2026 · v1.0</p>
   </div>
@@ -517,27 +772,27 @@
   <p class="lead mt-16 animate-in delay-3">NITER's student clubs face critical operational challenges that reduce engagement and increase administrative burden.</p>
 
   <div class="grid-3 mt-32">
-    <div class="card animate-in delay-4" style="border-left: 3px solid var(--red);">
+    <div class="card card-3d hover-lift animate-bounce delay-4" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">📱 Fragmented Communication</h3>
       <p style="font-size: 0.9em;">Activities scattered across Facebook, WhatsApp, and word-of-mouth. No centralized platform for discovery.</p>
     </div>
-    <div class="card animate-in delay-5" style="border-left: 3px solid var(--red);">
+    <div class="card card-3d hover-lift animate-bounce delay-5" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">📝 Manual Processes</h3>
       <p style="font-size: 0.9em;">Paper forms, Google Forms, no approval workflow. Students can't track their application status.</p>
     </div>
-    <div class="card animate-in delay-6" style="border-left: 3px solid var(--red);">
+    <div class="card card-3d hover-lift animate-bounce delay-6" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">📅 Event Management</h3>
       <p style="font-size: 0.9em;">No RSVP tracking, no capacity management, no attendance verification. Low event turnout.</p>
     </div>
-    <div class="card animate-in-left delay-4" style="border-left: 3px solid var(--red);">
+    <div class="card card-3d hover-lift animate-flip delay-4" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">🌐 No Digital Identity</h3>
       <p style="font-size: 0.9em;">Clubs depend on Facebook. When pages go down, digital presence vanishes.</p>
     </div>
-    <div class="card animate-in-left delay-5" style="border-left: 3px solid var(--red);">
+    <div class="card card-3d hover-lift animate-flip delay-5" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">⏰ Administrative Overhead</h3>
       <p style="font-size: 0.9em;">Hours spent manually collecting forms, sending reminders, and tracking applications.</p>
     </div>
-    <div class="card animate-in-left delay-6" style="border-left: 3px solid var(--red);">
+    <div class="card card-3d hover-lift animate-flip delay-6" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">🔍 Discovery Gap</h3>
 n      <p style="font-size: 0.9em;">New students have no easy way to learn about clubs or how to get involved.</p>
     </div>
@@ -552,7 +807,7 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
   <p class="animate-in delay-3" style="color: rgba(255,255,255,0.6); margin-top: 8px;" class="lead">A comprehensive web platform that centralizes and automates all club operations.</p>
 
   <div class="grid-3 mt-32">
-    <div class="card-dark animate-in delay-4">
+    <div class="card-dark animate-elastic delay-4 hover-lift">
       <div style="font-size: 1.8em; margin-bottom: 12px;">🎓</div>
       <h3 style="color: white; margin-bottom: 12px;">For Students</h3>
       <ul class="check-list">
@@ -563,7 +818,7 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
         <li><span class="check">✓</span> Personal dashboard with XP & badges</li>
       </ul>
     </div>
-    <div class="card-dark animate-in delay-5">
+    <div class="card-dark animate-elastic delay-5 hover-lift">
       <div style="font-size: 1.8em; margin-bottom: 12px;">🛡️</div>
       <h3 style="color: white; margin-bottom: 12px;">For Club Executives</h3>
       <ul class="check-list">
@@ -574,7 +829,7 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
         <li><span class="check">✓</span> Publish ads for events</li>
       </ul>
     </div>
-    <div class="card-dark animate-in delay-6">
+    <div class="card-dark animate-elastic delay-6 hover-lift">
       <div style="font-size: 1.8em; margin-bottom: 12px;">👑</div>
       <h3 style="color: white; margin-bottom: 12px;">For Administrators</h3>
       <ul class="check-list">
@@ -595,20 +850,20 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
   <h2 class="animate-in delay-2">Key Metrics</h2>
 
   <div class="grid-4 mt-32">
-    <div class="card-elevated stat animate-scale delay-3">
-      <div class="stat-value gold">11+</div>
+    <div class="card-elevated stat animate-elastic delay-3 hover-lift animate-glow">
+      <div class="stat-value gold counter-animate">11+</div>
       <div class="stat-label">Clubs Supported</div>
     </div>
-    <div class="card-elevated stat animate-scale delay-4">
-      <div class="stat-value blue">2,000+</div>
+    <div class="card-elevated stat animate-elastic delay-4 hover-lift animate-glow">
+      <div class="stat-value blue counter-animate">2,000+</div>
       <div class="stat-label">Potential Students</div>
     </div>
-    <div class="card-elevated stat animate-scale delay-5">
-      <div class="stat-value green">6</div>
+    <div class="card-elevated stat animate-elastic delay-5 hover-lift animate-glow">
+      <div class="stat-value green counter-animate">6</div>
       <div class="stat-label">Role Types</div>
     </div>
-    <div class="card-elevated stat animate-scale delay-6">
-      <div class="stat-value" style="color: var(--purple);">7</div>
+    <div class="card-elevated stat animate-elastic delay-6 hover-lift animate-glow">
+      <div class="stat-value counter-animate" style="color: var(--purple);">7</div>
       <div class="stat-label">API Endpoints</div>
     </div>
   </div>
@@ -734,23 +989,23 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
   <p class="animate-in delay-3" style="color: rgba(255,255,255,0.6);" class="lead">Serverless architecture — no application server to operate.</p>
 
   <div class="mt-32" style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;">
-    <div class="card-dark animate-in-left delay-4" style="min-width: 180px; text-align: center; padding: 30px;">
+    <div class="card-dark animate-flip delay-4 hover-lift" style="min-width: 180px; text-align: center; padding: 30px;">
       <div style="font-size: 2em; margin-bottom: 12px;">🌐</div>
       <h3 style="color: white; font-size: 1em;">Frontend</h3>
       <p style="font-size: 0.8em; margin-top: 8px;">Next.js 15<br>React 19</p>
     </div>
 
-    <div class="animate-scale delay-5" style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
+    <div class="animate-elastic delay-5 animate-glow" style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
 
-    <div class="card-gold animate-scale delay-5" style="min-width: 180px; text-align: center; padding: 30px;">
+    <div class="card-gold animate-bounce delay-5 hover-lift animate-glow" style="min-width: 180px; text-align: center; padding: 30px;">
       <div style="font-size: 2em; margin-bottom: 12px;">🔥</div>
       <h3 style="font-size: 1em;">Firebase BaaS</h3>
       <p style="font-size: 0.8em; margin-top: 8px; color: #92400E;">Serverless Backend</p>
     </div>
 
-    <div class="animate-scale delay-6" style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
+    <div class="animate-elastic delay-6 animate-glow" style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
 
-    <div class="card-dark animate-in-right delay-6" style="min-width: 180px; text-align: center; padding: 30px;">
+    <div class="card-dark animate-flip delay-6 hover-lift" style="min-width: 180px; text-align: center; padding: 30px;">
       <div style="font-size: 2em; margin-bottom: 12px;">📦</div>
       <h3 style="color: white; font-size: 1em;">Services</h3>
       <p style="font-size: 0.8em; margin-top: 8px;">Firestore · Auth<br>Storage · Rules</p>
@@ -875,7 +1130,7 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
   <h2 class="animate-in delay-2">Features Deep Dive</h2>
 
   <div class="grid-3 mt-32">
-    <div class="card" style="border-top: 3px solid var(--gold);">
+    <div class="card card-3d hover-lift animate-flip delay-3" style="border-top: 3px solid var(--gold);">
       <h3 style="font-size: 1em; margin-bottom: 12px;">📝 Form Engine</h3>
       <p style="font-size: 0.85em; margin-bottom: 12px;">Visual field builder with 10 field types:</p>
       <div style="display: flex; flex-wrap: wrap; gap: 4px;">
@@ -892,7 +1147,7 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
       </div>
     </div>
 
-    <div class="card" style="border-top: 3px solid var(--green);">
+    <div class="card card-3d hover-lift animate-flip delay-4" style="border-top: 3px solid var(--green);">
       <h3 style="font-size: 1em; margin-bottom: 12px;">🏆 Gamification</h3>
       <ul class="check-list">
         <li><span class="check">✓</span> XP for check-ins, RSVPs, certificates</li>
@@ -902,7 +1157,7 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
       </ul>
     </div>
 
-    <div class="card" style="border-top: 3px solid var(--blue);">
+    <div class="card card-3d hover-lift animate-flip delay-5" style="border-top: 3px solid var(--blue);">
       <h3 style="font-size: 1em; margin-bottom: 12px;">📅 Events System</h3>
       <ul class="check-list">
         <li><span class="check">✓</span> RSVP with capacity limits</li>
@@ -914,11 +1169,11 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
   </div>
 
   <div class="grid-2 mt-24">
-    <div class="card" style="border-top: 3px solid var(--purple);">
+    <div class="card card-3d hover-lift animate-bounce delay-4" style="border-top: 3px solid var(--purple);">
       <h3 style="font-size: 1em; margin-bottom: 12px;">📣 Club Ads</h3>
       <p style="font-size: 0.85em;">Moderator-published image/video ads in the homepage carousel. Supports scheduling, analytics, and link targets.</p>
     </div>
-    <div class="card" style="border-top: 3px solid var(--gold);">
+    <div class="card card-3d hover-lift animate-bounce delay-5" style="border-top: 3px solid var(--gold);">
       <h3 style="font-size: 1em; margin-bottom: 12px;">🧭 Club Match Quiz</h3>
       <p style="font-size: 0.85em;">"Which club fits me?" quiz matcher using personality tags. Students get matched based on interests.</p>
     </div>
@@ -997,8 +1252,8 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
   <div class="slide-number" style="color: rgba(0,0,0,0.3);">12 / 12</div>
 
   <div style="text-align: center; margin: auto;">
-    <div class="animate-scale delay-1" style="font-size: 4em; margin-bottom: 24px;">🏛️</div>
-    <h1 class="animate-in delay-2" style="font-size: 3.5em; margin-bottom: 16px;">Thank You</h1>
+    <div class="animate-elastic delay-1 animate-float" style="font-size: 4em; margin-bottom: 24px;">🏛️</div>
+    <h1 class="animate-bounce delay-2" style="font-size: 3.5em; margin-bottom: 16px;">Thank You</h1>
     <div class="accent-line" style="margin: 0 auto 24px; background: var(--navy);"></div>
     <p style="font-size: 1.3em; font-weight: 500; margin-bottom: 40px;">
       NITER Clubs Portal<br>
@@ -1056,13 +1311,17 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
   function showSlide(n) {
     document.querySelectorAll('.slide').forEach(s => {
       s.classList.remove('active');
-      // Reset animations
-      s.querySelectorAll('.animate-in, .animate-in-left, .animate-in-right, .animate-scale').forEach(el => {
-        el.style.animation = 'none';
-        el.offsetHeight; // Trigger reflow
-        el.style.animation = '';
-      });
     });
+    
+    // Reset animations on target slide
+    const targetSlide = document.getElementById(`slide-${n}`);
+    const animatedElements = targetSlide.querySelectorAll('[class*="animate-"]');
+    animatedElements.forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight; // Trigger reflow
+      el.style.animation = '';
+    });
+    
     document.getElementById(`slide-${n}`).classList.add('active');
     document.getElementById('progressBar').style.width = `${(n / totalSlides) * 100}%`;
     
@@ -1104,6 +1363,42 @@ n      <p style="font-size: 0.9em;">New students have no easy way to learn about
   document.addEventListener('touchend', (e) => {
     const diff = touchStartX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+  });
+
+  // Magnetic button effect
+  document.querySelectorAll('.magnetic-btn').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0, 0)';
+    });
+  });
+
+  // 3D card tilt effect
+  document.querySelectorAll('.card-3d').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(1000px) rotateY(${x * 10}deg) rotateX(${-y * 10}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
+    });
+  });
+
+  // Parallax floating elements
+  document.addEventListener('mousemove', (e) => {
+    const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+    const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+    document.querySelectorAll('.animate-float').forEach((el, i) => {
+      const factor = (i + 1) * 0.5;
+      el.style.transform = `translate(${moveX * factor}px, ${moveY * factor}px)`;
+    });
   });
 </script>
 
