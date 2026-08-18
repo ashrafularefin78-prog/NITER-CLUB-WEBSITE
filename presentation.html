@@ -3,47 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NITER Clubs Portal — Project Presentation</title>
+  <title>NITER Clubs Portal — Executive Presentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --navy: #002147;
-      --navy-light: #1A3A5C;
-      --gold: #FFB606;
-      --sky: #428BCA;
+      --navy: #0F172A;
+      --navy-mid: #1E293B;
+      --navy-light: #334155;
+      --slate: #64748B;
+      --gray: #94A3B8;
+      --light: #F1F5F9;
       --white: #FFFFFF;
-      --gray: #F5F7FB;
-      --dark-gray: #666666;
+      --gold: #F59E0B;
+      --gold-light: #FCD34D;
+      --green: #10B981;
+      --green-light: #D1FAE5;
+      --blue: #3B82F6;
+      --blue-light: #DBEAFE;
+      --red: #EF4444;
+      --red-light: #FEE2E2;
+      --purple: #8B5CF6;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--navy);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0F172A;
       overflow: hidden;
       height: 100vh;
       width: 100vw;
+      -webkit-font-smoothing: antialiased;
     }
 
     .slide {
       display: none;
       width: 100vw;
       height: 100vh;
-      padding: 60px 80px;
+      padding: 50px 70px;
       position: relative;
       overflow: hidden;
     }
 
     .slide.active { display: flex; flex-direction: column; }
 
-    /* Slide backgrounds */
+    /* Slide variants */
     .slide-cover {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, #0a1628 100%);
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
       justify-content: center;
       align-items: center;
       text-align: center;
+    }
+
+    .slide-dark {
+      background: var(--navy);
+      color: var(--white);
     }
 
     .slide-white {
@@ -51,331 +65,320 @@
       color: var(--navy);
     }
 
-    .slide-light {
-      background: var(--gray);
+    .slide-gray {
+      background: var(--light);
       color: var(--navy);
     }
 
-    .slide-gradient {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-      color: var(--white);
-    }
-
-    .slide-gold {
-      background: linear-gradient(135deg, var(--gold) 0%, #FF9500 100%);
+    .slide-accent {
+      background: linear-gradient(135deg, var(--gold) 0%, #D97706 100%);
       color: var(--navy);
     }
 
     /* Typography */
-    h1 { font-size: 3em; font-weight: 800; line-height: 1.2; margin-bottom: 20px; }
-    h2 { font-size: 2.4em; font-weight: 700; line-height: 1.3; margin-bottom: 30px; color: var(--navy); }
-    h3 { font-size: 1.6em; font-weight: 600; margin-bottom: 15px; color: var(--navy-light); }
-    p { font-size: 1.2em; line-height: 1.8; margin-bottom: 15px; }
-    .subtitle { font-size: 1.4em; color: var(--dark-gray); font-weight: 300; margin-top: 10px; }
-    .gold { color: var(--gold); }
-    .white { color: var(--white); }
-    .small { font-size: 0.9em; color: var(--dark-gray); }
-    .center { text-align: center; }
-    .bold { font-weight: 700; }
+    .slide-number {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .slide-number.white { color: rgba(255,255,255,0.4); }
+
+    h1 { font-size: 3.2em; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
+    h2 { font-size: 2.2em; font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+    h3 { font-size: 1.3em; font-weight: 600; line-height: 1.3; }
+    p { font-size: 1em; line-height: 1.7; color: var(--slate); }
+    .text-white p { color: rgba(255,255,255,0.7); }
+
+    .overline {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .text-white .overline { color: var(--gold); }
+
+    .lead { font-size: 1.25em; line-height: 1.6; color: var(--slate); font-weight: 400; }
 
     /* Layout */
-    .flex { display: flex; gap: 40px; align-items: flex-start; }
-    .flex-center { display: flex; gap: 40px; align-items: center; justify-content: center; }
-    .col { flex: 1; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; }
-    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
-    .mt-20 { margin-top: 20px; }
-    .mt-40 { margin-top: 40px; }
+    .flex { display: flex; gap: 40px; }
+    .flex-1 { flex: 1; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .mt-auto { margin-top: auto; }
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .mt-32 { margin-top: 32px; }
+    .mt-48 { margin-top: 48px; }
+    .mb-16 { margin-bottom: 16px; }
+    .mb-24 { margin-bottom: 24px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+    .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
 
     /* Cards */
     .card {
       background: var(--white);
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border: 1px solid rgba(0,0,0,0.05);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid #E2E8F0;
     }
 
-    .card-navy {
-      background: var(--navy);
-      color: var(--white);
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    .card-elevated {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .card-dark {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
     .card-gold {
-      background: linear-gradient(135deg, var(--gold) 0%, #FF9500 100%);
-      color: var(--navy);
-      border-radius: 16px;
-      padding: 30px;
-      box-shadow: 0 4px 20px rgba(255,182,6,0.3);
+      background: linear-gradient(135deg, var(--gold) 0%, #D97706 100%);
+      border-radius: 12px;
+      padding: 24px;
     }
 
-    .card h3 { margin-bottom: 10px; }
-    .card p { margin-bottom: 8px; font-size: 1em; }
+    /* Stats */
+    .stat {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .stat-value {
+      font-size: 2.8em;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-value.gold { color: var(--gold); }
+    .stat-value.green { color: var(--green); }
+    .stat-value.blue { color: var(--blue); }
+    .stat-value.white { color: var(--white); }
+
+    .stat-label {
+      font-size: 0.85em;
+      color: var(--slate);
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .text-white .stat-label { color: rgba(255,255,255,0.6); }
 
     /* Lists */
-    .features-list {
+    .check-list {
       list-style: none;
       padding: 0;
     }
 
-    .features-list li {
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      font-size: 1.1em;
+    .check-list li {
+      padding: 10px 0;
+      font-size: 0.95em;
       display: flex;
       align-items: flex-start;
       gap: 12px;
+      color: var(--navy);
+      border-bottom: 1px solid #F1F5F9;
     }
 
-    .features-list li:last-child { border-bottom: none; }
+    .check-list li:last-child { border-bottom: none; }
 
-    .features-list .icon {
-      font-size: 1.4em;
+    .check-list .check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--green-light);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
       flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .text-white .check-list li {
+      color: rgba(255,255,255,0.9);
+      border-bottom-color: rgba(255,255,255,0.1);
+    }
+
+    .text-white .check-list .check {
+      background: rgba(16,185,129,0.2);
+      color: var(--green);
     }
 
     /* Tables */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
-      font-size: 0.95em;
+      font-size: 0.9em;
     }
 
     th {
-      background: var(--navy);
-      color: var(--white);
-      padding: 14px 18px;
       text-align: left;
+      padding: 12px 16px;
       font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate);
+      border-bottom: 2px solid #E2E8F0;
     }
 
     td {
-      padding: 12px 18px;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 16px;
+      border-bottom: 1px solid #F1F5F9;
+      color: var(--navy);
     }
 
-    tr:nth-child(even) td { background: var(--gray); }
+    tr:last-child td { border-bottom: none; }
 
     /* Tags */
     .tag {
       display: inline-block;
-      background: var(--navy);
-      color: var(--white);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85em;
-      font-weight: 600;
-      margin: 4px;
-    }
-
-    .tag-gold {
-      background: var(--gold);
-      color: var(--navy);
-    }
-
-    .tag-sky {
-      background: var(--sky);
-      color: var(--white);
-    }
-
-    /* Stats */
-    .stat-box {
-      text-align: center;
-      padding: 25px;
-    }
-
-    .stat-number {
-      font-size: 3em;
-      font-weight: 800;
-      color: var(--gold);
-      line-height: 1;
-    }
-
-    .stat-label {
-      font-size: 1em;
-      color: var(--dark-gray);
-      margin-top: 8px;
-      font-weight: 500;
-    }
-
-    /* Progress bar */
-    .progress-bar {
-      height: 12px;
-      background: #e5e7eb;
+      padding: 5px 12px;
       border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 2px;
+    }
+
+    .tag-navy { background: var(--navy); color: var(--white); }
+    .tag-gold { background: #FEF3C7; color: #92400E; }
+    .tag-green { background: var(--green-light); color: #065F46; }
+    .tag-blue { background: var(--blue-light); color: #1E40AF; }
+
+    /* Progress */
+    .progress {
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 4px;
       overflow: hidden;
-      margin-top: 8px;
     }
 
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--gold) 0%, #FF9500 100%);
-      border-radius: 6px;
-      transition: width 0.5s ease;
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    .progress-gold { background: linear-gradient(90deg, var(--gold), #D97706); }
+    .progress-green { background: var(--green); }
+    .progress-blue { background: var(--blue); }
+
+    /* Comparison */
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid #F1F5F9;
+    }
+
+    .compare-before {
+      background: var(--red-light);
+      padding: 14px 18px;
+      border-radius: 8px;
+      color: #991B1B;
+      font-size: 0.9em;
+    }
+
+    .compare-arrow {
+      text-align: center;
+      color: var(--gold);
+      font-size: 1.5em;
+    }
+
+    .compare-after {
+      background: var(--green-light);
+      padding: 14px 18px;
+      border-radius: 8px;
+      color: #065F46;
+      font-size: 0.9em;
     }
 
     /* Navigation */
     .nav {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
+      bottom: 24px;
+      right: 24px;
       display: flex;
-      gap: 10px;
+      gap: 8px;
       z-index: 100;
     }
 
     .nav button {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
       border: none;
-      background: var(--gold);
-      color: var(--navy);
-      font-size: 1.4em;
-      font-weight: 700;
+      background: rgba(255,255,255,0.1);
+      color: var(--white);
+      font-size: 16px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255,182,6,0.4);
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: all 0.2s;
+      backdrop-filter: blur(10px);
     }
 
-    .nav button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 20px rgba(255,182,6,0.5);
-    }
+    .nav button:hover { background: rgba(255,255,255,0.2); }
 
-    .slide-counter {
+    .progress-bar-bottom {
       position: fixed;
-      bottom: 40px;
-      left: 40px;
-      color: rgba(255,255,255,0.5);
-      font-size: 0.9em;
-      font-weight: 600;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
       z-index: 100;
     }
 
-    .slide-counter.dark { color: rgba(0,33,71,0.4); }
-
-    /* Decorative elements */
-    .bg-circle {
-      position: absolute;
-      border-radius: 50%;
-      opacity: 0.1;
-    }
-
-    .bg-circle-1 {
-      width: 400px;
-      height: 400px;
+    .progress-bar-fill {
+      height: 100%;
       background: var(--gold);
-      top: -100px;
-      right: -100px;
+      transition: width 0.3s ease;
     }
 
-    .bg-circle-2 {
-      width: 300px;
-      height: 300px;
-      background: var(--sky);
-      bottom: -80px;
-      left: -80px;
-    }
-
-    /* Logo */
-    .logo {
-      font-size: 4em;
+    /* Decorative */
+    .accent-line {
+      width: 48px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 2px;
       margin-bottom: 20px;
     }
 
-    /* Architecture diagram */
-    .arch-box {
-      background: var(--navy);
-      color: var(--white);
-      padding: 20px 30px;
-      border-radius: 12px;
-      text-align: center;
-      font-weight: 600;
-    }
-
-    .arch-box.gold-bg {
-      background: var(--gold);
-      color: var(--navy);
-    }
-
-    .arch-arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2em;
-      color: var(--gold);
-      padding: 10px 0;
-    }
-
-    /* Timeline */
-    .timeline {
-      position: relative;
-      padding-left: 40px;
-    }
-
-    .timeline::before {
-      content: '';
+    .dot-grid {
       position: absolute;
-      left: 15px;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--gold);
+      right: 40px;
+      bottom: 40px;
+      display: grid;
+      grid-template-columns: repeat(5, 8px);
+      gap: 8px;
+      opacity: 0.15;
     }
 
-    .timeline-item {
-      position: relative;
-      margin-bottom: 30px;
-      padding-left: 20px;
-    }
-
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -32px;
-      top: 8px;
-      width: 16px;
-      height: 16px;
+    .dot-grid span {
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: var(--gold);
-      border: 3px solid var(--navy);
-    }
-
-    /* Code block */
-    .code-block {
-      background: #1a1a2e;
-      color: #e0e0e0;
-      padding: 20px 25px;
-      border-radius: 12px;
-      font-family: 'Consolas', monospace;
-      font-size: 0.9em;
-      line-height: 1.6;
-      overflow-x: auto;
-      margin-top: 15px;
-    }
-
-    .code-block .comment { color: #6a9955; }
-    .code-block .keyword { color: #569cd6; }
-    .code-block .string { color: #ce9178; }
-
-    /* Keyboard hint */
-    .keyboard-hint {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.3);
-      color: rgba(255,255,255,0.6);
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-size: 0.8em;
-      z-index: 100;
+      background: currentColor;
     }
   </style>
 </head>
@@ -383,467 +386,468 @@
 
 <!-- ==================== SLIDE 1: COVER ==================== -->
 <div class="slide slide-cover active" id="slide-1">
-  <div class="bg-circle bg-circle-1"></div>
-  <div class="bg-circle bg-circle-2"></div>
-  <div class="logo">🏛️</div>
-  <h1 style="color: white; font-size: 3.5em;">NITER Clubs Portal</h1>
-  <p style="color: var(--gold); font-size: 1.5em; font-weight: 300;">One Portal for Every Club at NITER</p>
-  <div style="margin-top: 40px;">
-    <span class="tag tag-gold">Next.js 15</span>
-    <span class="tag tag-gold">React 19</span>
-    <span class="tag tag-gold">TypeScript</span>
-    <span class="tag tag-gold">Firebase</span>
-    <span class="tag tag-gold">Tailwind CSS</span>
+  <div class="slide-number white">01 / 12</div>
+  <div style="max-width: 800px;">
+    <div class="overline" style="color: var(--gold);">Executive Summary</div>
+    <h1 style="color: white; margin-bottom: 24px;">NITER Clubs Portal</h1>
+    <div class="accent-line" style="margin: 0 auto 24px;"></div>
+    <p style="color: rgba(255,255,255,0.6); font-size: 1.3em; line-height: 1.6;">
+      A unified digital platform transforming how 11+ student clubs operate, communicate, and engage with 2,000+ students at the National Institute of Textile Engineering and Research.
+    </p>
+    <div class="mt-48" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <span class="tag tag-navy">Next.js 15</span>
+      <span class="tag tag-navy">React 19</span>
+      <span class="tag tag-navy">TypeScript</span>
+      <span class="tag tag-navy">Firebase</span>
+      <span class="tag tag-navy">Tailwind CSS</span>
+    </div>
+    <p style="color: rgba(255,255,255,0.3); margin-top: 48px; font-size: 0.85em;">August 2026 · v1.0</p>
   </div>
-  <p style="color: rgba(255,255,255,0.5); margin-top: 60px; font-size: 0.9em;">National Institute of Textile Engineering and Research<br>Dhaka, Bangladesh</p>
-  <p style="color: rgba(255,255,255,0.4); margin-top: 10px; font-size: 0.8em;">August 2026</p>
 </div>
 
-<!-- ==================== SLIDE 2: PROBLEM STATEMENT ==================== -->
+<!-- ==================== SLIDE 2: PROBLEM ==================== -->
 <div class="slide slide-white" id="slide-2">
-  <h2>📋 Problem Statement</h2>
-  <p class="subtitle" style="margin-bottom: 30px;">Why does NITER need a Clubs Portal?</p>
+  <div class="slide-number">02 / 12</div>
+  <div class="overline">The Challenge</div>
+  <h2>Problem Statement</h2>
+  <p class="lead mt-16">NITER's student clubs face critical operational challenges that reduce engagement and increase administrative burden.</p>
 
-  <div class="grid-3">
-    <div class="card">
-      <div style="font-size: 2.5em; margin-bottom: 15px;">📱</div>
-      <h3>Fragmented Communication</h3>
-      <p style="color: var(--dark-gray);">Club activities scattered across Facebook, WhatsApp, Messenger, and word-of-mouth. No centralized platform.</p>
+  <div class="grid-3 mt-32">
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <h3 style="font-size: 1.1em; margin-bottom: 12px;">📱 Fragmented Communication</h3>
+      <p style="font-size: 0.9em;">Activities scattered across Facebook, WhatsApp, and word-of-mouth. No centralized platform for discovery.</p>
     </div>
-    <div class="card">
-      <div style="font-size: 2.5em; margin-bottom: 15px;">📝</div>
-      <h3>Manual Membership</h3>
-      <p style="color: var(--dark-gray);">Paper forms, Google Forms, no approval workflow. Students can't track their membership status.</p>
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <h3 style="font-size: 1.1em; margin-bottom: 12px;">📝 Manual Processes</h3>
+      <p style="font-size: 0.9em;">Paper forms, Google Forms, no approval workflow. Students can't track their application status.</p>
     </div>
-    <div class="card">
-      <div style="font-size: 2.5em; margin-bottom: 15px;">🗓️</div>
-      <h3>Event Chaos</h3>
-      <p style="color: var(--dark-gray);">No RSVP tracking, no capacity management, no attendance verification. Low event turnout.</p>
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <h3 style="font-size: 1.1em; margin-bottom: 12px;">📅 Event Management</h3>
+      <p style="font-size: 0.9em;">No RSVP tracking, no capacity management, no attendance verification. Low event turnout.</p>
     </div>
-    <div class="card">
-      <div style="font-size: 2.5em; margin-bottom: 15px;">🌐</div>
-      <h3>No Digital Identity</h3>
-      <p style="color: var(--dark-gray);">Clubs depend on Facebook pages. When pages go down, the club's digital presence vanishes.</p>
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <h3 style="font-size: 1.1em; margin-bottom: 12px;">🌐 No Digital Identity</h3>
+      <p style="font-size: 0.9em;">Clubs depend on Facebook. When pages go down, digital presence vanishes.</p>
     </div>
-    <div class="card">
-      <div style="font-size: 2.5em; margin-bottom: 15px;">⏰</div>
-      <h3>Admin Overhead</h3>
-      <p style="color: var(--dark-gray);">Hours spent manually collecting forms, sending reminders, and tracking applications.</p>
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <h3 style="font-size: 1.1em; margin-bottom: 12px;">⏰ Administrative Overhead</h3>
+      <p style="font-size: 0.9em;">Hours spent manually collecting forms, sending reminders, and tracking applications.</p>
     </div>
-    <div class="card">
-      <div style="font-size: 2.5em; margin-bottom: 15px;">🔍</div>
-      <h3>Discovery Gap</h3>
-      <p style="color: var(--dark-gray);">New students have no easy way to learn about clubs, their activities, or how to get involved.</p>
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <h3 style="font-size: 1.1em; margin-bottom: 12px;">🔍 Discovery Gap</h3>
+      <p style="font-size: 0.9em;">New students have no easy way to learn about clubs or how to get involved.</p>
     </div>
   </div>
 </div>
 
-<!-- ==================== SLIDE 3: OUR SOLUTION ==================== -->
-<div class="slide slide-gradient" id="slide-3">
-  <h2 style="color: var(--white);">💡 Our Solution</h2>
-  <p style="color: var(--gold); font-size: 1.3em; margin-bottom: 30px;">A comprehensive web platform that centralizes and streamlines all club operations</p>
+<!-- ==================== SLIDE 3: SOLUTION ==================== -->
+<div class="slide slide-dark text-white" id="slide-3">
+  <div class="slide-number white">03 / 12</div>
+  <div class="overline">Our Approach</div>
+  <h2 style="color: white;">The Solution</h2>
+  <p style="color: rgba(255,255,255,0.6); margin-top: 8px;" class="lead">A comprehensive web platform that centralizes and automates all club operations.</p>
 
-  <div class="grid-3">
-    <div class="card" style="border-left: 4px solid var(--gold);">
-      <h3>🎓 For Students</h3>
-      <ul class="features-list">
-        <li><span class="icon">🔍</span> Discover & search all 11+ clubs</li>
-        <li><span class="icon">📝</span> Apply via digital forms with tracking</li>
-        <li><span class="icon">🤝</span> Join clubs with real-time status</li>
-        <li><span class="icon">📅</span> RSVP to events & earn certificates</li>
-        <li><span class="icon">📊</span> Personal dashboard with XP & badges</li>
+  <div class="grid-3 mt-32">
+    <div class="card-dark">
+      <div style="font-size: 1.8em; margin-bottom: 12px;">🎓</div>
+      <h3 style="color: white; margin-bottom: 12px;">For Students</h3>
+      <ul class="check-list">
+        <li><span class="check">✓</span> Discover & search all 11+ clubs</li>
+        <li><span class="check">✓</span> Apply via digital forms with tracking</li>
+        <li><span class="check">✓</span> Join clubs with real-time status</li>
+        <li><span class="check">✓</span> RSVP to events & earn certificates</li>
+        <li><span class="check">✓</span> Personal dashboard with XP & badges</li>
       </ul>
     </div>
-    <div class="card" style="border-left: 4px solid var(--sky);">
-      <h3>🛡️ For Club Executives</h3>
-      <ul class="features-list">
-        <li><span class="icon">📢</span> Publish notices with reactions</li>
-        <li><span class="icon">📝</span> Build custom forms (visual builder)</li>
-        <li><span class="icon">✅</span> Approve/reject with one click</li>
-        <li><span class="icon">🗓️</span> Manage events, RSVPs & waitlists</li>
-        <li><span class="icon">📣</span> Publish ads for events</li>
+    <div class="card-dark">
+      <div style="font-size: 1.8em; margin-bottom: 12px;">🛡️</div>
+      <h3 style="color: white; margin-bottom: 12px;">For Club Executives</h3>
+      <ul class="check-list">
+        <li><span class="check">✓</span> Publish notices with reactions</li>
+        <li><span class="check">✓</span> Build custom forms (visual builder)</li>
+        <li><span class="check">✓</span> Approve/reject with one click</li>
+        <li><span class="check">✓</span> Manage events, RSVPs & waitlists</li>
+        <li><span class="check">✓</span> Publish ads for events</li>
       </ul>
     </div>
-    <div class="card" style="border-left: 4px solid var(--gold);">
-      <h3>👑 For Administrators</h3>
-      <ul class="features-list">
-        <li><span class="icon">👥</span> Role management & club assignments</li>
-        <li><span class="icon">🔑</span> One admin per club system</li>
-        <li><span class="icon">🛡️</span> Moderator approval workflow</li>
-        <li><span class="icon">📋</span> Audit log for all actions</li>
-        <li><span class="icon">⚙️</span> Site-wide settings control</li>
+    <div class="card-dark">
+      <div style="font-size: 1.8em; margin-bottom: 12px;">👑</div>
+      <h3 style="color: white; margin-bottom: 12px;">For Administrators</h3>
+      <ul class="check-list">
+        <li><span class="check">✓</span> Role management & club assignments</li>
+        <li><span class="check">✓</span> One admin per club system</li>
+        <li><span class="check">✓</span> Moderator approval workflow</li>
+        <li><span class="check">✓</span> Audit log for all actions</li>
+        <li><span class="check">✓</span> Site-wide settings control</li>
       </ul>
     </div>
   </div>
 </div>
 
-<!-- ==================== SLIDE 4: KEY FEATURES ==================== -->
-<div class="slide slide-light" id="slide-4">
-  <h2>⚡ Key Features</h2>
+<!-- ==================== SLIDE 4: KEY METRICS ==================== -->
+<div class="slide slide-white" id="slide-4">
+  <div class="slide-number">04 / 12</div>
+  <div class="overline">By The Numbers</div>
+  <h2>Key Metrics</h2>
 
-  <div class="grid-4">
-    <div class="card-gold stat-box">
-      <div class="stat-number">11+</div>
+  <div class="grid-4 mt-32">
+    <div class="card-elevated stat">
+      <div class="stat-value gold">11+</div>
       <div class="stat-label">Clubs Supported</div>
     </div>
-    <div class="card-navy stat-box">
-      <div class="stat-number" style="color: var(--gold);">6</div>
+    <div class="card-elevated stat">
+      <div class="stat-value blue">2,000+</div>
+      <div class="stat-label">Potential Students</div>
+    </div>
+    <div class="card-elevated stat">
+      <div class="stat-value green">6</div>
       <div class="stat-label">Role Types</div>
     </div>
-    <div class="card-gold stat-box">
-      <div class="stat-number">8</div>
-      <div class="stat-label">Portal Tabs</div>
-    </div>
-    <div class="card-navy stat-box">
-      <div class="stat-number" style="color: var(--gold);">3</div>
-      <div class="stat-label">Notification APIs</div>
+    <div class="card-elevated stat">
+      <div class="stat-value" style="color: var(--purple);">7</div>
+      <div class="stat-label">API Endpoints</div>
     </div>
   </div>
 
-  <div class="grid-2 mt-40">
-    <div class="card">
-      <h3>🔐 Authentication & Roles</h3>
-      <ul class="features-list">
-        <li><span class="icon">👤</span> <strong>Visitor</strong> — Browse, fill forms, file complaints</li>
-        <li><span class="icon">🎓</span> <strong>Member</strong> — Track submissions & memberships</li>
-        <li><span class="icon">🛡️</span> <strong>Moderator</strong> — Manage club (admin approval required)</li>
-        <li><span class="icon">⭐</span> <strong>Executive</strong> — Full club management access</li>
-        <li><span class="icon">🔑</span> <strong>Club Admin</strong> — One per club, instant access</li>
-        <li><span class="icon">👑</span> <strong>Global Admin</strong> — Everything, first account</li>
-      </ul>
+  <div class="grid-2 mt-32">
+    <div class="card-elevated">
+      <h3 style="font-size: 1em; margin-bottom: 16px;">Feature Coverage</h3>
+      <div class="mb-16">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-size: 0.85em; font-weight: 500;">Club Management</span>
+          <span style="font-size: 0.85em; color: var(--gold); font-weight: 600;">100%</span>
+        </div>
+        <div class="progress"><div class="progress-fill progress-gold" style="width: 100%;"></div></div>
+      </div>
+      <div class="mb-16">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-size: 0.85em; font-weight: 500;">Form Engine</span>
+          <span style="font-size: 0.85em; color: var(--green); font-weight: 600;">100%</span>
+        </div>
+        <div class="progress"><div class="progress-fill progress-green" style="width: 100%;"></div></div>
+      </div>
+      <div class="mb-16">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-size: 0.85em; font-weight: 500;">Event System</span>
+          <span style="font-size: 0.85em; color: var(--blue); font-weight: 600;">100%</span>
+        </div>
+        <div class="progress"><div class="progress-fill progress-blue" style="width: 100%;"></div></div>
+      </div>
+      <div class="mb-16">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-size: 0.85em; font-weight: 500;">Notifications</span>
+          <span style="font-size: 0.85em; color: var(--gold); font-weight: 600;">100%</span>
+        </div>
+        <div class="progress"><div class="progress-fill progress-gold" style="width: 100%;"></div></div>
+      </div>
+      <div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-size: 0.85em; font-weight: 500;">Gamification</span>
+          <span style="font-size: 0.85em; color: var(--green); font-weight: 600;">100%</span>
+        </div>
+        <div class="progress"><div class="progress-fill progress-green" style="width: 100%;"></div></div>
+      </div>
     </div>
-    <div class="card">
-      <h3>📧 Email Notifications</h3>
-      <ul class="features-list">
-        <li><span class="icon">📬</span> <strong>Moderator Request</strong> — Admin notified on signup</li>
-        <li><span class="icon">📬</span> <strong>Membership Submit</strong> — Club staff notified</li>
-        <li><span class="icon">📬</span> <strong>Membership Decision</strong> — Student notified</li>
-        <li><span class="icon">📬</span> <strong>Committee Edit</strong> — Moderators notified</li>
-      </ul>
-      <p class="small mt-20">All notifications use FormSubmit provider with configurable email addresses.</p>
+
+    <div class="card-elevated">
+      <h3 style="font-size: 1em; margin-bottom: 16px;">Roles & Access</h3>
+      <table>
+        <tr><th>Role</th><th>Approval</th><th>Scope</th></tr>
+        <tr><td><span class="tag tag-navy">Visitor</span></td><td>—</td><td>Public</td></tr>
+        <tr><td><span class="tag tag-green">Member</span></td><td>Instant</td><td>Dashboard</td></tr>
+        <tr><td><span class="tag tag-blue">Moderator</span></td><td>Admin</td><td>Club</td></tr>
+        <tr><td><span class="tag tag-gold">Executive</span></td><td>Admin</td><td>Club</td></tr>
+        <tr><td><span class="tag tag-navy">Club Admin</span></td><td>Instant</td><td>Single Club</td></tr>
+        <tr><td><span class="tag" style="background: #FEE2E2; color: #991B1B;">Global Admin</span></td><td>First</td><td>All</td></tr>
+      </table>
     </div>
   </div>
 </div>
 
 <!-- ==================== SLIDE 5: TECH STACK ==================== -->
-<div class="slide slide-white" id="slide-5">
-  <h2>🛠️ Tech Stack</h2>
+<div class="slide slide-gray" id="slide-5">
+  <div class="slide-number">05 / 12</div>
+  <div class="overline">Technology</div>
+  <h2>Tech Stack</h2>
 
-  <div class="grid-2">
+  <div class="grid-2 mt-32">
     <div>
-      <h3 class="mt-20">Frontend</h3>
-      <table>
-        <tr><th>Technology</th><th>Version</th></tr>
-        <tr><td><strong>Next.js</strong></td><td>15 (App Router)</td></tr>
-        <tr><td><strong>React</strong></td><td>19</td></tr>
-        <tr><td><strong>TypeScript</strong></td><td>5 (strict)</td></tr>
-        <tr><td><strong>Tailwind CSS</strong></td><td>v4</td></tr>
-        <tr><td><strong>Firebase SDK</strong></td><td>v12 (modular)</td></tr>
-      </table>
+      <div class="card-elevated mb-24">
+        <h3 style="font-size: 0.95em; margin-bottom: 16px; color: var(--slate);">FRONTEND</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span class="tag tag-navy">Next.js 15</span>
+          <span class="tag tag-navy">React 19</span>
+          <span class="tag tag-navy">TypeScript 5</span>
+          <span class="tag tag-navy">Tailwind CSS v4</span>
+          <span class="tag tag-navy">Firebase SDK v12</span>
+        </div>
+      </div>
 
-      <h3 class="mt-20">Development Tools</h3>
-      <div style="margin-top: 10px;">
-        <span class="tag">ESLint 9</span>
-        <span class="tag">Prettier 3</span>
-        <span class="tag">GitHub Actions</span>
-        <span class="tag">Firebase CLI</span>
+      <div class="card-elevated">
+        <h3 style="font-size: 0.95em; margin-bottom: 16px; color: var(--slate);">BACKEND</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span class="tag tag-blue">Firebase Firestore</span>
+          <span class="tag tag-blue">Firebase Auth</span>
+          <span class="tag tag-blue">Firebase Storage</span>
+          <span class="tag tag-blue">Firestore Rules</span>
+          <span class="tag tag-green">Appwrite (Alt)</span>
+        </div>
       </div>
     </div>
-    <div>
-      <h3 class="mt-20">Backend & Services</h3>
-      <table>
-        <tr><th>Service</th><th>Purpose</th></tr>
-        <tr><td><strong>Firebase Firestore</strong></td><td>Realtime NoSQL database</td></tr>
-        <tr><td><strong>Firebase Auth</strong></td><td>Email/password accounts</td></tr>
-        <tr><td><strong>Firebase Storage</strong></td><td>Photo & media uploads</td></tr>
-        <tr><td><strong>Firestore Rules</strong></td><td>Server-side security</td></tr>
-        <tr><td><strong>Appwrite</strong></td><td>Alternative backend kit</td></tr>
-      </table>
 
-      <h3 class="mt-20">API Routes</h3>
-      <div style="margin-top: 10px;">
-        <span class="tag tag-sky">/api/students</span>
-        <span class="tag tag-sky">/api/submissions</span>
-        <span class="tag tag-sky">/api/users</span>
-        <span class="tag tag-sky">/api/committee-notify</span>
-        <span class="tag tag-sky">/api/moderator-notify</span>
-        <span class="tag tag-sky">/api/membership-notify</span>
-        <span class="tag tag-sky">/api/membership-decision-notify</span>
+    <div>
+      <div class="card-elevated mb-24">
+        <h3 style="font-size: 0.95em; margin-bottom: 16px; color: var(--slate);">API ROUTES</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span class="tag tag-gold">/api/students</span>
+          <span class="tag tag-gold">/api/submissions</span>
+          <span class="tag tag-gold">/api/users</span>
+          <span class="tag tag-gold">/api/committee-notify</span>
+          <span class="tag tag-gold">/api/moderator-notify</span>
+          <span class="tag tag-gold">/api/membership-notify</span>
+          <span class="tag tag-gold">/api/membership-decision-notify</span>
+        </div>
+      </div>
+
+      <div class="card-elevated">
+        <h3 style="font-size: 0.95em; margin-bottom: 16px; color: var(--slate);">DEVOPS</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span class="tag tag-green">ESLint 9</span>
+          <span class="tag tag-green">Prettier 3</span>
+          <span class="tag tag-green">GitHub Actions</span>
+          <span class="tag tag-green">Firebase CLI</span>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ==================== SLIDE 6: ARCHITECTURE ==================== -->
-<div class="slide slide-gradient" id="slide-6">
-  <h2 style="color: var(--white);">🏗️ Architecture</h2>
+<div class="slide slide-dark text-white" id="slide-6">
+  <div class="slide-number white">06 / 12</div>
+  <div class="overline">System Design</div>
+  <h2 style="color: white;">Architecture</h2>
+  <p style="color: rgba(255,255,255,0.6);" class="lead">Serverless architecture — no application server to operate.</p>
 
-  <div style="display: flex; justify-content: center; gap: 30px; margin-top: 40px; flex-wrap: wrap;">
-    <div style="text-align: center;">
-      <div class="arch-box" style="min-width: 200px;">
-        <div style="font-size: 2em; margin-bottom: 10px;">🌐</div>
-        Browser (SPA)
-      </div>
-      <p class="small white" style="margin-top: 10px;">Next.js 15 / React 19</p>
+  <div class="mt-32" style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;">
+    <div class="card-dark" style="min-width: 180px; text-align: center; padding: 30px;">
+      <div style="font-size: 2em; margin-bottom: 12px;">🌐</div>
+      <h3 style="color: white; font-size: 1em;">Frontend</h3>
+      <p style="font-size: 0.8em; margin-top: 8px;">Next.js 15<br>React 19</p>
     </div>
 
-    <div class="arch-arrow" style="flex-direction: column;">
-      <span style="color: var(--gold);">⟷</span>
-      <span class="small white">HTTPS</span>
+    <div style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
+
+    <div class="card-gold" style="min-width: 180px; text-align: center; padding: 30px;">
+      <div style="font-size: 2em; margin-bottom: 12px;">🔥</div>
+      <h3 style="font-size: 1em;">Firebase BaaS</h3>
+      <p style="font-size: 0.8em; margin-top: 8px; color: #92400E;">Serverless Backend</p>
     </div>
 
-    <div style="text-align: center;">
-      <div class="arch-box gold-bg" style="min-width: 200px;">
-        <div style="font-size: 2em; margin-bottom: 10px;">🔥</div>
-        Firebase (BaaS)
-      </div>
-      <div style="display: flex; gap: 15px; margin-top: 15px; justify-content: center;">
-        <div class="arch-box" style="padding: 12px 20px; font-size: 0.9em;">Firestore</div>
-        <div class="arch-box" style="padding: 12px 20px; font-size: 0.9em;">Auth</div>
-        <div class="arch-box" style="padding: 12px 20px; font-size: 0.9em;">Storage</div>
-      </div>
+    <div style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
+
+    <div class="card-dark" style="min-width: 180px; text-align: center; padding: 30px;">
+      <div style="font-size: 2em; margin-bottom: 12px;">📦</div>
+      <h3 style="color: white; font-size: 1em;">Services</h3>
+      <p style="font-size: 0.8em; margin-top: 8px;">Firestore · Auth<br>Storage · Rules</p>
     </div>
   </div>
 
-  <div class="grid-3 mt-40">
-    <div class="card">
-      <h3>🔄 Real-time Sync</h3>
-      <p>Edits appear instantly via Firestore onSnapshot subscriptions.</p>
+  <div class="grid-3 mt-32">
+    <div class="card-dark">
+      <h3 style="color: var(--gold); font-size: 0.95em; margin-bottom: 8px;">Real-time Sync</h3>
+      <p style="font-size: 0.85em;">Edits appear instantly via Firestore onSnapshot subscriptions.</p>
     </div>
-    <div class="card">
-      <h3>🔐 Security Rules</h3>
-      <p>Role-based read/write enforcement per collection.</p>
+    <div class="card-dark">
+      <h3 style="color: var(--gold); font-size: 0.95em; margin-bottom: 8px;">Security Rules</h3>
+      <p style="font-size: 0.85em;">Role-based read/write enforcement per collection.</p>
     </div>
-    <div class="card">
-      <h3>📱 Responsive</h3>
-      <p>Works on desktop, tablet, and mobile with dark/light themes.</p>
+    <div class="card-dark">
+      <h3 style="color: var(--gold); font-size: 0.95em; margin-bottom: 8px;">Cross-platform</h3>
+      <p style="font-size: 0.85em;">Responsive design with dark/light themes.</p>
     </div>
   </div>
 </div>
 
 <!-- ==================== SLIDE 7: DATA MODEL ==================== -->
 <div class="slide slide-white" id="slide-7">
-  <h2>💾 Data Model</h2>
-  <p class="subtitle">Firestore Collections</p>
+  <div class="slide-number">07 / 12</div>
+  <div class="overline">Data Layer</div>
+  <h2>Data Model</h2>
 
-  <table style="margin-top: 20px;">
-    <tr>
-      <th>Collection</th>
-      <th>Document</th>
-      <th>Who Reads</th>
-      <th>Who Writes</th>
-    </tr>
-    <tr>
-      <td><code>clubs</code></td>
-      <td>One doc per club</td>
-      <td>Everyone</td>
-      <td>Admins / executives</td>
-    </tr>
-    <tr>
-      <td><code>notices</code></td>
-      <td>One doc per notice</td>
-      <td>Everyone</td>
-      <td>Admins / executives</td>
-    </tr>
-    <tr>
-      <td><code>forms</code></td>
-      <td>One doc per form</td>
-      <td>Everyone</td>
-      <td>Admins / executives</td>
-    </tr>
-    <tr>
-      <td><code>submissions</code></td>
-      <td>One doc per application</td>
-      <td>Club staff</td>
-      <td>Anyone (public)</td>
-    </tr>
-    <tr>
-      <td><code>memberships</code></td>
-      <td>One doc per join request</td>
-      <td>Self / club staff</td>
-      <td>Anyone / staff</td>
-    </tr>
-    <tr>
-      <td><code>events</code></td>
-      <td>One doc per club event</td>
-      <td>Everyone</td>
-      <td>Admins / executives</td>
-    </tr>
-    <tr>
-      <td><code>users</code></td>
-      <td>Profile + role + clubs</td>
-      <td>Self / staff</td>
-      <td>Self (name), admins</td>
-    </tr>
-    <tr>
-      <td><code>moderatorRequests</code></td>
-      <td>One doc per request</td>
-      <td>Club admins</td>
-      <td>System / admins</td>
-    </tr>
-  </table>
+  <div class="mt-32" style="overflow-x: auto;">
+    <table>
+      <tr>
+        <th>Collection</th>
+        <th>Document</th>
+        <th>Readers</th>
+        <th>Writers</th>
+      </tr>
+      <tr><td><code style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">clubs</code></td><td>One per club</td><td>Everyone</td><td>Admins / Executives</td></tr>
+      <tr><td><code style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">notices</code></td><td>One per notice</td><td>Everyone</td><td>Admins / Executives</td></tr>
+      <tr><td><code style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">forms</code></td><td>One per form</td><td>Everyone</td><td>Admins / Executives</td></tr>
+      <tr><td><code style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">submissions</code></td><td>One per application</td><td>Club Staff</td><td>Public</td></tr>
+      <tr><td><code style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">memberships</code></td><td>One per request</td><td>Self / Staff</td><td>Anyone / Staff</td></tr>
+      <tr><td><code style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">events</code></td><td>One per event</td><td>Everyone</td><td>Admins / Executives</td></tr>
+      <tr><td><code style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">users</code></td><td>Profile + Role</td><td>Self / Staff</td><td>Self / Admins</td></tr>
+      <tr><td><code style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">moderatorRequests</code></td><td>One per request</td><td>Club Admins</td><td>System / Admins</td></tr>
+    </table>
+  </div>
 </div>
 
 <!-- ==================== SLIDE 8: USER FLOWS ==================== -->
-<div class="slide slide-light" id="slide-8">
-  <h2>🔄 User Flows</h2>
+<div class="slide slide-gray" id="slide-8">
+  <div class="slide-number">08 / 12</div>
+  <div class="overline">Workflows</div>
+  <h2>User Flows</h2>
 
-  <div class="grid-2 mt-20">
-    <div class="card">
-      <h3>🎓 Student Membership Flow</h3>
-      <div class="timeline">
-        <div class="timeline-item">
-          <strong>1. Browse Clubs</strong>
-          <p class="small">Student discovers clubs on the portal</p>
+  <div class="grid-2 mt-32">
+    <div class="card-elevated">
+      <h3 style="font-size: 1em; margin-bottom: 20px;">🎓 Student Membership</h3>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">1</div>
+          <div><strong style="font-size: 0.9em;">Browse Clubs</strong><br><span style="font-size: 0.8em; color: var(--slate);">Student discovers clubs on the portal</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>2. Submit Form</strong>
-          <p class="small">Fills membership form with required fields</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">2</div>
+          <div><strong style="font-size: 0.9em;">Submit Form</strong><br><span style="font-size: 0.8em; color: var(--slate);">Fills membership form with required fields</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>3. Auto-Create Request</strong>
-          <p class="small">System creates membership request (pending)</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">3</div>
+          <div><strong style="font-size: 0.9em;">Auto-Create Request</strong><br><span style="font-size: 0.8em; color: var(--slate);">System creates membership request (pending)</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>4. Email Notification</strong>
-          <p class="small">Club admin & moderators notified</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--green); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">4</div>
+          <div><strong style="font-size: 0.9em;">Email Notification</strong><br><span style="font-size: 0.8em; color: var(--slate);">Club admin & moderators notified</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>5. Review & Decide</strong>
-          <p class="small">Admin approves or rejects the request</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">5</div>
+          <div><strong style="font-size: 0.9em;">Review & Decide</strong><br><span style="font-size: 0.8em; color: var(--slate);">Admin approves or rejects the request</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>6. Student Notified</strong>
-          <p class="small">Email sent with decision</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--purple); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">6</div>
+          <div><strong style="font-size: 0.9em;">Student Notified</strong><br><span style="font-size: 0.8em; color: var(--slate);">Email sent with decision</span></div>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <h3>🛡️ Moderator Approval Flow</h3>
-      <div class="timeline">
-        <div class="timeline-item">
-          <strong>1. Student Signs Up</strong>
-          <p class="small">Selects "Club Moderator" + chooses club</p>
+    <div class="card-elevated">
+      <h3 style="font-size: 1em; margin-bottom: 20px;">🛡️ Moderator Approval</h3>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">1</div>
+          <div><strong style="font-size: 0.9em;">Student Signs Up</strong><br><span style="font-size: 0.8em; color: var(--slate);">Selects "Club Moderator" + chooses club</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>2. Pending Request Created</strong>
-          <p class="small">ModeratorRequest document created</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">2</div>
+          <div><strong style="font-size: 0.9em;">Pending Request</strong><br><span style="font-size: 0.8em; color: var(--slate);">ModeratorRequest document created</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>3. Email to Club Admin</strong>
-          <p class="small">Admin notified via /api/moderator-notify</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">3</div>
+          <div><strong style="font-size: 0.9em;">Email to Admin</strong><br><span style="font-size: 0.8em; color: var(--slate);">Admin notified via /api/moderator-notify</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>4. Admin Reviews</strong>
-          <p class="small">Portal → Settings → Moderator requests</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--green); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">4</div>
+          <div><strong style="font-size: 0.9em;">Admin Reviews</strong><br><span style="font-size: 0.8em; color: var(--slate);">Portal → Settings → Moderator requests</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>5. Approve/Reject</strong>
-          <p class="small">User role updated to "executive"</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">5</div>
+          <div><strong style="font-size: 0.9em;">Approve/Reject</strong><br><span style="font-size: 0.8em; color: var(--slate);">User role updated to "executive"</span></div>
         </div>
-        <div class="timeline-item">
-          <strong>6. Portal Access</strong>
-          <p class="small">Moderator can now manage the club</p>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--purple); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0;">6</div>
+          <div><strong style="font-size: 0.9em;">Portal Access</strong><br><span style="font-size: 0.8em; color: var(--slate);">Moderator can now manage the club</span></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ==================== SLIDE 9: FEATURES DEEP DIVE ==================== -->
+<!-- ==================== SLIDE 9: FEATURES ==================== -->
 <div class="slide slide-white" id="slide-9">
-  <h2>🔍 Features Deep Dive</h2>
+  <div class="slide-number">09 / 12</div>
+  <div class="overline">Capabilities</div>
+  <h2>Features Deep Dive</h2>
 
-  <div class="grid-3 mt-20">
-    <div class="card" style="border-top: 4px solid var(--gold);">
-      <div style="font-size: 2em; margin-bottom: 15px;">📝</div>
-      <h3>Form Engine</h3>
-      <p>Visual field builder with 10 field types:</p>
-      <div style="margin-top: 10px;">
-        <span class="tag" style="font-size: 0.75em;">Text</span>
-        <span class="tag" style="font-size: 0.75em;">Email</span>
-        <span class="tag" style="font-size: 0.75em;">Phone</span>
-        <span class="tag" style="font-size: 0.75em;">Number</span>
-        <span class="tag" style="font-size: 0.75em;">Date</span>
-        <span class="tag" style="font-size: 0.75em;">Textarea</span>
-        <span class="tag" style="font-size: 0.75em;">Select</span>
-        <span class="tag" style="font-size: 0.75em;">Radio</span>
-        <span class="tag" style="font-size: 0.75em;">Photo</span>
-        <span class="tag" style="font-size: 0.75em;">Payment</span>
+  <div class="grid-3 mt-32">
+    <div class="card" style="border-top: 3px solid var(--gold);">
+      <h3 style="font-size: 1em; margin-bottom: 12px;">📝 Form Engine</h3>
+      <p style="font-size: 0.85em; margin-bottom: 12px;">Visual field builder with 10 field types:</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+        <span class="tag tag-navy" style="font-size: 10px;">Text</span>
+        <span class="tag tag-navy" style="font-size: 10px;">Email</span>
+        <span class="tag tag-navy" style="font-size: 10px;">Phone</span>
+        <span class="tag tag-navy" style="font-size: 10px;">Number</span>
+        <span class="tag tag-navy" style="font-size: 10px;">Date</span>
+        <span class="tag tag-navy" style="font-size: 10px;">Textarea</span>
+        <span class="tag tag-navy" style="font-size: 10px;">Select</span>
+        <span class="tag tag-navy" style="font-size: 10px;">Radio</span>
+        <span class="tag tag-navy" style="font-size: 10px;">Photo</span>
+        <span class="tag tag-navy" style="font-size: 10px;">Payment</span>
       </div>
     </div>
 
-    <div class="card" style="border-top: 4px solid var(--sky);">
-      <div style="font-size: 2em; margin-bottom: 15px;">🏆</div>
-      <h3>Gamification</h3>
-      <ul class="features-list" style="font-size: 0.9em;">
-        <li><span class="icon">⭐</span> XP for check-ins, RSVPs, certificates</li>
-        <li><span class="icon">🏅</span> Achievement badges</li>
-        <li><span class="icon">🛂</span> Club Passport stamps</li>
-        <li><span class="icon">📊</span> Leaderboard rankings</li>
-        <li><span class="icon">🎯</span> Club Hopper unlock</li>
+    <div class="card" style="border-top: 3px solid var(--green);">
+      <h3 style="font-size: 1em; margin-bottom: 12px;">🏆 Gamification</h3>
+      <ul class="check-list">
+        <li><span class="check">✓</span> XP for check-ins, RSVPs, certificates</li>
+        <li><span class="check">✓</span> Achievement badges</li>
+        <li><span class="check">✓</span> Club Passport stamps</li>
+        <li><span class="check">✓</span> Leaderboard rankings</li>
       </ul>
     </div>
 
-    <div class="card" style="border-top: 4px solid var(--gold);">
-      <div style="font-size: 2em; margin-bottom: 15px;">📅</div>
-      <h3>Events System</h3>
-      <ul class="features-list" style="font-size: 0.9em;">
-        <li><span class="icon">📋</span> RSVP with capacity limits</li>
-        <li><span class="icon">⏳</span> Auto-waitlist when full</li>
-        <li><span class="icon">🔑</span> Door code verification</li>
-        <li><span class="icon">✅</span> Check-in tracking</li>
-        <li><span class="icon">📜</span> Participation certificates</li>
+    <div class="card" style="border-top: 3px solid var(--blue);">
+      <h3 style="font-size: 1em; margin-bottom: 12px;">📅 Events System</h3>
+      <ul class="check-list">
+        <li><span class="check">✓</span> RSVP with capacity limits</li>
+        <li><span class="check">✓</span> Auto-waitlist when full</li>
+        <li><span class="check">✓</span> Door code verification</li>
+        <li><span class="check">✓</span> Participation certificates</li>
       </ul>
     </div>
   </div>
 
-  <div class="grid-2 mt-20">
-    <div class="card" style="border-top: 4px solid var(--sky);">
-      <div style="font-size: 2em; margin-bottom: 15px;">📣</div>
-      <h3>Club Ads</h3>
-      <p>Moderator-published image/video ads in the homepage carousel. Supports scheduling, analytics (impressions + clicks), and link targets (club page, form, or external URL).</p>
+  <div class="grid-2 mt-24">
+    <div class="card" style="border-top: 3px solid var(--purple);">
+      <h3 style="font-size: 1em; margin-bottom: 12px;">📣 Club Ads</h3>
+      <p style="font-size: 0.85em;">Moderator-published image/video ads in the homepage carousel. Supports scheduling, analytics, and link targets.</p>
     </div>
-
-    <div class="card" style="border-top: 4px solid var(--gold);">
-      <div style="font-size: 2em; margin-bottom: 15px;">🧭</div>
-      <h3>Club Match Quiz</h3>
-      <p>"Which club fits me?" quiz matcher using personality tags. Students answer questions and get matched to clubs based on interests and preferences.</p>
+    <div class="card" style="border-top: 3px solid var(--gold);">
+      <h3 style="font-size: 1em; margin-bottom: 12px;">🧭 Club Match Quiz</h3>
+      <p style="font-size: 0.85em;">"Which club fits me?" quiz matcher using personality tags. Students get matched based on interests.</p>
     </div>
   </div>
 </div>
 
 <!-- ==================== SLIDE 10: SECURITY ==================== -->
-<div class="slide slide-gradient" id="slide-10">
-  <h2 style="color: var(--white);">🔒 Security Model</h2>
+<div class="slide slide-dark text-white" id="slide-10">
+  <div class="slide-number white">10 / 12</div>
+  <div class="overline">Protection</div>
+  <h2 style="color: white;">Security Model</h2>
 
-  <div class="grid-2 mt-20">
+  <div class="grid-2 mt-32">
     <div>
-      <h3 style="color: var(--gold);">Firestore Rules</h3>
-      <ul class="features-list" style="color: rgba(255,255,255,0.9);">
-        <li><span class="icon">✅</span> Public collections readable by anyone</li>
-        <li><span class="icon">✅</span> Restricted collections scoped by club</li>
-        <li><span class="icon">✅</span> Users can only update their own name</li>
-        <li><span class="icon">✅</span> Admins can update roles and clubs</li>
-        <li><span class="icon">✅</span> First-admin bootstrap marker</li>
-        <li><span class="icon">✅</span> Role checks on every restricted read</li>
+      <h3 style="color: var(--gold); margin-bottom: 16px;">Firestore Rules</h3>
+      <ul class="check-list">
+        <li><span class="check">✓</span> Public collections readable by anyone</li>
+        <li><span class="check">✓</span> Restricted collections scoped by club</li>
+        <li><span class="check">✓</span> Users can only update their own name</li>
+        <li><span class="check">✓</span> Admins can update roles and clubs</li>
+        <li><span class="check">✓</span> First-admin bootstrap marker</li>
+        <li><span class="check">✓</span> Role checks on every restricted read</li>
       </ul>
     </div>
     <div>
-      <h3 style="color: var(--gold);">Storage Rules</h3>
-      <ul class="features-list" style="color: rgba(255,255,255,0.9);">
-        <li><span class="icon">✅</span> Submission photos under user uid folder</li>
-        <li><span class="icon">✅</span> Guest submissions under guest/ folder</li>
-        <li><span class="icon">✅</span> Image type validation (client-side)</li>
-        <li><span class="icon">✅</span> File size limits (8 MB photos, 15 MB video)</li>
-      </ul>
-
-      <h3 class="mt-20" style="color: var(--gold);">Data Privacy</h3>
-      <ul class="features-list" style="color: rgba(255,255,255,0.9);">
-        <li><span class="icon">✅</span> Student data never exposed publicly</li>
-        <li><span class="icon">✅</span> Only club staff can read submissions</li>
-        <li><span class="icon">✅</span> Passwords handled by Firebase Auth</li>
+      <h3 style="color: var(--gold); margin-bottom: 16px;">Storage & Privacy</h3>
+      <ul class="check-list">
+        <li><span class="check">✓</span> Submission photos under user uid folder</li>
+        <li><span class="check">✓</span> Guest submissions under guest/ folder</li>
+        <li><span class="check">✓</span> Image type validation (client-side)</li>
+        <li><span class="check">✓</span> File size limits (8 MB photos)</li>
+        <li><span class="check">✓</span> Student data never exposed publicly</li>
+        <li><span class="check">✓</span> Passwords handled by Firebase Auth</li>
       </ul>
     </div>
   </div>
@@ -851,82 +855,61 @@
 
 <!-- ==================== SLIDE 11: IMPACT ==================== -->
 <div class="slide slide-white" id="slide-11">
-  <h2>🌍 Future Impact</h2>
+  <div class="slide-number">11 / 12</div>
+  <div class="overline">Outcomes</div>
+  <h2>Impact & Scalability</h2>
 
-  <div class="grid-3 mt-20">
-    <div class="card-gold stat-box">
-      <div class="stat-number">10x</div>
-      <div class="stat-label">Student Engagement</div>
-      <div class="progress-bar mt-20">
-        <div class="progress-fill" style="width: 90%;"></div>
-      </div>
+  <div class="mt-32">
+    <div class="compare-row">
+      <div class="compare-before"><strong>Club Discovery</strong><br>Word-of-mouth only</div>
+      <div class="compare-arrow">→</div>
+      <div class="compare-after"><strong>Centralized Directory</strong><br>Search, filter, discover</div>
     </div>
-    <div class="card-navy stat-box">
-      <div class="stat-number" style="color: var(--gold);">5hrs</div>
-      <div class="stat-label">Saved Weekly per Club</div>
-      <div class="progress-bar mt-20">
-        <div class="progress-fill" style="width: 75%;"></div>
-      </div>
+    <div class="compare-row">
+      <div class="compare-before"><strong>Membership</strong><br>Paper forms, no tracking</div>
+      <div class="compare-arrow">→</div>
+      <div class="compare-after"><strong>Digital Workflow</strong><br>Auto-create, approve, notify</div>
     </div>
-    <div class="card-gold stat-box">
-      <div class="stat-number">100%</div>
-      <div class="stat-label">Digital Transformation</div>
-      <div class="progress-bar mt-20">
-        <div class="progress-fill" style="width: 100%;"></div>
-      </div>
+    <div class="compare-row">
+      <div class="compare-before"><strong>Event Management</strong><br>Untracked, low turnout</div>
+      <div class="compare-arrow">→</div>
+      <div class="compare-after"><strong>Full Lifecycle</strong><br>RSVP, waitlist, certificates</div>
     </div>
-  </div>
-
-  <div class="grid-2 mt-40">
-    <div class="card">
-      <h3>📈 Expected Outcomes</h3>
-      <table>
-        <tr><th>Metric</th><th>Before</th><th>After</th></tr>
-        <tr><td>Club Discovery</td><td>Word-of-mouth</td><td>Centralized directory</td></tr>
-        <tr><td>Membership</td><td>Paper forms</td><td>Digital workflow</td></tr>
-        <tr><td>Events</td><td>Untracked</td><td>RSVP + certificates</td></tr>
-        <tr><td>Communication</td><td>Scattered</td><td>Unified platform</td></tr>
-        <tr><td>Admin Time</td><td>Hours/week</td><td>Minutes</td></tr>
-      </table>
+    <div class="compare-row">
+      <div class="compare-before"><strong>Communication</strong><br>Scattered across platforms</div>
+      <div class="compare-arrow">→</div>
+      <div class="compare-after"><strong>Unified Platform</strong><br>Notices, forms, ads</div>
     </div>
-    <div class="card">
-      <h3>🚀 Scalability</h3>
-      <ul class="features-list">
-        <li><span class="icon">🏫</span> Multi-institute support</li>
-        <li><span class="icon">🔌</span> Plugin architecture for new features</li>
-        <li><span class="icon">📱</span> PWA installability + push notifications</li>
-        <li><span class="icon">🌐</span> Multi-language (Bangla support)</li>
-        <li><span class="icon">💳</span> Payment gateway integration</li>
-        <li><span class="icon">📊</span> Advanced analytics dashboard</li>
-      </ul>
+    <div class="compare-row">
+      <div class="compare-before"><strong>Admin Time</strong><br>Hours per week</div>
+      <div class="compare-arrow">→</div>
+      <div class="compare-after"><strong>Automated</strong><br>Minutes with notifications</div>
     </div>
   </div>
 </div>
 
 <!-- ==================== SLIDE 12: CLOSING ==================== -->
-<div class="slide slide-gold" id="slide-12">
-  <div class="bg-circle bg-circle-1" style="background: var(--navy);"></div>
-  <div class="bg-circle bg-circle-2" style="background: var(--navy);"></div>
+<div class="slide slide-accent" id="slide-12">
+  <div class="slide-number" style="color: rgba(0,0,0,0.3);">12 / 12</div>
 
   <div style="text-align: center; margin: auto;">
-    <div style="font-size: 5em; margin-bottom: 30px;">🏛️</div>
-    <h1 style="color: var(--navy); font-size: 3em;">Thank You</h1>
-    <p style="color: var(--navy); font-size: 1.4em; font-weight: 300; margin-top: 20px;">
+    <div style="font-size: 4em; margin-bottom: 24px;">🏛️</div>
+    <h1 style="font-size: 3.5em; margin-bottom: 16px;">Thank You</h1>
+    <div class="accent-line" style="margin: 0 auto 24px; background: var(--navy);"></div>
+    <p style="font-size: 1.3em; font-weight: 500; margin-bottom: 40px;">
       NITER Clubs Portal<br>
-      <span style="font-weight: 600;">One Portal for Every Club</span>
+      <span style="font-weight: 300;">One Portal for Every Club</span>
     </p>
 
-    <div style="margin-top: 40px;">
-      <div class="card" style="display: inline-block; padding: 20px 40px;">
-        <p style="margin: 0; font-size: 1.1em;">
-          <strong>Repository:</strong> github.com/ashrafularefin78-prog/NITER-CLUB-WEBSITE<br>
-          <strong>Demo:</strong> localhost:3000 (Next.js) or open index.html<br>
-          <strong>Contact:</strong> developer@niter.edu.bd
-        </p>
-      </div>
+    <div class="card" style="display: inline-block; padding: 24px 40px; text-align: left;">
+      <p style="margin: 0; font-size: 0.95em; color: var(--navy);">
+        <strong>Repository:</strong> github.com/ashrafularefin78-prog/NITER-CLUB-WEBSITE<br>
+        <strong>Demo:</strong> localhost:3000 or open index.html<br>
+        <strong>Contact:</strong> developer@niter.edu.bd
+      </p>
     </div>
 
-    <p style="color: var(--navy); opacity: 0.6; margin-top: 40px; font-size: 0.9em;">
+    <p style="color: rgba(0,0,0,0.4); margin-top: 32px; font-size: 0.85em;">
       Built with ❤️ for the NITER community
     </p>
   </div>
@@ -938,8 +921,9 @@
   <button onclick="nextSlide()">→</button>
 </div>
 
-<div class="slide-counter" id="slideCounter">1 / 12</div>
-<div class="keyboard-hint">← → Arrow keys to navigate | F for fullscreen</div>
+<div class="progress-bar-bottom">
+  <div class="progress-bar-fill" id="progressBar" style="width: 8.33%;"></div>
+</div>
 
 <script>
   let currentSlide = 1;
@@ -948,76 +932,33 @@
   function showSlide(n) {
     document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
     document.getElementById(`slide-${n}`).classList.add('active');
-
-    const counter = document.getElementById('slideCounter');
-    counter.textContent = `${n} / ${totalSlides}`;
-
-    // Update counter color based on slide background
-    const slide = document.getElementById(`slide-${n}`);
-    if (slide.classList.contains('slide-white') || slide.classList.contains('slide-light')) {
-      counter.classList.add('dark');
-    } else {
-      counter.classList.remove('dark');
-    }
+    document.getElementById('progressBar').style.width = `${(n / totalSlides) * 100}%`;
   }
 
   function nextSlide() {
-    if (currentSlide < totalSlides) {
-      currentSlide++;
-      showSlide(currentSlide);
-    }
+    if (currentSlide < totalSlides) { currentSlide++; showSlide(currentSlide); }
   }
 
   function prevSlide() {
-    if (currentSlide > 1) {
-      currentSlide--;
-      showSlide(currentSlide);
-    }
+    if (currentSlide > 1) { currentSlide--; showSlide(currentSlide); }
   }
 
-  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === ' ') {
-      e.preventDefault();
-      nextSlide();
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      prevSlide();
-    } else if (e.key === 'f' || e.key === 'F') {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else {
-        document.documentElement.requestFullscreen();
-      }
-    } else if (e.key === 'Home') {
-      currentSlide = 1;
-      showSlide(currentSlide);
-    } else if (e.key === 'End') {
-      currentSlide = totalSlides;
-      showSlide(currentSlide);
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    else if (e.key === 'f' || e.key === 'F') {
+      document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
     }
+    else if (e.key === 'Home') { currentSlide = 1; showSlide(1); }
+    else if (e.key === 'End') { currentSlide = totalSlides; showSlide(totalSlides); }
   });
 
-  // Touch support
   let touchStartX = 0;
-  document.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-  });
-
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
   document.addEventListener('touchend', (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX - touchEndX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) nextSlide();
-      else prevSlide();
-    }
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
   });
-
-  // Hide keyboard hint after 5 seconds
-  setTimeout(() => {
-    document.querySelector('.keyboard-hint').style.opacity = '0';
-    document.querySelector('.keyboard-hint').style.transition = 'opacity 0.5s';
-  }, 5000);
 </script>
 
 </body>
