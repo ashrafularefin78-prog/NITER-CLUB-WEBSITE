@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import type { Form, FormField, Submission } from "@/lib/types";
-import { clubById, fmtDateTime, statusOf } from "@/lib/utils";
+import type { Form, FormField, Membership, Submission } from "@/lib/types";
+import { clubById, fmtDateTime, relativeAgo, statusOf } from "@/lib/utils";
 import { mutate, useDb } from "@/lib/store";
 import { logAudit } from "@/lib/audit";
 import { mirrorSubmission } from "@/lib/appwrite-write";
 import { getCloudStorage } from "@/lib/firebase";
+import { useAuth } from "@/lib/auth";
 import { useToast } from "@/components/providers";
 import { Countdown } from "@/components/countdown";
 import { Skeleton } from "@/components/ui";
@@ -17,6 +18,7 @@ import { uid } from "@/lib/utils";
 
 export default function FormView({ formId }: { formId: string }) {
   const db = useDb();
+  const auth = useAuth();
   const form = db?.forms.find((f) => f.id === formId) ?? null;
   const [done, setDone] = useState<Submission | null>(null);
   const [values, setValues] = useState<Record<string, string>>({});
@@ -115,9 +117,53 @@ export default function FormView({ formId }: { formId: string }) {
               // the success panel animates in cleanly.
               setSubmitting(true);
               window.setTimeout(() => {
+                // Check if this is a membership form
+                const isMembershipForm = /membership/i.test(form.title);
+                let existingMembership: Membership | undefined;
+
                 mutate((db) => {
                   db.submissions.push(sub);
+
+                  // If it's a membership form, also create a membership request
+                  if (isMembershipForm) {
+                    const user = auth.user;
+                    const submitterEmail = sub.submitterEmail || "";
+                    const submitterName = sub.data.name || sub.submitterName || submitterEmail;
+                    const submitterStudentId = sub.data.studentId || sub.submitterStudentId || "";
+
+                    // Check if there's already a pending/approved membership for this user/club
+                    existingMembership = (db.memberships || []).find(
+                      (m) =>
+                        m.clubId === form.clubId &&
+                        ((user && m.userId === user.uid) ||
+                          (submitterEmail && m.userEmail === submitterEmail))
+                    );
+
+                    if (!existingMembership) {
+                      // Create a new membership request
+                      const membership: Membership = {
+                        id: uid("m"),
+                        userId: user?.uid || "",
+                        clubId: form.clubId,
+                        status: "pending",
+                        requestedAt: new Date().toISOString(),
+                        reviewedAt: "",
+                        reviewedBy: "",
+                        userName: submitterName,
+                        userEmail: submitterEmail,
+                        studentId: submitterStudentId,
+                      };
+                      db.memberships.push(membership);
+                    } else if (existingMembership.status === "rejected") {
+                      // Re-submit a rejected membership
+                      existingMembership.status = "pending";
+                      existingMembership.requestedAt = new Date().toISOString();
+                      existingMembership.reviewedAt = "";
+                      existingMembership.reviewedBy = "";
+                    }
+                  }
                 });
+
                 logAudit(
                   "submission",
                   `Form submission: ${form.title}`,
@@ -125,9 +171,26 @@ export default function FormView({ formId }: { formId: string }) {
                   (sub.data.name || sub.submitterEmail || "student") + (club ? " · " + club.name : ""),
                   sub.submitterEmail || ""
                 );
+
+                // Send notifications for membership forms
+                if (isMembershipForm && !existingMembership) {
+                  void notifyClubModerators(
+                    form.clubId,
+                    sub.data.name || sub.submitterName || "",
+                    sub.submitterEmail || "",
+                    sub.data.studentId || sub.submitterStudentId || "",
+                    form.title
+                  );
+                }
+
                 setSubmitting(false);
                 setDone(sub);
-                toast.toast("Application submitted successfully!", "ok");
+                toast.toast(
+                  isMembershipForm
+                    ? "Application submitted! The club admin/moderator will review your membership request."
+                    : "Application submitted successfully!",
+                  "ok"
+                );
                 void mirrorSubmission(sub);
               }, 700);
             }}
@@ -632,6 +695,60 @@ function escapeHtml(s: string): string {
 }
 
 const PAYMENT_FALLBACK = ["bKash", "Nagad", "Rocket", "Bank transfer", "Cash (at venue)", "Other"];
+
+/**
+ * Notify club admin and moderators when a student submits a membership form.
+ * Best-effort — failures are silently ignored.
+ */
+async function notifyClubModerators(
+  clubId: string,
+  studentName: string,
+  studentEmail: string,
+  studentId: string,
+  formTitle: string
+): Promise<void> {
+  try {
+    const { getCloudDb } = await import("@/lib/firebase");
+    const { collection, getDocs } = await import("firebase/firestore");
+    const dbref = getCloudDb();
+    if (!dbref) return;
+
+    // Find all users who are admins or executives for this club
+    const usersSnap = await getDocs(collection(dbref, "users"));
+    const recipients: { email: string; name?: string }[] = [];
+    usersSnap.forEach((ds) => {
+      const u = ds.data() as { email?: string; name?: string; role?: string; clubs?: string[] };
+      if (u.email && (u.role === "admin" || (u.role === "executive" && (u.clubs || []).includes(clubId)))) {
+        recipients.push({ email: u.email, name: u.name || u.email });
+      }
+    });
+
+    if (!recipients.length) return;
+
+    // Get club name
+    const db = useDb();
+    const club = db?.clubs.find((c) => c.id === clubId);
+    const clubName = club?.name || clubId;
+
+    // Send email notification via the API
+    await fetch("/api/membership-notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        clubId,
+        clubName,
+        studentName,
+        studentEmail,
+        studentId,
+        formTitle,
+        recipients,
+        url: typeof window !== "undefined" ? `${window.location.origin}/portal` : "",
+      }),
+    });
+  } catch {
+    // Best-effort notification — don't fail the submission
+  }
+}
 
 function FormSkeleton() {
   return (

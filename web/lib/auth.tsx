@@ -19,7 +19,7 @@ import {
   signOut as fbSignOut,
 } from "firebase/auth";
 import { doc, getDoc, setDoc, writeBatch } from "firebase/firestore";
-import type { PortalUser, Session } from "./types";
+import type { PortalUser, Session, ModeratorRequest } from "./types";
 import { getCloudAuth, getCloudDb } from "./firebase";
 import { getDb, linkSubmissionsToUser, setReadScope } from "./store";
 import { logAudit } from "./audit";
@@ -89,7 +89,12 @@ interface AuthState {
     email: string,
     pass: string,
     mode: "signin" | "signup",
-    name?: string
+    name?: string,
+    role?: string,
+    selectedClubId?: string,
+    studentId?: string,
+    phone?: string,
+    classId?: string
   ) => Promise<string | null>;
   loginWithGoogle: () => Promise<string | null>;
   signOut: () => void;
@@ -107,7 +112,12 @@ const AuthContext = createContext<AuthState | null>(null);
  */
 async function bootstrapUser(
   user: { uid: string; email: string | null; displayName?: string | null },
-  name: string
+  name: string,
+  requestedRole?: string,
+  selectedClubId?: string,
+  studentId?: string,
+  phone?: string,
+  classId?: string
 ): Promise<PortalUser> {
   const db = getCloudDb();
   const uid = user.uid;
@@ -124,6 +134,8 @@ async function bootstrapUser(
       role: d.role || "member",
       clubs: d.clubs || [],
       studentId: d.studentId || "",
+      phone: d.phone || "",
+      classId: d.classId || "",
     };
   }
 
@@ -133,10 +145,47 @@ async function bootstrapUser(
     const first = !snap.exists();
     const batch = writeBatch(db);
     let clubs: string[] = [];
-    const role = first ? "admin" : "member";
+    let role: string = first ? "admin" : (requestedRole || "member");
+    let pendingModeratorClubId: string | undefined;
+    let pendingModeratorRequestedAt: string | undefined;
     if (first) {
+      // First account gets admin of ALL clubs
       clubs = (getDb()?.clubs ?? []).map((c) => c.id);
       batch.set(doc(db, "meta", "bootstrap"), { uid, at: new Date().toISOString() });
+    } else if (role === "admin" && selectedClubId) {
+      // Check if this club already has an admin
+      const { collection, getDocs, query, where } = await import("firebase/firestore");
+      const adminsQuery = query(
+        collection(db, "users"),
+        where("role", "==", "admin"),
+        where("clubs", "array-contains", selectedClubId)
+      );
+      const existingAdmins = await getDocs(adminsQuery);
+      if (!existingAdmins.empty) {
+        // Club already has an admin — throw error to prevent creation
+        const allClubs = getDb()?.clubs ?? [];
+        const clubName = allClubs.find((c) => c.id === selectedClubId)?.name || selectedClubId;
+        throw new Error(`This club already has an admin. Each club can only have one admin. Please contact the existing admin of ${clubName} to manage the club.`);
+      }
+      clubs = [selectedClubId];
+    } else if (role === "moderator" && selectedClubId) {
+      // Moderator account: stays as member until admin approves
+      role = "member";
+      pendingModeratorClubId = selectedClubId;
+      pendingModeratorRequestedAt = new Date().toISOString();
+      // Create a moderator request for admin approval
+      const requestId = "mr-" + uid + "-" + selectedClubId;
+      const modRequest: ModeratorRequest = {
+        id: requestId,
+        userId: uid,
+        clubId: selectedClubId,
+        status: "pending",
+        requestedAt: pendingModeratorRequestedAt,
+        userName: name || user.displayName || "",
+        userEmail: email,
+        studentId: studentId || "",
+      };
+      batch.set(doc(db, "moderatorRequests", requestId), modRequest);
     }
     batch.set(doc(db, "users", uid), {
       uid,
@@ -146,9 +195,29 @@ async function bootstrapUser(
       clubs,
       status: "active",
       createdAt: new Date().toISOString(),
+      studentId: studentId || "",
+      phone: phone || "",
+      classId: classId || "",
+      ...(pendingModeratorClubId ? { pendingModeratorClubId, pendingModeratorRequestedAt } : {}),
     });
     await batch.commit();
-    return { uid, email, name: name || user.displayName || "", role, clubs };
+
+    // Send notification to club admin about the moderator request
+    if (role === "member" && pendingModeratorClubId) {
+      void notifyClubAdmin(selectedClubId!, name || user.displayName || "", email, studentId || "");
+    }
+
+    return {
+      uid,
+      email,
+      name: name || user.displayName || "",
+      role: role as PortalUser["role"],
+      clubs,
+      studentId: studentId || "",
+      phone: phone || "",
+      classId: classId || "",
+      ...(pendingModeratorClubId ? { pendingModeratorClubId, pendingModeratorRequestedAt } : {}),
+    };
   } catch (err) {
     // Concurrent bootstrap race (another account became admin first, or the
     // meta/bootstrap marker was created mid-flight) — retry as a plain member
@@ -167,6 +236,57 @@ async function bootstrapUser(
   }
 }
 
+/**
+ * Notify the club admin when a student requests to become a moderator.
+ * Best-effort — failures are silently ignored since the request is already stored.
+ */
+async function notifyClubAdmin(
+  clubId: string,
+  requesterName: string,
+  requesterEmail: string,
+  studentId: string
+): Promise<void> {
+  try {
+    const db = getCloudDb();
+    if (!db) return;
+
+    // Find the club admin(s) for this club
+    const { collection, getDocs, query, where } = await import("firebase/firestore");
+    const usersSnap = await getDocs(collection(db, "users"));
+    const admins: { email: string; name?: string }[] = [];
+    usersSnap.forEach((ds) => {
+      const u = ds.data() as PortalUser;
+      if (u.role === "admin" && (u.clubs || []).includes(clubId) && u.email) {
+        admins.push({ email: u.email, name: u.name || u.email });
+      }
+    });
+
+    // Get club name
+    const clubs = getDb()?.clubs ?? [];
+    const club = clubs.find((c) => c.id === clubId);
+    const clubName = club?.name || clubId;
+
+    if (!admins.length) return;
+
+    // Send email notification via the API
+    await fetch("/api/moderator-notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        clubId,
+        clubName,
+        requesterName,
+        requesterEmail,
+        studentId,
+        adminEmails: admins,
+        url: typeof window !== "undefined" ? `${window.location.origin}/portal` : "",
+      }),
+    });
+  } catch {
+    // Best-effort notification — don't fail the signup
+  }
+}
+
 async function loadProfile(user: {
   uid: string;
   email: string | null;
@@ -174,7 +294,8 @@ async function loadProfile(user: {
 }): Promise<PortalUser> {
   const db = getCloudDb();
   if (!db) throw new Error("Cloud disabled");
-  const snap = await getDoc(doc(db, "users", user.uid));    if (snap.exists()) {
+  const snap = await getDoc(doc(db, "users", user.uid));
+  if (snap.exists()) {
     const d = snap.data() as Partial<PortalUser>;
     return {
       uid: user.uid,
@@ -183,6 +304,10 @@ async function loadProfile(user: {
       role: d.role || "member",
       clubs: d.clubs || [],
       studentId: d.studentId || "",
+      phone: d.phone || "",
+      classId: d.classId || "",
+      pendingModeratorClubId: d.pendingModeratorClubId || undefined,
+      pendingModeratorRequestedAt: d.pendingModeratorRequestedAt || undefined,
     };
   }
   return bootstrapUser(user, user.displayName || "");
@@ -256,7 +381,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const loginEmail = useCallback(
-    async (email: string, pass: string, mode: "signin" | "signup", name?: string): Promise<string | null> => {
+    async (
+      email: string,
+      pass: string,
+      mode: "signin" | "signup",
+      name?: string,
+      role?: string,
+      selectedClubId?: string,
+      studentId?: string,
+      phone?: string,
+      classId?: string
+    ): Promise<string | null> => {
       const auth = getCloudAuth();
       if (!auth) return "Cloud sign-in is not available in demo mode.";
       email = email.trim().toLowerCase();
@@ -267,7 +402,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           mode === "signup"
             ? await createUserWithEmailAndPassword(auth, email, pass)
             : await signInWithEmailAndPassword(auth, email, pass);
-        const profile = await bootstrapUser(req.user, name || "");
+        const profile = await bootstrapUser(req.user, name || "", role, selectedClubId, studentId, phone, classId);
         setUser(profile);
         setReadScope({ role: profile.role, clubs: profile.clubs, uid: profile.uid, email: profile.email });
         setSession(null);
@@ -277,6 +412,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logAudit("login_ok", mode === "signup" ? "Account created & signed in" : "Signed in", "info", email, email);
         return null;
       } catch (err) {
+        // Handle custom errors from bootstrapUser (e.g., duplicate admin)
+        const msg = err instanceof Error ? err.message : "";
+        if (msg && !msg.includes("auth/")) {
+          // This is a custom error, not a Firebase auth error
+          logAudit("login_fail", msg, "warn", msg, email);
+          return msg;
+        }
         logAudit("login_fail", "Failed sign-in attempt", "warn", authErrorMessage(err), email);
         return authErrorMessage(err);
       }

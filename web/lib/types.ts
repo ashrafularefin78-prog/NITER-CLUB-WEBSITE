@@ -271,6 +271,22 @@ export interface Config {
   announcement?: string;
 }
 
+export type ModeratorRequestStatus = "pending" | "approved" | "rejected";
+
+/** A request from a student to become a club moderator — needs admin approval. */
+export interface ModeratorRequest {
+  id: string;
+  userId: string;
+  clubId: string;
+  status: ModeratorRequestStatus;
+  requestedAt: string;
+  reviewedAt?: string;
+  reviewedBy?: string;
+  userName: string;
+  userEmail: string;
+  studentId: string;
+}
+
 export interface Database {
   version: number;
   clubs: Club[];
@@ -286,11 +302,12 @@ export interface Database {
   auditLog: AuditEvent[];
   questions: Question[];
   warnings: Warning[];
+  moderatorRequests: ModeratorRequest[];
   config: Config;
   __users?: PortalUser[];
 }
 
-export type Role = "admin" | "executive" | "it-staff" | "member";
+export type Role = "admin" | "executive" | "moderator" | "it-staff" | "member";
 
 export interface PortalUser {
   uid: string;
@@ -299,6 +316,11 @@ export interface PortalUser {
   role: Role;
   clubs: string[];
   studentId?: string;
+  phone?: string;
+  classId?: string;
+  /** Pending moderator approval status — only set when role is "member" and a moderator request is active. */
+  pendingModeratorClubId?: string;
+  pendingModeratorRequestedAt?: string;
 }
 
 export type FormStatusKey = "soon" | "open" | "closed";

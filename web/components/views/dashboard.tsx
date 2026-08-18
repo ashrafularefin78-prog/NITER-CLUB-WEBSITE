@@ -27,7 +27,7 @@ interface DemoAccount {
   pass: string;
 }
 
-type UserLike = { uid: string; email: string; name: string; studentId?: string; role?: string };
+type UserLike = { uid: string; email: string; name: string; studentId?: string; role?: string; clubs?: string[] };
 
 function loadAccounts(): Record<string, DemoAccount> {
   try {
@@ -87,10 +87,10 @@ export default function DashboardView() {
     const email = loadDemoSession();
     if (!email) return null;
     const acc = loadAccounts()[email];
-    return acc ? { uid: "local-" + email, email, name: acc.name, studentId: acc.studentId, role: "member" } : null;
+    return acc ? { uid: "local-" + email, email, name: acc.name, studentId: acc.studentId, role: "member", clubs: [] } : null;
   });
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [form, setForm] = useState({ name: "", studentId: "", email: "", pass: "" });
+  const [form, setForm] = useState({ name: "", studentId: "", email: "", pass: "", phone: "", classId: "", accountType: "member" as "member" | "admin" | "moderator", selectedClubId: "" });
 
   const user: UserLike | null = auth.cloud ? auth.user : demoUser;
 
@@ -128,6 +128,7 @@ export default function DashboardView() {
         onGoogleSignIn={auth.loginWithGoogle}
         onCloudEmail={auth.loginEmail}
         verify={(id) => verifyStudentId(db, id)}
+        clubs={db.clubs.map((c) => ({ id: c.id, icon: c.icon, name: c.name }))}
       />
     );
   }
@@ -159,16 +160,18 @@ function DashboardLogin({
   onGoogleSignIn,
   onCloudEmail,
   verify,
+  clubs,
 }: {
   mode: "signin" | "signup";
   setMode: (m: "signin" | "signup") => void;
-  form: { name: string; studentId: string; email: string; pass: string };
-  setForm: (f: { name: string; studentId: string; email: string; pass: string }) => void;
+  form: { name: string; studentId: string; email: string; pass: string; phone: string; classId: string; accountType: "member" | "admin" | "moderator"; selectedClubId: string };
+  setForm: (f: { name: string; studentId: string; email: string; pass: string; phone: string; classId: string; accountType: "member" | "admin" | "moderator"; selectedClubId: string }) => void;
   cloud: boolean;
   onDemoSignIn: (u: UserLike) => void;
   onGoogleSignIn: () => Promise<string | null>;
-  onCloudEmail: (email: string, pass: string, mode: "signin" | "signup", name: string) => Promise<string | null>;
+  onCloudEmail: (email: string, pass: string, mode: "signin" | "signup", name: string, role?: string, selectedClubId?: string, studentId?: string) => Promise<string | null>;
   verify: (id: string) => StudentCheck;
+  clubs: { id: string; icon: string; name: string }[];
 }) {
   const toast = useToast();
   const [gBusy, setGBusy] = useState(false);
@@ -181,12 +184,24 @@ function DashboardLogin({
     if (cloud) {
       if (mode === "signup") {
         if (!form.name.trim()) return toast.toast("Enter your name.", "err");
+        if (form.accountType === "admin" && !form.selectedClubId) return toast.toast("Please select a club for admin role.", "err");
+        if (form.accountType === "moderator" && !form.selectedClubId) return toast.toast("Please select a club for moderator role.", "err");
         const check = verify(form.studentId);
         if (!check.ok) return toast.toast(studentIdError(form.studentId, check.reason), "err");
         toast.toast("✓ Student verified: " + studentVerifiedText(check.student), "ok");
       }
       setEBusy(true);
-      const err = await onCloudEmail(email, form.pass, mode, form.name.trim());
+      const err = await onCloudEmail(
+        email,
+        form.pass,
+        mode,
+        form.name.trim(),
+        mode === "signup" ? form.accountType : undefined,
+        mode === "signup" && (form.accountType === "admin" || form.accountType === "moderator") ? form.selectedClubId : undefined,
+        mode === "signup" ? form.studentId : undefined,
+        mode === "signup" ? form.phone : undefined,
+        mode === "signup" ? form.classId : undefined
+      );
       setEBusy(false);
       if (err) toast.toast(err, "err");
       return;
@@ -262,13 +277,84 @@ function DashboardLogin({
           {mode === "signup" && (
             <div className="mb-3 grid gap-3 anim-fade-up">
               <input className="input" placeholder="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} aria-label="Full name" />
-              <input className="input" placeholder="NITER student ID (e.g. CS-2607001)" value={form.studentId} onChange={(e) => setForm({ ...form, studentId: e.target.value })} aria-label="NITER student ID" />
+              <div>
+                <label className="label" htmlFor="acct-type">
+                  Account type
+                </label>
+                <select
+                  id="acct-type"
+                  className="select"
+                  value={form.accountType}
+                  onChange={(e) => setForm({ ...form, accountType: e.target.value as "member" | "admin" | "moderator", selectedClubId: "" })}
+                >
+                  <option value="member">👤 Member</option>
+                  <option value="admin">🔑 Club Admin</option>
+                  <option value="moderator">🛡️ Club Moderator</option>
+                </select>
+                <p className="hint mt-1">
+                  {form.accountType === "admin"
+                    ? "Admins manage a single club — each club has exactly one admin. Your account is approved instantly."
+                    : form.accountType === "moderator"
+                      ? "Moderators help manage a club — needs admin approval before you can log in."
+                      : "Regular members can join clubs and submit forms."}
+                </p>
+              </div>
+              {(form.accountType === "member" || form.accountType === "moderator") && (
+                <>
+                  <input className="input" placeholder="Class ID (e.g. CSE-26-01)" value={form.classId} onChange={(e) => setForm({ ...form, classId: e.target.value })} aria-label="Class ID" />
+                  <input className="input" type="tel" placeholder="Phone number (e.g. 01XXXXXXXXX)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} aria-label="Phone number" />
+                  <input className="input" type="email" placeholder="Email address" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} aria-label="Email address" />
+                  <input className="input" type="password" placeholder="Password (at least 6 characters)" value={form.pass} onChange={(e) => setForm({ ...form, pass: e.target.value })} aria-label="Password" />
+                </>
+              )}
+              {form.accountType === "admin" && (
+                <div>
+                  <label className="label" htmlFor="admin-club">
+                    Select your club <span className="text-crimson">*</span>
+                  </label>
+                  <select
+                    id="admin-club"
+                    className="select"
+                    value={form.selectedClubId}
+                    onChange={(e) => setForm({ ...form, selectedClubId: e.target.value })}
+                  >
+                    <option value="">— Choose a club —</option>
+                    {clubs.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.icon} {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="hint mt-1">
+                    You&apos;ll be the admin of this club. Only one admin per club — no approval needed, instant access.
+                  </p>
+                </div>
+              )}
+              {form.accountType === "moderator" && (
+                <div>
+                  <label className="label" htmlFor="mod-club">
+                    Select your club <span className="text-crimson">*</span>
+                  </label>
+                  <select
+                    id="mod-club"
+                    className="select"
+                    value={form.selectedClubId}
+                    onChange={(e) => setForm({ ...form, selectedClubId: e.target.value })}
+                  >
+                    <option value="">— Choose a club —</option>
+                    {clubs.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.icon} {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="hint mt-1">
+                    You&apos;ll be a moderator of this club. The club admin must approve your request first.
+                  </p>
+                </div>
+              )}
             </div>
           )}
-          <div className="mb-3 grid gap-3">
-            <input className="input" type="email" placeholder="you@niter.edu.bd" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} aria-label="Email" />
-            <input className="input" type="password" placeholder="At least 6 characters" value={form.pass} onChange={(e) => setForm({ ...form, pass: e.target.value })} aria-label="Password" />
-          </div>
           <button className="btn btn-primary w-full" onClick={submit} disabled={eBusy || gBusy}>
             {eBusy
               ? "Working…"
@@ -545,6 +631,46 @@ function DashboardHome({
                   <p className="m-0 font-semibold text-ink">{dbUser.name || "—"}</p>
                   <p className="mb-1 mt-3 text-muted">Student ID</p>
                   <p className="m-0 font-mono text-[13px] font-semibold text-ink">{dbUser.studentId || "—"}</p>
+                  {/* Role & Club badges */}
+                  {dbUser.role && dbUser.role !== "member" && (
+                    <>
+                      <p className="mb-1 mt-3 text-muted">Role</p>
+                      <div className="flex flex-wrap gap-2">
+                        <span
+                          className={`rounded-md px-2.5 py-1 text-[12px] font-bold ${
+                            dbUser.role === "admin"
+                              ? "border border-red-400 bg-red-100 text-red-800"
+                              : dbUser.role === "executive"
+                                ? "border border-blue-400 bg-blue-100 text-blue-800"
+                                : "border border-purple-400 bg-purple-100 text-purple-800"
+                          }`}
+                        >
+                          {dbUser.role === "admin" ? "🔑 Club Admin" : dbUser.role === "executive" ? "🛡️ Executive/Moderator" : `👤 ${dbUser.role}`}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                  {(dbUser as any).clubs && (dbUser as any).clubs.length > 0 && (
+                    <>
+                      <p className="mb-1 mt-3 text-muted">Clubs</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {(dbUser as any).clubs.map((clubId: string) => {
+                          const c = clubById(db, clubId);
+                          return c ? (
+                            <Link
+                              key={clubId}
+                              href={`/club/${c.id}`}
+                              className="no-underline"
+                            >
+                              <span className="inline-flex items-center gap-1 rounded-md border border-gold/40 bg-gold/15 px-2 py-0.5 text-[11.5px] font-semibold text-gold hover:bg-gold/25 transition">
+                                {c.icon} {c.name}
+                              </span>
+                            </Link>
+                          ) : null;
+                        })}
+                      </div>
+                    </>
+                  )}
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button className="btn btn-outline btn-sm" onClick={() => setEditing(true)}>
                       Edit profile

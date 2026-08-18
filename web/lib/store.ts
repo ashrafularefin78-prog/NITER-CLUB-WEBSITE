@@ -35,8 +35,9 @@ const CLOUD_COLLECTIONS = [
   "auditLog",
   "questions",
   "warnings",
+  "moderatorRequests",
 ] as const;
-const RESTRICTED_COLLECTIONS = new Set(["submissions", "complaints", "memberships", "auditLog", "warnings"]);
+const RESTRICTED_COLLECTIONS = new Set(["submissions", "complaints", "memberships", "auditLog", "warnings", "moderatorRequests"]);
 
 type ReadScope = { role: Role; clubs: string[]; uid?: string; email?: string } | null;
 

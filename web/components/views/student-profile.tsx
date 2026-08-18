@@ -8,18 +8,20 @@ import { clubById, fmtDate, relativeAgo } from "@/lib/utils";
 import { studentDeptLabel, studentSessionOf, verifyStudentId } from "@/lib/students";
 import { EmptyState, PageHero, Skeleton } from "@/components/ui";
 import CampusBanner from "@/components/campus-banner";
-import type { Database, Membership, Submission } from "@/lib/types";
+import type { Database, Membership, PortalUser, Submission } from "@/lib/types";
 
 interface ProfileStudent {
   key: string;
   name: string;
   studentId: string;
   email: string;
+  role?: string;
+  clubs?: string[];
   memberships: Membership[];
   submissions: Submission[];
 }
 
-type UserLike = { uid: string; email: string; name: string; studentId?: string; role?: string };
+type UserLike = { uid: string; email: string; name: string; studentId?: string; role?: string; clubs?: string[] };
 
 const STUDENT_ACCOUNTS_KEY = "niter-student-accounts";
 
@@ -46,14 +48,21 @@ function resolveStudent(db: Database, me: UserLike | null, rawKey: string): Prof
   const subs = (db.submissions || []).filter(
     (s) => (s.userId || "").toLowerCase() === k || (s.submitterEmail || "").toLowerCase() === k
   );
-  if (ms.length || subs.length) {
+  // Check if the user is in the users collection (for role/club info)
+  const users = (db as Database & { __users?: PortalUser[] }).__users || [];
+  const user = users.find(
+    (u) => (u.email || "").toLowerCase() === k || (u.uid || "").toLowerCase() === k
+  );
+  if (ms.length || subs.length || user) {
     const mem = ms[0];
     const sub = subs[0];
     return {
       key: k,
-      name: mem?.userName || sub?.submitterName || "",
-      studentId: mem?.studentId || sub?.submitterStudentId || "",
-      email: mem?.userEmail || sub?.submitterEmail || "",
+      name: user?.name || mem?.userName || sub?.submitterName || "",
+      studentId: user?.studentId || mem?.studentId || sub?.submitterStudentId || "",
+      email: user?.email || mem?.userEmail || sub?.submitterEmail || "",
+      role: user?.role,
+      clubs: user?.clubs,
       memberships: ms,
       submissions: subs,
     };
@@ -203,6 +212,36 @@ export default function StudentProfileView({ studentKey }: { studentKey: string 
             ))}
           </div>
         ) : null}
+        {/* Role & Club badges */}
+        {s.role && s.role !== "member" && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            <span
+              className={`rounded-md px-3 py-1 text-[12.5px] font-bold ${
+                s.role === "admin"
+                  ? "border border-red-400 bg-red-100 text-red-800"
+                  : s.role === "executive"
+                    ? "border border-blue-400 bg-blue-100 text-blue-800"
+                    : "border border-purple-400 bg-purple-100 text-purple-800"
+              }`}
+            >
+              {s.role === "admin" ? "🔑 Club Admin" : s.role === "executive" ? "🛡️ Club Executive/Moderator" : `👤 ${s.role}`}
+            </span>
+            {(s.clubs || []).length > 0 && s.clubs!.map((clubId) => {
+              const club = clubById(db, clubId);
+              return club ? (
+                <Link
+                  key={clubId}
+                  href={`/club/${club.id}`}
+                  className="no-underline"
+                >
+                  <span className="rounded-md border border-gold/40 bg-gold/15 px-3 py-1 text-[12.5px] font-semibold text-gold hover:bg-gold/25 transition">
+                    {club.icon} {club.name}
+                  </span>
+                </Link>
+              ) : null;
+            })}
+          </div>
+        )}
       </PageHero>
 
       <div className="container-x py-10">

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useDb, mutate } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { clubForms, clubNotices, isClosed, nextDeadline, relativeAgo, statusOf, uid } from "@/lib/utils";
@@ -9,12 +10,42 @@ import { useToast } from "@/components/providers";
 import { FormGrid, NoticeCard } from "@/components/cards";
 import { Countdown } from "@/components/countdown";
 import { EmptyState, PageHero, Skeleton } from "@/components/ui";
+import type { PortalUser } from "@/lib/types";
 
 export default function ClubDetailView({ clubId }: { clubId: string }) {
   const db = useDb();
   const auth = useAuth();
   const toast = useToast();
   const club = db?.clubs.find((c) => c.id === clubId) ?? null;
+  const [clubAdmin, setClubAdmin] = useState<PortalUser | null>(null);
+
+  // Load the club's admin from the users collection
+  useEffect(() => {
+    if (!club) return;
+    let cancelled = false;
+    const loadAdmin = async () => {
+      try {
+        const { getCloudDb } = await import("@/lib/firebase");
+        const { collection, getDocs, query, where } = await import("firebase/firestore");
+        const dbref = getCloudDb();
+        if (!dbref) return;
+        const adminQuery = query(
+          collection(dbref, "users"),
+          where("role", "==", "admin"),
+          where("clubs", "array-contains", club.id)
+        );
+        const snap = await getDocs(adminQuery);
+        if (!cancelled && !snap.empty) {
+          const doc = snap.docs[0];
+          setClubAdmin({ ...doc.data(), uid: doc.id } as PortalUser);
+        }
+      } catch {
+        // Silently fail — admin info is optional
+      }
+    };
+    void loadAdmin();
+    return () => { cancelled = true; };
+  }, [club?.id]);
 
   if (!db) return <ClubDetailSkeleton />;
   if (!club) return <ClubMissing />;
@@ -178,6 +209,35 @@ export default function ClubDetailView({ clubId }: { clubId: string }) {
               ) : null}
             </div>
           </div>
+
+          {/* Club Admin */}
+          {clubAdmin && (
+            <div className="card p-5">
+              <h3 className="m-0 text-[15px] font-bold text-ink">🔑 Club Admin</h3>
+              <p className="m-0 mt-1 text-[12.5px] text-muted">
+                This club is managed by:
+              </p>
+              <div className="mt-3 flex items-center gap-3 rounded-xl border border-line bg-surface-2 p-3">
+                <span
+                  aria-hidden="true"
+                  className="inline-grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gradient-to-br from-navy to-blue-700 text-[14px] font-extrabold text-white"
+                >
+                  {initialsOf(clubAdmin.name || "?")}
+                </span>
+                <div className="min-w-0">
+                  <span className="block truncate text-[14px] font-bold text-ink">
+                    {clubAdmin.name || "Admin"}
+                  </span>
+                  <span className="block text-[12px] text-muted">
+                    {clubAdmin.email}
+                  </span>
+                </div>
+              </div>
+              <p className="m-0 mt-2 text-[12px] text-muted">
+                Contact the admin for club-related queries, membership issues or moderator requests.
+              </p>
+            </div>
+          )}
 
           <div className="card p-5">
             <h3 className="m-0 text-[15px] font-bold text-ink">📊 Forms status</h3>

@@ -18266,10 +18266,7 @@
       function group(icon, title, items) {
         return '<div class="nai-rail-group"><h4>' + icon + " " + esc(title) + "</h4>" + items.map(railBtn).join("") + "</div>";
       }
-      var live = naiLiveChips().slice(0, compact ? 3 : 5);
       var out = [
-        group("📡", "Live now", live),
-        group("📄", "Documents", ["📄 Generate a lab report cover page", "📚 Make cover pages for the whole class", "🔄 Convert the C bubble sort to Rust", "📄 Export the last answer as .docx"]),
         group("🎓", "NITER knowledge", ["The RMG industry", "🚌 NITER bus service & routes", "Which clubs are there?", "How do I join a club?"]),
         group("📚", "Study tools", ["🧮 Solve 2x + 3 = 7", "∫ Integrate x² from 0 to 3", "📊 Mean of 5, 6, 7, 8", "🔀 Check my routine for clashes", "📅 Find a free slot for a new course", "📚 Study plan for Data Structures in 2 weeks", "🔖 Cite a book for me"])
       ];

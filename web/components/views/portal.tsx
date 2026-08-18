@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { Executive, Form, FormField, Membership, Notice, PortalUser, Submission } from "@/lib/types";
+import type { Executive, Form, FormField, Membership, ModeratorRequest, Notice, PortalUser, Submission } from "@/lib/types";
 import {
   clubById,
   clubForms,
@@ -53,6 +53,29 @@ export default function PortalView() {
     if (!auth.cloud) return <DemoLogin />;
     if (auth.loading) return <PortalSkeleton />;
     if (!auth.user) return <CloudLogin />;
+    // Check if user has a pending moderator request
+    if (auth.user.pendingModeratorClubId) {
+      const pendingClub = clubById(db, auth.user.pendingModeratorClubId);
+      return (
+        <div className="container-x py-16">
+          <div className="card mx-auto max-w-md p-8 text-center">
+            <div className="text-5xl">⏳</div>
+            <h1 className="mt-3 text-xl font-bold text-ink">Moderator request pending</h1>
+            <p className="mt-1 text-[14px] text-muted">
+              You requested to become a moderator for <b>{pendingClub?.name || "a club"}</b>.
+              The club admin needs to approve your request before you can access the portal.
+            </p>
+            <p className="mt-2 text-[12.5px] text-muted">
+              Requested {auth.user.pendingModeratorRequestedAt ? relativeAgo(auth.user.pendingModeratorRequestedAt) : "recently"}.
+              You&apos;ll be notified once approved.
+            </p>
+            <button className="btn btn-outline mt-5" onClick={auth.signOut}>
+              Sign out
+            </button>
+          </div>
+        </div>
+      );
+    }
     if (!allowedClubIds.length)
       return (
         <div className="container-x py-16">
@@ -250,11 +273,16 @@ function DemoLogin() {
 
 function CloudLogin() {
   const auth = useAuth();
+  const db = useDb();
   const toast = useToast();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [classId, setClassId] = useState("");
+  const [accountType, setAccountType] = useState<"member" | "admin" | "moderator">("member");
+  const [selectedClubId, setSelectedClubId] = useState("");
   const [busy, setBusy] = useState(false);
   const [gBusy, setGBusy] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -306,11 +334,36 @@ function CloudLogin() {
           className="space-y-4 text-left"
           onSubmit={async (e) => {
             e.preventDefault();
+            if (mode === "signup" && accountType === "admin" && !selectedClubId) {
+              toast.toast("Please select a club for admin role.", "err");
+              return;
+            }
+            if (mode === "signin" && !selectedClubId) {
+              toast.toast("Please select the club you want to manage.", "err");
+              return;
+            }
             setBusy(true);
-            const err = await auth.loginEmail(email, pass, mode, name);
+            const err = await auth.loginEmail(
+              email,
+              pass,
+              mode,
+              name,
+              mode === "signup" ? accountType : undefined,
+              mode === "signup" && (accountType === "admin" || accountType === "moderator") ? selectedClubId : undefined,
+              undefined, // studentId
+              mode === "signup" ? phone : undefined,
+              mode === "signup" ? classId : undefined
+            );
             setBusy(false);
-            if (err) toast.toast(err, "err");
-            else toast.toast("Welcome!", "ok");
+            if (err) {
+              toast.toast(err, "err");
+            } else {
+              toast.toast("Welcome!", "ok");
+              // For sign-in: set the club session directly so the admin goes to the dashboard.
+              if (mode === "signin" && selectedClubId) {
+                auth.setClubSession(selectedClubId);
+              }
+            }
           }}
         >
           <div>
@@ -328,17 +381,142 @@ function CloudLogin() {
             </select>
           </div>
           {mode === "signup" && (
+            <>
+              <div>
+                <label className="label" htmlFor="login-name">
+                  Full name
+                </label>
+                <input
+                  id="login-name"
+                  className="input"
+                  placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="label" htmlFor="portal-acct-type">
+                  Account type
+                </label>
+                <select
+                  id="portal-acct-type"
+                  className="select"
+                  value={accountType}
+                  onChange={(e) => {
+                    setAccountType(e.target.value as "member" | "admin" | "moderator");
+                    setSelectedClubId("");
+                  }}
+                >
+                  <option value="member">👤 Member</option>
+                  <option value="admin">🔑 Club Admin</option>
+                  <option value="moderator">🛡️ Club Moderator</option>
+                </select>
+                <p className="hint mt-1">
+                  {accountType === "admin"
+                    ? "Admins manage a single club — each club has exactly one admin. Your account is approved instantly."
+                    : accountType === "moderator"
+                      ? "Moderators help manage a club — needs admin approval before you can log in."
+                      : "Regular members can join clubs and submit forms."}
+                </p>
+              </div>
+              {(accountType === "member" || accountType === "moderator") && (
+                <>
+                  <div>
+                    <label className="label" htmlFor="portal-class-id">
+                      Class ID
+                    </label>
+                    <input
+                      id="portal-class-id"
+                      className="input"
+                      placeholder="e.g. CSE-26-01"
+                      value={classId}
+                      onChange={(e) => setClassId(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="label" htmlFor="portal-phone">
+                      Phone number
+                    </label>
+                    <input
+                      id="portal-phone"
+                      className="input"
+                      type="tel"
+                      placeholder="e.g. 01XXXXXXXXX"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
+              {accountType === "admin" && db && (
+                <div>
+                  <label className="label" htmlFor="portal-admin-club">
+                    Select your club <span className="text-crimson">*</span>
+                  </label>
+                  <select
+                    id="portal-admin-club"
+                    className="select"
+                    value={selectedClubId}
+                    onChange={(e) => setSelectedClubId(e.target.value)}
+                  >
+                    <option value="">— Choose a club —</option>
+                    {db.clubs.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.icon} {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="hint mt-1">
+                    You&apos;ll be the admin of this club. Only one admin per club — no approval needed, instant access.
+                  </p>
+                </div>
+              )}
+              {accountType === "moderator" && db && (
+                <div>
+                  <label className="label" htmlFor="portal-mod-club">
+                    Select your club <span className="text-crimson">*</span>
+                  </label>
+                  <select
+                    id="portal-mod-club"
+                    className="select"
+                    value={selectedClubId}
+                    onChange={(e) => setSelectedClubId(e.target.value)}
+                  >
+                    <option value="">— Choose a club —</option>
+                    {db.clubs.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.icon} {c.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="hint mt-1">
+                    You&apos;ll be a moderator of this club. The club admin must approve your request first.
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+          {mode === "signin" && db && (
             <div>
-              <label className="label" htmlFor="login-name">
-                Full name
+              <label className="label" htmlFor="portal-signin-club">
+                Select your club <span className="text-crimson">*</span>
               </label>
-              <input
-                id="login-name"
-                className="input"
-                placeholder="Your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+              <select
+                id="portal-signin-club"
+                className="select"
+                value={selectedClubId}
+                onChange={(e) => setSelectedClubId(e.target.value)}
+              >
+                <option value="">— Choose a club to manage —</option>
+                {db.clubs.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.icon} {c.name}
+                  </option>
+                ))}
+              </select>
+              <p className="hint mt-1">
+                Pick the club you want to manage. You&apos;ll go straight to the dashboard.
+              </p>
             </div>
           )}
           <div>
@@ -389,8 +567,9 @@ function CloudLogin() {
           </button>
         </form>
         <div className="mt-5 rounded-xl border border-line bg-surface-2/60 p-3 text-left text-[12.5px] text-muted">
-          💡 The first account created becomes the <b>admin</b>. Admins promote others to club executives from
-          portal → Settings → Members &amp; roles.
+          💡 Select the club you manage, then sign in. The first account created becomes the global
+          <b> admin</b>. New accounts can sign up as a <b>club admin</b> (one per club) or a
+          <b> member</b>.
         </div>
       </div>
     </div>
@@ -1424,12 +1603,13 @@ function MembershipsTab({ clubId }: { clubId: string }) {
       toast.toast("Only this club's moderator can review join requests.", "err");
       return;
     }
+    const reviewerName = auth.user?.name || auth.user?.email || "";
     mutate((draft) => {
       const t = draft.memberships.find((x) => x.id === m.id);
       if (!t) return;
       t.status = status;
       t.reviewedAt = new Date().toISOString();
-      t.reviewedBy = auth.user?.name || auth.user?.email || "";
+      t.reviewedBy = reviewerName;
     });
     logAudit(
       "membership_review",
@@ -1438,6 +1618,8 @@ function MembershipsTab({ clubId }: { clubId: string }) {
       m.clubId,
       auth.user?.email || auth.user?.name || ""
     );
+    // Notify the student about the decision
+    void notifyStudentMembershipDecision(m, status, clubId, reviewerName);
     toast.toast(status === "approved" ? "Membership approved!" : "Membership rejected.", "ok");
   };
 
@@ -1794,6 +1976,10 @@ function SettingsTab({ clubId, isAdmin }: { clubId: string; isAdmin: boolean }) 
 
       {isAdmin && <AuditLogPanel />}
 
+      {isAdmin && <ModeratorRequestsTab clubId={clubId} />}
+
+      {isAdmin && <ClubAdminPanel clubId={clubId} />}
+
       {isAdmin && (
         <div className="panel lg:col-span-2">
           <h2 className="m-0 text-[18px] font-bold text-ink">Members &amp; roles</h2>
@@ -1851,9 +2037,32 @@ function MemberRow({
             className="btn btn-outline btn-sm"
             onClick={async () => {
               const { getCloudDb } = await import("@/lib/firebase");
-              const { doc, updateDoc } = await import("firebase/firestore");
+              const { doc, updateDoc, getDocs, query, collection, where } = await import("firebase/firestore");
               const dbref = getCloudDb();
               if (!dbref) return;
+
+              // If changing to admin, check if any of the selected clubs already have an admin
+              if (role === "admin" && selectedClubs.length > 0) {
+                for (const clubId of selectedClubs) {
+                  const adminsQuery = query(
+                    collection(dbref, "users"),
+                    where("role", "==", "admin"),
+                    where("clubs", "array-contains", clubId)
+                  );
+                  const existingAdmins = await getDocs(adminsQuery);
+                  // Check if there's already an admin for this club (excluding the current user)
+                  const otherAdmin = existingAdmins.docs.find((d) => d.id !== user.uid);
+                  if (otherAdmin) {
+                    const club = clubs.find((c) => c.id === clubId);
+                    toast.toast(
+                      `Cannot assign as admin — ${club?.name || clubId} already has an admin. Each club can only have one admin.`,
+                      "err"
+                    );
+                    return;
+                  }
+                }
+              }
+
               try {
                 await updateDoc(doc(dbref, "users", user.uid), { role, clubs: selectedClubs });
                 toast.toast("Role updated.", "ok");
@@ -1886,6 +2095,205 @@ function MemberRow({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+/* ================= Moderator Requests tab ================= */
+
+function ModeratorRequestsTab({ clubId }: { clubId: string }) {
+  const db = useDb()!;
+  const auth = useAuth();
+  const toast = useToast();
+  const [requests, setRequests] = useState<ModeratorRequest[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const loadRequests = async () => {
+    const { getCloudDb } = await import("@/lib/firebase");
+    const { collection, getDocs, query, where } = await import("firebase/firestore");
+    const dbref = getCloudDb();
+    if (!dbref) return;
+    setLoading(true);
+    try {
+      // Admin sees all requests for their clubs; executive sees only their club
+      const q = auth.user?.role === "admin"
+        ? query(collection(dbref, "moderatorRequests"), where("clubId", "==", clubId))
+        : query(collection(dbref, "moderatorRequests"), where("clubId", "==", clubId));
+      const snap = await getDocs(q);
+      const list: ModeratorRequest[] = [];
+      snap.forEach((ds) => {
+        list.push({ ...ds.data(), id: ds.id } as ModeratorRequest);
+      });
+      setRequests(list.sort((a, b) => b.requestedAt.localeCompare(a.requestedAt)));
+    } catch {
+      toast.toast("Could not load moderator requests.", "err");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRequest = async (request: ModeratorRequest, approve: boolean) => {
+    const { getCloudDb } = await import("@/lib/firebase");
+    const { doc, updateDoc, getDoc } = await import("firebase/firestore");
+    const dbref = getCloudDb();
+    if (!dbref) return;
+    try {
+      const now = new Date().toISOString();
+      const status = approve ? "approved" : "rejected";
+
+      // Update the moderator request status
+      await updateDoc(doc(dbref, "moderatorRequests", request.id), {
+        status,
+        reviewedAt: now,
+        reviewedBy: auth.user?.name || auth.user?.email || "",
+      });
+
+      // If approved, update the user's role and clubs
+      if (approve) {
+        const userSnap = await getDoc(doc(dbref, "users", request.userId));
+        if (userSnap.exists()) {
+          const userData = userSnap.data() as PortalUser;
+          const currentClubs = userData.clubs || [];
+          const newClubs = currentClubs.includes(request.clubId)
+            ? currentClubs
+            : [...currentClubs, request.clubId];
+          await updateDoc(doc(dbref, "users", request.userId), {
+            role: "executive",
+            clubs: newClubs,
+            pendingModeratorClubId: null,
+            pendingModeratorRequestedAt: null,
+          });
+        }
+      } else {
+        // If rejected, just clear the pending status
+        await updateDoc(doc(dbref, "users", request.userId), {
+          pendingModeratorClubId: null,
+          pendingModeratorRequestedAt: null,
+        });
+      }
+
+      // Update local state
+      setRequests((prev) =>
+        prev.map((r) =>
+          r.id === request.id
+            ? { ...r, status, reviewedAt: now, reviewedBy: auth.user?.name || auth.user?.email || "" }
+            : r
+        )
+      );
+
+      logAudit(
+        approve ? "moderator_approved" : "moderator_rejected",
+        `${approve ? "Approved" : "Rejected"} moderator request for ${request.userName || request.userEmail}`,
+        approve ? "info" : "warn",
+        request.clubId,
+        auth.user?.email || auth.user?.name || ""
+      );
+
+      toast.toast(
+        approve ? `Moderator request approved — ${request.userName} is now a club executive.` : `Moderator request rejected.`,
+        approve ? "ok" : "warn"
+      );
+    } catch (err) {
+      toast.toast("Could not process request: " + (err as Error).message, "err");
+    }
+  };
+
+  const pending = requests.filter((r) => r.status === "pending");
+  const processed = requests.filter((r) => r.status !== "pending");
+
+  return (
+    <div className="panel lg:col-span-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="m-0 text-[18px] font-bold text-ink">🛡️ Moderator requests</h2>
+        <button className="btn btn-outline btn-sm" onClick={() => void loadRequests()} disabled={loading}>
+          {loading ? "Loading…" : "Load requests"}
+        </button>
+      </div>
+      <p className="m-0 mt-1 text-[13px] text-muted">
+        Students who requested to become a club moderator — approve to grant them executive access,
+        or reject to deny.
+      </p>
+      {requests.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-bold text-amber-800">
+            {pending.length} pending
+          </span>
+          <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-800">
+            {processed.filter((r) => r.status === "approved").length} approved
+          </span>
+          <span className="rounded-full bg-rose-100 px-2.5 py-1 text-[11px] font-bold text-rose-700">
+            {processed.filter((r) => r.status === "rejected").length} rejected
+          </span>
+        </div>
+      )}
+      {pending.length > 0 && (
+        <div className="mt-4">
+          <h3 className="m-0 mb-3 text-[15px] font-bold text-ink">⏳ Pending requests</h3>
+          <div className="space-y-3">
+            {pending.map((req) => (
+              <div key={req.id} className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-[14.5px] font-bold text-ink">{req.userName || req.userEmail}</div>
+                    <div className="text-[12.5px] text-muted">
+                      {req.userEmail}
+                      {req.studentId ? ` · 🎓 ${req.studentId}` : ""}
+                    </div>
+                    <div className="mt-1 text-[12px] text-muted">
+                      Requested {relativeAgo(req.requestedAt)}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => void handleRequest(req, true)}
+                    >
+                      ✓ Approve
+                    </button>
+                    <button
+                      className="btn btn-outline btn-sm"
+                      onClick={() => void handleRequest(req, false)}
+                    >
+                      ✕ Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {processed.length > 0 && (
+        <div className="mt-5">
+          <h3 className="m-0 mb-3 text-[15px] font-bold text-ink">📋 Processed requests</h3>
+          <div className="space-y-2">
+            {processed.map((req) => (
+              <div key={req.id} className="flex items-center justify-between rounded-xl border border-line p-3">
+                <div className="min-w-0">
+                  <div className="text-[13.5px] font-semibold text-ink">{req.userName || req.userEmail}</div>
+                  <div className="text-[11.5px] text-muted">
+                    {req.userEmail} · {relativeAgo(req.requestedAt)}
+                  </div>
+                </div>
+                <span
+                  className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
+                    req.status === "approved"
+                      ? "bg-emerald-100 text-emerald-800"
+                      : "bg-rose-100 text-rose-700"
+                  }`}
+                >
+                  {req.status === "approved" ? "✓ Approved" : "✕ Rejected"}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {requests.length === 0 && !loading && (
+        <div className="mt-4 rounded-xl border border-dashed border-hairline p-6 text-center text-[13px] text-muted">
+          No moderator requests yet. Click &quot;Load requests&quot; to check.
+        </div>
+      )}
     </div>
   );
 }
@@ -2001,6 +2409,295 @@ function SiteSettingsPanel() {
       <button className="btn btn-primary mt-4" onClick={save}>
         Save site settings
       </button>
+    </div>
+  );
+}
+
+/**
+ * Notify a student when their membership request is approved or rejected.
+ * Best-effort — failures are silently ignored.
+ */
+async function notifyStudentMembershipDecision(
+  membership: Membership,
+  status: "approved" | "rejected",
+  clubId: string,
+  reviewerName: string
+): Promise<void> {
+  try {
+    const dbref = useDb();
+    const club = dbref?.clubs.find((c) => c.id === clubId);
+    const clubName = club?.name || clubId;
+
+    await fetch("/api/membership-decision-notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        studentEmail: membership.userEmail,
+        studentName: membership.userName,
+        clubName,
+        status,
+        reviewerName,
+      }),
+    });
+  } catch {
+    // Best-effort notification
+  }
+}
+
+/* ================= Club Admin Management Panel ================= */
+
+function ClubAdminPanel({ clubId }: { clubId: string }) {
+  const db = useDb()!;
+  const auth = useAuth();
+  const toast = useToast();
+  const [currentAdmin, setCurrentAdmin] = useState<PortalUser | null>(null);
+  const [allUsers, setAllUsers] = useState<PortalUser[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [reassignUserId, setReassignUserId] = useState("");
+
+  const club = db.clubs.find((c) => c.id === clubId);
+
+  const loadAdmin = async () => {
+    const { getCloudDb } = await import("@/lib/firebase");
+    const { collection, getDocs, query, where } = await import("firebase/firestore");
+    const dbref = getCloudDb();
+    if (!dbref) return;
+    setLoading(true);
+    try {
+      // Get current admin
+      const adminQuery = query(
+        collection(dbref, "users"),
+        where("role", "==", "admin"),
+        where("clubs", "array-contains", clubId)
+      );
+      const adminSnap = await getDocs(adminQuery);
+      if (!adminSnap.empty) {
+        const doc = adminSnap.docs[0];
+        setCurrentAdmin({ ...doc.data(), uid: doc.id } as PortalUser);
+      } else {
+        setCurrentAdmin(null);
+      }
+
+      // Get all users for reassignment dropdown
+      const usersSnap = await getDocs(collection(dbref, "users"));
+      const users: PortalUser[] = [];
+      usersSnap.forEach((ds) => {
+        const u = ds.data() as PortalUser;
+        if (u.uid !== auth.user?.uid) {
+          users.push({ ...u, uid: ds.id });
+        }
+      });
+      setAllUsers(users);
+    } catch {
+      toast.toast("Could not load admin data.", "err");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const reassignAdmin = async () => {
+    if (!reassignUserId) {
+      toast.toast("Select a user to assign as admin.", "err");
+      return;
+    }
+    const { getCloudDb } = await import("@/lib/firebase");
+    const { doc, updateDoc, arrayUnion, arrayRemove, getDoc } = await import("firebase/firestore");
+    const dbref = getCloudDb();
+    if (!dbref) return;
+
+    try {
+      const newAdmin = allUsers.find((u) => u.uid === reassignUserId);
+      if (!newAdmin) {
+        toast.toast("User not found.", "err");
+        return;
+      }
+
+      // Check if new admin already has a club
+      if (newAdmin.clubs && newAdmin.clubs.length > 0) {
+        toast.toast(
+          `${newAdmin.name || newAdmin.email} already manages another club. Each user can only admin one club.`,
+          "err"
+        );
+        return;
+      }
+
+      // Remove admin role from current admin (if exists)
+      if (currentAdmin) {
+        const currentAdminRef = doc(dbref, "users", currentAdmin.uid);
+        const currentAdminSnap = await getDoc(currentAdminRef);
+        if (currentAdminSnap.exists()) {
+          const currentData = currentAdminSnap.data();
+          const currentClubs = currentData.clubs || [];
+          // If this admin manages other clubs, remove this club from their list
+          // Otherwise, demote to executive or member
+          if (currentClubs.length > 1) {
+            await updateDoc(currentAdminRef, {
+              clubs: arrayRemove(clubId),
+            });
+          } else {
+            // Demote to member since they only had this club
+            await updateDoc(currentAdminRef, {
+              role: "member",
+              clubs: [],
+            });
+          }
+        }
+      }
+
+      // Assign new admin
+      const newAdminRef = doc(dbref, "users", reassignUserId);
+      await updateDoc(newAdminRef, {
+        role: "admin",
+        clubs: arrayUnion(clubId),
+      });
+
+      logAudit(
+        "admin_reassigned",
+        `Reassigned admin of ${club?.name || clubId} from ${currentAdmin?.email || "none"} to ${newAdmin.email}`,
+        "info",
+        clubId,
+        auth.user?.email || ""
+      );
+
+      toast.toast(`Admin reassigned to ${newAdmin.name || newAdmin.email}.`, "ok");
+      setReassignUserId("");
+      void loadAdmin();
+    } catch (err) {
+      toast.toast("Could not reassign admin: " + (err as Error).message, "err");
+    }
+  };
+
+  const removeAdmin = async () => {
+    if (!currentAdmin) return;
+    const { getCloudDb } = await import("@/lib/firebase");
+    const { doc, updateDoc, getDoc } = await import("firebase/firestore");
+    const dbref = getCloudDb();
+    if (!dbref) return;
+
+    if (!confirm(`Remove ${currentAdmin.name || currentAdmin.email} as admin of ${club?.name || clubId}?`)) {
+      return;
+    }
+
+    try {
+      const adminRef = doc(dbref, "users", currentAdmin.uid);
+      const adminSnap = await getDoc(adminRef);
+      if (adminSnap.exists()) {
+        const data = adminSnap.data();
+        const clubs = data.clubs || [];
+        if (clubs.length > 1) {
+          // Admin manages multiple clubs — just remove this club
+          await updateDoc(adminRef, {
+            clubs: clubs.filter((c: string) => c !== clubId),
+          });
+        } else {
+          // Admin only has this club — demote to member
+          await updateDoc(adminRef, {
+            role: "member",
+            clubs: [],
+          });
+        }
+      }
+
+      logAudit(
+        "admin_removed",
+        `Removed ${currentAdmin.email} as admin of ${club?.name || clubId}`,
+        "warn",
+        clubId,
+        auth.user?.email || ""
+      );
+
+      toast.toast(`${currentAdmin.name || currentAdmin.email} is no longer admin of this club.`, "ok");
+      void loadAdmin();
+    } catch (err) {
+      toast.toast("Could not remove admin: " + (err as Error).message, "err");
+    }
+  };
+
+  return (
+    <div className="panel lg:col-span-2">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="m-0 text-[18px] font-bold text-ink">🔑 Club Admin</h2>
+        <button className="btn btn-outline btn-sm" onClick={() => void loadAdmin()} disabled={loading}>
+          {loading ? "Loading…" : "Load admin"}
+        </button>
+      </div>
+      <p className="m-0 mt-1 text-[13px] text-muted">
+        Manage who is the admin of this club. Each club has exactly one admin — no approval needed, instant access.
+        The admin manages the club, approves moderator requests, and reviews membership applications.
+      </p>
+
+      {/* Current admin */}
+      {currentAdmin && (
+        <div className="mt-4 rounded-xl border border-line p-4">
+          <h3 className="m-0 text-[14px] font-bold text-ink">Current admin</h3>
+          <div className="mt-2 flex items-center gap-3">
+            <span
+              aria-hidden="true"
+              className="inline-grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-navy to-blue-700 text-[13px] font-extrabold text-white"
+            >
+              {((currentAdmin.name || "?").trim().split(/\s+/).filter(Boolean)[0]?.[0] || "?") +
+                ((currentAdmin.name || "?").trim().split(/\s+/).filter(Boolean).slice(-1)[0]?.[0] || "")}
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="text-[14px] font-bold text-ink">{currentAdmin.name || "Admin"}</div>
+              <div className="text-[12.5px] text-muted">{currentAdmin.email}</div>
+            </div>
+            <button className="btn btn-danger btn-sm" onClick={() => void removeAdmin()}>
+              Remove admin
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!currentAdmin && !loading && (
+        <div className="mt-4 rounded-xl border border-dashed border-amber-300 bg-amber-50 p-4">
+          <p className="m-0 text-[13px] font-semibold text-amber-800">
+            ⚠️ No admin assigned to this club. Assign one below.
+          </p>
+        </div>
+      )}
+
+      {/* Reassign admin */}
+      <div className="mt-4 rounded-xl border border-line p-4">
+        <h3 className="m-0 text-[14px] font-bold text-ink">
+          {currentAdmin ? "Reassign admin" : "Assign admin"}
+        </h3>
+        <p className="m-0 mt-1 text-[12.5px] text-muted">
+          Select a user to become the new admin of this club. They must not already be an admin of another club.
+        </p>
+        <div className="mt-3 flex flex-wrap items-end gap-3">
+          <div className="flex-1">
+            <label className="label" htmlFor="reassign-admin">
+              Select user
+            </label>
+            <select
+              id="reassign-admin"
+              className="select"
+              value={reassignUserId}
+              onChange={(e) => setReassignUserId(e.target.value)}
+            >
+              <option value="">— Choose a user —</option>
+              {allUsers
+                .filter((u) => u.role !== "admin")
+                .sort((a, b) => (a.name || a.email).localeCompare(b.name || b.email))
+                .map((u) => (
+                  <option key={u.uid} value={u.uid}>
+                    {u.name || u.email} ({u.email}) — {u.role}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <button className="btn btn-primary btn-sm" onClick={() => void reassignAdmin()}>
+            {currentAdmin ? "Reassign" : "Assign"} admin
+          </button>
+        </div>
+      </div>
+
+      {allUsers.length === 0 && !loading && (
+        <p className="m-0 mt-3 text-[12.5px] text-muted">
+          Click &quot;Load admin&quot; to see the current admin and available users.
+        </p>
+      )}
     </div>
   );
 }
