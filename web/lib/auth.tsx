@@ -219,10 +219,15 @@ async function bootstrapUser(
       ...(pendingModeratorClubId ? { pendingModeratorClubId, pendingModeratorRequestedAt } : {}),
     };
   } catch (err) {
+    // Re-throw validation errors (e.g. duplicate admin) so the user sees them.
+    const msg = (err as Error)?.message || "";
+    if (msg.includes("already has an admin") || msg.includes("Each club can only have")) {
+      throw err;
+    }
     // Concurrent bootstrap race (another account became admin first, or the
     // meta/bootstrap marker was created mid-flight) — retry as a plain member
     // profile so the account is never left unusable.
-    console.warn("Bootstrap race, falling back to member profile:", (err as Error)?.message);
+    console.warn("Bootstrap race, falling back to member profile:", msg);
     await setDoc(doc(db, "users", uid), {
       uid,
       email,

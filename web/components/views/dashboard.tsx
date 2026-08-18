@@ -169,7 +169,7 @@ function DashboardLogin({
   cloud: boolean;
   onDemoSignIn: (u: UserLike) => void;
   onGoogleSignIn: () => Promise<string | null>;
-  onCloudEmail: (email: string, pass: string, mode: "signin" | "signup", name: string, role?: string, selectedClubId?: string, studentId?: string) => Promise<string | null>;
+  onCloudEmail: (email: string, pass: string, mode: "signin" | "signup", name: string, role?: string, selectedClubId?: string, studentId?: string, phone?: string, classId?: string) => Promise<string | null>;
   verify: (id: string) => StudentCheck;
   clubs: { id: string; icon: string; name: string }[];
 }) {
@@ -306,10 +306,10 @@ function DashboardLogin({
                 <>
                   <input className="input" placeholder="Class ID (e.g. CSE-26-01)" value={form.classId} onChange={(e) => setForm({ ...form, classId: e.target.value })} aria-label="Class ID" />
                   <input className="input" type="tel" placeholder="Phone number (e.g. 01XXXXXXXXX)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} aria-label="Phone number" />
-                  <input className="input" type="email" placeholder="Email address" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} aria-label="Email address" />
-                  <input className="input" type="password" placeholder="Password (at least 6 characters)" value={form.pass} onChange={(e) => setForm({ ...form, pass: e.target.value })} aria-label="Password" />
                 </>
               )}
+              <input className="input" type="email" placeholder="Email address" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} aria-label="Email address" />
+              <input className="input" type="password" placeholder="Password (at least 6 characters)" value={form.pass} onChange={(e) => setForm({ ...form, pass: e.target.value })} aria-label="Password" />
               {form.accountType === "admin" && (
                 <div>
                   <label className="label" htmlFor="admin-club">
