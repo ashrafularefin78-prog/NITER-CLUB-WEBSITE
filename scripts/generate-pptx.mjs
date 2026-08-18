@@ -1,4 +1,4 @@
-import PptxGenJS from "pptxgenjs";
+import PptxGenJS from "@bapunhansdah/pptxgenjs";
 
 const pptx = new PptxGenJS();
 
@@ -25,32 +25,36 @@ pptx.layout = "LAYOUT_WIDE";
 // ============================================================
 let slide = pptx.addSlide();
 slide.background = { color: NAVY };
+slide.transition = { type: 'fade', speed: 'slow' };
 
 // Top accent line
-slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 4, fill: { color: GOLD } });
+slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 4, fill: { color: GOLD }, animation: { type: 'wipe', duration: 600, direction: 'left', trigger: 'withPrevious' } });
 
 // Overline
 slide.addText("EXECUTIVE SUMMARY", {
   x: 0.8, y: 1.5, w: 8, h: 0.4,
   fontSize: 11, fontFace: "Arial", bold: true,
-  color: GOLD, charSpacing: 4
+  color: GOLD, charSpacing: 4,
+  animation: { type: 'fadein', duration: 500, trigger: 'withPrevious' }
 });
 
 // Title
 slide.addText("NITER Clubs\nPortal", {
   x: 0.8, y: 2.0, w: 8, h: 2.0,
   fontSize: 48, fontFace: "Arial", bold: true,
-  color: WHITE, lineSpacingMultiple: 0.9
+  color: WHITE, lineSpacingMultiple: 0.9,
+  animation: { type: 'flyin', duration: 700, direction: 'bottom', trigger: 'onClick' }
 });
 
 // Accent line under title
-slide.addShape(pptx.ShapeType.rect, { x: 0.8, y: 4.1, w: 0.8, h: 4, fill: { color: GOLD } });
+slide.addShape(pptx.ShapeType.rect, { x: 0.8, y: 4.1, w: 0.8, h: 4, fill: { color: GOLD }, animation: { type: 'wipe', duration: 400, direction: 'left', trigger: 'withPrevious' } });
 
 // Subtitle
 slide.addText("A unified digital platform transforming how 11+ student clubs operate, communicate, and engage with 2,000+ students at the National Institute of Textile Engineering and Research.", {
   x: 0.8, y: 4.5, w: 8, h: 1.5,
   fontSize: 16, fontFace: "Arial",
-  color: GRAY, lineSpacingMultiple: 1.5
+  color: GRAY, lineSpacingMultiple: 1.5,
+  animation: { type: 'fadein', duration: 800, trigger: 'withPrevious' }
 });
 
 // Tech stack tags
@@ -59,12 +63,14 @@ tags.forEach((tag, i) => {
   slide.addShape(pptx.ShapeType.roundRect, {
     x: 0.8 + (i * 1.8), y: 6.2, w: 1.6, h: 0.4,
     fill: { color: NAVY_MID }, rectRadius: 0.1,
-    line: { color: "334155", width: 1 }
+    line: { color: "334155", width: 1 },
+    animation: { type: 'zoom', duration: 400, trigger: 'withPrevious', delay: i * 100 }
   });
   slide.addText(tag, {
     x: 0.8 + (i * 1.8), y: 6.2, w: 1.6, h: 0.4,
     fontSize: 9, fontFace: "Arial", bold: true,
-    color: WHITE, align: "center", valign: "middle"
+    color: WHITE, align: "center", valign: "middle",
+    animation: { type: 'fadein', duration: 300, trigger: 'withPrevious', delay: i * 100 }
   });
 });
 
@@ -79,24 +85,28 @@ slide.addText("August 2026 · v1.0", {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: WHITE };
+slide.transition = { type: 'push', speed: 'fast' };
 
 // Section label
 slide.addText("THE CHALLENGE", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
   fontSize: 11, fontFace: "Arial", bold: true,
-  color: GOLD, charSpacing: 3
+  color: GOLD, charSpacing: 3,
+  animation: { type: 'fadein', duration: 400, trigger: 'withPrevious' }
 });
 
 // Title
 slide.addText("Problem Statement", {
   x: 0.8, y: 0.8, w: 10, h: 0.8,
-  fontSize: 36, fontFace: "Arial", bold: true, color: NAVY
+  fontSize: 36, fontFace: "Arial", bold: true, color: NAVY,
+  animation: { type: 'flyin', duration: 600, direction: 'left', trigger: 'onClick' }
 });
 
 // Lead text
 slide.addText("NITER's student clubs face critical operational challenges that reduce engagement and increase administrative burden.", {
   x: 0.8, y: 1.6, w: 10, h: 0.6,
-  fontSize: 14, fontFace: "Arial", color: GRAY, lineSpacingMultiple: 1.5
+  fontSize: 14, fontFace: "Arial", color: GRAY, lineSpacingMultiple: 1.5,
+  animation: { type: 'fadein', duration: 500, trigger: 'withPrevious' }
 });
 
 // Problem cards
@@ -121,30 +131,34 @@ problems.forEach((p, i) => {
     fill: { color: WHITE },
     line: { color: "E2E8F0", width: 1 },
     rectRadius: 0.1,
-    shadow: { type: "outer", blur: 4, offset: 2, color: "000000", opacity: 0.08 }
+    shadow: { type: "outer", blur: 4, offset: 2, color: "000000", opacity: 0.08 },
+    animation: { type: 'flyin', duration: 500, direction: i < 3 ? 'left' : 'right', trigger: 'onClick', delay: i * 150 }
   });
 
   // Red left border
   slide.addShape(pptx.ShapeType.rect, {
     x, y, w: 0.05, h: 2.1,
-    fill: { color: RED }
+    fill: { color: RED },
+    animation: { type: 'wipe', duration: 300, direction: 'top', trigger: 'withPrevious' }
   });
 
   // Icon
-  slide.addText(p.icon, { x: x + 0.2, y: y + 0.15, w: 0.5, h: 0.5, fontSize: 24 });
+  slide.addText(p.icon, { x: x + 0.2, y: y + 0.15, w: 0.5, h: 0.5, fontSize: 24, animation: { type: 'zoom', duration: 400, trigger: 'withPrevious' } });
 
   // Title
   slide.addText(p.title, {
     x: x + 0.2, y: y + 0.65, w: 3.1, h: 0.6,
     fontSize: 13, fontFace: "Arial", bold: true, color: NAVY,
-    lineSpacingMultiple: 1.1
+    lineSpacingMultiple: 1.1,
+    animation: { type: 'fadein', duration: 400, trigger: 'withPrevious' }
   });
 
   // Description
   slide.addText(p.desc, {
     x: x + 0.2, y: y + 1.3, w: 3.1, h: 0.6,
     fontSize: 10, fontFace: "Arial", color: GRAY,
-    lineSpacingMultiple: 1.3
+    lineSpacingMultiple: 1.3,
+    animation: { type: 'fadein', duration: 500, trigger: 'withPrevious' }
   });
 });
 
@@ -153,21 +167,25 @@ problems.forEach((p, i) => {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: NAVY };
+slide.transition = { type: 'cover', speed: 'medium' };
 
 slide.addText("OUR APPROACH", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
   fontSize: 11, fontFace: "Arial", bold: true,
-  color: GOLD, charSpacing: 3
+  color: GOLD, charSpacing: 3,
+  animation: { type: 'fadein', duration: 400, trigger: 'withPrevious' }
 });
 
 slide.addText("The Solution", {
   x: 0.8, y: 0.8, w: 10, h: 0.8,
-  fontSize: 36, fontFace: "Arial", bold: true, color: WHITE
+  fontSize: 36, fontFace: "Arial", bold: true, color: WHITE,
+  animation: { type: 'flyin', duration: 600, direction: 'bottom', trigger: 'onClick' }
 });
 
 slide.addText("A comprehensive web platform that centralizes and automates all club operations.", {
   x: 0.8, y: 1.5, w: 10, h: 0.5,
-  fontSize: 14, fontFace: "Arial", color: GRAY
+  fontSize: 14, fontFace: "Arial", color: GRAY,
+  animation: { type: 'fadein', duration: 500, trigger: 'withPrevious' }
 });
 
 const solutions = [
@@ -184,16 +202,18 @@ solutions.forEach((sol, i) => {
     x, y: 2.2, w: 3.6, h: 4.8,
     fill: { color: "1E293B" },
     line: { color: "334155", width: 1 },
-    rectRadius: 0.1
+    rectRadius: 0.1,
+    animation: { type: 'growandturn', duration: 700, trigger: 'onClick', delay: i * 200 }
   });
 
   // Emoji
-  slide.addText(sol.emoji, { x: x + 0.3, y: 2.4, w: 0.6, h: 0.6, fontSize: 28 });
+  slide.addText(sol.emoji, { x: x + 0.3, y: 2.4, w: 0.6, h: 0.6, fontSize: 28, animation: { type: 'zoom', duration: 400, trigger: 'withPrevious' } });
 
   // Title
   slide.addText(sol.title, {
     x: x + 0.3, y: 3.0, w: 3.0, h: 0.4,
-    fontSize: 16, fontFace: "Arial", bold: true, color: WHITE
+    fontSize: 16, fontFace: "Arial", bold: true, color: WHITE,
+    animation: { type: 'fadein', duration: 500, trigger: 'withPrevious' }
   });
 
   // Items
@@ -201,7 +221,8 @@ solutions.forEach((sol, i) => {
     slide.addText(`✓  ${item}`, {
       x: x + 0.3, y: 3.5 + (j * 0.55), w: 3.0, h: 0.5,
       fontSize: 10, fontFace: "Arial", color: "CBD5E1",
-      lineSpacingMultiple: 1.2
+      lineSpacingMultiple: 1.2,
+      animation: { type: 'fadein', duration: 300, trigger: 'withPrevious', delay: j * 100 }
     });
   });
 });
@@ -211,6 +232,7 @@ solutions.forEach((sol, i) => {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: WHITE };
+slide.transition = { type: 'wipe', speed: 'fast' };
 
 slide.addText("BY THE NUMBERS", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
@@ -239,18 +261,21 @@ stats.forEach((s, i) => {
     fill: { color: WHITE },
     line: { color: "E2E8F0", width: 1 },
     rectRadius: 0.1,
-    shadow: { type: "outer", blur: 4, offset: 2, color: "000000", opacity: 0.08 }
+    shadow: { type: "outer", blur: 4, offset: 2, color: "000000", opacity: 0.08 },
+    animation: { type: 'zoom', duration: 500, trigger: 'onClick', delay: i * 150 }
   });
 
   slide.addText(s.value, {
     x, y: 2.15, w: 2.6, h: 1.0,
     fontSize: 40, fontFace: "Arial", bold: true,
-    color: s.color, align: "center"
+    color: s.color, align: "center",
+    animation: { type: 'growandturn', duration: 600, trigger: 'withPrevious' }
   });
 
   slide.addText(s.label, {
     x, y: 3.1, w: 2.6, h: 0.5,
-    fontSize: 11, fontFace: "Arial", color: GRAY, align: "center"
+    fontSize: 11, fontFace: "Arial", color: GRAY, align: "center",
+    animation: { type: 'fadein', duration: 400, trigger: 'withPrevious' }
   });
 });
 
@@ -285,6 +310,7 @@ slide.addTable(roleRows, {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: LIGHT_GRAY };
+slide.transition = { type: 'push', speed: 'medium' };
 
 slide.addText("TECHNOLOGY", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
@@ -377,6 +403,7 @@ apis.forEach((t, i) => {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: NAVY };
+slide.transition = { type: 'cover', speed: 'fast' };
 
 slide.addText("SYSTEM DESIGN", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
@@ -469,6 +496,7 @@ archFeatures.forEach((f, i) => {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: WHITE };
+slide.transition = { type: 'fade', speed: 'fast' };
 
 slide.addText("DATA LAYER", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
@@ -509,6 +537,7 @@ slide.addTable(dataRows, {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: LIGHT_GRAY };
+slide.transition = { type: 'push', speed: 'medium' };
 
 slide.addText("WORKFLOWS", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
@@ -548,22 +577,26 @@ membershipSteps.forEach((s, i) => {
 
   slide.addShape(pptx.ShapeType.ellipse, {
     x: 1.2, y: y, w: 0.35, h: 0.35,
-    fill: { color: i < 3 ? NAVY : i < 5 ? GOLD : GREEN }
+    fill: { color: i < 3 ? NAVY : i < 5 ? GOLD : GREEN },
+    animation: { type: 'zoom', duration: 400, trigger: 'onClick', delay: i * 120 }
   });
 
   slide.addText(s.num, {
     x: 1.2, y: y, w: 0.35, h: 0.35,
-    fontSize: 9, fontFace: "Arial", bold: true, color: WHITE, align: "center", valign: "middle"
+    fontSize: 9, fontFace: "Arial", bold: true, color: WHITE, align: "center", valign: "middle",
+    animation: { type: 'fadein', duration: 300, trigger: 'withPrevious' }
   });
 
   slide.addText(s.title, {
     x: 1.7, y: y - 0.05, w: 4.0, h: 0.25,
-    fontSize: 11, fontFace: "Arial", bold: true, color: NAVY
+    fontSize: 11, fontFace: "Arial", bold: true, color: NAVY,
+    animation: { type: 'fadein', duration: 300, trigger: 'withPrevious' }
   });
 
   slide.addText(s.desc, {
     x: 1.7, y: y + 0.2, w: 4.0, h: 0.25,
-    fontSize: 9, fontFace: "Arial", color: GRAY
+    fontSize: 9, fontFace: "Arial", color: GRAY,
+    animation: { type: 'fadein', duration: 400, trigger: 'withPrevious' }
   });
 });
 
@@ -594,22 +627,26 @@ modSteps.forEach((s, i) => {
 
   slide.addShape(pptx.ShapeType.ellipse, {
     x: 7.2, y: y, w: 0.35, h: 0.35,
-    fill: { color: i < 3 ? NAVY : i < 5 ? GOLD : GREEN }
+    fill: { color: i < 3 ? NAVY : i < 5 ? GOLD : GREEN },
+    animation: { type: 'zoom', duration: 400, trigger: 'onClick', delay: i * 120 }
   });
 
   slide.addText(s.num, {
     x: 7.2, y: y, w: 0.35, h: 0.35,
-    fontSize: 9, fontFace: "Arial", bold: true, color: WHITE, align: "center", valign: "middle"
+    fontSize: 9, fontFace: "Arial", bold: true, color: WHITE, align: "center", valign: "middle",
+    animation: { type: 'fadein', duration: 300, trigger: 'withPrevious' }
   });
 
   slide.addText(s.title, {
     x: 7.7, y: y - 0.05, w: 4.0, h: 0.25,
-    fontSize: 11, fontFace: "Arial", bold: true, color: NAVY
+    fontSize: 11, fontFace: "Arial", bold: true, color: NAVY,
+    animation: { type: 'fadein', duration: 300, trigger: 'withPrevious' }
   });
 
   slide.addText(s.desc, {
     x: 7.7, y: y + 0.2, w: 4.0, h: 0.25,
-    fontSize: 9, fontFace: "Arial", color: GRAY
+    fontSize: 9, fontFace: "Arial", color: GRAY,
+    animation: { type: 'fadein', duration: 400, trigger: 'withPrevious' }
   });
 });
 
@@ -618,6 +655,7 @@ modSteps.forEach((s, i) => {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: WHITE };
+slide.transition = { type: 'wipe', speed: 'fast' };
 
 slide.addText("CAPABILITIES", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
@@ -648,26 +686,30 @@ features.forEach((f, i) => {
     fill: { color: WHITE },
     line: { color: "E2E8F0", width: 1 },
     rectRadius: 0.1,
-    shadow: { type: "outer", blur: 3, offset: 1, color: "000000", opacity: 0.06 }
+    shadow: { type: "outer", blur: 3, offset: 1, color: "000000", opacity: 0.06 },
+    animation: { type: 'growandturn', duration: 600, trigger: 'onClick', delay: i * 200 }
   });
 
   // Top accent
   slide.addShape(pptx.ShapeType.rect, {
     x, y, w: 5.5, h: 0.06,
-    fill: { color: f.color }
+    fill: { color: f.color },
+    animation: { type: 'wipe', duration: 300, direction: 'left', trigger: 'withPrevious' }
   });
 
-  slide.addText(f.emoji, { x: x + 0.2, y: y + 0.2, w: 0.5, h: 0.5, fontSize: 24 });
+  slide.addText(f.emoji, { x: x + 0.2, y: y + 0.2, w: 0.5, h: 0.5, fontSize: 24, animation: { type: 'zoom', duration: 400, trigger: 'withPrevious' } });
 
   slide.addText(f.title, {
     x: x + 0.8, y: y + 0.2, w: 4.5, h: 0.4,
-    fontSize: 16, fontFace: "Arial", bold: true, color: NAVY
+    fontSize: 16, fontFace: "Arial", bold: true, color: NAVY,
+    animation: { type: 'fadein', duration: 500, trigger: 'withPrevious' }
   });
 
   slide.addText(f.desc, {
     x: x + 0.2, y: y + 0.8, w: 5.1, h: 1.2,
     fontSize: 11, fontFace: "Arial", color: GRAY,
-    lineSpacingMultiple: 1.4
+    lineSpacingMultiple: 1.4,
+    animation: { type: 'fadein', duration: 600, trigger: 'withPrevious' }
   });
 });
 
@@ -676,6 +718,7 @@ features.forEach((f, i) => {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: NAVY };
+slide.transition = { type: 'cover', speed: 'medium' };
 
 slide.addText("PROTECTION", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
@@ -751,6 +794,7 @@ storageRules.forEach((r, i) => {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: WHITE };
+slide.transition = { type: 'fade', speed: 'fast' };
 
 slide.addText("OUTCOMES", {
   x: 0.8, y: 0.5, w: 4, h: 0.3,
@@ -778,30 +822,35 @@ comparisons.forEach((c, i) => {
   slide.addShape(pptx.ShapeType.roundRect, {
     x: 0.8, y, w: 4.5, h: 0.9,
     fill: { color: "FEE2E2" },
-    rectRadius: 0.08
+    rectRadius: 0.08,
+    animation: { type: 'flyin', duration: 400, direction: 'left', trigger: 'onClick', delay: i * 200 }
   });
   slide.addText(c.before, {
     x: 1.0, y, w: 4.2, h: 0.9,
     fontSize: 10, fontFace: "Arial", bold: true, color: "991B1B",
-    lineSpacingMultiple: 1.2, valign: "middle"
+    lineSpacingMultiple: 1.2, valign: "middle",
+    animation: { type: 'fadein', duration: 300, trigger: 'withPrevious' }
   });
 
   // Arrow
   slide.addText("→", {
     x: 5.5, y, w: 0.8, h: 0.9,
-    fontSize: 20, fontFace: "Arial", bold: true, color: GOLD, align: "center", valign: "middle"
+    fontSize: 20, fontFace: "Arial", bold: true, color: GOLD, align: "center", valign: "middle",
+    animation: { type: 'zoom', duration: 300, trigger: 'withPrevious' }
   });
 
   // After
   slide.addShape(pptx.ShapeType.roundRect, {
     x: 6.5, y, w: 5.5, h: 0.9,
     fill: { color: "D1FAE5" },
-    rectRadius: 0.08
+    rectRadius: 0.08,
+    animation: { type: 'flyin', duration: 400, direction: 'right', trigger: 'withPrevious' }
   });
   slide.addText(c.after, {
     x: 6.7, y, w: 5.2, h: 0.9,
     fontSize: 10, fontFace: "Arial", bold: true, color: "065F46",
-    lineSpacingMultiple: 1.2, valign: "middle"
+    lineSpacingMultiple: 1.2, valign: "middle",
+    animation: { type: 'fadein', duration: 300, trigger: 'withPrevious' }
   });
 });
 
@@ -810,6 +859,7 @@ comparisons.forEach((c, i) => {
 // ============================================================
 slide = pptx.addSlide();
 slide.background = { color: GOLD };
+slide.transition = { type: 'zoom', speed: 'slow' };
 
 slide.addText("12 / 12", {
   x: 10.5, y: 0.5, w: 2, h: 0.3,
@@ -817,18 +867,20 @@ slide.addText("12 / 12", {
   color: "92400E", align: "right"
 });
 
-slide.addText("🏛️", { x: 5.5, y: 1.5, w: 2, h: 1.0, fontSize: 48, align: "center" });
+slide.addText("🏛️", { x: 5.5, y: 1.5, w: 2, h: 1.0, fontSize: 48, align: "center", animation: { type: 'zoom', duration: 800, trigger: 'withPrevious' } });
 
 slide.addText("Thank You", {
   x: 2, y: 2.5, w: 9, h: 1.2,
   fontSize: 54, fontFace: "Arial", bold: true,
-  color: NAVY, align: "center"
+  color: NAVY, align: "center",
+  animation: { type: 'growandturn', duration: 900, trigger: 'withPrevious' }
 });
 
 slide.addText("NITER Clubs Portal\nOne Portal for Every Club", {
   x: 2, y: 3.7, w: 9, h: 1.0,
   fontSize: 18, fontFace: "Arial",
-  color: "92400E", align: "center", lineSpacingMultiple: 1.4
+  color: "92400E", align: "center", lineSpacingMultiple: 1.4,
+  animation: { type: 'fadein', duration: 700, trigger: 'withPrevious' }
 });
 
 // Contact card
