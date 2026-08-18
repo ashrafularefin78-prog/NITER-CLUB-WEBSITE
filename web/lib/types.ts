@@ -41,6 +41,10 @@ export interface Club {
 
 export type Reactions = Record<string, number>;
 
+export type NoticeCategory = "general" | "event" | "meeting" | "workshop" | "competition" | "announcement" | "urgent" | "other";
+
+export type NoticePriority = "low" | "normal" | "high" | "urgent";
+
 export interface Notice {
   id: string;
   clubId: string;
@@ -51,6 +55,30 @@ export interface Notice {
   reactions: Reactions;
   pinned?: boolean;
   formId?: string;
+  /** Notice category for filtering and display. */
+  category?: NoticeCategory;
+  /** Priority level — urgent notices get a red badge. */
+  priority?: NoticePriority;
+  /** Event/meeting date and time (if the notice is about a specific event). */
+  eventDate?: string;
+  /** Event/meeting end date and time. */
+  eventEndDate?: string;
+  /** Venue or location for the event/meeting. */
+  venue?: string;
+  /** Contact person for questions about this notice. */
+  contactPerson?: string;
+  /** Contact email for questions about this notice. */
+  contactEmail?: string;
+  /** Contact phone for questions about this notice. */
+  contactPhone?: string;
+  /** External URL link (registration page, Facebook event, etc). */
+  externalUrl?: string;
+  /** External URL label (e.g., "Register Now", "Facebook Event"). */
+  externalUrlLabel?: string;
+  /** Number of views (tracked on page load). */
+  viewCount?: number;
+  /** Author name (executive who posted). */
+  authorName?: string;
 }
 
 export interface Form {

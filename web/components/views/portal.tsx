@@ -730,6 +730,19 @@ function NoticeForm({
   const [formId, setFormId] = useState(initial?.formId ?? "");
   const [date, setDate] = useState(initial?.date ?? new Date().toISOString().slice(0, 10));
   const [pinned, setPinned] = useState(initial?.pinned ?? false);
+  // New fields
+  const [category, setCategory] = useState(initial?.category ?? "general");
+  const [priority, setPriority] = useState(initial?.priority ?? "normal");
+  const [eventDate, setEventDate] = useState(initial?.eventDate ?? "");
+  const [eventEndDate, setEventEndDate] = useState(initial?.eventEndDate ?? "");
+  const [venue, setVenue] = useState(initial?.venue ?? "");
+  const [contactPerson, setContactPerson] = useState(initial?.contactPerson ?? "");
+  const [contactEmail, setContactEmail] = useState(initial?.contactEmail ?? "");
+  const [contactPhone, setContactPhone] = useState(initial?.contactPhone ?? "");
+  const [externalUrl, setExternalUrl] = useState(initial?.externalUrl ?? "");
+  const [externalUrlLabel, setExternalUrlLabel] = useState(initial?.externalUrlLabel ?? "");
+  const [authorName, setAuthorName] = useState(initial?.authorName ?? "");
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   return (
     <form
@@ -750,6 +763,17 @@ function NoticeForm({
                 formId: formId || undefined,
                 date,
                 pinned,
+                category,
+                priority,
+                eventDate: eventDate || undefined,
+                eventEndDate: eventEndDate || undefined,
+                venue: venue || undefined,
+                contactPerson: contactPerson || undefined,
+                contactEmail: contactEmail || undefined,
+                contactPhone: contactPhone || undefined,
+                externalUrl: externalUrl || undefined,
+                externalUrlLabel: externalUrlLabel || undefined,
+                authorName: authorName || undefined,
               });
           } else {
             d.notices.push({
@@ -762,6 +786,17 @@ function NoticeForm({
               reactions: {},
               pinned,
               formId: formId || undefined,
+              category,
+              priority,
+              eventDate: eventDate || undefined,
+              eventEndDate: eventEndDate || undefined,
+              venue: venue || undefined,
+              contactPerson: contactPerson || undefined,
+              contactEmail: contactEmail || undefined,
+              contactPhone: contactPhone || undefined,
+              externalUrl: externalUrl || undefined,
+              externalUrlLabel: externalUrlLabel || undefined,
+              authorName: authorName || undefined,
             });
           }
         });
@@ -791,6 +826,34 @@ function NoticeForm({
           value={body}
           onChange={(e) => setBody(e.target.value)}
         />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="label" htmlFor="nf-category">
+            Category
+          </label>
+          <select id="nf-category" className="select" value={category} onChange={(e) => setCategory(e.target.value as any)}>
+            <option value="general">📢 General</option>
+            <option value="event">📅 Event</option>
+            <option value="meeting">🤝 Meeting</option>
+            <option value="workshop">🔧 Workshop</option>
+            <option value="competition">🏆 Competition</option>
+            <option value="announcement">📣 Announcement</option>
+            <option value="urgent">🚨 Urgent</option>
+            <option value="other">📋 Other</option>
+          </select>
+        </div>
+        <div>
+          <label className="label" htmlFor="nf-priority">
+            Priority
+          </label>
+          <select id="nf-priority" className="select" value={priority} onChange={(e) => setPriority(e.target.value as any)}>
+            <option value="low">Low</option>
+            <option value="normal">Normal</option>
+            <option value="high">⬆️ High</option>
+            <option value="urgent">🚨 Urgent</option>
+          </select>
+        </div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
@@ -828,6 +891,70 @@ function NoticeForm({
         />
         📌 Pin this notice to the top
       </label>
+
+      {/* Advanced Options Toggle */}
+      <button
+        type="button"
+        className="flex items-center gap-2 text-[13px] font-semibold text-crimson hover:underline"
+        onClick={() => setShowAdvanced(!showAdvanced)}
+      >
+        {showAdvanced ? "▾" : "▸"} Advanced options (event details, contact, links)
+      </button>
+
+      {showAdvanced && (
+        <div className="space-y-4 rounded-xl border border-line bg-surface-2/40 p-4 anim-fade-up">
+          <h4 className="m-0 text-[14px] font-bold text-ink">📅 Event Details</h4>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="label" htmlFor="nf-event-date">Event start date & time</label>
+              <input id="nf-event-date" type="datetime-local" className="input" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
+            </div>
+            <div>
+              <label className="label" htmlFor="nf-event-end-date">Event end date & time (optional)</label>
+              <input id="nf-event-end-date" type="datetime-local" className="input" value={eventEndDate} onChange={(e) => setEventEndDate(e.target.value)} />
+            </div>
+          </div>
+          <div>
+            <label className="label" htmlFor="nf-venue">📍 Venue / Location</label>
+            <input id="nf-venue" className="input" placeholder="e.g. Room 301, NITER Main Building" value={venue} onChange={(e) => setVenue(e.target.value)} />
+          </div>
+
+          <h4 className="m-0 mt-4 text-[14px] font-bold text-ink">👤 Contact Information</h4>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <label className="label" htmlFor="nf-contact-person">Contact person</label>
+              <input id="nf-contact-person" className="input" placeholder="e.g. Ahmed Rahman" value={contactPerson} onChange={(e) => setContactPerson(e.target.value)} />
+            </div>
+            <div>
+              <label className="label" htmlFor="nf-contact-email">Contact email</label>
+              <input id="nf-contact-email" type="email" className="input" placeholder="e.g. ahmed@niter.edu.bd" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
+            </div>
+            <div>
+              <label className="label" htmlFor="nf-contact-phone">Contact phone</label>
+              <input id="nf-contact-phone" type="tel" className="input" placeholder="e.g. 01XXXXXXXXX" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} />
+            </div>
+          </div>
+
+          <h4 className="m-0 mt-4 text-[14px] font-bold text-ink">🔗 External Link (optional)</h4>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="label" htmlFor="nf-external-url">URL</label>
+              <input id="nf-external-url" className="input" placeholder="https://..." value={externalUrl} onChange={(e) => setExternalUrl(e.target.value)} />
+            </div>
+            <div>
+              <label className="label" htmlFor="nf-external-url-label">Link label</label>
+              <input id="nf-external-url-label" className="input" placeholder="e.g. Register Now, Facebook Event" value={externalUrlLabel} onChange={(e) => setExternalUrlLabel(e.target.value)} />
+            </div>
+          </div>
+
+          <h4 className="m-0 mt-4 text-[14px] font-bold text-ink">✍️ Author</h4>
+          <div>
+            <label className="label" htmlFor="nf-author">Posted by</label>
+            <input id="nf-author" className="input" placeholder="e.g. Ahmed Rahman, President" value={authorName} onChange={(e) => setAuthorName(e.target.value)} />
+          </div>
+        </div>
+      )}
+
       <button type="submit" className="btn btn-primary">
         {initial ? "Save changes" : "Publish notice"}
       </button>
