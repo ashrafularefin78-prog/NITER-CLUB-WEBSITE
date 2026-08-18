@@ -15249,7 +15249,7 @@
 
     /* ---- 4. INTENT CLASSIFICATION ---- */
     var GROK_INTENTS = [
-      { intent: 'greeting', patterns: /^(hi|hello|hey|yo|sup|salam|assalam|aoa|good\s*(morning|afternoon|evening)|ki\s*obostha|kemon\s*achen|নমস্কার|হ্যালো)/i, weight: 10 },
+      { intent: 'greeting', patterns: /^(hi|hello|hey|yo|sup|salam|assalam|aoa|alaikum\s*(us\s*)?salam|good\s*(morning|afternoon|evening)|ki\s*obostha|kemon\s*achen|নমস্কার|হ্যালো)/i, weight: 10 },
       { intent: 'farewell', patterns: /^(bye|goodbye|see\s*(you|ya)|later|ta\s*ta|alvida|good\s*night|শুভরাত্রি)/i, weight: 10 },
       { intent: 'thanks', patterns: /^(thank|thanks|thx|dhonnobad|shukriya|appreciate|জয়)/i, weight: 10 },
       { intent: 'identity', patterns: /(who are you|your name|introduce|what are you|tumi ke|apni ke)/i, weight: 10 },
@@ -15555,7 +15555,7 @@
       var _grokCtx = grokConversationFlow(q);
       var _convCtx = naiConversationFlow(q);
             /* ---- Islamic greeting: Assalamualaikum -> Alaikumus Salam ---- */
-      if (/assalamu\s*(ualaikum|\s*alaikum|\s*o\s*alaikum|alaikum)/i.test(q) || /^salam$/i.test(q) || /^aoa$/i.test(q)) {
+      if (/assalamu\s*(ualaikum|\s*alaikum|\s*o\s*alaikum|alaikum)/i.test(q) || /alaikum\s*(us\s*)?salam/i.test(q) || /^salam$/i.test(q) || /^aoa$/i.test(q)) {
         return naiPick([
           "Wa Alaikumus Salam! \ud83d\ude4f \ud83c\udf19 May your day be blessed. How can I help you with NITER today \u2014 clubs, admission, exams, or anything else?",
           "Alaikumus Salam! \ud83d\ude4f Welcome! I'm NITER AI. Ask me anything about NITER \u2014 the institute, clubs, events, fees, the RMG industry. What would you like to know?",
