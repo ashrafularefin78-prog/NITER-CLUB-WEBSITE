@@ -3,13 +3,21 @@
 import Link from "next/link";
 import { useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+<<<<<<< HEAD
 import type { Form, FormField, Membership, Submission } from "@/lib/types";
 import { clubById, fmtDateTime, relativeAgo, statusOf } from "@/lib/utils";
+=======
+import type { Form, FormField, Submission } from "@/lib/types";
+import { clubById, fmtDateTime, statusOf } from "@/lib/utils";
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 import { mutate, useDb } from "@/lib/store";
 import { logAudit } from "@/lib/audit";
 import { mirrorSubmission } from "@/lib/appwrite-write";
 import { getCloudStorage } from "@/lib/firebase";
+<<<<<<< HEAD
 import { useAuth } from "@/lib/auth";
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 import { useToast } from "@/components/providers";
 import { Countdown } from "@/components/countdown";
 import { Skeleton } from "@/components/ui";
@@ -18,7 +26,10 @@ import { uid } from "@/lib/utils";
 
 export default function FormView({ formId }: { formId: string }) {
   const db = useDb();
+<<<<<<< HEAD
   const auth = useAuth();
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   const form = db?.forms.find((f) => f.id === formId) ?? null;
   const [done, setDone] = useState<Submission | null>(null);
   const [values, setValues] = useState<Record<string, string>>({});
@@ -117,6 +128,7 @@ export default function FormView({ formId }: { formId: string }) {
               // the success panel animates in cleanly.
               setSubmitting(true);
               window.setTimeout(() => {
+<<<<<<< HEAD
                 // Check if this is a membership form
                 const isMembershipForm = /membership/i.test(form.title);
                 let existingMembership: Membership | undefined;
@@ -164,6 +176,11 @@ export default function FormView({ formId }: { formId: string }) {
                   }
                 });
 
+=======
+                mutate((db) => {
+                  db.submissions.push(sub);
+                });
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
                 logAudit(
                   "submission",
                   `Form submission: ${form.title}`,
@@ -171,6 +188,7 @@ export default function FormView({ formId }: { formId: string }) {
                   (sub.data.name || sub.submitterEmail || "student") + (club ? " · " + club.name : ""),
                   sub.submitterEmail || ""
                 );
+<<<<<<< HEAD
 
                 // Send notifications for membership forms
                 if (isMembershipForm && !existingMembership) {
@@ -191,6 +209,11 @@ export default function FormView({ formId }: { formId: string }) {
                     : "Application submitted successfully!",
                   "ok"
                 );
+=======
+                setSubmitting(false);
+                setDone(sub);
+                toast.toast("Application submitted successfully!", "ok");
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
                 void mirrorSubmission(sub);
               }, 700);
             }}
@@ -696,6 +719,7 @@ function escapeHtml(s: string): string {
 
 const PAYMENT_FALLBACK = ["bKash", "Nagad", "Rocket", "Bank transfer", "Cash (at venue)", "Other"];
 
+<<<<<<< HEAD
 /**
  * Notify club admin and moderators when a student submits a membership form.
  * Best-effort — failures are silently ignored.
@@ -757,6 +781,8 @@ async function notifyClubModerators(
   }
 }
 
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 function FormSkeleton() {
   return (
     <div className="container-x py-10">

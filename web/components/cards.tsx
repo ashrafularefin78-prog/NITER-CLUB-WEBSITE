@@ -1,6 +1,10 @@
 "use client";
 
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
+=======
+import { useState } from "react";
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 import Link from "next/link";
 import type { Club, Form, Notice } from "@/lib/types";
 import { clubById, fmtDate, formById, formSubs, statusOf } from "@/lib/utils";
@@ -98,6 +102,7 @@ export function NoticeCard({ notice, showClub = false }: { notice: Notice; showC
   const db = useDb();
   const club = db ? clubById(db, notice.clubId) : null;
   const form = notice.formId && db ? formById(db, notice.formId) : null;
+<<<<<<< HEAD
   const [expanded, setExpanded] = useState(false);
   const [viewed, setViewed] = useState(false);
 
@@ -287,6 +292,33 @@ export function NoticeCard({ notice, showClub = false }: { notice: Notice; showC
         </div>
       </div>
 
+=======
+  return (
+    <article className="notice-card">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <h3 className="m-0 text-[16px] font-bold text-ink">
+          {notice.pinned && <span className="pin-badge">📌 PINNED</span>}
+          {notice.title}
+        </h3>
+        <span className="shrink-0 text-[12.5px] text-muted">
+          🗓 {fmtDate(notice.date)}
+          {notice.createdAt ? ` · ${timeAgo(notice.createdAt)}` : ""}
+        </span>
+      </div>
+      <p className="m-0 whitespace-pre-line text-[14px] text-ink/85">{notice.body}</p>
+      <div className="flex flex-wrap items-center gap-2">
+        {showClub && club && (
+          <span className="pill club">
+            <span aria-hidden="true">{club.icon}</span> {club.name}
+          </span>
+        )}
+        {form && (
+          <Link href={`/form/${form.id}`} className="btn btn-primary btn-sm no-underline">
+            📝 Fill the form
+          </Link>
+        )}
+      </div>
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       <ReactionBar notice={notice} />
     </article>
   );

@@ -236,8 +236,13 @@ B.push(
   `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="600" w:after="200"/></w:pPr>` +
     `<w:r><w:rPr><w:color w:val="${SKY}"/></w:rPr><w:t>One portal for every club at NITER</w:t></w:r></w:p>`,
   rule(),
+<<<<<<< HEAD
   kv("Version", "4.0"),
   kv("Date", "August 18, 2026"),
+=======
+  kv("Version", "2.0"),
+  kv("Date", "August 15, 2026"),
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   kv("Status", "Released"),
   kv("Repository", "github.com/ashrafularefin78-prog/NITER-CLUB-WEBSITE"),
   pageBreak()
@@ -252,8 +257,11 @@ B.push(
     [
       ["1.0", "10 Aug 2026", "NITER Clubs Portal team", "Initial release — full project documentation."],
       ["2.0", "15 Aug 2026", "NITER Clubs Portal team", "Added club ads, events, memberships, committee editor, student directory and Appwrite mirroring."],
+<<<<<<< HEAD
       ["3.0", "18 Aug 2026", "NITER Clubs Portal team", "Added club admin/moderator system, membership auto-creation from forms, email notifications, user profile enhancements."],
       ["4.0", "18 Aug 2026", "NITER Clubs Portal team", "Bug fixes: duplicate admin validation, signup form fields, TypeScript errors. Added Apache 2.0 license. Updated documentation."],
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     ]
   ),
   h2("Revision History"),
@@ -262,8 +270,11 @@ B.push(
     [
       ["1.0", "10 Aug 2026", "Initial release."],
       ["2.0", "15 Aug 2026", "Documented the moderator-published ads feature, club events, membership approvals, the committee editor with email notifications, the admin-only student directory and the Appwrite mirroring routes."],
+<<<<<<< HEAD
       ["3.0", "18 Aug 2026", "Added club admin/moderator system: moderator approval workflow, auto-membership from forms, club admin panel, email notifications, user profile enhancements (phone, classId, role badges)."],
       ["4.0", "18 Aug 2026", "Bug fixes: duplicate admin validation error handling, signup form missing email/password for admin, TypeScript strict mode errors. Added Apache 2.0 license. Regenerated documentation."],
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     ]
   ),
   h2("Related Documents"),
@@ -398,6 +409,7 @@ B.push(
   ),
   h2("4.3 Authentication & Roles"),
   p("Authentication is email/password via Firebase Auth. The **first account created becomes the portal admin** (guarded by a `meta/bootstrap` marker so it can happen only once). Admins promote other users to executive and assign the clubs each executive manages."),
+<<<<<<< HEAD
   p("During signup, users choose an **account type**. Members and moderators provide their name, class ID, phone number and email. Admins provide their name, student ID and select a club. Each club has exactly **one admin** — duplicate admin assignments are blocked with a validation error."),
   table(
     ["Role", "Access", "Approval"],
@@ -412,6 +424,18 @@ B.push(
     ]
   ),
   p("**Moderator workflow** — when a student signs up as a moderator, a `ModeratorRequest` is created with status `pending`. The club admin is emailed immediately. The admin reviews the request in Portal → Settings → Moderator requests and approves or rejects it. Approved moderators are promoted to `executive` and gain portal access for their club."),
+=======
+  table(
+    ["Role", "Access"],
+    [
+      ["Visitor", "Browse all public content; fill forms; file complaints."],
+      ["Member", "Public access plus the ability to track their own submissions, join requests and dashboard."],
+      ["Executive", "Manage the clubs they are assigned to — notices, forms, submissions, complaints, ads and the committee."],
+      ["IT Staff", "Admin-granted role that unlocks the campus IT helpdesk."],
+      ["Admin", "Everything, plus role management and the ability to manage any club."],
+    ]
+  ),
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   h2("4.5 Form Engine"),
   p("Executives build forms from typed fields. Supported field types:"),
   table(
@@ -443,12 +467,18 @@ B.push(
   h2("4.9 Club Events"),
   p("Clubs post **events** (title, description, start/end time, venue, capacity) from the portal. Events appear on the club page, the homepage and each member's dashboard, and are capped by capacity."),
   h2("4.10 Memberships & Committee Management"),
+<<<<<<< HEAD
   bullet("**Membership forms** — when a student submits a form whose title contains \"membership\", the system **automatically creates a membership request** (status: `pending`) in addition to storing the submission. This means club moderators can publish membership forms and get instant join requests."),
   bullet("**Approval workflow** — both the club admin and club moderators (executives) can approve or reject membership requests from the portal's Memberships tab. Approved members see their club on the dashboard. When approved, the student is emailed a notification."),
   bullet("**Notifications** — every membership form submission triggers an email to all club admins and moderators (`POST /api/membership-notify`). Every approval or rejection sends an email to the student (`POST /api/membership-decision-notify`)."),
   bullet("**Club admin panel** — global admins can reassign or remove a club's admin from Portal → Settings → Club Admin. The panel shows the current admin, allows selecting a new admin (validated for one-per-club), and supports removing the admin (demotes to member)."),
   bullet("**Committee editor** — the Settings tab lets a club's moderator edit the executive committee (role, name, photo — upload or URL). Every save is logged in a public *committee history* on the club page and the club's moderators are emailed via `POST /api/committee-notify`."),
   bullet("**Student dashboard** — signed-in students get a personal dashboard tracking their memberships, submissions and approvals. Profile badges show their role and which clubs they belong to."),
+=======
+  bullet("**Memberships** — students request membership from a club page; moderators review and approve or decline each request from the portal. Approved members see their club on the dashboard."),
+  bullet("**Committee editor** — the Settings tab lets a club's moderator edit the executive committee (role, name, photo — upload or URL). Every save is logged in a public *committee history* on the club page and the club's moderators are emailed via `POST /api/committee-notify`."),
+  bullet("**Student dashboard** — signed-in students get a personal dashboard tracking their memberships, submissions and approvals."),
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   h2("4.11 Student Directory & Public Profiles"),
   p("The portal ships an **official student roster** (B.Sc. CSE session 2025–26 and the full institute section lists). The directory is **admin-only** — the footer link is hidden for everyone else — and is backed by the Appwrite `students` collection when configured, falling back to the bundled roster offline. Each student gets a public profile page with an initials avatar."),
   h2("4.12 Appwrite Mirroring"),
@@ -488,7 +518,11 @@ B.push(
       ["Styling", "Tailwind CSS v4 with NITER brand tokens and `data-theme` dark mode"],
       ["Firebase", "Modular Firebase SDK v12 (`web/lib/firebase.ts`)"],
       ["State", "Custom client store with `useSyncExternalStore`, cross-tab sync, Firestore hydrate/push"],
+<<<<<<< HEAD
       ["API routes", "`app/api/` — `/api/students` (directory), `/api/submissions` and `/api/users` (mirror), `/api/committee-notify`, `/api/moderator-notify`, `/api/membership-notify`, `/api/membership-decision-notify` (email notifications)"],
+=======
+      ["API routes", "`app/api/` — `/api/students` (Appwrite-backed directory), `/api/submissions` and `/api/users` (Appwrite mirror), `/api/committee-notify` (moderator emails)"],
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       ["Tooling", "ESLint 9, Prettier 3, `tsc --noEmit` typecheck"],
     ]
   ),
@@ -511,16 +545,24 @@ B.push(
       ["`memberships`", "One doc per join request", "Self / club staff", "Anyone (requesting); staff (reviewing)"],
       ["`events`", "One doc per club event", "Everyone", "Admins / executives of the club"],
       ["`ads`", "One doc per ad (`ad-…`)", "Everyone", "Admins / executives of the club"],
+<<<<<<< HEAD
       ["`users/{uid}`", "Profile + `role` + `clubs[]` + `phone` + `classId`", "Self / staff", "Self (name only), admins (roles)"],
       ["`moderatorRequests`", "One doc per moderator signup request", "Club admins", "System (on signup); admins (reviewing)"],
+=======
+      ["`users/{uid}`", "Profile + `role` + `clubs[]`", "Self / staff", "Self (name only), admins (roles)"],
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       ["`config/site`", "Institute name + semester list", "Everyone", "Admins"],
       ["`meta/bootstrap`", "First-admin marker", "Everyone", "Created once"],
     ]
   ),
   h2("6.2 Key Entities & Statuses"),
+<<<<<<< HEAD
   bullet("**Roles** — `admin`, `executive`, `moderator`, `it-staff`, `member` (visitors have no record). Moderators start as `member` with a pending request; approved moderators become `executive`."),
   bullet("**ModeratorRequest** — `id`, `userId`, `clubId`, `status` (`pending`/`approved`/`rejected`), `requestedAt`, `reviewedAt`, `reviewedBy`, `userName`, `userEmail`, `studentId`."),
   bullet("**User profile fields** — `phone` and `classId` are stored for member and moderator accounts."),
+=======
+  bullet("**Roles** — `admin`, `executive`, `it-staff`, `member` (visitors have no record)."),
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   bullet("**Form status** — derived from `openAt` / `deadline`: `soon`, `open`, `closed`."),
   bullet("**Complaint status** — `open`, `in-progress`, `resolved`."),
   bullet("**Membership status** — `pending`, `approved`, `rejected`."),
@@ -646,7 +688,11 @@ B.push(
     "│   ├── mcp.json / mcp.cloud.json",
     "│   └── README.md",
     "├── web/                    # Next.js 15 rewrite (recommended for new work)",
+<<<<<<< HEAD
     "│   ├── app/                # Routes + /api (students, submissions, users, committee-notify, moderator-notify, membership-notify, membership-decision-notify)",
+=======
+    "│   ├── app/                # Routes + /api (students, submissions, users, committee-notify)",
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     "│   ├── components/         # layout, cards, ads carousel, countdown, views/…",
     "│   ├── lib/                # types, seed, store, firebase, auth, utils, appwrite-*",
     "│   ├── package.json",

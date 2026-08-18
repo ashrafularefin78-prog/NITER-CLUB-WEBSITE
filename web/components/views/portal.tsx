@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+<<<<<<< HEAD
 import type { Executive, Form, FormField, Membership, ModeratorRequest, Notice, PortalUser, Submission } from "@/lib/types";
+=======
+import type { Executive, Form, FormField, Membership, Notice, PortalUser, Submission } from "@/lib/types";
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 import {
   clubById,
   clubForms,
@@ -53,6 +57,7 @@ export default function PortalView() {
     if (!auth.cloud) return <DemoLogin />;
     if (auth.loading) return <PortalSkeleton />;
     if (!auth.user) return <CloudLogin />;
+<<<<<<< HEAD
     // Check if user has a pending moderator request
     if (auth.user.pendingModeratorClubId) {
       const pendingClub = clubById(db, auth.user.pendingModeratorClubId);
@@ -76,6 +81,8 @@ export default function PortalView() {
         </div>
       );
     }
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     if (!allowedClubIds.length)
       return (
         <div className="container-x py-16">
@@ -273,16 +280,22 @@ function DemoLogin() {
 
 function CloudLogin() {
   const auth = useAuth();
+<<<<<<< HEAD
   const db = useDb();
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   const toast = useToast();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [name, setName] = useState("");
+<<<<<<< HEAD
   const [phone, setPhone] = useState("");
   const [classId, setClassId] = useState("");
   const [accountType, setAccountType] = useState<"member" | "admin" | "moderator">("member");
   const [selectedClubId, setSelectedClubId] = useState("");
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   const [busy, setBusy] = useState(false);
   const [gBusy, setGBusy] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -334,6 +347,7 @@ function CloudLogin() {
           className="space-y-4 text-left"
           onSubmit={async (e) => {
             e.preventDefault();
+<<<<<<< HEAD
             if (mode === "signup" && accountType === "admin" && !selectedClubId) {
               toast.toast("Please select a club for admin role.", "err");
               return;
@@ -364,6 +378,13 @@ function CloudLogin() {
                 auth.setClubSession(selectedClubId);
               }
             }
+=======
+            setBusy(true);
+            const err = await auth.loginEmail(email, pass, mode, name);
+            setBusy(false);
+            if (err) toast.toast(err, "err");
+            else toast.toast("Welcome!", "ok");
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
           }}
         >
           <div>
@@ -381,6 +402,7 @@ function CloudLogin() {
             </select>
           </div>
           {mode === "signup" && (
+<<<<<<< HEAD
             <>
               <div>
                 <label className="label" htmlFor="login-name">
@@ -517,6 +539,19 @@ function CloudLogin() {
               <p className="hint mt-1">
                 Pick the club you want to manage. You&apos;ll go straight to the dashboard.
               </p>
+=======
+            <div>
+              <label className="label" htmlFor="login-name">
+                Full name
+              </label>
+              <input
+                id="login-name"
+                className="input"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
             </div>
           )}
           <div>
@@ -567,9 +602,14 @@ function CloudLogin() {
           </button>
         </form>
         <div className="mt-5 rounded-xl border border-line bg-surface-2/60 p-3 text-left text-[12.5px] text-muted">
+<<<<<<< HEAD
           💡 Select the club you manage, then sign in. The first account created becomes the global
           <b> admin</b>. New accounts can sign up as a <b>club admin</b> (one per club) or a
           <b> member</b>.
+=======
+          💡 The first account created becomes the <b>admin</b>. Admins promote others to club executives from
+          portal → Settings → Members &amp; roles.
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         </div>
       </div>
     </div>
@@ -730,6 +770,7 @@ function NoticeForm({
   const [formId, setFormId] = useState(initial?.formId ?? "");
   const [date, setDate] = useState(initial?.date ?? new Date().toISOString().slice(0, 10));
   const [pinned, setPinned] = useState(initial?.pinned ?? false);
+<<<<<<< HEAD
   // New fields
   const [category, setCategory] = useState(initial?.category ?? "general");
   const [priority, setPriority] = useState(initial?.priority ?? "normal");
@@ -743,6 +784,8 @@ function NoticeForm({
   const [externalUrlLabel, setExternalUrlLabel] = useState(initial?.externalUrlLabel ?? "");
   const [authorName, setAuthorName] = useState(initial?.authorName ?? "");
   const [showAdvanced, setShowAdvanced] = useState(false);
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 
   return (
     <form
@@ -763,6 +806,7 @@ function NoticeForm({
                 formId: formId || undefined,
                 date,
                 pinned,
+<<<<<<< HEAD
                 category,
                 priority,
                 eventDate: eventDate || undefined,
@@ -774,6 +818,8 @@ function NoticeForm({
                 externalUrl: externalUrl || undefined,
                 externalUrlLabel: externalUrlLabel || undefined,
                 authorName: authorName || undefined,
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
               });
           } else {
             d.notices.push({
@@ -786,6 +832,7 @@ function NoticeForm({
               reactions: {},
               pinned,
               formId: formId || undefined,
+<<<<<<< HEAD
               category,
               priority,
               eventDate: eventDate || undefined,
@@ -797,6 +844,8 @@ function NoticeForm({
               externalUrl: externalUrl || undefined,
               externalUrlLabel: externalUrlLabel || undefined,
               authorName: authorName || undefined,
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
             });
           }
         });
@@ -829,6 +878,7 @@ function NoticeForm({
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
+<<<<<<< HEAD
           <label className="label" htmlFor="nf-category">
             Category
           </label>
@@ -857,6 +907,8 @@ function NoticeForm({
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
           <label className="label" htmlFor="nf-form">
             Attach a form (optional)
           </label>
@@ -891,6 +943,7 @@ function NoticeForm({
         />
         📌 Pin this notice to the top
       </label>
+<<<<<<< HEAD
 
       {/* Advanced Options Toggle */}
       <button
@@ -955,6 +1008,8 @@ function NoticeForm({
         </div>
       )}
 
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       <button type="submit" className="btn btn-primary">
         {initial ? "Save changes" : "Publish notice"}
       </button>
@@ -1730,13 +1785,20 @@ function MembershipsTab({ clubId }: { clubId: string }) {
       toast.toast("Only this club's moderator can review join requests.", "err");
       return;
     }
+<<<<<<< HEAD
     const reviewerName = auth.user?.name || auth.user?.email || "";
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     mutate((draft) => {
       const t = draft.memberships.find((x) => x.id === m.id);
       if (!t) return;
       t.status = status;
       t.reviewedAt = new Date().toISOString();
+<<<<<<< HEAD
       t.reviewedBy = reviewerName;
+=======
+      t.reviewedBy = auth.user?.name || auth.user?.email || "";
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     });
     logAudit(
       "membership_review",
@@ -1745,8 +1807,11 @@ function MembershipsTab({ clubId }: { clubId: string }) {
       m.clubId,
       auth.user?.email || auth.user?.name || ""
     );
+<<<<<<< HEAD
     // Notify the student about the decision
     void notifyStudentMembershipDecision(m, status, clubId, reviewerName);
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     toast.toast(status === "approved" ? "Membership approved!" : "Membership rejected.", "ok");
   };
 
@@ -2103,10 +2168,13 @@ function SettingsTab({ clubId, isAdmin }: { clubId: string; isAdmin: boolean }) 
 
       {isAdmin && <AuditLogPanel />}
 
+<<<<<<< HEAD
       {isAdmin && <ModeratorRequestsTab clubId={clubId} />}
 
       {isAdmin && <ClubAdminPanel clubId={clubId} />}
 
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       {isAdmin && (
         <div className="panel lg:col-span-2">
           <h2 className="m-0 text-[18px] font-bold text-ink">Members &amp; roles</h2>
@@ -2164,6 +2232,7 @@ function MemberRow({
             className="btn btn-outline btn-sm"
             onClick={async () => {
               const { getCloudDb } = await import("@/lib/firebase");
+<<<<<<< HEAD
               const { doc, updateDoc, getDocs, query, collection, where } = await import("firebase/firestore");
               const dbref = getCloudDb();
               if (!dbref) return;
@@ -2190,6 +2259,11 @@ function MemberRow({
                 }
               }
 
+=======
+              const { doc, updateDoc } = await import("firebase/firestore");
+              const dbref = getCloudDb();
+              if (!dbref) return;
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
               try {
                 await updateDoc(doc(dbref, "users", user.uid), { role, clubs: selectedClubs });
                 toast.toast("Role updated.", "ok");
@@ -2226,6 +2300,7 @@ function MemberRow({
   );
 }
 
+<<<<<<< HEAD
 /* ================= Moderator Requests tab ================= */
 
 function ModeratorRequestsTab({ clubId }: { clubId: string }) {
@@ -2425,6 +2500,8 @@ function ModeratorRequestsTab({ clubId }: { clubId: string }) {
   );
 }
 
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 function PortalSkeleton() {
   return (
     <div className="container-x py-16">
@@ -2539,6 +2616,7 @@ function SiteSettingsPanel() {
     </div>
   );
 }
+<<<<<<< HEAD
 
 /**
  * Notify a student when their membership request is approved or rejected.
@@ -2840,3 +2918,5 @@ function ClubAdminPanel({ clubId }: { clubId: string }) {
     </div>
   );
 }
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5

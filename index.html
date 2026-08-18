@@ -1520,8 +1520,35 @@
     /* thinking bubble: shimmering label */
     .nai-think { background: linear-gradient(90deg, #f6f5ff, #ffffff, #f6f5ff); background-size: 200% 100%; animation: naiThinkShimmer 1.6s linear infinite; }
     @keyframes naiThinkShimmer { 0% { background-position: 0% 0%; } 100% { background-position: -200% 0%; } }
+<<<<<<< HEAD
     /* ===== NITER AI app shell (full page) ===== */
     .nai-app { display: flex; flex-direction: column; gap: 16px; }
+=======
+    /* ===== app shell: capability rail beside the chat (full page) ===== */
+    .nai-app { display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 16px; align-items: start; }
+    .nai-rail { position: sticky; top: 18px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 130px); overflow-y: auto; padding-right: 2px; scrollbar-width: thin; }
+    .nai-rail-group { background: var(--surface); border: 1px solid #e5e7eb; border-radius: 14px; padding: 11px; box-shadow: 0 2px 12px rgba(0,0,0,.05); }
+    .nai-rail-group h4 { font-size: 10.5px; letter-spacing: .7px; text-transform: uppercase; color: #8b5cf6; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+    .nai-rail-btn {
+      display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: none; border: 0;
+      padding: 7px 9px; border-radius: 9px; font: inherit; font-size: 12.5px; color: var(--text); cursor: pointer;
+      transition: background .12s ease, transform .12s ease, color .12s ease;
+    }
+    .nai-rail-btn:hover { background: rgba(139,92,246,.1); transform: translateX(3px); color: #7c3aed; }
+    [data-theme="dark"] .nai-rail-group { background: #0f1831; border-color: #233156; }
+    [data-theme="dark"] .nai-rail-btn { color: #e2e8f0; }
+    [data-theme="dark"] .nai-rail-btn:hover { background: rgba(139,92,246,.16); color: #c4b5fd; }
+    /* compact horizontal rail inside the floating chat window */
+    .nai-rail-win { position: static; flex-direction: row; overflow-x: auto; max-height: none; gap: 8px; padding: 8px 10px; border-bottom: 1px solid #eee; scrollbar-width: thin; }
+    .nai-rail-win .nai-rail-group { min-width: 168px; flex: none; box-shadow: none; padding: 8px 10px; }
+    .nai-rail-win .nai-rail-btn { font-size: 11.5px; padding: 5px 8px; }
+    [data-theme="dark"] .nai-rail-win { border-bottom-color: #233156; }
+    @media (max-width: 920px) {
+      .nai-app { grid-template-columns: 1fr; }
+      .nai-rail { position: static; flex-direction: row; overflow-x: auto; max-height: none; padding-bottom: 4px; }
+      .nai-rail-group { min-width: 176px; flex: none; }
+    }
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     /* ===== live cover-page preview card ===== */
     .nai-cov-preview { margin-top: 10px; border: 1px solid #d8d3f7; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 6px 20px rgba(76,29,149,.12); animation: naiMsgIn .4s cubic-bezier(.22,1,.36,1) both; }
     .nai-cov-bar { display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #fff; background: linear-gradient(90deg, #4c1d95, #7c3aed); padding: 7px 12px; }
@@ -2169,6 +2196,10 @@
       <button class="ai-win-close" data-action="ai-win-close" title="Close" aria-label="Close">✕</button>
     </div>
     <div class="ai-win-body">
+<<<<<<< HEAD
+=======
+      <div class="nai-rail nai-rail-win" id="nai-win-rail"></div>
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       <div class="ai-win-thread" id="nai-win-thread"></div>
       <form id="niter-ai-win-form" class="nai-input-row">
         <button type="button" class="nai-attach" id="nai-win-attach" title="Attach an image, PDF, .docx or text file" aria-label="Attach image or document">📎</button>
@@ -11620,6 +11651,7 @@
        no network call. */
 
     var NAI_KB = [
+<<<<<<< HEAD
       { id: "overview", topics: ["what is niter", "about niter", "niter meaning", "niter full form", "national institute of textile", "introduce niter", "tell me about niter", "what kind of institute", "নাইটার কি", "নাইটার সম্পর্কে"],
         a: "NITER — the National Institute of Textile Engineering and Research (ন্যাশনাল ইনস্টিটিউট অফ টেক্সটাইল ইঞ্জিনিয়ারিং এন্ড রিসার্চ) — is one of the largest undergraduate textile engineering campuses in Bangladesh. It is a public–private partnership (PPP) between the Bangladesh Textile Mills Association (BTMA) and the Ministry of Textiles and Jute of the Government of Bangladesh, and a constituent institute of the University of Dhaka. It sits on about 17.7 acres (7 hectares) at Nayarhat, Kohinoor Gate, Savar, Dhaka-1350, with 2,000+ students — about 1,900 undergraduates and 100 postgraduates — and five B.Sc. programs. NITER also runs practical textile training classes for students of private universities.", link: { href: "https://www.niter.edu.bd", label: "niter.edu.bd →" } },
       { id: "history", topics: ["history of niter", "niter history", "when was niter established", "founded", "how old is niter", "tidc", "nittrad", "evolution"],
@@ -11629,6 +11661,17 @@
       { id: "affiliation", topics: ["university of dhaka", "du affiliation", "constituent", "degree awarding", "who awards", "du degree", "affiliated"],
         a: "NITER is a constituent institute of the University of Dhaka — the B.Sc. and postgraduate degrees are awarded by Dhaka University, not by NITER itself. That means NITER students graduate with a University of Dhaka certificate, which carries real weight for higher studies and jobs. The current Vice-Chancellor of Dhaka University serves as NITER's pro-chancellor level link; day-to-day operations are run by the institute's Director (Ashequl Alam Rana as of the latest public listings)." },
       { id: "admission", topics: ["admission", "admitted", "how to apply", "apply niter", "admission test", "admission requirements", "eligibility", "how do i get in", "how to get admitted", "unit test", "eis", "circular", "apply for", "entry requirements", "ভর্তি", "ভর্তি পরীক্ষা", "ভর্তি কিভাবে", "ভর্তির যোগ্যতা"],
+=======
+      { id: "overview", topics: ["what is niter", "about niter", "niter meaning", "niter full form", "national institute of textile", "introduce niter", "tell me about niter", "what kind of institute"],
+        a: "NITER — the National Institute of Textile Engineering and Research (ন্যাশনাল ইনস্টিটিউট অফ টেক্সটাইল ইঞ্জিনিয়ারিং এন্ড রিসার্চ) — is one of the largest undergraduate textile engineering campuses in Bangladesh. It is a public–private partnership (PPP) between the Bangladesh Textile Mills Association (BTMA) and the Ministry of Textiles and Jute of the Government of Bangladesh, and a constituent institute of the University of Dhaka. It sits on about 17.7 acres (7 hectares) at Nayarhat, Kohinoor Gate, Savar, Dhaka-1350, with 2,000+ students — about 1,900 undergraduates and 100 postgraduates — and five B.Sc. programs. NITER also runs practical textile training classes for students of private universities.", link: { href: "https://www.niter.edu.bd", label: "niter.edu.bd →" } },
+      { id: "history", topics: ["history of niter", "niter history", "when was niter established", "founded", "how old is niter", "tidc", "nittrad", "evolution"],
+        a: "NITER's roots go back to 1979, when the Bangladesh Textile Mills Corporation set up the Textile Industry Development Centre (TIDC) in Savar to train mill personnel and provide testing and consulting — supported in its first years by UNDP/UNIDO. In 1994 it became NITTRAD (National Institute of Textile Training Research and Design), and from 1 January 2013 the Ministry of Textiles and Jute renamed it the National Institute of Textile Engineering and Research (NITER). It started its B.Sc. in Textile Engineering in the 2010–11 session under the University of Dhaka, initiated by then-BTMA president Abdul Hai Sarkar." },
+      { id: "location", topics: ["where is niter", "niter location", "address", "how to reach", "how do i get", "savar", "nayarhat", "kohinoor gate", "campus address", "map"],
+        a: "NITER is at Nayarhat, Kohinoor Gate, Savar, Dhaka-1350 — about 20–25 km north-west of Dhaka city. The campus is on the Dhaka–Aricha highway side of Savar; buses towards Nayarhat (e.g. from Gabtoli or Mirpur routes passing Savar) drop near Kohinoor Gate, and CNG/rickshaw from Savar bazaar reaches the gate in a few minutes. Campus coordinates are roughly 23.916°N, 90.236°E.", link: { href: "https://maps.google.com/?q=NITER+Nayarhat+Savar", label: "Open in Google Maps →" } },
+      { id: "affiliation", topics: ["university of dhaka", "du affiliation", "constituent", "degree awarding", "who awards", "du degree", "affiliated"],
+        a: "NITER is a constituent institute of the University of Dhaka — the B.Sc. and postgraduate degrees are awarded by Dhaka University, not by NITER itself. That means NITER students graduate with a University of Dhaka certificate, which carries real weight for higher studies and jobs. The current Vice-Chancellor of Dhaka University serves as NITER's pro-chancellor level link; day-to-day operations are run by the institute's Director (Ashequl Alam Rana as of the latest public listings)." },
+      { id: "admission", topics: ["admission", "how to apply", "apply niter", "admission test", "admission requirements", "eligibility", "how do i get in", "unit test", "eis", "circular", "apply for"],
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         a: "Admission to NITER's B.Sc. programs is through the University of Dhaka unit-based admission test — there is no separate NITER test. You apply online through DU's admission portal (collegeadmission.eis.du.ac.bd) when the circular opens, choose NITER along with other DU-affiliated institutes, and seats are allotted by merit in the Technology unit. The admission/application processing fee is around ৳5,000, and NITER's own admission site (admission.niter.edu.bd) mirrors the circular. Keep an eye on the DU admission circular for the current session for exact eligibility, dates and fees. This portal's clubs post their own recruitment forms separately — those are just for club membership, not academic admission." },
       { id: "programs", topics: ["programs", "programmes", "departments", "subjects offered", "what can i study", "courses offered", "b.sc", "undergraduate", "majors"],
         a: "NITER offers five B.Sc. (Engineering) programs: Textile Engineering (TE), Industrial and Production Engineering (IPE), Fashion Design and Apparel Engineering (FDAE), Computer Science and Engineering (CSE), and Electrical and Electronic Engineering (EEE). Postgraduate offerings include an M.Sc. in Textile Engineering and an MBA in Textile & Apparel Value Chain. All undergraduate degrees are awarded under the University of Dhaka." },
@@ -11677,6 +11720,7 @@
         a: "The MBA in Textile & Apparel Value Chain is NITER's management program, built for the RMG sector: it covers merchandising, sourcing, supply-chain and export business across the textile value chain — from fibre to finished garment to the buyer's shelf." },
       { id: "facilities", topics: ["facilities", "campus facilities", "what is on campus", "amenities", "facilities at niter"],
         a: "NITER's ~13-acre campus is equipped for both study and daily life: a web-based library, fully equipped computer labs with internet, modern textile labs (including a large yarn manufacturing lab and dyeing & printing facilities), separate hostels for male and female students, a medical centre, canteen, mosque and campus transport." },
+<<<<<<< HEAD
       { id: "hostels", topics: ["hostel", "hostels", "accommodation", "dormitory", "where do students live", "living", "boys hostel", "girls hostel", "boys' hostel", "girls' hostel", "hostel fee", "hostel fees", "hostel seat", "hostel seats", "hostel rules", "security money", "hostel security", "hostel allotment", "হোস্টেল", "ছাত্রাবাস"],
         a: "NITER has separate on-campus hostels for male and female students. 👦 Boys hostel: a well-furnished 3-storied main building plus an extension building, with canteen, TV and common-room facilities; every room has an attached bath, washroom and furniture, and around 400 students can be accommodated. 👧 Girls hostel: around 300 students, in a 3-storied building with well-furnished rooms, a common room, dining room, TV room, and separated kitchen and washrooms on each floor — security is strong, with guards on 24-hour shifted duty. 💰 Fees (official resources page): after allotment you pay ৳2,500 security money, refunded after course completion, plus a hostel fee of ৳550 per month (changeable) — allotment is renewed every year. Seats are usually allotted alongside admission on a merit basis, and many students also commute daily from Dhaka and Savar instead of staying in the hostel. Check the admission/registrar notice for the current session's exact fee, seat availability and renewal dates.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official hostels page →" } },
       { id: "medical", topics: ["medical", "medical centre", "medical center", "health centre", "health center", "doctor", "first aid", "first-aid", "emergency", "clinic", "treatment", "sick", "ill", "health checkup", "checkup", "rmo", "medicine", "medicines", "hospital", "ambulance", "medical certificate", "campus doctor", "niter medical"],
@@ -11686,16 +11730,35 @@
       { id: "labs", topics: ["labs", "laboratories", "laboratory", "equipment", "machines", "practical", "ল্যাব", "ল্যাবরেটরি"],
         a: "NITER's labs are the heart of its hands-on approach: a large yarn manufacturing lab with modern spinning machinery, weaving/knitting setups, wet-processing (dyeing & printing) facilities, textile testing & quality control equipment, and fully equipped computer labs with internet for CSE/EEE work. Undergraduate textile students also get practical/industrial training exposure through the institute's ties to the industry." },
       { id: "library", topics: ["library", "niter library", "books", "e-library", "e library", "digital library", "reading", "reading room", "journals", "magazines", "textile journals", "borrow", "borrowing", "issue", "reference", "photocopy", "group work", "study space", "library facilities", "library services", "library hours", "library rules", "where to study", "লাইব্রেরি", "গ্রন্থাগার"],
+=======
+      { id: "hostels", topics: ["hostel", "hostels", "accommodation", "dormitory", "where do students live", "living", "boys hostel", "girls hostel", "boys' hostel", "girls' hostel", "hostel fee", "hostel fees", "hostel seat", "hostel seats", "hostel rules", "security money", "hostel security", "hostel allotment"],
+        a: "NITER has separate on-campus hostels for male and female students. 👦 Boys hostel: a well-furnished 3-storied main building plus an extension building, with canteen, TV and common-room facilities; every room has an attached bath, washroom and furniture, and around 400 students can be accommodated. 👧 Girls hostel: around 300 students, in a 3-storied building with well-furnished rooms, a common room, dining room, TV room, and separated kitchen and washrooms on each floor — security is strong, with guards on 24-hour shifted duty. 💰 Fees (official resources page): after allotment you pay ৳2,500 security money, refunded after course completion, plus a hostel fee of ৳550 per month (changeable) — allotment is renewed every year. Seats are usually allotted alongside admission on a merit basis, and many students also commute daily from Dhaka and Savar instead of staying in the hostel. Check the admission/registrar notice for the current session's exact fee, seat availability and renewal dates.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official hostels page →" } },
+      { id: "medical", topics: ["medical", "medical centre", "medical center", "health centre", "health center", "doctor", "first aid", "first-aid", "emergency", "clinic", "treatment", "sick", "ill", "health checkup", "checkup", "rmo", "medicine", "medicines", "hospital", "ambulance", "medical certificate", "campus doctor", "niter medical"],
+        a: "NITER's medical centre is on the 1st floor of Academic Building-2 (Room AC-216) and serves students, teachers and office staff. A Residential Medical Officer (RMO) is on campus for emergency and first-aid treatment — the RMO provides primary treatment and refers patients to a specialized hospital when required. 🏥 Corporate agreements: NITER has tie-ups with Enam Medical College Hospital and The IBN SINA TRUST, so students get discounts on health check-up packages — bring your student ID card (staff show their employee ID). Practical notes: the centre handles day-to-day illness and first aid, so for minor issues go there first; serious cases are referred onward, and the hospital agreements make check-ups cheaper than walk-in rates. For exact consultation hours ask at the centre or the registrar office.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official medical centre page →" } },
+      { id: "canteen", topics: ["canteen", "cafeteria", "cafe", "café", "food", "snacks", "lunch", "breakfast", "dining", "dining hall", "restaurant", "tea", "coffee", "where to eat", "food on campus", "mess", "eating", "campus food"],
+        a: "NITER has a campus café/canteen listed among the official campus facilities — the everyday spot for tea, snacks and meals between classes. The hostel buildings have their own eating spots too: the boys' hostel building includes a canteen, and the girls' hostel has a dining room plus a separated kitchen on each floor. The official resources page doesn't publish a menu or prices, so check the canteen notice board for today's menu — and keep an eye on the club notices: club events often carry a '🍕 Free food' tag (CV clinics, cultural auditions and bootcamps all list it), and the Games & Sports Club and Cultural Club programs usually wrap up with snacks for participants.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official campus facilities →" } },
+      { id: "labs", topics: ["labs", "laboratories", "laboratory", "equipment", "machines", "practical"],
+        a: "NITER's labs are the heart of its hands-on approach: a large yarn manufacturing lab with modern spinning machinery, weaving/knitting setups, wet-processing (dyeing & printing) facilities, textile testing & quality control equipment, and fully equipped computer labs with internet for CSE/EEE work. Undergraduate textile students also get practical/industrial training exposure through the institute's ties to the industry." },
+      { id: "library", topics: ["library", "niter library", "books", "e-library", "e library", "digital library", "reading", "reading room", "journals", "magazines", "textile journals", "borrow", "borrowing", "issue", "reference", "photocopy", "group work", "study space", "library facilities", "library services", "library hours", "library rules", "where to study"],
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         a: "NITER's central library is an enriched, updated, modern automated (web-based) library serving all five departments. Collection: more than 17,000 books, journals and magazines — the official resources page says the total now exceeds 19,000 — with the latest editions available and books across many disciplines, plus a strong textile section: textile-related journals, magazines, annual reports and periodicals so students and faculty can follow modern textile technology. Environment: the library is fully air-conditioned and doubles as a comfortable study space. Services (official list): book borrowing, reading room, group work, reference, and photocopy services. How to use it: bring your NITER student ID — borrowing/issue happens at the circulation desk, reference texts usually stay in the library, the reading room is for quiet study, and there is a dedicated group-work area for team projects; the photocopy service covers sections you can't take out. E-library: the web-based library gives students and staff online access to resources from campus, useful for project research and reports across CSE, EEE, TE, IPE and FDAE. Hours & rules: exact opening hours and borrowing limits are set by the library office each term (check the notice board) — the general institute office schedule runs Sunday to Thursday, 8:00 AM–4:00 PM. The library is listed under official campus resources at niter.edu.bd/resources.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official resources page →" } },
       { id: "library-etiquette", topics: ["library rules", "library etiquette", "library fines", "fines", "fine", "penalty", "late return", "overdue", "quiet", "silence", "silent", "reading room rules", "what is not allowed in the library", "not allowed in library", "can i eat in the library", "food in the library", "eating in the library", "drink in library", "phone in library", "mobile in library", "call in library", "borrowing rules", "library behavior", "behaviour", "return books", "damage a book", "lost book", "mark books", "reshelve", "library loan", "borrow limit", "how long can i keep a book", "keep books"],
         a: "General library etiquette at NITER — the official resources page lists a 'General Rules of using library facility' section, and the library office displays the full notice inside; exact fines and loan limits are set each term, so confirm them at the circulation desk. 📖 Reading room: study in silence, use headphones for any audio/video, put your phone on silent, and step outside for calls — the group-work area is where discussion is welcome. 💳 Borrowing: books are issued at the circulation desk against your NITER student ID, respect the loan period and return on time — late returns usually attract a per-day fine, and lost or damaged books typically mean paying the replacement cost or a fine. 🚫 Not allowed: eating or drinking in the reading room, marking/highlighting or tearing pages, removing reference texts (they stay in the library — use the photocopy service), reshelving books in the wrong place (unsure? leave them on the table), reserving seats with bags, and loud phone calls or group chatter in the quiet zone. 💡 Tips: keep your bag in the designated area, don't reshelve reference books, and check the notice board for the current term's fine amounts and how many books you can borrow.", link: { href: "https://www.niter.edu.bd/resources/", label: "Official resources page →" } },
       { id: "bus", topics: ["bus", "niter bus", "student bus", "shuttle", "bus schedule", "bus route", "bus service", "campus bus", "niter transport", "pickup point", "pick up point", "bus stop", "how to get to campus by bus", "bus from dhaka", "bus to savar", "khamarbari", "bus service to campus"],
         a: "NITER runs its own student and staff bus service connecting the campus (Nayarhat, Kohinoor Gate, Savar) with Dhaka city and nearby areas — the official resource page lists \u201CBus services connecting the campus with Dhaka city and nearby areas\u201D as a campus facility. A known pickup point in the city is Khamarbari: NITER student buses have departed from Dhaka Khamarbari early in the morning (around 6:45 AM on event days) to bring students to the campus, with return runs in the evening after classes. Routes and pickup/drop points follow the Dhaka–Aricha highway corridor (Mohakhali–Khamarbari–Gabtoli–Amin Bazar–Savar–Nayarhat side), so students on those corridors can usually find a stop nearby. Exact route maps and the current timetable are issued by the Transport Section each semester (check the notice board and the registrar office for the latest schedule; niter.edu.bd/resource page lists transport under campus facilities, contact registrar office — +880 1755 060 275, registraroffice@niter.edu.bd). Tips: (1) arrive at your pickup point ~10 minutes early — buses leave on time; (2) on event days (fests, admission tests, workshops) the service runs special trips — the Career Club and club pages post those departure times; (3) if the institute bus doesn't cover your area, public buses along the Dhaka–Aricha road run frequently — get off near Nayarhat/Kohinoor Gate and take a CNG/rickshaw the last 5 minutes; (4) hostel students don't need the bus; the service mainly helps daily commuters from Dhaka and the Savar side." },
+<<<<<<< HEAD
       { id: "transport", topics: ["transport", "commute", "coming to campus", "travel", "how to reach", "getting to niter", "বাস", "পরিবহন"],
         a: "NITER provides campus transport for students and staff commuting from Dhaka and the Savar area — the institute runs its own bus service with pickup points along the Dhaka–Aricha corridor (a known city pickup is Khamarbari, with early-morning departures around 6:45 AM on event days and evening return runs). The campus is also reachable by public bus along the Dhaka–Aricha road (get off near Nayarhat/Kohinoor Gate, then a short CNG/rickshaw ride) and from Savar bazaar by rickshaw/CNG in a few minutes. For the current semester's route map and timetable ask the Transport Section or registrar office (+880 1755 060 275, registraroffice@niter.edu.bd). The film club's photography walks and the games & sports club's tournaments are great ways to get to know the area." },
       { id: "collab", topics: ["collaboration", "international", "foreign", "university partners", "exchange", "china", "bolton", "germany"],
         a: "NITER collaborates internationally with Wuhan Textile University (China), the University of Bolton (UK) and Hochschule Niederrhein University of Applied Sciences (Germany), and works with UNIDO and GIZ on industry-linked training and research. These ties open research and exchange pathways for students and faculty." },
       { id: "career", topics: ["why textile", "career", "job prospects", "rmg", "salary", "demand", "future", "good career", "placement", "চাকরি", "ক্যারিয়ার"],
+=======
+      { id: "transport", topics: ["transport", "commute", "coming to campus", "travel", "how to reach", "getting to niter"],
+        a: "NITER provides campus transport for students and staff commuting from Dhaka and the Savar area — the institute runs its own bus service with pickup points along the Dhaka–Aricha corridor (a known city pickup is Khamarbari, with early-morning departures around 6:45 AM on event days and evening return runs). The campus is also reachable by public bus along the Dhaka–Aricha road (get off near Nayarhat/Kohinoor Gate, then a short CNG/rickshaw ride) and from Savar bazaar by rickshaw/CNG in a few minutes. For the current semester's route map and timetable ask the Transport Section or registrar office (+880 1755 060 275, registraroffice@niter.edu.bd). The film club's photography walks and the games & sports club's tournaments are great ways to get to know the area." },
+      { id: "collab", topics: ["collaboration", "international", "foreign", "university partners", "exchange", "china", "bolton", "germany"],
+        a: "NITER collaborates internationally with Wuhan Textile University (China), the University of Bolton (UK) and Hochschule Niederrhein University of Applied Sciences (Germany), and works with UNIDO and GIZ on industry-linked training and research. These ties open research and exchange pathways for students and faculty." },
+      { id: "career", topics: ["why textile", "career", "job prospects", "rmg", "salary", "demand", "future", "good career", "placement"],
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         a: "Textile and RMG is Bangladesh's largest export industry, and textile engineers are in steady demand — in spinning, weaving, wet processing, garments, merchandising and quality control, plus the booming technical textile segment. NITER's position as a BTMA-backed institute means strong industry linkage; the Career Club here runs CV clinics and mock interviews, and the opportunity board posts real internships and trainee roles from companies like DBL Group.", link: { href: "#/opportunities", label: "Open opportunity board →" } },
       { id: "terms", topics: ["semester", "term", "academic year", "session", "how long", "duration", "credits"],
         a: "NITER engineering programs follow the University of Dhaka's level–term system: an undergraduate program runs four years, divided into levels and terms with term-end exams. Specific term dates follow the DU academic calendar; the forms on this portal (e.g. the Computer Club's membership form) ask for your current semester in that same system." },
@@ -11707,12 +11770,21 @@
         a: "Campus life at NITER is built around eleven active clubs — the Computer Club, Science Society, Career Club, Language Club, Cultural Club, Games & Sports Club, Islamic Society, Robotics Club, Film & Photography, Journalism Society and Social Welfare Club — plus the annual cultural program, IPE Fest and sports tournaments. The institute's colours are purple and white, and English is the medium of instruction.", link: { href: "#/clubs", label: "Browse all clubs →" } },
       { id: "contact", topics: ["website", "official site", "contact niter", "email niter", "how to contact", "niter.edu.bd"],
         a: "The official website is niter.edu.bd — that is the authoritative source for admission circulars, academic calendars and notices. Each club in this portal also lists its own email and Facebook page on its club page, so you can reach a specific club directly.", link: { href: "https://www.niter.edu.bd", label: "niter.edu.bd →" } },
+<<<<<<< HEAD
       { id: "fees", topics: ["fees", "tuition", "cost", "how much", "semester fee", "installment", "admission fee", "application fee", "expensive", "affordable", "total fee", "খরচ", "কত টাকা", "ফি", "টিউশন ফি"],
         a: "A B.Sc. at NITER costs ৳464,000 in total tuition, paid in 16 installments of ৳29,000 — that figure excludes Dhaka University exam fees, which are billed separately each term. Admission processing is around ৳5,000, and hostel accommodation runs roughly ৳15,000 per term. It is cheaper than most private universities, and between the DU scholarship system and NITER's own waivers many students pay significantly less." },
       { id: "scholarship", topics: ["scholarship", "waiver", "concession", "financial aid", "free studentship", "merit", "funding", "discount", "stipend", "বৃত্তি", "স্কলারশিপ", "ওয়েভার"],
         a: "NITER has several kinds of financial support. 5% of admitted students receive scholarships chosen by the University of Dhaka Scholarship Committee. NITER also provides need-based support and tuition waivers — typically 5% to 20% off each installment — plus an annual merit scholarship (a one-time ৳10,000 award for top GPAs, with special quotas like children of freedom fighters). Students have also won Chinese Government Scholarships for M.Sc. study at Wuhan Textile University and Tianjin Polytechnic University. For the current notice, ask the accounts/registrar office or check niter.edu.bd." },
       { id: "leadership", topics: ["director", "principal", "leadership", "head of niter", "who runs niter", "chairman", "governing", "board", "pro vice chancellor", "ডাইরেক্টর", "পরিচালক"],
         a: "NITER Leadership and Administration:\n\nDirector (Acting): Dr. Md. Abul Kalam\n- Appointed October 2024\n- Also serves as Vice President of BTMA\n- Managing Director of Chaity Composite Ltd (Chaity Group)\n\nGoverning Body:\n- Chairman: Representative from Bangladesh Textile Mills Association (BTMA)\n- Prof. Dr. Upama Kabir: Member, also serves as Dean\n- Representatives from Ministry of Textiles and Jute\n- Representatives from University of Dhaka\n\nBTMA (Bangladesh Textile Mills Association):\n- Industry partner and co-founder of NITER\n- Provides industry connections, internships, and job placement\n- President (2025-2027): Showkat Aziz Russell\n\nUniversity of Dhaka Affiliation:\n- NITER is a constituent institute of the University of Dhaka\n- DU conducts the admission test and final examinations\n- DU awards the B.Sc. degrees\n\nFor administrative queries, contact:\n- Registrar Office: registraroffice@niter.edu.bd\n- Phone: +880 1755 060 275" },
+=======
+      { id: "fees", topics: ["fees", "tuition", "cost", "how much", "semester fee", "installment", "admission fee", "application fee", "expensive", "affordable", "total fee"],
+        a: "A B.Sc. at NITER costs ৳464,000 in total tuition, paid in 16 installments of ৳29,000 — that figure excludes Dhaka University exam fees, which are billed separately each term. Admission processing is around ৳5,000, and hostel accommodation runs roughly ৳15,000 per term. It is cheaper than most private universities, and between the DU scholarship system and NITER's own waivers many students pay significantly less." },
+      { id: "scholarship", topics: ["scholarship", "waiver", "concession", "financial aid", "free studentship", "merit", "funding", "discount", "stipend"],
+        a: "NITER has several kinds of financial support. 5% of admitted students receive scholarships chosen by the University of Dhaka Scholarship Committee. NITER also provides need-based support and tuition waivers — typically 5% to 20% off each installment — plus an annual merit scholarship (a one-time ৳10,000 award for top GPAs, with special quotas like children of freedom fighters). Students have also won Chinese Government Scholarships for M.Sc. study at Wuhan Textile University and Tianjin Polytechnic University. For the current notice, ask the accounts/registrar office or check niter.edu.bd." },
+      { id: "leadership", topics: ["director", "principal", "leadership", "head of niter", "who runs niter", "chairman", "governing", "board", "pro vice chancellor"],
+        a: "NITER is headed by a Director — currently Dr. Ashequl Alam Rana. Academically it sits under the University of Dhaka (Vice-Chancellor Niaz Ahmed Khan; Dean Upama Kabir on the relevant faculty), while governance runs through the public–private partnership between BTMA and the Ministry of Textiles and Jute. Earlier leaders include Dr. Engr. Ayub Nabi Khan (former Principal, now Pro-Vice-Chancellor of BGMEA University of Textiles) and Dr. Md. Abul Kalam (Director-in-charge, 2025)." },
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       { id: "industry", topics: ["btma", "industry", "industry linkage", "mills", "factory", "industrial training", "private university", "rmg", "garment", "job market", "placement", "textile sector"],
         a: "Because BTMA runs NITER, industry access is unusually direct: the association's member mills and factories are a constant pipeline for industrial training, internships and first jobs. NITER also delivers practical textile training classes to students of private universities. Graduates typically move into spinning, weaving, wet processing, garment production, merchandising and quality control across Bangladesh's RMG sector — the country's largest export industry." },
       { id: "rmg", topics: ["rmg", "rmg industry", "ready made garments", "readymade garments", "garment industry", "apparel industry", "what is rmg", "clothing industry", "bangladesh textile industry", "textile sector of bangladesh", "export industry", "biggest industry"],
@@ -11756,6 +11828,7 @@
       { id: "aihelp", topics: ["who are you", "what can you do", "help", "how does this work", "what is niter ai", "capabilities"],
         a: "I'm NITER AI — a campus assistant built into this portal. Ask me about NITER's history, programs, admission, campus facilities, clubs, careers, or what's happening right now: upcoming events, open forms, opportunities and more. I answer from a curated knowledge base plus this portal's live data, and I work fully offline. Try: \"which clubs are there?\", \"upcoming events\", \"how do I join a club?\", or \"what is Textile Engineering?\"" },
       { id: "portal", topics: ["this website", "this portal", "what can i do here", "features of", "niter clubs portal"],
+<<<<<<< HEAD
         a: "This portal is one place for every NITER club: browse notices and events, RSVP with door check-in and verifiable certificates, join the Q&A board, earn XP and badges on the leaderboard, collect club-passport stamps, take the \"which club fits you?\" quiz, follow clubs for a unified feed, and apply to internships and jobs on the opportunity board. Everything is stored in your browser and synced when online.", link: { href: "#/", label: "Back to home →" } },
       { id: "wifi", topics: ["wifi", "internet", "wifi password", "internet access", "wifi on campus", "internet speed", "online access", "connect to wifi", "network", "how to connect", "ওয়াইফাই", "ইন্টারনেট"],
         a: "NITER provides internet access on campus through the institute's network facilities. The computer labs in each department have wired internet connections with decent speeds for academic use. WiFi availability may vary — check with the Computer Club or the IT office for the current network name and credentials. For reliable connectivity on your own device, students typically use mobile data ( Banglalink, Grameenphone, Robi or Teletalk 4G), which has good coverage in the Savar/Nayarhat area. Tip: download lecture materials and documents when you have a strong connection (labs or home) so you're not caught offline later." },
@@ -11842,6 +11915,9 @@
             { id: "niter-mba", topics: ["MBA", "masters", "postgraduate", "MSc", "graduate program", "MBA textile", "MBA value chain"],
         a: "NITER Postgraduate Programs:\n\nMBA in Textile and Apparel Value Chain:\n- Duration: 2 years\n- Covers textile management, supply chain, merchandising\n- Designed for working professionals and fresh graduates\n- Evening/weekend classes available\n\nM.Sc. in Textile Engineering:\n- Research-based master's program\n- Specializations available across textile disciplines\n- Thesis and coursework components\n- Faculty supervision from NITER and partner universities\n\nOther Programs:\n- Short-term professional development courses\n- Industry training programs\n- Workshops and seminars through CRIR\n\nFor admission to postgraduate programs:\n- Check niter.edu.bd for current admission circulars\n- Contact the registrar office: registraroffice@niter.edu.bd\n- Some programs offer tuition fee waivers for meritorious candidates", link: { href: "https://niter.edu.bd/programs/", label: "NITER programs page" } },
 
+=======
+        a: "This portal is one place for every NITER club: browse notices and events, RSVP with door check-in and verifiable certificates, join the Q&A board, earn XP and badges on the leaderboard, collect club-passport stamps, take the \"which club fits you?\" quiz, follow clubs for a unified feed, and apply to internships and jobs on the opportunity board. Everything is stored in your browser and synced when online.", link: { href: "#/", label: "Back to home →" } }
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     ];
 
     /* ---- answer engine ---- */
@@ -13088,9 +13164,13 @@
         typos: typoArr.slice(0, 4),
         typoCount: typoArr.length,
         log: b.log.slice(-6).reverse(),
+<<<<<<< HEAD
         stats: b.stats,
         analytics: naiAnalyticsLoad(),
         hermes: hermesStatus()
+=======
+        stats: b.stats
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       };
     }
     function naiBrainAgeLabel(firstAt) {
@@ -13156,10 +13236,13 @@
           nF + " fact" + (nF === 1 ? "" : "s") + " in memory, " + nG + " question" + (nG === 1 ? "" : "s") + " noted that I couldn't answer yet, " +
           (snap.stats.gapResolved || 0) + " gap" + ((snap.stats.gapResolved || 0) === 1 ? "" : "s") + " resolved, and " + nT + " spelling" + (nT === 1 ? "" : "s") + " I now auto-correct from your past mistypes.";
         return { text: txt, brain: snap, chips: ["remember that the library opens at 9am", "Which clubs are there?"], link: null };
+<<<<<<< HEAD
       /* analytics */
       if (/analytics|usage\s+stats|show\s+analytics/i.test(query)) {
         return naiAnalyticsReport();
       }
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       }
       /* teach: "remember that X is Y" / "learn that X means Y" /
          "from now on X is Y". Guarded so "learn python" (code vault) and
@@ -13224,7 +13307,11 @@
             if (chat[j].role === "user") { lastUser = chat[j]; break; }
           }
         }
+<<<<<<< HEAD
         if (lastAi && lastAi.text && lastUser && lastUser.text && lastAi.text.indexOf("couldn't find a confident answer — you can ask in Bangla (বাংলায়) or English. Try: “ভর্তি কিভাবে”, “ফি কত”, “হোস্টেল”, “পরীক্ষা”") === -1) {
+=======
+        if (lastAi && lastAi.text && lastUser && lastUser.text && lastAi.text.indexOf("couldn't find a confident answer") === -1) {
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
           /* don't self-learn trivial pairs (greetings, 1-2 word asks) */
           var qw = String(lastUser.text || "").trim().split(/\s+/).length;
           if (qw < 3 && !/[?]/.test(lastUser.text)) return null;
@@ -13265,6 +13352,7 @@
        OR straight from chat. Rules run on the live tick like the
        built-in automations, and everything persists in db.automations. */
 
+<<<<<<< HEAD
     /* ================================================================
        NITER AI — ADVANCED ENGINE v2.0
        ================================================================ */
@@ -13875,6 +13963,8 @@
     /* ================================================================ */
 
 
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     function naiModActive() {
       if (state.user && ["admin", "executive", "it-staff"].indexOf(state.user.role) !== -1) return true;
       if (state.session && state.session.clubId) return true;
@@ -14803,6 +14893,7 @@
       return { intent: "admin", label: "Club admin — " + label, match: "admin-tier intent on the dedicated club", src: ["Club ownership model", "Club profile (live)"], conf: 0.96 };
     }
 
+<<<<<<< HEAD
 
     /* ================================================================
        NITER AI — CONVERSATIONAL ENGINE v3.0
@@ -15562,6 +15653,10 @@
       }
 
 if (/^(?:(?:say|just\s+say|please\s+say|i\s+(?:wanna|want\s+to)\s+say)\s+)?(hi|hii+|hey|heyy+|hello|hola|yo|howdy|salam|assalamu|assalam\s+o\s+alaikum|aoa|good\s*(morning|afternoon|evening|night)|ki\s*(obostha|khobor)|kemon\s*(achen|acho|aso)|sup|whats\s*up|wassup)\b/.test(q)) {
+=======
+    function naiChatReply(q) {
+      if (/^(?:(?:say|just\s+say|please\s+say|i\s+(?:wanna|want\s+to)\s+say)\s+)?(hi|hii+|hey|heyy+|hello|hola|yo|howdy|salam|assalamu|assalam\s+o\s+alaikum|aoa|good\s*(morning|afternoon|evening|night)|ki\s*(obostha|khobor)|kemon\s*(achen|acho|aso)|sup|whats\s*up|wassup)\b/.test(q)) {
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         return naiPick([
           "Hey there! 👋 Welcome back to the NITER Clubs Portal. Ask me anything — clubs, events, admission, syllabus, the RMG industry — or just say hi. What's on your mind?",
           "Hello! 😊 Good to see you. I'm NITER AI, your campus assistant. Want the latest events, open forms, or a quick fact about NITER?",
@@ -15577,6 +15672,7 @@ if (/^(?:(?:say|just\s+say|please\s+say|i\s+(?:wanna|want\s+to)\s+say)\s+)?(hi|h
       if (/^(bye|goodbye|see\s*(you|ya)|later|ta\s*ta|tata|alvida)\b/.test(q)) {
         return "Take care! 👋 Don't forget to check the events calendar for this week — and the passport is waiting for your next check-in stamp. Come back anytime!";
       }
+<<<<<<< HEAD
       
       /* ---- ADVANCED CONVERSATION REPLIES ---- */
 
@@ -15677,6 +15773,9 @@ if (/^(?:(?:say|just\s+say|please\s+say|i\s+(?:wanna|want\s+to)\s+say)\s+)?(hi|h
 
 
 if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi\s*ke|apni\s*ke|introduce\s*yourself/.test(q)) {
+=======
+      if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi\s*ke|apni\s*ke|introduce\s*yourself/.test(q)) {
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         return "I'm NITER AI — the friendly assistant built into this portal. I know NITER inside out: its history, five departments, eleven clubs, the RMG industry, and what's happening right now on campus. I work fully offline — no internet needed, just you and me. 😊";
       }
       if (/who\s+(made|created|built|developed|wrote)\s+you|your\s+(maker|creator|developer|builder)/.test(q)) {
@@ -15842,7 +15941,11 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
       "helth": "health", "fees": "fees", "scholarship": "scholarship"
     };
     var NAI_COMMON_WORDS = "a about after again against all also always am an and another any anyone are around as at be because been before being below between both but by can could did do does doing each else enough even every few for from further had has have having he her here hers him his how i if in into is it its itself just know like made make many me more most much must my myself never new no not now of off on once one only or other our ours ourselves out over own same say said she should so some such than that the their them themselves then there these they this those through to too two under until up upon us use used very want was way we well were what when where which while who whom why will with within without would year you your yours update updates updated update delete remove create change edit draft welcome notify summarize summarise digest list show view open close add set send review flag automate automation transfer control manage analytics profile committee settings dashboard export import reset save cancel confirm class classes whole pages ready tell give find week weeks routine routines course courses subject subjects section sections special trips bus buses shuttle ride vehicle event days day time times clash clashes clashing schedule scheduled scheduling timetable timetables lab labs theory practical practicals semester semesters exam exams".split(" ");
+<<<<<<< HEAD
     var NAI_DOMAIN_WORDS = ("niter textile engineering research institute nayarhat savar dhaka admission admitted admitting enrolled enrollment scholarship scholarships tuition fee fees hostel hostels campus departments department semester credit gpa cgpa library laboratory certificates certificate passport leaderboard quiz robotics career science culture language journalism photography welfare society societies opportunity opportunities internship intern job jobs deadline register registration member membership reminder remind study plan exams exam routine timetable schedule clash conflict citation reference report cover docx word document rmg btma bangladesh upcoming syllabus curriculum events event clubs club forms form notices notice apply join month year next first second third professor teacher faculty student students workshop meetup calendar every all about what when where which who why how tell know need want open closes tomorrow today activity activities proctor exams exam-office exam-committee exam-quality exam-system grading marks sessional class-test attendance labs computer-lab wifi internet canteen food transport bus scholarship director governing-body leadership meaning philosophy weather temperature rain hot cold humid forecast climate time clock your name love hate advice success happy stressful study tips exam preparation knowledge curious witty casual fun jokes entertainment mood feeling").split(" ");
+=======
+    var NAI_DOMAIN_WORDS = ("niter textile engineering research institute nayarhat savar dhaka admission scholarship scholarships tuition fee fees hostel hostels campus department departments semester credit gpa cgpa library laboratory certificate certificates passport leaderboard quiz robotics career science culture language journalism photography welfare society societies opportunity opportunities internship intern job jobs deadline register registration member membership reminder remind study plan exam exams routine timetable schedule clash conflict citation reference report cover docx word document rmg btma bangladesh upcoming syllabus curriculum event events club clubs form forms notice notices apply join week month year next first second third professor teacher faculty student students workshop workshop meetup calendar every all about what when where which who why how tell know need want open closes tomorrow today activity activities").split(" ");
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     var NAI_VOCAB = null;
     function naiDomainVocab() {
       if (NAI_VOCAB) return NAI_VOCAB;
@@ -17338,6 +17441,7 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
       return { text: "🔴 Closed right now — it's " + NAI_LIB_DAY[today] + " and the library is closed on weekends. It reopens " + NAI_LIB_DAY[nnd] + " at " + fmt(OPEN) + ". " + sched(), chips: chips, link: libLink };
     }
     function naiAsk(q) {
+<<<<<<< HEAD
       grokConvLoad();
       naiConvLoad();
       var query = naiNorm(q);
@@ -17366,6 +17470,10 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
         }
       }
       if (!query) return null;
+=======
+      var query = naiNorm(q);
+      if (!query) return null;
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       /* bulk covers: parse the pasted student list from the RAW normalized
          query — the typo corrector would otherwise rewrite list text
          ("pages"→"page", "for:"→"form") and swallow student rows. */
@@ -17382,6 +17490,7 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
         return { text: "Take the 2-minute interest quiz — it asks about your department, hobbies and skills, then matches you with 2–3 clubs that actually fit. It's the fastest way to find your community at NITER.", chips: ["Which clubs are there?", "How do I join a club?"], link: { href: "#/quiz", label: "Take the quiz →" } };
       }
 
+<<<<<<< HEAD
       /* ---- admission must beat the generic NITER overview: "how to get admitted"
          would otherwise hit the overview entry because of the word "niter" ---- */
       if (/admit(?:ted|ting|ance|ting)?|enroll(?:ment|ed)?|how to (?:get )?(?:into|in to|in)\b|entry requirements?|apply (?:to |for )?niter|get into niter/i.test(query)) {
@@ -17389,6 +17498,8 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
         if (admK) return { text: admK.a, chips: ["Fee structure", "Which department should I choose?"], link: admK.link };
       }
 
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       /* ---- library must beat the live branches: "library opening time"
          would otherwise hit the opportunities board ("open"), and
          "where can I study" needs a home before the KB loop ---- */
@@ -17762,6 +17873,7 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
       if (/check.?in|qr|door code|attendance/i.test(query)) {
         return { text: "Each event has a door code (shown on its page to the club's staff). At the venue, the staff enter your email to check you in — your attendance is recorded instantly and a certificate is issued. Check-ins also feed your passport stamps and XP.", chips: ["Upcoming events", "What is the passport?"], link: { href: "#/events", label: "Open events →" } };
       }
+<<<<<<< HEAD
       /* ---- GROK-STYLE GENERAL KNOWLEDGE: meaning of life, weather, time, etc. ---- */
       var _generalResp = grokHandleGeneral(q) || grokHandleGeneral(query);
       if (_generalResp) {
@@ -17770,6 +17882,8 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
         return { text: _generalResp, chips: ["Tell me a joke", "What can you do?", "How are you?"], link: null };
       }
 
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       /* ---- 🧮 math engine: equations, derivatives, integrals, stats,
          percentages, number theory, trig, shapes and unit conversions.
          Runs before the code vault so "what is 5 factorial" or "is 97
@@ -17861,8 +17975,11 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
         if (score > bestScore) { bestScore = score; best = k; }
       });
       if (best && bestScore >= 6) {
+<<<<<<< HEAD
         naiConvTrack('ai', best.a, best.id); naiConvSave();
         grokConvTrack('ai', best.a, best.id); grokConvSave();
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         return { text: best.a, chips: chips.slice(0, 4), link: best.link };
       }
 
@@ -17896,7 +18013,11 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
         ? "\n\n💡 This is the " + (gapTimes === 2 ? "second" : gapTimes + "th") + " time you've asked and I still don't know it — teach me once and I'll never forget: say “remember that " + q.slice(0, 60).replace(/[.!?]+$/, "") + " is <the answer>”."
         : "";
       return {
+<<<<<<< HEAD
         text: "I couldn't find a confident answer to that in my knowledge base. I know about NITER's history, programs, admission, campus facilities, clubs, fees, scholarships, career paths for all departments, bus routes, hostels, library, faculty and more — and I can answer live about events, forms, opportunities, certificates, the passport and the leaderboard. Try one of these:" + gapNudge,
+=======
+        text: "I couldn't find a confident answer to that in my knowledge base. I know about NITER's history, programs, admission, campus facilities and clubs — and I can answer live about events, forms, opportunities, certificates, the passport and the leaderboard. Try one of these:" + gapNudge,
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         chips: chips,
         link: null
       };
@@ -19833,7 +19954,32 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
       add("🧠 remember that the library opens at 9am");
       return out.slice(0, 39);
     }
+<<<<<<< HEAD
     /* naiRailHTML removed — suggestion groups are no longer shown in the NITER AI sidebar */
+=======
+    /* ---- capability rail: a curated app-style sidebar of what NITER AI
+       can do, one tap away. Buttons reuse the ai-chip action so they
+       behave exactly like suggestion chips. ---- */
+    function naiRailHTML(compact) {
+      function railBtn(t) {
+        return '<button type="button" class="nai-rail-btn" data-action="ai-chip" data-q="' + esc(t) + '">' + esc(t) + "</button>";
+      }
+      function group(icon, title, items) {
+        return '<div class="nai-rail-group"><h4>' + icon + " " + esc(title) + "</h4>" + items.map(railBtn).join("") + "</div>";
+      }
+      var live = naiLiveChips().slice(0, compact ? 3 : 5);
+      var out = [
+        group("📡", "Live now", live),
+        group("📄", "Documents", ["📄 Generate a lab report cover page", "📚 Make cover pages for the whole class", "🔄 Convert the C bubble sort to Rust", "📄 Export the last answer as .docx"]),
+        group("🎓", "NITER knowledge", ["The RMG industry", "🚌 NITER bus service & routes", "Which clubs are there?", "How do I join a club?"]),
+        group("📚", "Study tools", ["🧮 Solve 2x + 3 = 7", "∫ Integrate x² from 0 to 3", "📊 Mean of 5, 6, 7, 8", "🔀 Check my routine for clashes", "📅 Find a free slot for a new course", "📚 Study plan for Data Structures in 2 weeks", "🔖 Cite a book for me"])
+      ];
+      if (!compact) out.push(group("🤖", "Agent", ["⏰ Remind me to prepare slides", "📋 Show my to-do list", "🧠 What have you learned?", "😄 Tell me a joke"]));
+      if (naiModActive()) out.push(group("🛠", "Moderator studio", ["✍️ Draft a club notice", "📥 Summarize my submissions", "🩺 Analyze my club", "🗣 Feedback digest", "🤖 List my automations", "✨ Add an automation"]));
+      if (naiClubAdmin()) out.push(group("👑", "Club admin", ["👑 What can I control?", "📊 Deep club analytics", "👑 Transfer admin", "🏛️ Update my club tagline"]));
+      return out.join("");
+    }
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     function naiNowStrip() {
       var ups = upcomingEvents();
       var parts = [];
@@ -19946,6 +20092,11 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
     function naiWinPaint(chat, typew) {
       var th = document.getElementById("nai-win-thread");
       if (!th) return;
+<<<<<<< HEAD
+=======
+      var railEl = document.getElementById("nai-win-rail");
+      if (railEl) railEl.innerHTML = naiRailHTML(true);
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       var wasTyping = !!state.aiTyping;
       var lastIdx = chat.length - 1;
       var msgs = chat.map(function (m, i) {
@@ -19956,7 +20107,11 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
         msgs += '<div class="nai-msg ai"><div class="nai-avatar">🤖</div>' +
           '<div class="nai-bubble nai-think"><span class="nai-think-spinner"></span>' +
           '<span id="nai-win-think">' + esc(thinkLab) + "</span>" +
+<<<<<<< HEAD
           '<span class="nai-typing-dots"><span></span><span></span><span></span></span></div></div>';
+=======
+          '<span class="nai-typing-dots"><span></span><span></span><span></span></div></div>';
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       }
       th.innerHTML = msgs;
       th.scrollTop = th.scrollHeight;
@@ -20052,6 +20207,10 @@ if (/who\s+are\s+you|what\s+(are|r)\s+you\b|your\s+name|whats\s*your\s*name|tumi
         '<div class="container nai-wrap">' +
         naiNowStrip() +
         '<div class="nai-app">' +
+<<<<<<< HEAD
+=======
+        '<aside class="nai-rail" aria-label="NITER AI capabilities">' + naiRailHTML(false) + "</aside>" +
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         '<div class="nai-shell">' +
         '<div class="nai-thread" id="nai-thread">' + msgs + "</div>" +
         '<form id="niter-ai-form" class="nai-input-row">' +

@@ -1,27 +1,42 @@
 "use client";
 
 import Link from "next/link";
+<<<<<<< HEAD
 import { useEffect, useMemo, useState } from "react";
+=======
+import { useMemo } from "react";
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 import { useDb } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { clubById, fmtDate, relativeAgo } from "@/lib/utils";
 import { studentDeptLabel, studentSessionOf, verifyStudentId } from "@/lib/students";
 import { EmptyState, PageHero, Skeleton } from "@/components/ui";
 import CampusBanner from "@/components/campus-banner";
+<<<<<<< HEAD
 import type { Database, Membership, PortalUser, Submission } from "@/lib/types";
+=======
+import type { Database, Membership, Submission } from "@/lib/types";
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 
 interface ProfileStudent {
   key: string;
   name: string;
   studentId: string;
   email: string;
+<<<<<<< HEAD
   role?: string;
   clubs?: string[];
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   memberships: Membership[];
   submissions: Submission[];
 }
 
+<<<<<<< HEAD
 type UserLike = { uid: string; email: string; name: string; studentId?: string; role?: string; clubs?: string[] };
+=======
+type UserLike = { uid: string; email: string; name: string; studentId?: string; role?: string };
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 
 const STUDENT_ACCOUNTS_KEY = "niter-student-accounts";
 
@@ -40,7 +55,11 @@ function loadAccounts(): Record<string, { name: string; studentId: string; pass:
    the legacy app: memberships/submissions first, then offline demo accounts,
    then the signed-in user's own session (so a fresh student can always open
    their own profile). Returns null when nothing matches. */
+<<<<<<< HEAD
 function resolveStudent(db: Database, me: UserLike | null, rawKey: string, profileUser?: PortalUser | null): ProfileStudent | null {
+=======
+function resolveStudent(db: Database, me: UserLike | null, rawKey: string): ProfileStudent | null {
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   const k = decodeURIComponent(rawKey || "").toLowerCase();
   const ms = (db.memberships || []).filter(
     (m) => (m.userId || "").toLowerCase() === k || (m.userEmail || "").toLowerCase() === k
@@ -48,18 +67,28 @@ function resolveStudent(db: Database, me: UserLike | null, rawKey: string, profi
   const subs = (db.submissions || []).filter(
     (s) => (s.userId || "").toLowerCase() === k || (s.submitterEmail || "").toLowerCase() === k
   );
+<<<<<<< HEAD
   // Use the profileUser passed from the component (loaded from Firestore)
   const user = profileUser || null;
   if (ms.length || subs.length || user) {
+=======
+  if (ms.length || subs.length) {
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     const mem = ms[0];
     const sub = subs[0];
     return {
       key: k,
+<<<<<<< HEAD
       name: user?.name || mem?.userName || sub?.submitterName || "",
       studentId: user?.studentId || mem?.studentId || sub?.submitterStudentId || "",
       email: user?.email || mem?.userEmail || sub?.submitterEmail || "",
       role: user?.role,
       clubs: user?.clubs,
+=======
+      name: mem?.userName || sub?.submitterName || "",
+      studentId: mem?.studentId || sub?.submitterStudentId || "",
+      email: mem?.userEmail || sub?.submitterEmail || "",
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       memberships: ms,
       submissions: subs,
     };
@@ -151,6 +180,7 @@ function StudentMissing() {
 export default function StudentProfileView({ studentKey }: { studentKey: string }) {
   const db = useDb();
   const auth = useAuth();
+<<<<<<< HEAD
   const [profileUser, setProfileUser] = useState<PortalUser | null>(null);
 
   // Load the user data from Firestore for role/club info
@@ -182,6 +212,12 @@ export default function StudentProfileView({ studentKey }: { studentKey: string 
   const profile = useMemo(
     () => (db ? resolveStudent(db, auth.cloud ? auth.user : null, studentKey, profileUser) : null),
     [db, auth.cloud, auth.user, studentKey, profileUser]
+=======
+
+  const profile = useMemo(
+    () => (db ? resolveStudent(db, auth.cloud ? auth.user : null, studentKey) : null),
+    [db, auth.cloud, auth.user, studentKey]
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   );
 
   const isMe = useMemo(() => {
@@ -236,6 +272,7 @@ export default function StudentProfileView({ studentKey }: { studentKey: string 
             ))}
           </div>
         ) : null}
+<<<<<<< HEAD
         {/* Role & Club badges */}
         {s.role && s.role !== "member" && (
           <div className="mt-4 flex flex-wrap gap-2">
@@ -266,6 +303,8 @@ export default function StudentProfileView({ studentKey }: { studentKey: string 
             })}
           </div>
         )}
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       </PageHero>
 
       <div className="container-x py-10">

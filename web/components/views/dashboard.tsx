@@ -27,7 +27,11 @@ interface DemoAccount {
   pass: string;
 }
 
+<<<<<<< HEAD
 type UserLike = { uid: string; email: string; name: string; studentId?: string; role?: string; clubs?: string[] };
+=======
+type UserLike = { uid: string; email: string; name: string; studentId?: string; role?: string };
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 
 function loadAccounts(): Record<string, DemoAccount> {
   try {
@@ -87,10 +91,17 @@ export default function DashboardView() {
     const email = loadDemoSession();
     if (!email) return null;
     const acc = loadAccounts()[email];
+<<<<<<< HEAD
     return acc ? { uid: "local-" + email, email, name: acc.name, studentId: acc.studentId, role: "member", clubs: [] } : null;
   });
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [form, setForm] = useState({ name: "", studentId: "", email: "", pass: "", phone: "", classId: "", accountType: "member" as "member" | "admin" | "moderator", selectedClubId: "" });
+=======
+    return acc ? { uid: "local-" + email, email, name: acc.name, studentId: acc.studentId, role: "member" } : null;
+  });
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [form, setForm] = useState({ name: "", studentId: "", email: "", pass: "" });
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 
   const user: UserLike | null = auth.cloud ? auth.user : demoUser;
 
@@ -128,7 +139,10 @@ export default function DashboardView() {
         onGoogleSignIn={auth.loginWithGoogle}
         onCloudEmail={auth.loginEmail}
         verify={(id) => verifyStudentId(db, id)}
+<<<<<<< HEAD
         clubs={db.clubs.map((c) => ({ id: c.id, icon: c.icon, name: c.name }))}
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       />
     );
   }
@@ -160,6 +174,7 @@ function DashboardLogin({
   onGoogleSignIn,
   onCloudEmail,
   verify,
+<<<<<<< HEAD
   clubs,
 }: {
   mode: "signin" | "signup";
@@ -172,6 +187,18 @@ function DashboardLogin({
   onCloudEmail: (email: string, pass: string, mode: "signin" | "signup", name: string, role?: string, selectedClubId?: string, studentId?: string, phone?: string, classId?: string) => Promise<string | null>;
   verify: (id: string) => StudentCheck;
   clubs: { id: string; icon: string; name: string }[];
+=======
+}: {
+  mode: "signin" | "signup";
+  setMode: (m: "signin" | "signup") => void;
+  form: { name: string; studentId: string; email: string; pass: string };
+  setForm: (f: { name: string; studentId: string; email: string; pass: string }) => void;
+  cloud: boolean;
+  onDemoSignIn: (u: UserLike) => void;
+  onGoogleSignIn: () => Promise<string | null>;
+  onCloudEmail: (email: string, pass: string, mode: "signin" | "signup", name: string) => Promise<string | null>;
+  verify: (id: string) => StudentCheck;
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 }) {
   const toast = useToast();
   const [gBusy, setGBusy] = useState(false);
@@ -184,6 +211,7 @@ function DashboardLogin({
     if (cloud) {
       if (mode === "signup") {
         if (!form.name.trim()) return toast.toast("Enter your name.", "err");
+<<<<<<< HEAD
         if (form.accountType === "admin" && !form.selectedClubId) return toast.toast("Please select a club for admin role.", "err");
         if (form.accountType === "moderator" && !form.selectedClubId) return toast.toast("Please select a club for moderator role.", "err");
         // Only validate student ID for admin accounts (member/moderator use class ID instead)
@@ -205,6 +233,14 @@ function DashboardLogin({
         mode === "signup" ? form.phone : undefined,
         mode === "signup" ? form.classId : undefined
       );
+=======
+        const check = verify(form.studentId);
+        if (!check.ok) return toast.toast(studentIdError(form.studentId, check.reason), "err");
+        toast.toast("✓ Student verified: " + studentVerifiedText(check.student), "ok");
+      }
+      setEBusy(true);
+      const err = await onCloudEmail(email, form.pass, mode, form.name.trim());
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       setEBusy(false);
       if (err) toast.toast(err, "err");
       return;
@@ -280,6 +316,7 @@ function DashboardLogin({
           {mode === "signup" && (
             <div className="mb-3 grid gap-3 anim-fade-up">
               <input className="input" placeholder="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} aria-label="Full name" />
+<<<<<<< HEAD
               <div>
                 <label className="label" htmlFor="acct-type">
                   Account type
@@ -358,6 +395,15 @@ function DashboardLogin({
               )}
             </div>
           )}
+=======
+              <input className="input" placeholder="NITER student ID (e.g. CS-2607001)" value={form.studentId} onChange={(e) => setForm({ ...form, studentId: e.target.value })} aria-label="NITER student ID" />
+            </div>
+          )}
+          <div className="mb-3 grid gap-3">
+            <input className="input" type="email" placeholder="you@niter.edu.bd" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} aria-label="Email" />
+            <input className="input" type="password" placeholder="At least 6 characters" value={form.pass} onChange={(e) => setForm({ ...form, pass: e.target.value })} aria-label="Password" />
+          </div>
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
           <button className="btn btn-primary w-full" onClick={submit} disabled={eBusy || gBusy}>
             {eBusy
               ? "Working…"
@@ -365,12 +411,19 @@ function DashboardLogin({
                 ? "Sign in"
                 : "Create my student login"}
           </button>
+<<<<<<< HEAD
           {form.accountType === "admin" && (
             <p className="mb-0 mt-4 text-center text-[12.5px] text-muted">
               Student ID format: <code className="rounded bg-surface-2 px-1 py-0.5 font-mono text-[11.5px]">CS-2607001</code>{" "}
               (CS = CSE · 26 = batch · 07 = dept code · 001 = roll)
             </p>
           )}
+=======
+          <p className="mb-0 mt-4 text-center text-[12.5px] text-muted">
+            Student ID format: <code className="rounded bg-surface-2 px-1 py-0.5 font-mono text-[11.5px]">CS-2607001</code>{" "}
+            (CS = CSE · 26 = batch · 07 = dept code · 001 = roll)
+          </p>
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         </div>
       </div>
     </>
@@ -584,8 +637,11 @@ function DashboardHome({
                   <EmptyState icon="🗓">No upcoming events yet.</EmptyState>
                 )}
               </div>
+<<<<<<< HEAD
             </section>
 
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
             {/* my certificates */}
             <section className="card p-5">
               <h2 className="m-0 text-[18px] font-bold text-ink">📜 My certificates ({myCerts.length})</h2>
@@ -638,6 +694,7 @@ function DashboardHome({
                   <p className="m-0 font-semibold text-ink">{dbUser.name || "—"}</p>
                   <p className="mb-1 mt-3 text-muted">Student ID</p>
                   <p className="m-0 font-mono text-[13px] font-semibold text-ink">{dbUser.studentId || "—"}</p>
+<<<<<<< HEAD
                   {/* Role & Club badges */}
                   {dbUser.role && dbUser.role !== "member" && (
                     <>
@@ -678,6 +735,8 @@ function DashboardHome({
                       </div>
                     </>
                   )}
+=======
+>>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button className="btn btn-outline btn-sm" onClick={() => setEditing(true)}>
                       Edit profile
