@@ -236,8 +236,8 @@ B.push(
   `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="600" w:after="200"/></w:pPr>` +
     `<w:r><w:rPr><w:color w:val="${SKY}"/></w:rPr><w:t>One portal for every club at NITER</w:t></w:r></w:p>`,
   rule(),
-  kv("Version", "2.0"),
-  kv("Date", "August 15, 2026"),
+  kv("Version", "4.0"),
+  kv("Date", "August 18, 2026"),
   kv("Status", "Released"),
   kv("Repository", "github.com/ashrafularefin78-prog/NITER-CLUB-WEBSITE"),
   pageBreak()
@@ -253,6 +253,7 @@ B.push(
       ["1.0", "10 Aug 2026", "NITER Clubs Portal team", "Initial release — full project documentation."],
       ["2.0", "15 Aug 2026", "NITER Clubs Portal team", "Added club ads, events, memberships, committee editor, student directory and Appwrite mirroring."],
       ["3.0", "18 Aug 2026", "NITER Clubs Portal team", "Added club admin/moderator system, membership auto-creation from forms, email notifications, user profile enhancements."],
+      ["4.0", "18 Aug 2026", "NITER Clubs Portal team", "Bug fixes: duplicate admin validation, signup form fields, TypeScript errors. Added Apache 2.0 license. Updated documentation."],
     ]
   ),
   h2("Revision History"),
@@ -262,6 +263,7 @@ B.push(
       ["1.0", "10 Aug 2026", "Initial release."],
       ["2.0", "15 Aug 2026", "Documented the moderator-published ads feature, club events, membership approvals, the committee editor with email notifications, the admin-only student directory and the Appwrite mirroring routes."],
       ["3.0", "18 Aug 2026", "Added club admin/moderator system: moderator approval workflow, auto-membership from forms, club admin panel, email notifications, user profile enhancements (phone, classId, role badges)."],
+      ["4.0", "18 Aug 2026", "Bug fixes: duplicate admin validation error handling, signup form missing email/password for admin, TypeScript strict mode errors. Added Apache 2.0 license. Regenerated documentation."],
     ]
   ),
   h2("Related Documents"),
@@ -486,7 +488,7 @@ B.push(
       ["Styling", "Tailwind CSS v4 with NITER brand tokens and `data-theme` dark mode"],
       ["Firebase", "Modular Firebase SDK v12 (`web/lib/firebase.ts`)"],
       ["State", "Custom client store with `useSyncExternalStore`, cross-tab sync, Firestore hydrate/push"],
-      ["API routes", "`app/api/` — `/api/students` (Appwrite-backed directory), `/api/submissions` and `/api/users` (Appwrite mirror), `/api/committee-notify` (moderator emails)"],
+      ["API routes", "`app/api/` — `/api/students` (directory), `/api/submissions` and `/api/users` (mirror), `/api/committee-notify`, `/api/moderator-notify`, `/api/membership-notify`, `/api/membership-decision-notify` (email notifications)"],
       ["Tooling", "ESLint 9, Prettier 3, `tsc --noEmit` typecheck"],
     ]
   ),
@@ -644,7 +646,7 @@ B.push(
     "│   ├── mcp.json / mcp.cloud.json",
     "│   └── README.md",
     "├── web/                    # Next.js 15 rewrite (recommended for new work)",
-    "│   ├── app/                # Routes + /api (students, submissions, users, committee-notify)",
+    "│   ├── app/                # Routes + /api (students, submissions, users, committee-notify, moderator-notify, membership-notify, membership-decision-notify)",
     "│   ├── components/         # layout, cards, ads carousel, countdown, views/…",
     "│   ├── lib/                # types, seed, store, firebase, auth, utils, appwrite-*",
     "│   ├── package.json",
