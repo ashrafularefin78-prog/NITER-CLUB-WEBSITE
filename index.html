@@ -14806,7 +14806,16 @@
     }
 
     function naiChatReply(q) {
-      if (/^(?:(?:say|just\s+say|please\s+say|i\s+(?:wanna|want\s+to)\s+say)\s+)?(hi|hii+|hey|heyy+|hello|hola|yo|howdy|salam|assalamu|assalam\s+o\s+alaikum|aoa|good\s*(morning|afternoon|evening|night)|ki\s*(obostha|khobor)|kemon\s*(achen|acho|aso)|sup|whats\s*up|wassup)\b/.test(q)) {
+            /* ---- Islamic greeting: Assalamualaikum -> Alaikumus Salam ---- */
+      if (/assalamu\s*(ualaikum|\s*alaikum|\s*o\s*alaikum|alaikum)/i.test(q) || /^salam$/i.test(q) || /^aoa$/i.test(q)) {
+        return naiPick([
+          "Wa Alaikumus Salam! \ud83d\ude4f \ud83c\udf19 May your day be blessed. How can I help you with NITER today \u2014 clubs, admission, exams, or anything else?",
+          "Alaikumus Salam! \ud83d\ude4f Welcome! I'm NITER AI. Ask me anything about NITER \u2014 the institute, clubs, events, fees, the RMG industry. What would you like to know?",
+          "Wa Alaikumus Salam! \ud83d\ude4f \u2728 Peace be upon you too. I'm here to help with anything NITER-related \u2014 clubs, admission, campus life, career paths. What's on your mind?"
+        ]);
+      }
+
+if (/^(?:(?:say|just\s+say|please\s+say|i\s+(?:wanna|want\s+to)\s+say)\s+)?(hi|hii+|hey|heyy+|hello|hola|yo|howdy|salam|assalamu|assalam\s+o\s+alaikum|aoa|good\s*(morning|afternoon|evening|night)|ki\s*(obostha|khobor)|kemon\s*(achen|acho|aso)|sup|whats\s*up|wassup)\b/.test(q)) {
         return naiPick([
           "Hey there! 👋 Welcome back to the NITER Clubs Portal. Ask me anything — clubs, events, admission, syllabus, the RMG industry — or just say hi. What's on your mind?",
           "Hello! 😊 Good to see you. I'm NITER AI, your campus assistant. Want the latest events, open forms, or a quick fact about NITER?",
