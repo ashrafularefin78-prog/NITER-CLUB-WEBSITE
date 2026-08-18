@@ -2424,9 +2424,21 @@ async function notifyStudentMembershipDecision(
   reviewerName: string
 ): Promise<void> {
   try {
-    const dbref = useDb();
-    const club = dbref?.clubs.find((c) => c.id === clubId);
-    const clubName = club?.name || clubId;
+    // Get club name from Firestore directly (useDb is a React hook, can't be used here)
+    let clubName = clubId;
+    try {
+      const { getCloudDb } = await import("@/lib/firebase");
+      const { getDoc, doc } = await import("firebase/firestore");
+      const dbref = getCloudDb();
+      if (dbref) {
+        const clubDoc = await getDoc(doc(dbref, "clubs", clubId));
+        if (clubDoc.exists()) {
+          clubName = (clubDoc.data() as { name?: string }).name || clubId;
+        }
+      }
+    } catch {
+      // Fall back to clubId
+    }
 
     await fetch("/api/membership-decision-notify", {
       method: "POST",

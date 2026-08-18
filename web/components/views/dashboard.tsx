@@ -186,9 +186,12 @@ function DashboardLogin({
         if (!form.name.trim()) return toast.toast("Enter your name.", "err");
         if (form.accountType === "admin" && !form.selectedClubId) return toast.toast("Please select a club for admin role.", "err");
         if (form.accountType === "moderator" && !form.selectedClubId) return toast.toast("Please select a club for moderator role.", "err");
-        const check = verify(form.studentId);
-        if (!check.ok) return toast.toast(studentIdError(form.studentId, check.reason), "err");
-        toast.toast("✓ Student verified: " + studentVerifiedText(check.student), "ok");
+        // Only validate student ID for admin accounts (member/moderator use class ID instead)
+        if (form.accountType === "admin") {
+          const check = verify(form.studentId);
+          if (!check.ok) return toast.toast(studentIdError(form.studentId, check.reason), "err");
+          toast.toast("✓ Student verified: " + studentVerifiedText(check.student), "ok");
+        }
       }
       setEBusy(true);
       const err = await onCloudEmail(

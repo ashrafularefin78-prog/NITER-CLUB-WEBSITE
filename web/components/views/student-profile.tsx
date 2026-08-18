@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDb } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { clubById, fmtDate, relativeAgo } from "@/lib/utils";
@@ -40,7 +40,7 @@ function loadAccounts(): Record<string, { name: string; studentId: string; pass:
    the legacy app: memberships/submissions first, then offline demo accounts,
    then the signed-in user's own session (so a fresh student can always open
    their own profile). Returns null when nothing matches. */
-function resolveStudent(db: Database, me: UserLike | null, rawKey: string): ProfileStudent | null {
+function resolveStudent(db: Database, me: UserLike | null, rawKey: string, profileUser?: PortalUser | null): ProfileStudent | null {
   const k = decodeURIComponent(rawKey || "").toLowerCase();
   const ms = (db.memberships || []).filter(
     (m) => (m.userId || "").toLowerCase() === k || (m.userEmail || "").toLowerCase() === k
@@ -48,11 +48,8 @@ function resolveStudent(db: Database, me: UserLike | null, rawKey: string): Prof
   const subs = (db.submissions || []).filter(
     (s) => (s.userId || "").toLowerCase() === k || (s.submitterEmail || "").toLowerCase() === k
   );
-  // Check if the user is in the users collection (for role/club info)
-  const users = (db as Database & { __users?: PortalUser[] }).__users || [];
-  const user = users.find(
-    (u) => (u.email || "").toLowerCase() === k || (u.uid || "").toLowerCase() === k
-  );
+  // Use the profileUser passed from the component (loaded from Firestore)
+  const user = profileUser || null;
   if (ms.length || subs.length || user) {
     const mem = ms[0];
     const sub = subs[0];
@@ -154,10 +151,37 @@ function StudentMissing() {
 export default function StudentProfileView({ studentKey }: { studentKey: string }) {
   const db = useDb();
   const auth = useAuth();
+  const [profileUser, setProfileUser] = useState<PortalUser | null>(null);
+
+  // Load the user data from Firestore for role/club info
+  useEffect(() => {
+    if (!db || !auth.cloud) return;
+    let cancelled = false;
+    const loadUser = async () => {
+      try {
+        const { getCloudDb } = await import("@/lib/firebase");
+        const { collection, getDocs, query, where } = await import("firebase/firestore");
+        const dbref = getCloudDb();
+        if (!dbref) return;
+        const k = decodeURIComponent(studentKey || "").toLowerCase();
+        // Try to find by email first, then by uid
+        const q = query(collection(dbref, "users"), where("email", "==", k));
+        const snap = await getDocs(q);
+        if (!cancelled && !snap.empty) {
+          const doc = snap.docs[0];
+          setProfileUser({ ...doc.data(), uid: doc.id } as PortalUser);
+        }
+      } catch {
+        // Silently fail — role info is optional
+      }
+    };
+    void loadUser();
+    return () => { cancelled = true; };
+  }, [db, auth.cloud, studentKey]);
 
   const profile = useMemo(
-    () => (db ? resolveStudent(db, auth.cloud ? auth.user : null, studentKey) : null),
-    [db, auth.cloud, auth.user, studentKey]
+    () => (db ? resolveStudent(db, auth.cloud ? auth.user : null, studentKey, profileUser) : null),
+    [db, auth.cloud, auth.user, studentKey, profileUser]
   );
 
   const isMe = useMemo(() => {

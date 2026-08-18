@@ -725,10 +725,17 @@ async function notifyClubModerators(
 
     if (!recipients.length) return;
 
-    // Get club name
-    const db = useDb();
-    const club = db?.clubs.find((c) => c.id === clubId);
-    const clubName = club?.name || clubId;
+    // Get club name from Firestore directly (useDb is a React hook, can't be used here)
+    let clubName = clubId;
+    try {
+      const { getDoc, doc } = await import("firebase/firestore");
+      const clubDoc = await getDoc(doc(dbref, "clubs", clubId));
+      if (clubDoc.exists()) {
+        clubName = (clubDoc.data() as { name?: string }).name || clubId;
+      }
+    } catch {
+      // Fall back to clubId if club lookup fails
+    }
 
     // Send email notification via the API
     await fetch("/api/membership-notify", {
