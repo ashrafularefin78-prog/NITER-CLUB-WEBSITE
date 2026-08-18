@@ -365,10 +365,12 @@ function DashboardLogin({
                 ? "Sign in"
                 : "Create my student login"}
           </button>
-          <p className="mb-0 mt-4 text-center text-[12.5px] text-muted">
-            Student ID format: <code className="rounded bg-surface-2 px-1 py-0.5 font-mono text-[11.5px]">CS-2607001</code>{" "}
-            (CS = CSE · 26 = batch · 07 = dept code · 001 = roll)
-          </p>
+          {form.accountType === "admin" && (
+            <p className="mb-0 mt-4 text-center text-[12.5px] text-muted">
+              Student ID format: <code className="rounded bg-surface-2 px-1 py-0.5 font-mono text-[11.5px]">CS-2607001</code>{" "}
+              (CS = CSE · 26 = batch · 07 = dept code · 001 = roll)
+            </p>
+          )}
         </div>
       </div>
     </>
