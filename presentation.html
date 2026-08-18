@@ -45,7 +45,70 @@
       overflow: hidden;
     }
 
-    .slide.active { display: flex; flex-direction: column; }
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+      animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideInFromBottom {
+      from { opacity: 0; transform: translateY(60px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .animate-in { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+    .animate-in-left { animation: fadeInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+    .animate-in-right { animation: fadeInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+    .animate-scale { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+    .delay-6 { animation-delay: 0.6s; }
+    .delay-7 { animation-delay: 0.7s; }
+    .delay-8 { animation-delay: 0.8s; }
 
     /* Slide variants */
     .slide-cover {
@@ -132,6 +195,12 @@
       border-radius: 12px;
       padding: 24px;
       border: 1px solid #E2E8F0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
     }
 
     .card-elevated {
@@ -139,6 +208,12 @@
       border-radius: 12px;
       padding: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card-elevated:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
 
     .card-dark {
@@ -146,6 +221,12 @@
       border-radius: 12px;
       padding: 24px;
       border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card-dark:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
     }
 
     .card-gold {
@@ -165,6 +246,11 @@
       font-weight: 800;
       line-height: 1;
       letter-spacing: -0.02em;
+      transition: transform 0.3s ease;
+    }
+
+    .stat:hover .stat-value {
+      transform: scale(1.1);
     }
 
     .stat-value.gold { color: var(--gold); }
@@ -195,6 +281,12 @@
       gap: 12px;
       color: var(--navy);
       border-bottom: 1px solid #F1F5F9;
+      transition: all 0.2s ease;
+    }
+
+    .check-list li:hover {
+      padding-left: 8px;
+      background: rgba(241,245,249,0.5);
     }
 
     .check-list li:last-child { border-bottom: none; }
@@ -257,6 +349,11 @@
       font-size: 12px;
       font-weight: 600;
       margin: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .tag:hover {
+      transform: scale(1.05);
     }
 
     .tag-navy { background: var(--navy); color: var(--white); }
@@ -337,7 +434,14 @@
       backdrop-filter: blur(10px);
     }
 
-    .nav button:hover { background: rgba(255,255,255,0.2); }
+    .nav button:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
+    }
+
+    .nav button:active {
+      transform: scale(0.95);
+    }
 
     .progress-bar-bottom {
       position: fixed;
@@ -388,54 +492,54 @@
 <div class="slide slide-cover active" id="slide-1">
   <div class="slide-number white">01 / 12</div>
   <div style="max-width: 800px;">
-    <div class="overline" style="color: var(--gold);">Executive Summary</div>
-    <h1 style="color: white; margin-bottom: 24px;">NITER Clubs Portal</h1>
-    <div class="accent-line" style="margin: 0 auto 24px;"></div>
-    <p style="color: rgba(255,255,255,0.6); font-size: 1.3em; line-height: 1.6;">
+    <div class="overline animate-in delay-1" style="color: var(--gold);">Executive Summary</div>
+    <h1 class="animate-in delay-2" style="color: white; margin-bottom: 24px;">NITER Clubs Portal</h1>
+    <div class="accent-line animate-in delay-3" style="margin: 0 auto 24px;"></div>
+    <p class="animate-in delay-4" style="color: rgba(255,255,255,0.6); font-size: 1.3em; line-height: 1.6;">
       A unified digital platform transforming how 11+ student clubs operate, communicate, and engage with 2,000+ students at the National Institute of Textile Engineering and Research.
     </p>
-    <div class="mt-48" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+    <div class="mt-48 animate-in delay-5" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
       <span class="tag tag-navy">Next.js 15</span>
       <span class="tag tag-navy">React 19</span>
       <span class="tag tag-navy">TypeScript</span>
       <span class="tag tag-navy">Firebase</span>
       <span class="tag tag-navy">Tailwind CSS</span>
     </div>
-    <p style="color: rgba(255,255,255,0.3); margin-top: 48px; font-size: 0.85em;">August 2026 · v1.0</p>
+    <p class="animate-in delay-6" style="color: rgba(255,255,255,0.3); margin-top: 48px; font-size: 0.85em;">August 2026 · v1.0</p>
   </div>
 </div>
 
 <!-- ==================== SLIDE 2: PROBLEM ==================== -->
 <div class="slide slide-white" id="slide-2">
   <div class="slide-number">02 / 12</div>
-  <div class="overline">The Challenge</div>
-  <h2>Problem Statement</h2>
-  <p class="lead mt-16">NITER's student clubs face critical operational challenges that reduce engagement and increase administrative burden.</p>
+  <div class="overline animate-in delay-1">The Challenge</div>
+  <h2 class="animate-in delay-2">Problem Statement</h2>
+  <p class="lead mt-16 animate-in delay-3">NITER's student clubs face critical operational challenges that reduce engagement and increase administrative burden.</p>
 
   <div class="grid-3 mt-32">
-    <div class="card" style="border-left: 3px solid var(--red);">
+    <div class="card animate-in delay-4" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">📱 Fragmented Communication</h3>
       <p style="font-size: 0.9em;">Activities scattered across Facebook, WhatsApp, and word-of-mouth. No centralized platform for discovery.</p>
     </div>
-    <div class="card" style="border-left: 3px solid var(--red);">
+    <div class="card animate-in delay-5" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">📝 Manual Processes</h3>
       <p style="font-size: 0.9em;">Paper forms, Google Forms, no approval workflow. Students can't track their application status.</p>
     </div>
-    <div class="card" style="border-left: 3px solid var(--red);">
+    <div class="card animate-in delay-6" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">📅 Event Management</h3>
       <p style="font-size: 0.9em;">No RSVP tracking, no capacity management, no attendance verification. Low event turnout.</p>
     </div>
-    <div class="card" style="border-left: 3px solid var(--red);">
+    <div class="card animate-in-left delay-4" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">🌐 No Digital Identity</h3>
       <p style="font-size: 0.9em;">Clubs depend on Facebook. When pages go down, digital presence vanishes.</p>
     </div>
-    <div class="card" style="border-left: 3px solid var(--red);">
+    <div class="card animate-in-left delay-5" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">⏰ Administrative Overhead</h3>
       <p style="font-size: 0.9em;">Hours spent manually collecting forms, sending reminders, and tracking applications.</p>
     </div>
-    <div class="card" style="border-left: 3px solid var(--red);">
+    <div class="card animate-in-left delay-6" style="border-left: 3px solid var(--red);">
       <h3 style="font-size: 1.1em; margin-bottom: 12px;">🔍 Discovery Gap</h3>
-      <p style="font-size: 0.9em;">New students have no easy way to learn about clubs or how to get involved.</p>
+n      <p style="font-size: 0.9em;">New students have no easy way to learn about clubs or how to get involved.</p>
     </div>
   </div>
 </div>
@@ -443,12 +547,12 @@
 <!-- ==================== SLIDE 3: SOLUTION ==================== -->
 <div class="slide slide-dark text-white" id="slide-3">
   <div class="slide-number white">03 / 12</div>
-  <div class="overline">Our Approach</div>
-  <h2 style="color: white;">The Solution</h2>
-  <p style="color: rgba(255,255,255,0.6); margin-top: 8px;" class="lead">A comprehensive web platform that centralizes and automates all club operations.</p>
+  <div class="overline animate-in delay-1">Our Approach</div>
+  <h2 class="animate-in delay-2" style="color: white;">The Solution</h2>
+  <p class="animate-in delay-3" style="color: rgba(255,255,255,0.6); margin-top: 8px;" class="lead">A comprehensive web platform that centralizes and automates all club operations.</p>
 
   <div class="grid-3 mt-32">
-    <div class="card-dark">
+    <div class="card-dark animate-in delay-4">
       <div style="font-size: 1.8em; margin-bottom: 12px;">🎓</div>
       <h3 style="color: white; margin-bottom: 12px;">For Students</h3>
       <ul class="check-list">
@@ -459,7 +563,7 @@
         <li><span class="check">✓</span> Personal dashboard with XP & badges</li>
       </ul>
     </div>
-    <div class="card-dark">
+    <div class="card-dark animate-in delay-5">
       <div style="font-size: 1.8em; margin-bottom: 12px;">🛡️</div>
       <h3 style="color: white; margin-bottom: 12px;">For Club Executives</h3>
       <ul class="check-list">
@@ -470,7 +574,7 @@
         <li><span class="check">✓</span> Publish ads for events</li>
       </ul>
     </div>
-    <div class="card-dark">
+    <div class="card-dark animate-in delay-6">
       <div style="font-size: 1.8em; margin-bottom: 12px;">👑</div>
       <h3 style="color: white; margin-bottom: 12px;">For Administrators</h3>
       <ul class="check-list">
@@ -487,30 +591,30 @@
 <!-- ==================== SLIDE 4: KEY METRICS ==================== -->
 <div class="slide slide-white" id="slide-4">
   <div class="slide-number">04 / 12</div>
-  <div class="overline">By The Numbers</div>
-  <h2>Key Metrics</h2>
+  <div class="overline animate-in delay-1">By The Numbers</div>
+  <h2 class="animate-in delay-2">Key Metrics</h2>
 
   <div class="grid-4 mt-32">
-    <div class="card-elevated stat">
+    <div class="card-elevated stat animate-scale delay-3">
       <div class="stat-value gold">11+</div>
       <div class="stat-label">Clubs Supported</div>
     </div>
-    <div class="card-elevated stat">
+    <div class="card-elevated stat animate-scale delay-4">
       <div class="stat-value blue">2,000+</div>
       <div class="stat-label">Potential Students</div>
     </div>
-    <div class="card-elevated stat">
+    <div class="card-elevated stat animate-scale delay-5">
       <div class="stat-value green">6</div>
       <div class="stat-label">Role Types</div>
     </div>
-    <div class="card-elevated stat">
+    <div class="card-elevated stat animate-scale delay-6">
       <div class="stat-value" style="color: var(--purple);">7</div>
       <div class="stat-label">API Endpoints</div>
     </div>
   </div>
 
   <div class="grid-2 mt-32">
-    <div class="card-elevated">
+    <div class="card-elevated animate-in-left delay-5">
       <h3 style="font-size: 1em; margin-bottom: 16px;">Feature Coverage</h3>
       <div class="mb-16">
         <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
@@ -549,7 +653,7 @@
       </div>
     </div>
 
-    <div class="card-elevated">
+    <div class="card-elevated animate-in-right delay-5">
       <h3 style="font-size: 1em; margin-bottom: 16px;">Roles & Access</h3>
       <table>
         <tr><th>Role</th><th>Approval</th><th>Scope</th></tr>
@@ -567,12 +671,12 @@
 <!-- ==================== SLIDE 5: TECH STACK ==================== -->
 <div class="slide slide-gray" id="slide-5">
   <div class="slide-number">05 / 12</div>
-  <div class="overline">Technology</div>
-  <h2>Tech Stack</h2>
+  <div class="overline animate-in delay-1">Technology</div>
+  <h2 class="animate-in delay-2">Tech Stack</h2>
 
   <div class="grid-2 mt-32">
     <div>
-      <div class="card-elevated mb-24">
+      <div class="card-elevated mb-24 animate-in-left delay-3">
         <h3 style="font-size: 0.95em; margin-bottom: 16px; color: var(--slate);">FRONTEND</h3>
         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
           <span class="tag tag-navy">Next.js 15</span>
@@ -583,7 +687,7 @@
         </div>
       </div>
 
-      <div class="card-elevated">
+      <div class="card-elevated animate-in-right delay-3">
         <h3 style="font-size: 0.95em; margin-bottom: 16px; color: var(--slate);">BACKEND</h3>
         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
           <span class="tag tag-blue">Firebase Firestore</span>
@@ -625,28 +729,28 @@
 <!-- ==================== SLIDE 6: ARCHITECTURE ==================== -->
 <div class="slide slide-dark text-white" id="slide-6">
   <div class="slide-number white">06 / 12</div>
-  <div class="overline">System Design</div>
-  <h2 style="color: white;">Architecture</h2>
-  <p style="color: rgba(255,255,255,0.6);" class="lead">Serverless architecture — no application server to operate.</p>
+  <div class="overline animate-in delay-1">System Design</div>
+  <h2 class="animate-in delay-2" style="color: white;">Architecture</h2>
+  <p class="animate-in delay-3" style="color: rgba(255,255,255,0.6);" class="lead">Serverless architecture — no application server to operate.</p>
 
   <div class="mt-32" style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;">
-    <div class="card-dark" style="min-width: 180px; text-align: center; padding: 30px;">
+    <div class="card-dark animate-in-left delay-4" style="min-width: 180px; text-align: center; padding: 30px;">
       <div style="font-size: 2em; margin-bottom: 12px;">🌐</div>
       <h3 style="color: white; font-size: 1em;">Frontend</h3>
       <p style="font-size: 0.8em; margin-top: 8px;">Next.js 15<br>React 19</p>
     </div>
 
-    <div style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
+    <div class="animate-scale delay-5" style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
 
-    <div class="card-gold" style="min-width: 180px; text-align: center; padding: 30px;">
+    <div class="card-gold animate-scale delay-5" style="min-width: 180px; text-align: center; padding: 30px;">
       <div style="font-size: 2em; margin-bottom: 12px;">🔥</div>
       <h3 style="font-size: 1em;">Firebase BaaS</h3>
       <p style="font-size: 0.8em; margin-top: 8px; color: #92400E;">Serverless Backend</p>
     </div>
 
-    <div style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
+    <div class="animate-scale delay-6" style="display: flex; align-items: center; color: var(--gold); font-size: 2em;">⟷</div>
 
-    <div class="card-dark" style="min-width: 180px; text-align: center; padding: 30px;">
+    <div class="card-dark animate-in-right delay-6" style="min-width: 180px; text-align: center; padding: 30px;">
       <div style="font-size: 2em; margin-bottom: 12px;">📦</div>
       <h3 style="color: white; font-size: 1em;">Services</h3>
       <p style="font-size: 0.8em; margin-top: 8px;">Firestore · Auth<br>Storage · Rules</p>
@@ -672,8 +776,8 @@
 <!-- ==================== SLIDE 7: DATA MODEL ==================== -->
 <div class="slide slide-white" id="slide-7">
   <div class="slide-number">07 / 12</div>
-  <div class="overline">Data Layer</div>
-  <h2>Data Model</h2>
+  <div class="overline animate-in delay-1">Data Layer</div>
+  <h2 class="animate-in delay-2">Data Model</h2>
 
   <div class="mt-32" style="overflow-x: auto;">
     <table>
@@ -698,11 +802,11 @@
 <!-- ==================== SLIDE 8: USER FLOWS ==================== -->
 <div class="slide slide-gray" id="slide-8">
   <div class="slide-number">08 / 12</div>
-  <div class="overline">Workflows</div>
-  <h2>User Flows</h2>
+  <div class="overline animate-in delay-1">Workflows</div>
+  <h2 class="animate-in delay-2">User Flows</h2>
 
   <div class="grid-2 mt-32">
-    <div class="card-elevated">
+    <div class="card-elevated animate-in-left delay-3">
       <h3 style="font-size: 1em; margin-bottom: 20px;">🎓 Student Membership</h3>
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div style="display: flex; gap: 12px; align-items: flex-start;">
@@ -732,7 +836,7 @@
       </div>
     </div>
 
-    <div class="card-elevated">
+    <div class="card-elevated animate-in-right delay-3">
       <h3 style="font-size: 1em; margin-bottom: 20px;">🛡️ Moderator Approval</h3>
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div style="display: flex; gap: 12px; align-items: flex-start;">
@@ -767,8 +871,8 @@
 <!-- ==================== SLIDE 9: FEATURES ==================== -->
 <div class="slide slide-white" id="slide-9">
   <div class="slide-number">09 / 12</div>
-  <div class="overline">Capabilities</div>
-  <h2>Features Deep Dive</h2>
+  <div class="overline animate-in delay-1">Capabilities</div>
+  <h2 class="animate-in delay-2">Features Deep Dive</h2>
 
   <div class="grid-3 mt-32">
     <div class="card" style="border-top: 3px solid var(--gold);">
@@ -824,8 +928,8 @@
 <!-- ==================== SLIDE 10: SECURITY ==================== -->
 <div class="slide slide-dark text-white" id="slide-10">
   <div class="slide-number white">10 / 12</div>
-  <div class="overline">Protection</div>
-  <h2 style="color: white;">Security Model</h2>
+  <div class="overline animate-in delay-1">Protection</div>
+  <h2 class="animate-in delay-2" style="color: white;">Security Model</h2>
 
   <div class="grid-2 mt-32">
     <div>
@@ -856,8 +960,8 @@
 <!-- ==================== SLIDE 11: IMPACT ==================== -->
 <div class="slide slide-white" id="slide-11">
   <div class="slide-number">11 / 12</div>
-  <div class="overline">Outcomes</div>
-  <h2>Impact & Scalability</h2>
+  <div class="overline animate-in delay-1">Outcomes</div>
+  <h2 class="animate-in delay-2">Impact & Scalability</h2>
 
   <div class="mt-32">
     <div class="compare-row">
@@ -893,8 +997,8 @@
   <div class="slide-number" style="color: rgba(0,0,0,0.3);">12 / 12</div>
 
   <div style="text-align: center; margin: auto;">
-    <div style="font-size: 4em; margin-bottom: 24px;">🏛️</div>
-    <h1 style="font-size: 3.5em; margin-bottom: 16px;">Thank You</h1>
+    <div class="animate-scale delay-1" style="font-size: 4em; margin-bottom: 24px;">🏛️</div>
+    <h1 class="animate-in delay-2" style="font-size: 3.5em; margin-bottom: 16px;">Thank You</h1>
     <div class="accent-line" style="margin: 0 auto 24px; background: var(--navy);"></div>
     <p style="font-size: 1.3em; font-weight: 500; margin-bottom: 40px;">
       NITER Clubs Portal<br>
@@ -929,10 +1033,52 @@
   let currentSlide = 1;
   const totalSlides = 12;
 
+  function animateCounter(element, target, duration = 1000) {
+    const numTarget = parseInt(target.replace(/[^0-9]/g, ''));
+    const suffix = target.replace(/[0-9,]/g, '').replace(numTarget.toString(), '');
+    if (isNaN(numTarget)) return;
+    
+    let start = 0;
+    const increment = numTarget / (duration / 16);
+    
+    function update() {
+      start += increment;
+      if (start >= numTarget) {
+        element.textContent = target;
+        return;
+      }
+      element.textContent = Math.floor(start).toLocaleString() + suffix;
+      requestAnimationFrame(update);
+    }
+    update();
+  }
+
   function showSlide(n) {
-    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.slide').forEach(s => {
+      s.classList.remove('active');
+      // Reset animations
+      s.querySelectorAll('.animate-in, .animate-in-left, .animate-in-right, .animate-scale').forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight; // Trigger reflow
+        el.style.animation = '';
+      });
+    });
     document.getElementById(`slide-${n}`).classList.add('active');
     document.getElementById('progressBar').style.width = `${(n / totalSlides) * 100}%`;
+    
+    // Animate counters on metrics slide
+    if (n === 4) {
+      setTimeout(() => {
+        document.querySelectorAll('.stat-value').forEach(el => {
+          const text = el.textContent;
+          if (text.includes('+')) {
+            animateCounter(el, text.replace('+', '') + '+', 800);
+          } else if (!isNaN(parseInt(text))) {
+            animateCounter(el, text, 600);
+          }
+        });
+      }, 400);
+    }
   }
 
   function nextSlide() {
