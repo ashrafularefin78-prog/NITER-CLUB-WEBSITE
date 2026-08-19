@@ -429,6 +429,96 @@ table.sub-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 .grow { flex: 1; }
 
 /* ============================================================
+   Splash Screen (mobile only)
+   ============================================================ */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #16204e 0%, #1f2a6b 50%, #2a1d63 100%);
+  color: #fff;
+  opacity: 1;
+  transition: opacity .35s ease;
+}
+.splash-screen.dismissing {
+  opacity: 0;
+  pointer-events: none;
+}
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: splashPopIn .4s cubic-bezier(.22,.61,.36,1) both;
+}
+.splash-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #c8102e, #ff5a5f);
+  display: grid;
+  place-items: center;
+  font-size: 36px;
+  box-shadow: 0 8px 32px rgba(200,16,46,.45);
+  animation: splashPulse 1.4s ease-in-out infinite;
+}
+.splash-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: .5px;
+}
+.splash-subtitle {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  opacity: .7;
+  margin: 0;
+}
+.splash-loader {
+  width: 140px;
+  height: 3px;
+  background: rgba(255,255,255,.15);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.splash-loader-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #e8aa1c, #c8102e);
+  border-radius: 999px;
+  animation: splashProgress 1.2s ease-in-out forwards;
+}
+@keyframes splashPopIn {
+  from { opacity: 0; transform: scale(.85) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes splashPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+@keyframes splashProgress {
+  0%   { width: 0%; }
+  60%  { width: 75%; }
+  100% { width: 100%; }
+}
+@media (min-width: 701px) {
+  .splash-screen { display: none !important; }
+}
+@media (max-width: 700px) {
+  .splash-screen { display: flex; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash-content { animation: none; }
+  .splash-logo { animation: none; }
+  .splash-loader-bar { animation: none; width: 100%; }
+}
+
+/* ============================================================
    Page Transition Animations (mobile)
    ============================================================ */
 @keyframes pageSlideIn {
