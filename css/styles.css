@@ -783,3 +783,74 @@ table.sub-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   .container { padding: 0 12px; }
   .form-card-lg .form-head, .form-card-lg .form-body { padding: 16px; }
 }
+
+/* ---- Swipe tab indicator (floating dots at bottom) ---- */
+.swipe-tab-indicator {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  display: flex;
+  gap: 7px;
+  background: rgba(15, 23, 42, .78);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 999px;
+  z-index: 1500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.swipe-tab-indicator.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.swipe-tab-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.35);
+  transition: background .2s, transform .2s;
+}
+.swipe-tab-dot.active {
+  background: #fff;
+  transform: scale(1.3);
+}
+
+/* ---- Swipe hint (shown once per page) ---- */
+.swipe-hint {
+  position: fixed;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: rgba(15, 23, 42, .82);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 12px;
+  z-index: 1500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease, transform .35s ease;
+  white-space: nowrap;
+  letter-spacing: .3px;
+}
+.swipe-hint.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ---- AI window swipe-to-dismiss visual cue ---- */
+.ai-win.open .ai-win-head {
+  cursor: grab;
+}
+.ai-win.open .ai-win-head::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255,255,255,.3);
+  margin: 2px auto 0;
+}

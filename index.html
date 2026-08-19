@@ -2491,6 +2491,77 @@
   .form-card-lg .form-head, .form-card-lg .form-body { padding: 16px; }
 }
 
+/* ---- Swipe tab indicator (floating dots at bottom) ---- */
+.swipe-tab-indicator {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  display: flex;
+  gap: 7px;
+  background: rgba(15, 23, 42, .78);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: 999px;
+  z-index: 1500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.swipe-tab-indicator.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.swipe-tab-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.35);
+  transition: background .2s, transform .2s;
+}
+.swipe-tab-dot.active {
+  background: #fff;
+  transform: scale(1.3);
+}
+
+/* ---- Swipe hint (shown once per page) ---- */
+.swipe-hint {
+  position: fixed;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: rgba(15, 23, 42, .82);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 12px;
+  z-index: 1500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease, transform .35s ease;
+  white-space: nowrap;
+  letter-spacing: .3px;
+}
+.swipe-hint.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ---- AI window swipe-to-dismiss visual cue ---- */
+.ai-win.open .ai-win-head {
+  cursor: grab;
+}
+.ai-win.open .ai-win-head::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255,255,255,.3);
+  margin: 2px auto 0;
+}
+
 </style>
   <script>try{if(localStorage.getItem("niter-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark");}}catch(e){}</script>
 </head>
@@ -23542,6 +23613,215 @@
 
     window.addEventListener("hashchange", render);
     render();
+
+    /* ============================================================
+       Swipe gestures (mobile only, ≤700 px)
+       • Horizontal swipe across #app cycles the visible chip-tab bar
+       • Vertical swipe-down on the AI assistant window dismisses it
+       ============================================================ */
+    (function () {
+      if (!window.matchMedia("(max-width: 700px)").matches) return;
+
+      /* ---- Tab configuration ----
+         Each array lists the data-tab values in left-to-right order.
+         The swipe handler cycles through these when a matching chip
+         bar is visible. */
+      var TAB_SETS = {
+        "home-tab": ["events", "forms", "notices"],
+        "qa-tab":   ["all", "open", "answered", "closed"],
+        "ev-tab":   ["all", "week", "later"],
+        "opp-tab":  null /* dynamic, built at swipe time */
+      };
+      var SWIPE_THRESHOLD = 40;  /* px needed to register a swipe */
+      var SWIPE_MAX_Y     = 80;  /* max vertical drift during a horizontal swipe */
+
+      var touch = { x0: 0, y0: 0, t0: 0, dragging: false };
+
+      /* -- helpers -------------------------------------------------- */
+      function isInput(el) {
+        return el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT");
+      }
+
+      /** Return { action, tabs } for the currently active chip bar. */
+      function findActiveChipBar(root) {
+        if (!root) return null;
+        var chips = root.querySelectorAll(".chip[data-action][data-tab]");
+        if (!chips.length) return null;
+        var activeChip = root.querySelector(".chip.active[data-action][data-tab]");
+        if (!activeChip) return null;
+        var action = activeChip.getAttribute("data-action");
+        var tabs;
+        if (action === "opp-tab") {
+          /* build dynamic list from rendered chips */
+          tabs = [];
+          chips.forEach(function (c) { tabs.push(c.getAttribute("data-tab")); });
+        } else {
+          tabs = TAB_SETS[action];
+        }
+        if (!tabs) return null;
+        var current = activeChip.getAttribute("data-tab");
+        var idx = tabs.indexOf(current);
+        if (idx === -1) return null;
+        return { action: action, tabs: tabs, idx: idx, current: current };
+      }
+
+      /** Programmatically click a chip tab by action + tab value. */
+      function activateChipTab(root, action, tabVal) {
+        if (!root) return;
+        var chip = root.querySelector('.chip[data-action="' + action + '"][data-tab="' + tabVal + '"]');
+        if (chip) chip.click();
+      }
+
+      /* -- tab indicator (bottom floating pills) -------------------- */
+      var indicator = document.createElement("div");
+      indicator.className = "swipe-tab-indicator";
+      indicator.setAttribute("aria-hidden", "true");
+      document.body.appendChild(indicator);
+
+      function showIndicator(tabLabels, activeIdx) {
+        indicator.innerHTML = tabLabels.map(function (t, i) {
+          return '<span class="swipe-tab-dot' + (i === activeIdx ? " active" : "") + '"></span>';
+        }).join("");
+        indicator.classList.add("visible");
+        clearTimeout(indicator._hideTimer);
+        indicator._hideTimer = setTimeout(function () {
+          indicator.classList.remove("visible");
+        }, 1200);
+      }
+
+      /* -- swipe hint shimmer (shown once per page on first visit) -- */
+      var hintShown = false;
+      function showSwipeHint() {
+        if (hintShown) return;
+        var app = document.getElementById("app");
+        if (!app || !findActiveChipBar(app)) return;
+        hintShown = true;
+        var hint = document.createElement("div");
+        hint.className = "swipe-hint";
+        hint.textContent = "← Swipe tabs →";
+        document.body.appendChild(hint);
+        setTimeout(function () { hint.classList.add("visible"); }, 300);
+        setTimeout(function () { hint.classList.remove("visible"); setTimeout(function () { if (hint.parentNode) hint.parentNode.removeChild(hint); }, 400); }, 2200);
+      }
+      /* show hint shortly after first render */
+      setTimeout(showSwipeHint, 1800);
+
+      /* -- AI window swipe-to-dismiss ------------------------------ */
+      var aiWinSelector = "#ai-win";
+      var AI_DISMISS_THRESHOLD = 100;
+
+      function isAiOpen() {
+        var w = document.querySelector(aiWinSelector);
+        return w && w.classList.contains("open");
+      }
+
+      /* ---- touch handlers ----------------------------------------- */
+      document.addEventListener("touchstart", function (e) {
+        var t = e.touches[0];
+        touch.x0 = t.clientX;
+        touch.y0 = t.clientY;
+        touch.t0 = Date.now();
+        touch.dragging = true;
+        touch.target = e.target;
+      }, { passive: true });
+
+      document.addEventListener("touchmove", function (e) {
+        if (!touch.dragging) return;
+        var t = e.touches[0];
+        var dx = t.clientX - touch.x0;
+        var dy = t.clientY - touch.y0;
+        /* If it's a horizontal swipe on #app area and the user is in
+           the tab-bar region (top ~60% of viewport), give a subtle
+           peek of the next/prev tab content with a translate. */
+        var app = document.getElementById("app");
+        if (Math.abs(dx) > 15 && Math.abs(dx) > Math.abs(dy) * 1.2 && app) {
+          var chipBar = findActiveChipBar(app);
+          if (chipBar) {
+            var clamped = Math.max(-60, Math.min(60, dx * 0.25));
+            app.style.transition = "none";
+            app.style.transform = "translateX(" + clamped + "px)";
+          }
+        }
+        /* If it's a vertical swipe-down on AI window, let it drag */
+        if (isAiOpen() && Math.abs(dy) > 15 && Math.abs(dy) > Math.abs(dx) * 1.5) {
+          var w = document.querySelector(aiWinSelector);
+          if (w && touch.target && (w.contains(touch.target) || touch.target.closest(aiWinSelector))) {
+            var translateY = Math.max(0, dy * 0.6);
+            w.style.transition = "none";
+            w.style.transform = "translateY(" + translateY + "px)";
+            w.style.opacity = 1 - (translateY / (AI_DISMISS_THRESHOLD * 2));
+          }
+        }
+      }, { passive: true });
+
+      document.addEventListener("touchend", function (e) {
+        if (!touch.dragging) return;
+        touch.dragging = false;
+        var t = e.changedTouches[0];
+        var dx = t.clientX - touch.x0;
+        var dy = t.clientY - touch.y0;
+        var dt = Date.now() - touch.t0;
+
+        /* ---- reset any peek transforms ---- */
+        var app = document.getElementById("app");
+        if (app) {
+          app.style.transition = "";
+          app.style.transform = "";
+        }
+
+        /* ---- AI window dismiss (swipe down) ---- */
+        if (isAiOpen() && dy > AI_DISMISS_THRESHOLD && Math.abs(dy) > Math.abs(dx) * 1.2 && dt < 500) {
+          var w = document.querySelector(aiWinSelector);
+          if (w) {
+            w.style.transition = "";
+            w.style.transform = "";
+            w.style.opacity = "";
+          }
+          /* trigger the app's close handler */
+          var closeBtn = document.querySelector(".ai-win-close");
+          if (closeBtn) closeBtn.click();
+          return;
+        }
+        /* reset AI window transform if not dismissed */
+        var w2 = document.querySelector(aiWinSelector);
+        if (w2) {
+          w2.style.transition = "";
+          w2.style.transform = "";
+          w2.style.opacity = "";
+        }
+
+        /* ---- tab swipe (horizontal) ---- */
+        if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.3 && dt < 600) {
+          if (!app) return;
+          /* Don't intercept if the swipe started on an input or inside
+             a scrollable area (like a code block or table wrapper). */
+          var startEl = touch.target;
+          if (isInput(startEl)) return;
+          if (startEl && startEl.closest && startEl.closest(".table-wrap, .code-block, pre, .ai-win-thread, .portal-tabs")) return;
+
+          var bar = findActiveChipBar(app);
+          if (!bar) return;
+          var newIdx = dx < 0 ? bar.idx + 1 : bar.idx - 1;
+          if (newIdx < 0 || newIdx >= bar.tabs.length) {
+            /* wrap around? no — just bounce */
+            return;
+          }
+          activateChipTab(app, bar.action, bar.tabs[newIdx]);
+          showIndicator(bar.tabs, newIdx);
+        }
+      }, { passive: true });
+
+      /* Re-derive the hint after each render */
+      var origRender = render;
+      render = (function (origFn) {
+        return function () {
+          origFn.apply(this, arguments);
+          /* Re-show hint on new pages */
+          hintShown = false;
+          setTimeout(showSwipeHint, 800);
+        };
+      })(render);
+    })();
 
     /* --- Dismiss splash screen after first render (mobile only) --- */
     (function () {
