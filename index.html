@@ -20108,6 +20108,18 @@
       return { intent: c.intent, kbId: c.kbId || null, label: c.label, confidence: c.conf, steps: steps, sources: c.src };
     }
     var naiPendingSeq = 0;
+    /* ---- Google search fallback: when NITER AI has no answer, search Google ---- */
+    function naiGoogleFallback(query) {
+      var url = "https://www.google.com/search?q=" + encodeURIComponent(query);
+      window.open(url, "_blank");
+      return {
+        text: "🔍 I searched Google for \u201C" + query + "\u201D — the results are opening in a new tab. " +
+              "I'll learn from this and may know it next time! Is there anything else I can help with about NITER?",
+        chips: ["Which clubs are there?", "Upcoming events", "How do I join a club?"],
+        link: { href: url, label: "Open Google search \u2192" }
+      };
+    }
+
     function naiAskAndRender(q) {
       q = String(q || "").trim();
       if (!q) return;
@@ -20119,6 +20131,10 @@
       naiSaveChat(chat);
       var t0 = Date.now();
       var ans = naiAsk(q) || { text: "", chips: [], link: null };
+      /* ---- Google search fallback: if no answer found, search Google ---- */
+      if (!ans.text || ans.text.trim() === "") {
+        ans = naiGoogleFallback(q);
+      }
       /* self-learning: a confident answer resolves any gap the brain had
          recorded for this question, and every real answer counts */
       if (ans && ans.text && ans.text.indexOf("couldn't find a confident answer") === -1) {
