@@ -429,6 +429,28 @@ table.sub-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 .grow { flex: 1; }
 
 /* ============================================================
+   Page Transition Animations (mobile)
+   ============================================================ */
+@keyframes pageSlideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+/* On mobile the #app gets this class briefly after each render */
+.page-enter {
+  animation: pageSlideIn .28s cubic-bezier(.22,.61,.36,1) both;
+}
+/* Prefers-reduced-motion: fade only, no slide */
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    animation: pageFadeIn .15s ease both;
+  }
+}
+
+/* ============================================================
    Mobile Optimisation — hamburger menu + responsive refinements
    ============================================================ */
 
