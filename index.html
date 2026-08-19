@@ -2131,6 +2131,254 @@
     .budget-label.warn { color: var(--warn); }
     .budget-label.over { color: var(--danger); }
 
+/* ============================================================
+   Mobile Optimisation — hamburger menu + responsive refinements
+   ============================================================ */
+
+/* ---- Hamburger button (hidden on desktop) ---- */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: rgba(255,255,255,.12);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .15s;
+}
+.hamburger-btn:hover { background: rgba(255,255,255,.22); }
+.hamburger-btn:active { background: rgba(255,255,255,.3); }
+.hamburger-line {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform .25s ease, opacity .25s ease;
+}
+.hamburger-btn.open .hamburger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger-btn.open .hamburger-line:nth-child(2) { opacity: 0; }
+.hamburger-btn.open .hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ---- Mobile nav overlay ---- */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 49;
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.nav-overlay.visible {
+  display: block;
+  opacity: 1;
+}
+
+/* ---- Mobile-specific overrides ---- */
+@media (max-width: 700px) {
+  .hamburger-btn { display: flex; }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(320px, 85vw);
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    padding: 70px 18px 28px;
+    background: linear-gradient(180deg, #16204e 0%, #1f2a6b 100%);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    z-index: 51;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-links.open {
+    transform: translateX(0);
+  }
+  .nav-links a {
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 10px;
+    white-space: normal;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  .nav-links a:hover,
+  .nav-links a:active {
+    background: rgba(255,255,255,.15);
+  }
+  .nav-links .nav-cta {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 8px;
+    justify-content: center;
+    font-size: 15px;
+  }
+  .nav-cta .nav-cta-label { display: inline-flex !important; }
+
+  .more-panel {
+    position: static !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: rgba(255,255,255,.06) !important;
+    margin-top: 2px;
+    padding: 0 8px !important;
+    display: none;
+  }
+  .more-menu.open .more-panel { display: flex; flex-direction: column; }
+  .more-panel a, .more-panel .nav-signout {
+    padding: 10px 14px !important;
+    min-height: 44px;
+    font-size: 14px;
+  }
+}
+
+/* ---- Broader responsive tweaks (≤700px) ---- */
+@media (max-width: 700px) {
+  /* Header */
+  .site-header .nav-inner {
+    flex-wrap: nowrap;
+  }
+  .nav-right {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+  .theme-toggle, .nav-icon-btn {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+  }
+
+  /* Hero */
+  .hero { padding: 36px 0 52px; }
+  .hero h1 { font-size: clamp(24px, 6vw, 34px); }
+  .hero p.lead { font-size: 15px; }
+  .hero-badges { gap: 8px; }
+  .stat-chip { padding: 6px 12px; font-size: 12.5px; }
+  .hero-card { padding: 20px; }
+  .hero-card h3 { font-size: 15px; }
+  .hero-mini-list li { font-size: 13.5px; }
+
+  /* Sections */
+  .section { padding: 32px 0; }
+  .section-head { margin-bottom: 18px; }
+  .section-head h2 { font-size: 20px; }
+
+  /* Club cards — single column, bigger touch targets */
+  .club-grid { grid-template-columns: 1fr !important; gap: 14px; }
+  .club-card { padding: 18px; min-height: 80px; }
+  .club-card h3 { font-size: 16px; }
+  .club-card:active { transform: scale(.98); }
+
+  /* Notice cards */
+  .notice-card { padding: 16px; border-left-width: 3px; }
+  .notice-card h3 { font-size: 15px; }
+  .notice-card .n-head { flex-direction: column; gap: 4px; }
+  .notice-card .n-body { font-size: 14px; }
+  .notice-card .n-actions { gap: 6px; }
+  .notice-card .n-actions .btn { min-height: 44px; padding: 10px 14px; }
+
+  /* Detail grid */
+  .detail-grid { grid-template-columns: 1fr; gap: 18px; margin-top: 24px; }
+  .detail-side { position: static; }
+
+  /* Portal layout */
+  .portal-layout { grid-template-columns: 1fr; gap: 16px; margin-top: 20px; }
+  .portal-tabs { position: static; grid-auto-flow: column; overflow-x: auto; padding: 8px; gap: 4px; }
+  .portal-tabs .tab { padding: 10px 14px; font-size: 13px; min-height: 44px; white-space: nowrap; }
+
+  /* Forms */
+  .form-card-lg .form-head { padding: 20px; }
+  .form-card-lg .form-body { padding: 20px; }
+  .form-card-lg .form-foot { padding: 14px 20px 20px; }
+  .form-card-lg .form-head h1 { font-size: 19px; }
+  .field > label { font-size: 15px; }
+
+  /* Input zoom prevention — iOS needs font-size >= 16px */
+  input[type="text"], input[type="email"], input[type="number"],
+  input[type="tel"], input[type="url"], select, textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+  textarea { min-height: 100px; }
+  .radio-group label, .check-group label { min-height: 44px; padding: 12px; }
+
+  /* Buttons — minimum 44px touch target */
+  .btn { min-height: 44px; padding: 11px 16px; font-size: 14px; }
+  .btn-sm { min-height: 38px; padding: 8px 14px; font-size: 13px; }
+
+  /* Tables — horizontal scroll */
+  .sub-table-wrap { margin: 0 -20px; padding: 0 20px; }
+  table.sub-table { font-size: 12.5px; }
+  table.sub-table th, table.sub-table td { padding: 8px 10px; }
+
+  /* Cover maker */
+  .cover-layout { grid-template-columns: 1fr; gap: 18px; }
+  .cover-form .two-col { grid-template-columns: 1fr; }
+  .cover-preview-wrap { position: static; }
+
+  /* Login card */
+  .login-card { margin: 24px auto; padding: 24px 18px; }
+  .login-card form { gap: 12px; }
+
+  /* Footer */
+  .site-footer { margin-top: 24px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 24px; padding: 28px 0 20px; }
+  .site-footer h4 { font-size: 14px; margin-bottom: 10px; }
+  .site-footer ul { font-size: 13px; gap: 6px; }
+  .footer-bottom { flex-direction: column; gap: 6px; text-align: center; font-size: 11.5px; padding: 12px 0; }
+
+  /* Page hero */
+  .page-hero { padding: 32px 0; }
+  .page-hero h1 { font-size: clamp(20px, 5vw, 28px); }
+  .page-hero .tagline { font-size: 14px; }
+  .breadcrumbs { margin-top: 12px; margin-bottom: 0; }
+
+  /* Builder fields */
+  .builder-row { grid-template-columns: 1fr; }
+  .builder-field { padding: 14px; }
+
+  /* AI FAB */
+  .ai-fab { right: 12px; bottom: 12px; padding: 10px 14px; }
+  .ai-fab-label { display: none; }
+
+  /* General spacing */
+  .container { padding: 0 16px; }
+  .toast { font-size: 13px; padding: 10px 14px; }
+}
+
+/* ---- Extra small screens (≤400px) ---- */
+@media (max-width: 400px) {
+  .hero { padding: 28px 0 40px; }
+  .hero h1 { font-size: 22px; }
+  .hero p.lead { font-size: 14px; }
+  .stat-chip { padding: 5px 10px; font-size: 11.5px; }
+  .club-card { padding: 14px; }
+  .section { padding: 24px 0; }
+  .section-head h2 { font-size: 18px; }
+  .container { padding: 0 12px; }
+  .form-card-lg .form-head, .form-card-lg .form-body { padding: 16px; }
+}
+
 </style>
   <script>try{if(localStorage.getItem("niter-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark");}}catch(e){}</script>
 </head>
@@ -2146,7 +2394,12 @@
         <button class="theme-toggle" data-action="toggle-theme" title="Toggle dark mode">🌙</button>
         <button type="button" class="nav-icon-btn" data-action="palette-open" title="Search everything (Ctrl/Cmd+K)" aria-label="Search">🔍</button>
         <button type="button" class="nav-icon-btn" data-action="nav-notif" title="Notifications" aria-label="Notifications">🔔<span class="notif-badge" id="notif-badge"></span></button>
-        <nav class="nav-links">
+        <button type="button" class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+        <nav class="nav-links" id="mobile-nav">
           <a href="#/" data-nav="home">Home</a>
           <a href="#/clubs" data-nav="clubs">Clubs</a>
           <a href="#/events" data-nav="events">📅 Events</a>
@@ -4382,6 +4635,69 @@
       var btn = menu.querySelector(".more-toggle");
       if (btn) btn.setAttribute("aria-expanded", "false");
     });
+
+    /* ---- Mobile hamburger menu ---- */
+    (function () {
+      var hamburger = document.getElementById("hamburger-btn");
+      var navLinks = document.getElementById("mobile-nav");
+      var overlay = null;
+      if (!hamburger || !navLinks) return;
+
+      function ensureOverlay() {
+        if (!overlay) {
+          overlay = document.createElement("div");
+          overlay.className = "nav-overlay";
+          overlay.setAttribute("aria-hidden", "true");
+          document.body.appendChild(overlay);
+          overlay.addEventListener("click", closeMenu);
+        }
+        return overlay;
+      }
+
+      function openMenu() {
+        ensureOverlay();
+        hamburger.classList.add("open");
+        hamburger.setAttribute("aria-expanded", "true");
+        hamburger.setAttribute("aria-label", "Close menu");
+        navLinks.classList.add("open");
+        overlay.classList.add("visible");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeMenu() {
+        hamburger.classList.remove("open");
+        hamburger.setAttribute("aria-expanded", "false");
+        hamburger.setAttribute("aria-label", "Open menu");
+        navLinks.classList.remove("open");
+        if (overlay) overlay.classList.remove("visible");
+        document.body.style.overflow = "";
+      }
+
+      hamburger.addEventListener("click", function () {
+        if (navLinks.classList.contains("open")) closeMenu();
+        else openMenu();
+      });
+
+      /* Close when a nav link is tapped */
+      navLinks.addEventListener("click", function (e) {
+        if (e.target.closest("a")) {
+          /* Allow more-menu toggle to work without closing */
+          if (e.target.closest(".more-toggle")) return;
+          closeMenu();
+        }
+      });
+
+      /* Close on Escape */
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && navLinks.classList.contains("open")) closeMenu();
+      });
+
+      /* Close on resize to desktop */
+      var mq = window.matchMedia("(min-width: 701px)");
+      mq.addEventListener("change", function (ev) {
+        if (ev.matches) closeMenu();
+      });
+    })();
 
     function download(filename, text, mime) {
       try {
