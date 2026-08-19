@@ -2191,7 +2191,6 @@
       <button class="ai-win-close" data-action="ai-win-close" title="Close" aria-label="Close">✕</button>
     </div>
     <div class="ai-win-body">
-      <div class="nai-rail nai-rail-win" id="nai-win-rail"></div>
       <div class="ai-win-thread" id="nai-win-thread"></div>
       <form id="niter-ai-win-form" class="nai-input-row">
         <button type="button" class="nai-attach" id="nai-win-attach" title="Attach an image, PDF, .docx or text file" aria-label="Attach image or document">📎</button>
@@ -19755,8 +19754,6 @@
     function naiWinPaint(chat, typew) {
       var th = document.getElementById("nai-win-thread");
       if (!th) return;
-      var railEl = document.getElementById("nai-win-rail");
-      if (railEl) railEl.innerHTML = naiRailHTML(true);
       var wasTyping = !!state.aiTyping;
       var lastIdx = chat.length - 1;
       var msgs = chat.map(function (m, i) {
@@ -19863,7 +19860,6 @@
         '<div class="container nai-wrap">' +
         naiNowStrip() +
         '<div class="nai-app">' +
-        '<aside class="nai-rail" aria-label="NITER AI capabilities">' + naiRailHTML(false) + "</aside>" +
         '<div class="nai-shell">' +
         '<div class="nai-thread" id="nai-thread">' + msgs + "</div>" +
         '<form id="niter-ai-form" class="nai-input-row">' +
