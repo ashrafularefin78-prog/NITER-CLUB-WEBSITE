@@ -20112,15 +20112,53 @@
       return { intent: c.intent, kbId: c.kbId || null, label: c.label, confidence: c.conf, steps: steps, sources: c.src };
     }
     var naiPendingSeq = 0;
-    /* ---- Google search fallback: when NITER AI has no answer, search Google ---- */
+    /* ---- Smart search fallback: when NITER AI has no answer, search the web ---- */
+    /* Detects if the query is NITER-related and adds context. Detects Bangla
+       and offers Bengali-specific search. Provides multiple search engines. */
+    var NAI_NITER_WORDS = /niter|nayarhat|savar|dhaka|bangladesh|university|college|campus|hostel|dept|department|cse|eee|te\b|ipe|fdae|textile|garment|rmg|btma|bgmea|admission|scholarship|tuition|syllabus|semester|cgpa|gpa|exam|credit|faculty|professor|director|proctor|library|canteen|cafeteria|club|committee|robotics|science|career|cultural|journalism|photography|language|welfare|islamic|games|sports|event|form|notice|complaint/i;
+    var NAI_BANGLA_RE = /[\u0980-\u09FF]/;
     function naiGoogleFallback(query) {
-      var url = "https://www.google.com/search?q=" + encodeURIComponent(query);
-      window.open(url, "_blank");
+      /* 1. Decide search terms */
+      var isNiter = NAI_NITER_WORDS.test(query);
+      var isBangla = NAI_BANGLA_RE.test(query);
+      var searchQ = query;
+      if (isNiter && !/niter|savar|nayarhat|bangladesh/i.test(query)) {
+        searchQ = query + " NITER Bangladesh";
+      }
+      var searchQBn = isBangla ? searchQ : searchQ + " বাংলাদেশ";
+      /* 2. Build search URLs */
+      var googleUrl = "https://www.google.com/search?q=" + encodeURIComponent(searchQ);
+      var bingUrl = "https://www.bing.com/search?q=" + encodeURIComponent(searchQ);
+      var ddgUrl = "https://duckduckgo.com/?q=" + encodeURIComponent(searchQ);
+      var googleBnUrl = "https://www.google.com/search?q=" + encodeURIComponent(searchQBn) + "&hl=bn";
+      /* 3. Open Google in new tab (primary) */
+      window.open(googleUrl, "_blank");
+      /* 4. Build smart response */
+      var lines = [];
+      lines.push("🔍 I don't have that in my knowledge base yet, but I searched for you:");
+      lines.push("");
+      lines.push("\u2022 <b>\u201C" + esc(searchQ) + "\u201D</b> \u2014 Google results are opening in a new tab.");
+      if (isBangla && !isNiter) {
+        lines.push("\u2022 <b>Bangla search</b> \u2014 also tried with বাংলাদেশ context.");
+      }
+      lines.push("");
+      lines.push("I'll remember this question and may know it next time!");
+      /* 5. Context-aware chip suggestions */
+      var chips = [];
+      if (isNiter) {
+        chips = ["What is NITER?", "Which clubs are there?", "Upcoming events"];
+      } else {
+        chips = ["What is NITER?", "How do I join a club?", "Admission info"];
+      }
       return {
-        text: "🔍 I searched Google for \u201C" + query + "\u201D — the results are opening in a new tab. " +
-              "I'll learn from this and may know it next time! Is there anything else I can help with about NITER?",
-        chips: ["Which clubs are there?", "Upcoming events", "How do I join a club?"],
-        link: { href: url, label: "Open Google search \u2192" }
+        text: lines.join("\n"),
+        chips: chips,
+        link: { href: googleUrl, label: "Open Google search \u2192" },
+        searchUrls: [
+          { label: "Google", url: googleUrl },
+          { label: "Bing", url: bingUrl },
+          { label: "DuckDuckGo", url: ddgUrl }
+        ]
       };
     }
 
