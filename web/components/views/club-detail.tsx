@@ -1,10 +1,6 @@
 "use client";
 
 import Link from "next/link";
-<<<<<<< HEAD
-import { useEffect, useState } from "react";
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 import { useDb, mutate } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 import { clubForms, clubNotices, isClosed, nextDeadline, relativeAgo, statusOf, uid } from "@/lib/utils";
@@ -13,48 +9,13 @@ import { useToast } from "@/components/providers";
 import { FormGrid, NoticeCard } from "@/components/cards";
 import { Countdown } from "@/components/countdown";
 import { EmptyState, PageHero, Skeleton } from "@/components/ui";
-<<<<<<< HEAD
-import type { PortalUser } from "@/lib/types";
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 
 export default function ClubDetailView({ clubId }: { clubId: string }) {
   const db = useDb();
   const auth = useAuth();
   const toast = useToast();
   const club = db?.clubs.find((c) => c.id === clubId) ?? null;
-<<<<<<< HEAD
-  const [clubAdmin, setClubAdmin] = useState<PortalUser | null>(null);
 
-  // Load the club's admin from the users collection
-  useEffect(() => {
-    if (!club) return;
-    let cancelled = false;
-    const loadAdmin = async () => {
-      try {
-        const { getCloudDb } = await import("@/lib/firebase");
-        const { collection, getDocs, query, where } = await import("firebase/firestore");
-        const dbref = getCloudDb();
-        if (!dbref) return;
-        const adminQuery = query(
-          collection(dbref, "users"),
-          where("role", "==", "admin"),
-          where("clubs", "array-contains", club.id)
-        );
-        const snap = await getDocs(adminQuery);
-        if (!cancelled && !snap.empty) {
-          const doc = snap.docs[0];
-          setClubAdmin({ ...doc.data(), uid: doc.id } as PortalUser);
-        }
-      } catch {
-        // Silently fail — admin info is optional
-      }
-    };
-    void loadAdmin();
-    return () => { cancelled = true; };
-  }, [club?.id]);
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 
   if (!db) return <ClubDetailSkeleton />;
   if (!club) return <ClubMissing />;
@@ -219,7 +180,6 @@ export default function ClubDetailView({ clubId }: { clubId: string }) {
             </div>
           </div>
 
-<<<<<<< HEAD
           {/* Club Admin */}
           {clubAdmin && (
             <div className="card p-5">
@@ -249,8 +209,6 @@ export default function ClubDetailView({ clubId }: { clubId: string }) {
             </div>
           )}
 
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
           <div className="card p-5">
             <h3 className="m-0 text-[15px] font-bold text-ink">📊 Forms status</h3>
             <div className="mt-3 grid grid-cols-3 gap-2 text-center">

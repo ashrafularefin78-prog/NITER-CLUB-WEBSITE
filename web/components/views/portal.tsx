@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-<<<<<<< HEAD
-import type { Executive, Form, FormField, Membership, ModeratorRequest, Notice, PortalUser, Submission } from "@/lib/types";
-=======
 import type { Executive, Form, FormField, Membership, Notice, PortalUser, Submission } from "@/lib/types";
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 import {
   clubById,
   clubForms,
@@ -57,32 +53,6 @@ export default function PortalView() {
     if (!auth.cloud) return <DemoLogin />;
     if (auth.loading) return <PortalSkeleton />;
     if (!auth.user) return <CloudLogin />;
-<<<<<<< HEAD
-    // Check if user has a pending moderator request
-    if (auth.user.pendingModeratorClubId) {
-      const pendingClub = clubById(db, auth.user.pendingModeratorClubId);
-      return (
-        <div className="container-x py-16">
-          <div className="card mx-auto max-w-md p-8 text-center">
-            <div className="text-5xl">⏳</div>
-            <h1 className="mt-3 text-xl font-bold text-ink">Moderator request pending</h1>
-            <p className="mt-1 text-[14px] text-muted">
-              You requested to become a moderator for <b>{pendingClub?.name || "a club"}</b>.
-              The club admin needs to approve your request before you can access the portal.
-            </p>
-            <p className="mt-2 text-[12.5px] text-muted">
-              Requested {auth.user.pendingModeratorRequestedAt ? relativeAgo(auth.user.pendingModeratorRequestedAt) : "recently"}.
-              You&apos;ll be notified once approved.
-            </p>
-            <button className="btn btn-outline mt-5" onClick={auth.signOut}>
-              Sign out
-            </button>
-          </div>
-        </div>
-      );
-    }
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     if (!allowedClubIds.length)
       return (
         <div className="container-x py-16">
@@ -280,22 +250,12 @@ function DemoLogin() {
 
 function CloudLogin() {
   const auth = useAuth();
-<<<<<<< HEAD
-  const db = useDb();
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   const toast = useToast();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [name, setName] = useState("");
-<<<<<<< HEAD
-  const [phone, setPhone] = useState("");
-  const [classId, setClassId] = useState("");
-  const [accountType, setAccountType] = useState<"member" | "admin" | "moderator">("member");
-  const [selectedClubId, setSelectedClubId] = useState("");
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
+
   const [busy, setBusy] = useState(false);
   const [gBusy, setGBusy] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -347,44 +307,11 @@ function CloudLogin() {
           className="space-y-4 text-left"
           onSubmit={async (e) => {
             e.preventDefault();
-<<<<<<< HEAD
-            if (mode === "signup" && accountType === "admin" && !selectedClubId) {
-              toast.toast("Please select a club for admin role.", "err");
-              return;
-            }
-            if (mode === "signin" && !selectedClubId) {
-              toast.toast("Please select the club you want to manage.", "err");
-              return;
-            }
-            setBusy(true);
-            const err = await auth.loginEmail(
-              email,
-              pass,
-              mode,
-              name,
-              mode === "signup" ? accountType : undefined,
-              mode === "signup" && (accountType === "admin" || accountType === "moderator") ? selectedClubId : undefined,
-              undefined, // studentId
-              mode === "signup" ? phone : undefined,
-              mode === "signup" ? classId : undefined
-            );
-            setBusy(false);
-            if (err) {
-              toast.toast(err, "err");
-            } else {
-              toast.toast("Welcome!", "ok");
-              // For sign-in: set the club session directly so the admin goes to the dashboard.
-              if (mode === "signin" && selectedClubId) {
-                auth.setClubSession(selectedClubId);
-              }
-            }
-=======
             setBusy(true);
             const err = await auth.loginEmail(email, pass, mode, name);
             setBusy(false);
             if (err) toast.toast(err, "err");
             else toast.toast("Welcome!", "ok");
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
           }}
         >
           <div>
@@ -402,144 +329,6 @@ function CloudLogin() {
             </select>
           </div>
           {mode === "signup" && (
-<<<<<<< HEAD
-            <>
-              <div>
-                <label className="label" htmlFor="login-name">
-                  Full name
-                </label>
-                <input
-                  id="login-name"
-                  className="input"
-                  placeholder="Your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="label" htmlFor="portal-acct-type">
-                  Account type
-                </label>
-                <select
-                  id="portal-acct-type"
-                  className="select"
-                  value={accountType}
-                  onChange={(e) => {
-                    setAccountType(e.target.value as "member" | "admin" | "moderator");
-                    setSelectedClubId("");
-                  }}
-                >
-                  <option value="member">👤 Member</option>
-                  <option value="admin">🔑 Club Admin</option>
-                  <option value="moderator">🛡️ Club Moderator</option>
-                </select>
-                <p className="hint mt-1">
-                  {accountType === "admin"
-                    ? "Admins manage a single club — each club has exactly one admin. Your account is approved instantly."
-                    : accountType === "moderator"
-                      ? "Moderators help manage a club — needs admin approval before you can log in."
-                      : "Regular members can join clubs and submit forms."}
-                </p>
-              </div>
-              {(accountType === "member" || accountType === "moderator") && (
-                <>
-                  <div>
-                    <label className="label" htmlFor="portal-class-id">
-                      Class ID
-                    </label>
-                    <input
-                      id="portal-class-id"
-                      className="input"
-                      placeholder="e.g. CSE-26-01"
-                      value={classId}
-                      onChange={(e) => setClassId(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="label" htmlFor="portal-phone">
-                      Phone number
-                    </label>
-                    <input
-                      id="portal-phone"
-                      className="input"
-                      type="tel"
-                      placeholder="e.g. 01XXXXXXXXX"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </div>
-                </>
-              )}
-              {accountType === "admin" && db && (
-                <div>
-                  <label className="label" htmlFor="portal-admin-club">
-                    Select your club <span className="text-crimson">*</span>
-                  </label>
-                  <select
-                    id="portal-admin-club"
-                    className="select"
-                    value={selectedClubId}
-                    onChange={(e) => setSelectedClubId(e.target.value)}
-                  >
-                    <option value="">— Choose a club —</option>
-                    {db.clubs.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.icon} {c.name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="hint mt-1">
-                    You&apos;ll be the admin of this club. Only one admin per club — no approval needed, instant access.
-                  </p>
-                </div>
-              )}
-              {accountType === "moderator" && db && (
-                <div>
-                  <label className="label" htmlFor="portal-mod-club">
-                    Select your club <span className="text-crimson">*</span>
-                  </label>
-                  <select
-                    id="portal-mod-club"
-                    className="select"
-                    value={selectedClubId}
-                    onChange={(e) => setSelectedClubId(e.target.value)}
-                  >
-                    <option value="">— Choose a club —</option>
-                    {db.clubs.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.icon} {c.name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="hint mt-1">
-                    You&apos;ll be a moderator of this club. The club admin must approve your request first.
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-          {mode === "signin" && db && (
-            <div>
-              <label className="label" htmlFor="portal-signin-club">
-                Select your club <span className="text-crimson">*</span>
-              </label>
-              <select
-                id="portal-signin-club"
-                className="select"
-                value={selectedClubId}
-                onChange={(e) => setSelectedClubId(e.target.value)}
-              >
-                <option value="">— Choose a club to manage —</option>
-                {db.clubs.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.icon} {c.name}
-                  </option>
-                ))}
-              </select>
-              <p className="hint mt-1">
-                Pick the club you want to manage. You&apos;ll go straight to the dashboard.
-              </p>
-=======
             <div>
               <label className="label" htmlFor="login-name">
                 Full name
@@ -551,7 +340,6 @@ function CloudLogin() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
             </div>
           )}
           <div>
@@ -602,14 +390,8 @@ function CloudLogin() {
           </button>
         </form>
         <div className="mt-5 rounded-xl border border-line bg-surface-2/60 p-3 text-left text-[12.5px] text-muted">
-<<<<<<< HEAD
-          💡 Select the club you manage, then sign in. The first account created becomes the global
-          <b> admin</b>. New accounts can sign up as a <b>club admin</b> (one per club) or a
-          <b> member</b>.
-=======
           💡 The first account created becomes the <b>admin</b>. Admins promote others to club executives from
           portal → Settings → Members &amp; roles.
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
         </div>
       </div>
     </div>
@@ -770,22 +552,7 @@ function NoticeForm({
   const [formId, setFormId] = useState(initial?.formId ?? "");
   const [date, setDate] = useState(initial?.date ?? new Date().toISOString().slice(0, 10));
   const [pinned, setPinned] = useState(initial?.pinned ?? false);
-<<<<<<< HEAD
-  // New fields
-  const [category, setCategory] = useState(initial?.category ?? "general");
-  const [priority, setPriority] = useState(initial?.priority ?? "normal");
-  const [eventDate, setEventDate] = useState(initial?.eventDate ?? "");
-  const [eventEndDate, setEventEndDate] = useState(initial?.eventEndDate ?? "");
-  const [venue, setVenue] = useState(initial?.venue ?? "");
-  const [contactPerson, setContactPerson] = useState(initial?.contactPerson ?? "");
-  const [contactEmail, setContactEmail] = useState(initial?.contactEmail ?? "");
-  const [contactPhone, setContactPhone] = useState(initial?.contactPhone ?? "");
-  const [externalUrl, setExternalUrl] = useState(initial?.externalUrl ?? "");
-  const [externalUrlLabel, setExternalUrlLabel] = useState(initial?.externalUrlLabel ?? "");
-  const [authorName, setAuthorName] = useState(initial?.authorName ?? "");
-  const [showAdvanced, setShowAdvanced] = useState(false);
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
+
 
   return (
     <form
@@ -806,20 +573,6 @@ function NoticeForm({
                 formId: formId || undefined,
                 date,
                 pinned,
-<<<<<<< HEAD
-                category,
-                priority,
-                eventDate: eventDate || undefined,
-                eventEndDate: eventEndDate || undefined,
-                venue: venue || undefined,
-                contactPerson: contactPerson || undefined,
-                contactEmail: contactEmail || undefined,
-                contactPhone: contactPhone || undefined,
-                externalUrl: externalUrl || undefined,
-                externalUrlLabel: externalUrlLabel || undefined,
-                authorName: authorName || undefined,
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
               });
           } else {
             d.notices.push({
@@ -832,20 +585,7 @@ function NoticeForm({
               reactions: {},
               pinned,
               formId: formId || undefined,
-<<<<<<< HEAD
-              category,
-              priority,
-              eventDate: eventDate || undefined,
-              eventEndDate: eventEndDate || undefined,
-              venue: venue || undefined,
-              contactPerson: contactPerson || undefined,
-              contactEmail: contactEmail || undefined,
-              contactPhone: contactPhone || undefined,
-              externalUrl: externalUrl || undefined,
-              externalUrlLabel: externalUrlLabel || undefined,
-              authorName: authorName || undefined,
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
+
             });
           }
         });
@@ -878,37 +618,6 @@ function NoticeForm({
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-<<<<<<< HEAD
-          <label className="label" htmlFor="nf-category">
-            Category
-          </label>
-          <select id="nf-category" className="select" value={category} onChange={(e) => setCategory(e.target.value as any)}>
-            <option value="general">📢 General</option>
-            <option value="event">📅 Event</option>
-            <option value="meeting">🤝 Meeting</option>
-            <option value="workshop">🔧 Workshop</option>
-            <option value="competition">🏆 Competition</option>
-            <option value="announcement">📣 Announcement</option>
-            <option value="urgent">🚨 Urgent</option>
-            <option value="other">📋 Other</option>
-          </select>
-        </div>
-        <div>
-          <label className="label" htmlFor="nf-priority">
-            Priority
-          </label>
-          <select id="nf-priority" className="select" value={priority} onChange={(e) => setPriority(e.target.value as any)}>
-            <option value="low">Low</option>
-            <option value="normal">Normal</option>
-            <option value="high">⬆️ High</option>
-            <option value="urgent">🚨 Urgent</option>
-          </select>
-        </div>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
           <label className="label" htmlFor="nf-form">
             Attach a form (optional)
           </label>
@@ -943,73 +652,7 @@ function NoticeForm({
         />
         📌 Pin this notice to the top
       </label>
-<<<<<<< HEAD
 
-      {/* Advanced Options Toggle */}
-      <button
-        type="button"
-        className="flex items-center gap-2 text-[13px] font-semibold text-crimson hover:underline"
-        onClick={() => setShowAdvanced(!showAdvanced)}
-      >
-        {showAdvanced ? "▾" : "▸"} Advanced options (event details, contact, links)
-      </button>
-
-      {showAdvanced && (
-        <div className="space-y-4 rounded-xl border border-line bg-surface-2/40 p-4 anim-fade-up">
-          <h4 className="m-0 text-[14px] font-bold text-ink">📅 Event Details</h4>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="label" htmlFor="nf-event-date">Event start date & time</label>
-              <input id="nf-event-date" type="datetime-local" className="input" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
-            </div>
-            <div>
-              <label className="label" htmlFor="nf-event-end-date">Event end date & time (optional)</label>
-              <input id="nf-event-end-date" type="datetime-local" className="input" value={eventEndDate} onChange={(e) => setEventEndDate(e.target.value)} />
-            </div>
-          </div>
-          <div>
-            <label className="label" htmlFor="nf-venue">📍 Venue / Location</label>
-            <input id="nf-venue" className="input" placeholder="e.g. Room 301, NITER Main Building" value={venue} onChange={(e) => setVenue(e.target.value)} />
-          </div>
-
-          <h4 className="m-0 mt-4 text-[14px] font-bold text-ink">👤 Contact Information</h4>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div>
-              <label className="label" htmlFor="nf-contact-person">Contact person</label>
-              <input id="nf-contact-person" className="input" placeholder="e.g. Ahmed Rahman" value={contactPerson} onChange={(e) => setContactPerson(e.target.value)} />
-            </div>
-            <div>
-              <label className="label" htmlFor="nf-contact-email">Contact email</label>
-              <input id="nf-contact-email" type="email" className="input" placeholder="e.g. ahmed@niter.edu.bd" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} />
-            </div>
-            <div>
-              <label className="label" htmlFor="nf-contact-phone">Contact phone</label>
-              <input id="nf-contact-phone" type="tel" className="input" placeholder="e.g. 01XXXXXXXXX" value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} />
-            </div>
-          </div>
-
-          <h4 className="m-0 mt-4 text-[14px] font-bold text-ink">🔗 External Link (optional)</h4>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="label" htmlFor="nf-external-url">URL</label>
-              <input id="nf-external-url" className="input" placeholder="https://..." value={externalUrl} onChange={(e) => setExternalUrl(e.target.value)} />
-            </div>
-            <div>
-              <label className="label" htmlFor="nf-external-url-label">Link label</label>
-              <input id="nf-external-url-label" className="input" placeholder="e.g. Register Now, Facebook Event" value={externalUrlLabel} onChange={(e) => setExternalUrlLabel(e.target.value)} />
-            </div>
-          </div>
-
-          <h4 className="m-0 mt-4 text-[14px] font-bold text-ink">✍️ Author</h4>
-          <div>
-            <label className="label" htmlFor="nf-author">Posted by</label>
-            <input id="nf-author" className="input" placeholder="e.g. Ahmed Rahman, President" value={authorName} onChange={(e) => setAuthorName(e.target.value)} />
-          </div>
-        </div>
-      )}
-
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       <button type="submit" className="btn btn-primary">
         {initial ? "Save changes" : "Publish notice"}
       </button>
@@ -1785,20 +1428,12 @@ function MembershipsTab({ clubId }: { clubId: string }) {
       toast.toast("Only this club's moderator can review join requests.", "err");
       return;
     }
-<<<<<<< HEAD
-    const reviewerName = auth.user?.name || auth.user?.email || "";
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     mutate((draft) => {
       const t = draft.memberships.find((x) => x.id === m.id);
       if (!t) return;
       t.status = status;
       t.reviewedAt = new Date().toISOString();
-<<<<<<< HEAD
-      t.reviewedBy = reviewerName;
-=======
       t.reviewedBy = auth.user?.name || auth.user?.email || "";
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
     });
     logAudit(
       "membership_review",
@@ -1807,11 +1442,7 @@ function MembershipsTab({ clubId }: { clubId: string }) {
       m.clubId,
       auth.user?.email || auth.user?.name || ""
     );
-<<<<<<< HEAD
-    // Notify the student about the decision
-    void notifyStudentMembershipDecision(m, status, clubId, reviewerName);
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
+
     toast.toast(status === "approved" ? "Membership approved!" : "Membership rejected.", "ok");
   };
 
@@ -2168,13 +1799,6 @@ function SettingsTab({ clubId, isAdmin }: { clubId: string; isAdmin: boolean }) 
 
       {isAdmin && <AuditLogPanel />}
 
-<<<<<<< HEAD
-      {isAdmin && <ModeratorRequestsTab clubId={clubId} />}
-
-      {isAdmin && <ClubAdminPanel clubId={clubId} />}
-
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
       {isAdmin && (
         <div className="panel lg:col-span-2">
           <h2 className="m-0 text-[18px] font-bold text-ink">Members &amp; roles</h2>
@@ -2232,38 +1856,9 @@ function MemberRow({
             className="btn btn-outline btn-sm"
             onClick={async () => {
               const { getCloudDb } = await import("@/lib/firebase");
-<<<<<<< HEAD
-              const { doc, updateDoc, getDocs, query, collection, where } = await import("firebase/firestore");
-              const dbref = getCloudDb();
-              if (!dbref) return;
-
-              // If changing to admin, check if any of the selected clubs already have an admin
-              if (role === "admin" && selectedClubs.length > 0) {
-                for (const clubId of selectedClubs) {
-                  const adminsQuery = query(
-                    collection(dbref, "users"),
-                    where("role", "==", "admin"),
-                    where("clubs", "array-contains", clubId)
-                  );
-                  const existingAdmins = await getDocs(adminsQuery);
-                  // Check if there's already an admin for this club (excluding the current user)
-                  const otherAdmin = existingAdmins.docs.find((d) => d.id !== user.uid);
-                  if (otherAdmin) {
-                    const club = clubs.find((c) => c.id === clubId);
-                    toast.toast(
-                      `Cannot assign as admin — ${club?.name || clubId} already has an admin. Each club can only have one admin.`,
-                      "err"
-                    );
-                    return;
-                  }
-                }
-              }
-
-=======
               const { doc, updateDoc } = await import("firebase/firestore");
               const dbref = getCloudDb();
               if (!dbref) return;
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
               try {
                 await updateDoc(doc(dbref, "users", user.uid), { role, clubs: selectedClubs });
                 toast.toast("Role updated.", "ok");
@@ -2300,208 +1895,7 @@ function MemberRow({
   );
 }
 
-<<<<<<< HEAD
-/* ================= Moderator Requests tab ================= */
 
-function ModeratorRequestsTab({ clubId }: { clubId: string }) {
-  const db = useDb()!;
-  const auth = useAuth();
-  const toast = useToast();
-  const [requests, setRequests] = useState<ModeratorRequest[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const loadRequests = async () => {
-    const { getCloudDb } = await import("@/lib/firebase");
-    const { collection, getDocs, query, where } = await import("firebase/firestore");
-    const dbref = getCloudDb();
-    if (!dbref) return;
-    setLoading(true);
-    try {
-      // Admin sees all requests for their clubs; executive sees only their club
-      const q = auth.user?.role === "admin"
-        ? query(collection(dbref, "moderatorRequests"), where("clubId", "==", clubId))
-        : query(collection(dbref, "moderatorRequests"), where("clubId", "==", clubId));
-      const snap = await getDocs(q);
-      const list: ModeratorRequest[] = [];
-      snap.forEach((ds) => {
-        list.push({ ...ds.data(), id: ds.id } as ModeratorRequest);
-      });
-      setRequests(list.sort((a, b) => b.requestedAt.localeCompare(a.requestedAt)));
-    } catch {
-      toast.toast("Could not load moderator requests.", "err");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRequest = async (request: ModeratorRequest, approve: boolean) => {
-    const { getCloudDb } = await import("@/lib/firebase");
-    const { doc, updateDoc, getDoc } = await import("firebase/firestore");
-    const dbref = getCloudDb();
-    if (!dbref) return;
-    try {
-      const now = new Date().toISOString();
-      const status = approve ? "approved" : "rejected";
-
-      // Update the moderator request status
-      await updateDoc(doc(dbref, "moderatorRequests", request.id), {
-        status,
-        reviewedAt: now,
-        reviewedBy: auth.user?.name || auth.user?.email || "",
-      });
-
-      // If approved, update the user's role and clubs
-      if (approve) {
-        const userSnap = await getDoc(doc(dbref, "users", request.userId));
-        if (userSnap.exists()) {
-          const userData = userSnap.data() as PortalUser;
-          const currentClubs = userData.clubs || [];
-          const newClubs = currentClubs.includes(request.clubId)
-            ? currentClubs
-            : [...currentClubs, request.clubId];
-          await updateDoc(doc(dbref, "users", request.userId), {
-            role: "executive",
-            clubs: newClubs,
-            pendingModeratorClubId: null,
-            pendingModeratorRequestedAt: null,
-          });
-        }
-      } else {
-        // If rejected, just clear the pending status
-        await updateDoc(doc(dbref, "users", request.userId), {
-          pendingModeratorClubId: null,
-          pendingModeratorRequestedAt: null,
-        });
-      }
-
-      // Update local state
-      setRequests((prev) =>
-        prev.map((r) =>
-          r.id === request.id
-            ? { ...r, status, reviewedAt: now, reviewedBy: auth.user?.name || auth.user?.email || "" }
-            : r
-        )
-      );
-
-      logAudit(
-        approve ? "moderator_approved" : "moderator_rejected",
-        `${approve ? "Approved" : "Rejected"} moderator request for ${request.userName || request.userEmail}`,
-        approve ? "info" : "warn",
-        request.clubId,
-        auth.user?.email || auth.user?.name || ""
-      );
-
-      toast.toast(
-        approve ? `Moderator request approved — ${request.userName} is now a club executive.` : `Moderator request rejected.`,
-        approve ? "ok" : "err"
-      );
-    } catch (err) {
-      toast.toast("Could not process request: " + (err as Error).message, "err");
-    }
-  };
-
-  const pending = requests.filter((r) => r.status === "pending");
-  const processed = requests.filter((r) => r.status !== "pending");
-
-  return (
-    <div className="panel lg:col-span-2">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="m-0 text-[18px] font-bold text-ink">🛡️ Moderator requests</h2>
-        <button className="btn btn-outline btn-sm" onClick={() => void loadRequests()} disabled={loading}>
-          {loading ? "Loading…" : "Load requests"}
-        </button>
-      </div>
-      <p className="m-0 mt-1 text-[13px] text-muted">
-        Students who requested to become a club moderator — approve to grant them executive access,
-        or reject to deny.
-      </p>
-      {requests.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-2">
-          <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-bold text-amber-800">
-            {pending.length} pending
-          </span>
-          <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-800">
-            {processed.filter((r) => r.status === "approved").length} approved
-          </span>
-          <span className="rounded-full bg-rose-100 px-2.5 py-1 text-[11px] font-bold text-rose-700">
-            {processed.filter((r) => r.status === "rejected").length} rejected
-          </span>
-        </div>
-      )}
-      {pending.length > 0 && (
-        <div className="mt-4">
-          <h3 className="m-0 mb-3 text-[15px] font-bold text-ink">⏳ Pending requests</h3>
-          <div className="space-y-3">
-            {pending.map((req) => (
-              <div key={req.id} className="rounded-xl border border-amber-200 bg-amber-50 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="text-[14.5px] font-bold text-ink">{req.userName || req.userEmail}</div>
-                    <div className="text-[12.5px] text-muted">
-                      {req.userEmail}
-                      {req.studentId ? ` · 🎓 ${req.studentId}` : ""}
-                    </div>
-                    <div className="mt-1 text-[12px] text-muted">
-                      Requested {relativeAgo(req.requestedAt)}
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => void handleRequest(req, true)}
-                    >
-                      ✓ Approve
-                    </button>
-                    <button
-                      className="btn btn-outline btn-sm"
-                      onClick={() => void handleRequest(req, false)}
-                    >
-                      ✕ Reject
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {processed.length > 0 && (
-        <div className="mt-5">
-          <h3 className="m-0 mb-3 text-[15px] font-bold text-ink">📋 Processed requests</h3>
-          <div className="space-y-2">
-            {processed.map((req) => (
-              <div key={req.id} className="flex items-center justify-between rounded-xl border border-line p-3">
-                <div className="min-w-0">
-                  <div className="text-[13.5px] font-semibold text-ink">{req.userName || req.userEmail}</div>
-                  <div className="text-[11.5px] text-muted">
-                    {req.userEmail} · {relativeAgo(req.requestedAt)}
-                  </div>
-                </div>
-                <span
-                  className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
-                    req.status === "approved"
-                      ? "bg-emerald-100 text-emerald-800"
-                      : "bg-rose-100 text-rose-700"
-                  }`}
-                >
-                  {req.status === "approved" ? "✓ Approved" : "✕ Rejected"}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {requests.length === 0 && !loading && (
-        <div className="mt-4 rounded-xl border border-dashed border-hairline p-6 text-center text-[13px] text-muted">
-          No moderator requests yet. Click &quot;Load requests&quot; to check.
-        </div>
-      )}
-    </div>
-  );
-}
-
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 function PortalSkeleton() {
   return (
     <div className="container-x py-16">
@@ -2616,7 +2010,6 @@ function SiteSettingsPanel() {
     </div>
   );
 }
-<<<<<<< HEAD
 
 /**
  * Notify a student when their membership request is approved or rejected.
@@ -2918,5 +2311,3 @@ function ClubAdminPanel({ clubId }: { clubId: string }) {
     </div>
   );
 }
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5

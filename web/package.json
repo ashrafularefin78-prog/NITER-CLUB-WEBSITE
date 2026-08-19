@@ -2,10 +2,7 @@
   "name": "niter-clubs-portal",
   "version": "1.0.0",
   "private": true,
-<<<<<<< HEAD
   "license": "Apache-2.0",
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   "description": "NITER Clubs Portal — Next.js frontend",
   "scripts": {
     "dev": "next dev",

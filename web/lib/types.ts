@@ -41,13 +41,6 @@ export interface Club {
 
 export type Reactions = Record<string, number>;
 
-<<<<<<< HEAD
-export type NoticeCategory = "general" | "event" | "meeting" | "workshop" | "competition" | "announcement" | "urgent" | "other";
-
-export type NoticePriority = "low" | "normal" | "high" | "urgent";
-
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 export interface Notice {
   id: string;
   clubId: string;
@@ -58,33 +51,6 @@ export interface Notice {
   reactions: Reactions;
   pinned?: boolean;
   formId?: string;
-<<<<<<< HEAD
-  /** Notice category for filtering and display. */
-  category?: NoticeCategory;
-  /** Priority level — urgent notices get a red badge. */
-  priority?: NoticePriority;
-  /** Event/meeting date and time (if the notice is about a specific event). */
-  eventDate?: string;
-  /** Event/meeting end date and time. */
-  eventEndDate?: string;
-  /** Venue or location for the event/meeting. */
-  venue?: string;
-  /** Contact person for questions about this notice. */
-  contactPerson?: string;
-  /** Contact email for questions about this notice. */
-  contactEmail?: string;
-  /** Contact phone for questions about this notice. */
-  contactPhone?: string;
-  /** External URL link (registration page, Facebook event, etc). */
-  externalUrl?: string;
-  /** External URL label (e.g., "Register Now", "Facebook Event"). */
-  externalUrlLabel?: string;
-  /** Number of views (tracked on page load). */
-  viewCount?: number;
-  /** Author name (executive who posted). */
-  authorName?: string;
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 }
 
 export interface Form {
@@ -305,25 +271,7 @@ export interface Config {
   announcement?: string;
 }
 
-<<<<<<< HEAD
-export type ModeratorRequestStatus = "pending" | "approved" | "rejected";
 
-/** A request from a student to become a club moderator — needs admin approval. */
-export interface ModeratorRequest {
-  id: string;
-  userId: string;
-  clubId: string;
-  status: ModeratorRequestStatus;
-  requestedAt: string;
-  reviewedAt?: string;
-  reviewedBy?: string;
-  userName: string;
-  userEmail: string;
-  studentId: string;
-}
-
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 export interface Database {
   version: number;
   clubs: Club[];
@@ -339,19 +287,11 @@ export interface Database {
   auditLog: AuditEvent[];
   questions: Question[];
   warnings: Warning[];
-<<<<<<< HEAD
-  moderatorRequests: ModeratorRequest[];
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
   config: Config;
   __users?: PortalUser[];
 }
 
-<<<<<<< HEAD
-export type Role = "admin" | "executive" | "moderator" | "it-staff" | "member";
-=======
 export type Role = "admin" | "executive" | "it-staff" | "member";
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
 
 export interface PortalUser {
   uid: string;
@@ -360,14 +300,12 @@ export interface PortalUser {
   role: Role;
   clubs: string[];
   studentId?: string;
-<<<<<<< HEAD
   phone?: string;
   classId?: string;
   /** Pending moderator approval status — only set when role is "member" and a moderator request is active. */
   pendingModeratorClubId?: string;
   pendingModeratorRequestedAt?: string;
-=======
->>>>>>> 6ce30bfed78dc8524b7ef2d0974be9e8eeb7caf5
+
 }
 
 export type FormStatusKey = "soon" | "open" | "closed";
